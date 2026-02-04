@@ -1,0 +1,107 @@
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+
+const HERO_IMAGES = {
+  main: "/images/landing/hero-section/6da4e59475159602882c3fabee07c1388d618dbb.png",
+  topRight: "/images/landing/hero-section/d7c609f1a7f9028a48f85f6b588e7ae4e6803c45.png",
+  bottomRight: "/images/landing/hero-section/efc3fc0e7c591b4a8aaa86acf5dae5a7e6ef5118.png",
+  tallRight: "/images/landing/hero-section/257b120991dba926e6251a0f8edb4a91647ec3c2.png",
+};
+
+export function HeroSection() {
+  return (
+    <div className="w-full bg-white px-4 py-4 md:px-6 md:py-6">
+      <div className="mx-auto grid w-full max-w-[1400px] grid-cols-1 gap-4 md:h-[600px] md:grid-cols-4">
+
+        <div className="group relative col-span-1 overflow-hidden rounded-xs md:col-span-2 md:row-span-2">
+          <Image
+            src={HERO_IMAGES.main}
+            alt="Elevate Your Fitness Journey"
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+          <div className="absolute bottom-8 left-8 max-w-md">
+            <h2 className="mb-6 text-2xl font-semibold leading-tight text-white sm:text-3xl md:text-[36px]">
+              Elevate Your <br /> Fitness Journey
+            </h2>
+            <Link
+              href="/shop"
+              className="inline-flex h-12 items-center gap-2 rounded-md bg-primary px-6 text-[16px] font-semibold text-black transition-colors hover:bg-primary/90"
+            >
+              Shop Now <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+
+        <div className="group relative col-span-1 overflow-hidden rounded-xs md:col-span-1 md:row-span-1">
+          <Image
+            src={HERO_IMAGES.topRight}
+            alt="Perfect Gear Awaits"
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-black/20" />
+          <div className="absolute left-6 top-6">
+            <h3 className="mb-2 text-xl font-semibold text-white sm:text-2xl">
+              Perfect Gear <br /> Awaits
+            </h3>
+            <Link
+              href="/shop"
+              className="inline-flex items-center gap-2 text-[16px] font-semibold text-primary hover:text-primary/80"
+            >
+              Shop Now <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+
+        <div className="group relative col-span-1 overflow-hidden rounded-xs md:col-span-1 md:row-span-2">
+          <Image
+            src={HERO_IMAGES.tallRight}
+            alt="Top Picks"
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-black/20" />
+          <div className="absolute bottom-8 left-0 right-0 text-center">
+            <h3 className="mb-1 text-3xl font-semibold italic tracking-wider text-white sm:text-4xl md:text-[48px]">
+              TOP
+            </h3>
+            <h3 className="mb-8 text-3xl font-semibold italic tracking-wider text-white sm:text-4xl md:text-[48px]">
+              PICKS
+            </h3>
+            <Link
+              href="/shop"
+              className="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-6 text-[16px] font-semibold text-black transition-colors hover:bg-primary/90"
+            >
+              Shop Now <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+
+        <div className="group relative col-span-1 overflow-hidden rounded-xs md:col-span-1 md:row-span-1">
+          <Image
+            src={HERO_IMAGES.bottomRight}
+            alt="Shine Bright with Weights"
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-black/20" />
+          <div className="absolute bottom-6 left-6">
+            <h3 className="mb-2 text-xl font-bold text-white">
+              Shine Bright with <br /> Weights
+            </h3>
+            <Link
+              href="/shop"
+              className="inline-flex items-center gap-2 text-[16px] font-semibold text-primary hover:text-primary/80"
+            >
+              Shop Now <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
