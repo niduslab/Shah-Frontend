@@ -61,7 +61,7 @@ export function Footer() {
             <h4 className="text-lg font-bold text-white">Company</h4>
             <ul className="flex flex-col gap-3 text-sm text-gray-300">
               <li>
-                <Link href="/about" className="hover:text-[#FFB81E] transition-colors">
+                <Link href="/about-us" className="hover:text-[#FFB81E] transition-colors">
                   About Us
                 </Link>
               </li>

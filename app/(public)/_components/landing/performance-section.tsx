@@ -47,7 +47,7 @@ export function PerformanceSection() {
             Play Better with the Right Gear
           </h2>
           <Link
-            href="/products"
+            href="/shop"
             className="flex items-center gap-2 text-[16px] font-bold text-[#3E4C24] hover:underline"
           >
             View All Products
@@ -72,10 +72,13 @@ export function PerformanceSection() {
               <p className="mb-6 max-w-md text-sm text-gray-200">
                 Lightweight paddles and gear built for fast rallies and smooth gameplay.
               </p>
-              <button className="flex items-center gap-2 rounded bg-[#FFC107] px-6 py-3 text-[16px] font-semibold text-black transition-colors hover:bg-[#FFC107]/90">
+              <Link 
+                href="/shop" 
+                className="flex items-center gap-2 rounded bg-[#FFC107] px-6 py-3 text-[16px] font-semibold text-black transition-colors hover:bg-[#FFC107]/90 w-fit"
+              >
                 Shop Now
                 <ArrowRight className="h-4 w-4" />
-              </button>
+              </Link>
             </div>
           </div>
 

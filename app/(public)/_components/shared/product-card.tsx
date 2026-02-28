@@ -27,7 +27,7 @@ export function ProductCard({ product, imageHeight = "h-[372px]" }: ProductCardP
   return (
     <div className="group relative flex flex-col gap-4">
       {/* Image Container */}
-      <div className={`relative ${imageHeight} w-full overflow-hidden rounded-xs bg-gray-50 p-8`}>
+      <div className={`relative ${imageHeight} w-full overflow-hidden rounded-xs bg-gray-50`}>
         {/* Badge */}
         {product.badge && (
           <div
@@ -42,7 +42,7 @@ export function ProductCard({ product, imageHeight = "h-[372px]" }: ProductCardP
         </button>
 
         {/* Product Image */}
-        <div className="block h-full w-full p-8">
+        <div className="block h-full w-full">
           <div className="relative h-full w-full">
             <Image
               src={product.image}

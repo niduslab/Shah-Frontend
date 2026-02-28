@@ -60,7 +60,7 @@ export function DiscountsSection() {
                 </p>
                 
                 <Link
-                  href={item.link}
+                  href="/flash-sale"
                   className="inline-flex items-center gap-2 text-[16px] font-semibold text-primary transition-colors hover:text-white"
                 >
                   Shop Now <ArrowRight className="h-4 w-4" />

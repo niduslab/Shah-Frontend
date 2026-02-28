@@ -70,7 +70,7 @@ export function OurClients() {
             Our Proud Clients
           </h2>
           <Link 
-            href="/clients"
+            href="/our-proud-clients"
             className="flex items-center gap-1 text-[16px] font-semibold text-black hover:text-primary transition-colors"
           >
             View All Clients <ChevronRight className="h-4 w-4" />

@@ -1,6 +1,7 @@
 import { TopBar } from "./_components/layout/top-bar";
 import { NavBar } from "./_components/layout/nav-bar";
 import { Footer } from "./_components/layout/footer";
+import { SubscribeSection } from "./_components/landing/subscribe-section";
 
 export default function PublicLayout({
   children,
@@ -12,6 +13,8 @@ export default function PublicLayout({
       <TopBar />
       <NavBar />
       {children}
+      <SubscribeSection />
+
       <Footer />
     </div>
   );

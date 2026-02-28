@@ -19,6 +19,7 @@ const BRANDS = [
 
 export function TrustedBrands() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const tweenRef = useRef<gsap.core.Tween | null>(null);
 
   useGSAP(() => {
     if (!containerRef.current) return;
@@ -28,7 +29,7 @@ export function TrustedBrands() {
     const totalWidth = containerRef.current.scrollWidth;
     const singleSetWidth = totalWidth / 2;
 
-    gsap.to(containerRef.current, {
+    tweenRef.current = gsap.to(containerRef.current, {
       x: -singleSetWidth,
       duration: 20,
       ease: "none",
@@ -52,15 +53,20 @@ export function TrustedBrands() {
         </div>
 
         {/* Brands Scroll Container */}
-        <div className="relative w-full overflow-hidden">
+        <div 
+          className="relative w-full overflow-hidden"
+          onMouseEnter={() => tweenRef.current?.pause()}
+          onMouseLeave={() => tweenRef.current?.play()}
+        >
           <div 
             ref={containerRef}
             className="flex w-max gap-4"
           >
             {/* First Set */}
             {BRANDS.map((brand) => (
-              <div
+              <Link
                 key={`first-${brand.id}`}
+                href="/brand/nordictrack"
                 className="flex min-w-[200px] items-center justify-center rounded-xs bg-gray-50 px-8 py-6 transition-colors hover:bg-gray-100"
               >
                 <div className="relative h-12 w-32">
@@ -71,12 +77,13 @@ export function TrustedBrands() {
                     className="object-contain opacity-80 transition-opacity hover:opacity-100"
                   />
                 </div>
-              </div>
+              </Link>
             ))}
             {/* Second Set (Duplicate for seamless loop) */}
             {BRANDS.map((brand) => (
-              <div
+              <Link
                 key={`second-${brand.id}`}
+                href="/brand/nordictrack"
                 className="flex min-w-[200px] items-center justify-center rounded-xs bg-gray-50 px-8 py-6 transition-colors hover:bg-gray-100"
               >
                 <div className="relative h-12 w-32">
@@ -87,7 +94,7 @@ export function TrustedBrands() {
                     className="object-contain opacity-80 transition-opacity hover:opacity-100"
                   />
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
