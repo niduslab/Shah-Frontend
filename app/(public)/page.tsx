@@ -1,5 +1,8 @@
 import { HeroSection } from "./_components/landing/hero-section";
 import { ExploreCategories } from "./_components/landing/explore-categories";
+import { PreOrderSection } from "./_components/landing/pre-order-section";
+import { RdxGallerySection } from "./_components/landing/rdx-gallery-section";
+import { OurServicesSection } from "./_components/landing/our-services-section";
 import { NewArrivalProducts } from "./_components/landing/new-arrival-products";
 import { FlashDealSection } from "./_components/landing/flash-deal-section";
 import { FloorSolution } from "./_components/landing/floor-solution";
@@ -19,22 +22,32 @@ export default function Home() {
     <div className="px-6 lg:px-0">
       <HeroSection />
       <ExploreCategories />
+      {/* add preorder now section */}
+      <PreOrderSection />
+      
       {/* <BestSellingProducts /> */}
       <NewArrivalProducts />
+      {/* add new rdx gallery */}
+      <RdxGallerySection />
+      
       <FlashDealSection />
       {/* floor solution  */}
       <FloorSolution />
+      <TrustedBrands />
 
       <SuccessStories />
 
-      <PerformanceSection />
-      <TrustedBrands />
-      {/* add success stories */}
-      
+      {/* our services */}
+      <OurServicesSection />
+
       <DiscountsSection />
       <DiscountedProducts />
-      <FeatureSection />
-      <ShopNowBanner />
+      <PerformanceSection />
+     
+      {/* add success stories */}
+      
+      {/* <FeatureSection />
+      <ShopNowBanner /> */}
     
       <OurClients />
       <PerformanceFrameSection />

@@ -6,7 +6,7 @@ const HERO_IMAGES = {
   main: "/images/landing/hero-section/6da4e59475159602882c3fabee07c1388d618dbb.png",
   topRight: "/images/landing/hero-section/d7c609f1a7f9028a48f85f6b588e7ae4e6803c45.png",
   bottomRight: "/images/landing/hero-section/efc3fc0e7c591b4a8aaa86acf5dae5a7e6ef5118.png",
-  tallRight: "/images/landing/hero-section/257b120991dba926e6251a0f8edb4a91647ec3c2.png",
+  tallRight: "/images/landing/hero-section/e2e807f93cc803b571ae315331b10d75e097223b.png",
 };
 
 export function HeroSection() {
@@ -74,7 +74,7 @@ export function HeroSection() {
             </h3>
             <Link
               href="/shop"
-              className="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-6 text-[16px] font-semibold text-black transition-colors hover:bg-primary/90"
+              className="inline-flex h-12 items-center gap-2 rounded-md bg-primary px-6 text-[16px] font-semibold text-black transition-colors hover:bg-primary/90"
             >
               Shop Now <ArrowRight className="h-4 w-4" />
             </Link>
