@@ -85,6 +85,11 @@ export function Footer() {
                   Our Store
                 </Link>
               </li>
+              <li>
+                <Link href="/admin/login" className="hover:text-[#FFB81E] transition-colors">
+                  Admin Login
+                </Link>
+              </li>
             </ul>
           </div>
 
