@@ -1,6 +1,16 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { useRef } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 const IMAGES = {
   floorMat: "/images/landing/floor-solution/57e9ba3f08e9becbf9b3d9c11be4bb6c027f1918.jpg",
@@ -9,19 +19,42 @@ const IMAGES = {
 };
 
 export function FloorSolution() {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: containerRef.current,
+        start: "top 75%",
+        toggleActions: "play none none reverse",
+      },
+    });
+
+    const items = containerRef.current?.querySelectorAll(".floor-item");
+    if (items) {
+      tl.from(items, {
+        opacity: 0,
+        y: 60,
+        stagger: 0.2,
+        duration: 1,
+        ease: "power3.out",
+      });
+    }
+  }, { scope: containerRef });
+
   return (
-    <div className="w-full bg-white px-4 py-4 md:px-6 md:py-6">
+    <div ref={containerRef} className="w-full bg-white px-4 py-4 md:px-6 md:py-6">
       <div className="mx-auto grid w-full max-w-[1400px] grid-cols-1 gap-4 md:grid-cols-2">
         {/* Floor Mat */}
-        <div className="group relative h-[300px] overflow-hidden rounded-xs md:h-[620px]">
+        <div className="floor-item group relative h-[300px] overflow-hidden rounded-xs md:h-[620px]">
           <Image
             src={IMAGES.floorMat}
             alt="Floor Mat"
             fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className="object-cover transition-transform duration-500 group-hover:scale-105 will-change-transform"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-          <div className="absolute bottom-8 left-0 right-0 flex flex-col items-center justify-end text-center">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+          <div className="absolute bottom-8 left-0 right-0 flex flex-col items-center justify-end text-center z-10">
             <h3 className="mb-4 text-3xl font-semibold text-white md:text-4xl">
               Floor Mat
             </h3>
@@ -35,15 +68,15 @@ export function FloorSolution() {
         </div>
 
         {/* Flooring Solution */}
-        <div className="group relative h-[300px] overflow-hidden rounded-xs md:h-[620px]">
+        <div className="floor-item group relative h-[300px] overflow-hidden rounded-xs md:h-[620px]">
           <Image
             src={IMAGES.flooringSolution}
             alt="Flooring Solution"
             fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className="object-cover transition-transform duration-500 group-hover:scale-105 will-change-transform"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-          <div className="absolute bottom-8 left-0 right-0 flex flex-col items-center justify-end text-center">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+          <div className="absolute bottom-8 left-0 right-0 flex flex-col items-center justify-end text-center z-10">
             <h3 className="mb-4 text-3xl font-semibold text-white md:text-4xl">
               Flooring Solution
             </h3>
@@ -57,15 +90,15 @@ export function FloorSolution() {
         </div>
 
         {/* Sports Equipments */}
-        <div className="group relative col-span-1 h-[300px] overflow-hidden rounded-xs md:col-span-2 md:h-[620px]">
+        <div className="floor-item group relative col-span-1 h-[300px] overflow-hidden rounded-xs md:col-span-2 md:h-[620px]">
           <Image
             src={IMAGES.sportsEquipments}
             alt="Sports Equipments"
             fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className="object-cover transition-transform duration-500 group-hover:scale-105 will-change-transform"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-          <div className="absolute bottom-12 left-0 right-0 flex flex-col items-center justify-end text-center">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+          <div className="absolute bottom-12 left-0 right-0 flex flex-col items-center justify-end text-center z-10">
             <h3 className="mb-4 text-3xl font-semibold text-white md:text-5xl">
               Sports Equipments
             </h3>

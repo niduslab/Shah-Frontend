@@ -33,7 +33,7 @@ export function NordicTrackCategories() {
           "radial-gradient(72.28% 72.28% at 53.3% 84.54%, #EC9A24 0%, #1B150F 100%)",
       }}
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto px-4 md:px-0 max-w-[1400px]">
         <h2 className="mb-12 text-center text-3xl font-semibold text-white md:text-4xl lg:text-5xl">
           Explore The Nordictrack Categories
         </h2>

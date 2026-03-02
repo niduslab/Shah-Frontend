@@ -5,7 +5,7 @@ import { ArrowRight } from "lucide-react";
 export function NordicTrackShopBy() {
   return (
     <section className="w-full bg-white pb-16 md:pb-24">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto px-4 md:px-0 max-w-[1400px]">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {/* Left Card - T Series */}
           <div className="group relative h-[400px] w-full overflow-hidden rounded-sm bg-gradient-to-b from-[#EAEAEA] to-[#B8B8B8] md:h-[500px]">

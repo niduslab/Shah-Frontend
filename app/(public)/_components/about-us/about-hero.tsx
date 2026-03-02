@@ -16,7 +16,7 @@ export function AboutHero() {
         <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent" />
       </div>
 
-      <div className="relative z-10 container mx-auto h-full px-6 md:px-12 flex flex-col justify-center">
+      <div className="relative z-10 container h-full mx-auto px-4 md:px-0 max-w-[1400px] flex flex-col justify-center">
         <div className="max-w-3xl">
           {/* Main Title */}
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 leading-tight uppercase">

@@ -36,7 +36,7 @@ const timelineData: TimelineItem[] = [
 export function JourneySection() {
   return (
     <section className="py-20 bg-[#461802] text-white overflow-hidden">
-      <div className="container mx-auto px-6">
+      <div className="container mx-auto px-4 md:px-0 max-w-[1400px]">
         <h2 className="text-3xl md:text-5xl font-bold text-center mb-16 md:mb-24">
           Our Journey So Far
         </h2>

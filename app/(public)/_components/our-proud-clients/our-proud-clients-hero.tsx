@@ -17,7 +17,7 @@ export function OurProudClientsHero() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 flex h-full items-center px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 flex h-full mx-auto px-4 md:px-0 max-w-[1400px] items-center">
         <div className="max-w-3xl">
           <h1 className="mb-6 text-4xl font-bold text-white sm:text-5xl md:text-6xl lg:text-[64px] leading-tight">
             Our Valued <span className="italic text-primary">Clients</span> <br />

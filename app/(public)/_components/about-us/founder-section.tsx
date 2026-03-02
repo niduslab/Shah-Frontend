@@ -19,12 +19,12 @@ function FounderCard({
 }: FounderProps) {
   return (
     <div
-      className={`flex flex-col md:flex-row gap-12 md:gap-24 items-center ${
+      className={`flex flex-col md:flex-row gap-6 md:gap-12 items-center ${
         reverse ? "md:flex-row-reverse" : ""
       }`}
     >
       {/* Image Section */}
-      <div className={`w-full md:w-1/2 flex justify-center ${reverse ? "md:justify-end" : "md:justify-start"} relative group`}>
+      <div className={`w-full md:w-1/2 flex justify-center ${reverse ? "md:justify-center" : "md:justify-center"} relative group`}>
         <div className="relative aspect-[3/4] w-full max-w-[450px] overflow-hidden bg-gray-100 shadow-xl rounded-sm">
           <Image
             src={imageSrc}
@@ -61,7 +61,7 @@ function FounderCard({
 export function FounderSection() {
   return (
     <section className="py-20 md:py-32 bg-white">
-      <div className="container mx-auto px-6 md:px-12">
+      <div className="container mx-auto px-4 md:px-0 max-w-[1400px]">
         <div className="space-y-24 md:space-y-32">
           {/* First Founder */}
           <FounderCard

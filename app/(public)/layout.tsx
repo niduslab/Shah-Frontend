@@ -2,6 +2,7 @@ import { TopBar } from "./_components/layout/top-bar";
 import { NavBar } from "./_components/layout/nav-bar";
 import { Footer } from "./_components/layout/footer";
 import { SubscribeSection } from "./_components/landing/subscribe-section";
+import { ScrollToTop } from "./_components/shared/scroll-to-top";
 
 export default function PublicLayout({
   children,
@@ -14,8 +15,9 @@ export default function PublicLayout({
       <NavBar />
       {children}
       <SubscribeSection />
-
+      
       <Footer />
+      <ScrollToTop />
     </div>
   );
 }

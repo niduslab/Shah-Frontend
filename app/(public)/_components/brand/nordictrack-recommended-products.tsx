@@ -94,7 +94,7 @@ export function NordicTrackRecommendedProducts() {
 
   return (
     <section className="w-full bg-white py-16 md:py-24">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto px-4 md:px-0 max-w-[1400px]">
         {/* Header */}
         <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           <h2 className="text-3xl font-bold tracking-tight text-black">

@@ -26,7 +26,7 @@ export function NordicTrackHero() {
       />
 
       {/* Content */}
-      <div className="relative z-20 flex h-full items-center px-4 sm:px-8 md:px-12 lg:px-20 xl:px-32">
+      <div className="relative z-20 flex h-full items-center mx-auto px-4 md:px-0 max-w-[1400px]">
         <div className="max-w-xl md:max-w-2xl">
           <h1 className="mb-6 text-4xl font-bold leading-tight text-white sm:text-5xl md:text-6xl lg:text-[64px]">
             Turn Your Home <br />

@@ -3,7 +3,7 @@ import Image from "next/image";
 export function NordicTrackBehindTheWork() {
   return (
     <section className="w-full bg-white py-16 md:py-24">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto px-4 md:px-0 max-w-[1400px]">
         <div className="flex flex-col gap-12 lg:flex-row lg:items-center lg:gap-16">
           {/* Content Side */}
           <div className="flex-1">

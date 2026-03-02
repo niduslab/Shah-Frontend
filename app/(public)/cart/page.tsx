@@ -222,9 +222,11 @@ export default function CartPage() {
 
               {/* Actions */}
               <div className="space-y-3">
-                <button className="w-full rounded-sm bg-primary py-3.5 text-sm font-bold text-black transition-colors hover:bg-primary/90">
-                  Proceed to Checkout
-                </button>
+                <Link href="/checkout" className="block w-full">
+                  <button className="w-full rounded-sm bg-primary py-3.5 text-sm font-bold text-black transition-colors hover:bg-primary/90">
+                    Proceed to Checkout
+                  </button>
+                </Link>
                 <Link href="/shop" className="block">
                   <button className="w-full rounded-sm border border-black bg-transparent py-3.5 text-sm font-bold text-black transition-colors hover:bg-black hover:text-white">
                     Continue Shopping

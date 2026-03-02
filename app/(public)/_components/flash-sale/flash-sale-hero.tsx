@@ -48,7 +48,7 @@ export function FlashSaleHero() {
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/60 to-transparent" />
       </div>
 
-      <div className="relative z-10 container mx-auto h-full px-4 md:px-8 flex flex-col justify-center">
+      <div className="relative z-10 mx-auto h-full w-full max-w-[1400px] flex flex-col justify-center">
         <div className="max-w-2xl">
           {/* Main Title */}
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-2">

@@ -6,8 +6,8 @@ export function NordicTrackShopRowers() {
   return (
     <section className="w-full bg-[#FFFBF0]">
       {/* First Section: Blue Background Rower */}
-      <div className="container mx-auto px-4 py-16 sm:px-6 lg:px-8">
-        <div className="flex flex-col gap-12 lg:flex-row lg:items-center lg:gap-16">
+      <div className="container py-16">
+        <div className="flex flex-col gap-12 lg:flex-row lg:items-center lg:gap-16 mx-auto px-4 md:px-0 max-w-[1400px]">
           {/* Left: Image */}
           <div className="flex-1">
             <div className="relative aspect-square w-full overflow-hidden rounded-sm bg-[#A4C8F0]/30 md:aspect-[4/3]">
@@ -15,7 +15,7 @@ export function NordicTrackShopRowers() {
                 src="/images/brand-page/shop-rowers/img-1.png"
                 alt="NordicTrack Smart Rower"
                 fill
-                className="object-contain p-8"
+                className="object-cover"
               />
             </div>
           </div>
@@ -44,8 +44,8 @@ export function NordicTrackShopRowers() {
       </div>
 
       {/* Second Section: Lifestyle Treadmill */}
-      <div className="container mx-auto px-4 py-16 sm:px-6 lg:px-8">
-        <div className="flex flex-col-reverse gap-12 lg:flex-row lg:items-center lg:gap-16">
+      <div className="container py-16">
+        <div className="flex flex-col-reverse gap-12 lg:flex-row lg:items-center lg:gap-16 mx-auto px-4 md:px-0 max-w-[1400px]">
           {/* Left: Content */}
           <div className="flex-1">
             <h2 className="mb-6 text-3xl font-bold leading-tight text-black sm:text-4xl lg:text-5xl">

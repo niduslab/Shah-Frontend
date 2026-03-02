@@ -403,7 +403,7 @@ export default function CheckoutPage() {
 
               {/* Actions */}
               <button className="w-full rounded-sm bg-primary py-3.5 text-sm font-bold text-black transition-colors hover:bg-primary/90">
-                Proceed to Checkout
+                Make Payment
               </button>
             </div>
           </div>

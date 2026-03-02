@@ -13,7 +13,7 @@ interface ClientCategorySectionProps {
 export function ClientCategorySection({ title, clients }: ClientCategorySectionProps) {
   return (
     <section className="py-12">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto px-4 md:px-0 max-w-[1400px]">
         <h2 className="mb-8 text-3xl font-bold text-black">{title}</h2>
         <div className="grid grid-cols-[repeat(auto-fill,minmax(197px,1fr))] gap-6">
           {clients.map((client, index) => (
