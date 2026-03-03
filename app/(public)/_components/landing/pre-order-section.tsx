@@ -6,13 +6,10 @@ import { ArrowRight } from "lucide-react";
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
+import { useGSAPInit } from "@/lib/hooks/useGSAPInit";
 
 export function PreOrderSection() {
+  useGSAPInit();
   const containerRef = useRef<HTMLDivElement>(null);
   const mainImageRef = useRef<HTMLDivElement>(null);
   const rightGridRef = useRef<HTMLDivElement>(null);

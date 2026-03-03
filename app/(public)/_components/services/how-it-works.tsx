@@ -3,13 +3,9 @@
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAPInit } from "@/lib/hooks/useGSAPInit";
 import { Phone, Stethoscope, Wrench, ShieldCheck, ArrowRight } from "lucide-react";
 import Link from "next/link";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 const STEPS = [
   {
@@ -39,6 +35,7 @@ const STEPS = [
 ];
 
 export function HowItWorks() {
+  useGSAPInit();
   const containerRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {

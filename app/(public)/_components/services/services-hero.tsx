@@ -5,12 +5,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAPInit } from "@/lib/hooks/useGSAPInit";
 import { useRef } from "react";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 const STATS = [
   { value: "15K+", label: "Repairs Completed" },
@@ -20,6 +16,7 @@ const STATS = [
 ];
 
 export function ServicesHero() {
+  useGSAPInit();
   const containerRef = useRef<HTMLDivElement>(null);
   const bgImageRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);

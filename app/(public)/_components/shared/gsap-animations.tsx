@@ -3,11 +3,7 @@
 import { useRef, ReactNode } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
+import { useGSAPInit } from "@/lib/hooks/useGSAPInit";
 
 interface AnimationProps {
   children: ReactNode;
@@ -23,6 +19,7 @@ export function FadeIn({
   delay = 0,
   duration = 0.5,
 }: AnimationProps) {
+  useGSAPInit();
   const ref = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
@@ -46,6 +43,7 @@ export function StaggerContainer({
   stagger = 0.1,
   delay = 0,
 }: AnimationProps) {
+  useGSAPInit();
   const ref = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
@@ -86,6 +84,7 @@ export function Parallax({
   className = "",
   speed = 1,
 }: ParallaxProps) {
+  useGSAPInit();
   const ref = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {

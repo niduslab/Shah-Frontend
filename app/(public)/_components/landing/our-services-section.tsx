@@ -6,11 +6,7 @@ import { ArrowRight, Phone } from "lucide-react";
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
+import { useGSAPInit } from "@/lib/hooks/useGSAPInit";
 
 const SERVICES = [
   { title: "New Motor", price: "৳12,000 - ৳25,000" },
@@ -24,6 +20,7 @@ const SERVICES = [
 ];
 
 export function OurServicesSection() {
+  useGSAPInit();
   const containerRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
 

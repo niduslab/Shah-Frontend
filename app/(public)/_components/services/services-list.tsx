@@ -5,11 +5,7 @@ import { ArrowRight, Wrench, Settings, Activity, Hammer } from "lucide-react";
 import Link from "next/link";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
+import { useGSAPInit } from "@/lib/hooks/useGSAPInit";
 
 // Service Categories and Data
 const CATEGORIES = [
@@ -136,6 +132,7 @@ const SERVICES = [
 ];
 
 export function ServicesList() {
+  useGSAPInit();
   const [activeCategory, setActiveCategory] = useState("all");
   const containerRef = useRef<HTMLDivElement>(null);
 
