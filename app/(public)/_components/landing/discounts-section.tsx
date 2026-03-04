@@ -6,7 +6,11 @@ import { ArrowRight } from "lucide-react";
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { useGSAPInit } from "@/lib/hooks/useGSAPInit";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 const DISCOUNTS = [
   {
@@ -30,7 +34,6 @@ const DISCOUNTS = [
 ];
 
 export function DiscountsSection() {
-  useGSAPInit();
   const containerRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {

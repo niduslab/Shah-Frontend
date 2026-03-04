@@ -137,7 +137,7 @@ export default function CategoryModal({
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header with gradient */}
-          <div className="relative bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-5">
+          <div className="relative bg-gradient-to-r from-[#FF6F00] to-[#E65100] px-6 py-5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
@@ -147,7 +147,7 @@ export default function CategoryModal({
                   <h3 className="text-xl font-semibold text-white" id="modal-title">
                     {category ? 'Edit Category' : 'Create New Category'}
                   </h3>
-                  <p className="text-sm text-blue-100 mt-0.5">
+                  <p className="text-sm text-orange-100 mt-0.5">
                     {category ? 'Update category information' : 'Add a new category to your store'}
                   </p>
                 </div>
@@ -187,7 +187,7 @@ export default function CategoryModal({
                         className={`w-full rounded-lg border px-4 py-2.5 text-sm transition-all focus:outline-none focus:ring-2 ${
                           errors.name 
                             ? 'border-red-300 bg-red-50 focus:border-red-500 focus:ring-red-500/20' 
-                            : 'border-gray-300 bg-white focus:border-blue-500 focus:ring-blue-500/20'
+                            : 'border-gray-300 bg-white focus:border-[#FF6F00] focus:ring-[#FF6F00]/20'
                         }`}
                         placeholder="e.g., Treadmills, Yoga Mats, Dumbbells"
                         disabled={isSubmitting}
@@ -210,7 +210,7 @@ export default function CategoryModal({
                         value={formData.description}
                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                         rows={3}
-                        className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                        className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm transition-all focus:border-[#FF6F00] focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
                         placeholder="Brief description of this category..."
                         disabled={isSubmitting}
                       />
@@ -238,7 +238,7 @@ export default function CategoryModal({
                           ...formData, 
                           parent_id: e.target.value ? Number(e.target.value) : null 
                         })}
-                        className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                        className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm transition-all focus:border-[#FF6F00] focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
                         disabled={isSubmitting}
                       >
                         <option value="">None (Top Level Category)</option>
@@ -266,7 +266,7 @@ export default function CategoryModal({
                         type="number"
                         value={formData.sort_order}
                         onChange={(e) => setFormData({ ...formData, sort_order: Number(e.target.value) })}
-                        className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                        className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm transition-all focus:border-[#FF6F00] focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
                         placeholder="0"
                         disabled={isSubmitting}
                       />
@@ -292,8 +292,8 @@ export default function CategoryModal({
                         type="button"
                         id="is-active"
                         onClick={() => setFormData({ ...formData, is_active: !formData.is_active })}
-                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                          formData.is_active ? 'bg-blue-600' : 'bg-gray-300'
+                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#FF6F00] focus:ring-offset-2 ${
+                          formData.is_active ? 'bg-[#FF6F00]' : 'bg-gray-300'
                         }`}
                         disabled={isSubmitting}
                       >
@@ -325,7 +325,7 @@ export default function CategoryModal({
                         type="text"
                         value={formData.meta_title}
                         onChange={(e) => setFormData({ ...formData, meta_title: e.target.value })}
-                        className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                        className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm transition-all focus:border-[#FF6F00] focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
                         placeholder="SEO title for search engines"
                         disabled={isSubmitting}
                       />
@@ -340,7 +340,7 @@ export default function CategoryModal({
                         value={formData.meta_description}
                         onChange={(e) => setFormData({ ...formData, meta_description: e.target.value })}
                         rows={2}
-                        className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                        className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm transition-all focus:border-[#FF6F00] focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
                         placeholder="SEO description for search engines"
                         disabled={isSubmitting}
                       />
@@ -363,7 +363,7 @@ export default function CategoryModal({
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition-all hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex items-center gap-2 rounded-lg bg-[#FF6F00] px-5 py-2.5 text-sm font-medium text-white transition-all hover:bg-[#E65100] focus:outline-none focus:ring-2 focus:ring-[#FF6F00] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {isSubmitting ? (
                   <>

@@ -6,14 +6,17 @@ import { ArrowRight } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { useGSAPInit } from "@/lib/hooks/useGSAPInit";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 // Placeholder image until the correct one is located/provided
 // User mentioned: public/images/landing/flash-deal
 const BACKGROUND_IMAGE = "/images/landing/flash-deal/flash-deal.png";
 
 export function FlashDealSection() {
-  useGSAPInit();
   const containerRef = useRef<HTMLDivElement>(null);
   const [timeLeft, setTimeLeft] = useState({
     days: 2,

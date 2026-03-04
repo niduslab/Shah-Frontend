@@ -6,7 +6,11 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { useGSAPInit } from "@/lib/hooks/useGSAPInit";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 const CATEGORIES = [
   {
@@ -36,7 +40,6 @@ const CATEGORIES = [
 ];
 
 export function ExploreCategories() {
-  useGSAPInit();
   const containerRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {

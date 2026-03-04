@@ -85,12 +85,12 @@ export default function CategoriesPage() {
             {hasChildren ? (
               <button
                 onClick={() => toggleExpand(category.id)}
-                className="rounded-lg p-1.5 transition-all hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="rounded-lg p-1.5 transition-all hover:bg-orange-50 focus:outline-none focus:ring-2 focus:ring-[#FF6F00]"
               >
                 {isExpanded ? (
-                  <ChevronDown className="h-4 w-4 text-gray-600" />
+                  <ChevronDown className="h-4 w-4 text-[#FF6F00]" />
                 ) : (
-                  <ChevronRight className="h-4 w-4 text-gray-600" />
+                  <ChevronRight className="h-4 w-4 text-[#FF6F00]" />
                 )}
               </button>
             ) : (
@@ -122,7 +122,7 @@ export default function CategoriesPage() {
           <div className="flex items-center gap-1.5 opacity-0 transition-opacity group-hover:opacity-100">
             <button
               onClick={() => handleEdit(category)}
-              className="rounded-lg p-2 text-blue-600 transition-all hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="rounded-lg p-2 text-[#FF6F00] transition-all hover:bg-orange-50 focus:outline-none focus:ring-2 focus:ring-[#FF6F00]"
               title="Edit category"
             >
               <Edit2 className="h-4 w-4" />
@@ -151,7 +151,7 @@ export default function CategoriesPage() {
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
         <div className="text-center">
           <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-xl">
-            <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-blue-600"></div>
+            <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-[#FF6F00]"></div>
           </div>
           <p className="text-sm font-medium text-gray-600">Loading categories...</p>
         </div>
@@ -165,7 +165,7 @@ export default function CategoriesPage() {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 shadow-lg shadow-blue-500/30">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#FF6F00] to-[#E65100] shadow-lg shadow-orange-500/30">
               <Filter className="h-6 w-6 text-white" />
             </div>
             <div>
@@ -186,7 +186,7 @@ export default function CategoriesPage() {
                 placeholder="Search categories..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-xl border border-gray-300 bg-gray-50 py-2.5 pl-11 pr-4 text-sm transition-all focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                className="w-full rounded-xl border border-gray-300 bg-gray-50 py-2.5 pl-11 pr-4 text-sm transition-all focus:border-[#FF6F00] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
               />
             </div>
 
@@ -218,7 +218,7 @@ export default function CategoriesPage() {
               {/* Create Button */}
               <button
                 onClick={handleCreate}
-                className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-blue-500/30 transition-all hover:shadow-xl hover:shadow-blue-500/40 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#FF6F00] to-[#E65100] px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-orange-500/30 transition-all hover:shadow-xl hover:shadow-orange-500/40 focus:outline-none focus:ring-2 focus:ring-[#FF6F00] focus:ring-offset-2"
               >
                 <Plus className="h-5 w-5" />
                 Add Category
@@ -238,7 +238,7 @@ export default function CategoriesPage() {
               <p className="mb-8 text-gray-500">Get started by creating your first category</p>
               <button
                 onClick={handleCreate}
-                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-3 text-sm font-medium text-white shadow-lg shadow-blue-500/30 transition-all hover:shadow-xl hover:shadow-blue-500/40"
+                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#FF6F00] to-[#E65100] px-6 py-3 text-sm font-medium text-white shadow-lg shadow-orange-500/30 transition-all hover:shadow-xl hover:shadow-orange-500/40"
               >
                 <Plus className="h-5 w-5" />
                 Add Category

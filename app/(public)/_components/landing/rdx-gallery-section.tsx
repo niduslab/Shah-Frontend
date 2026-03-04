@@ -5,7 +5,11 @@ import Link from "next/link";
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { useGSAPInit } from "@/lib/hooks/useGSAPInit";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 const GALLERY_ITEMS = [
   {
@@ -46,7 +50,6 @@ const GALLERY_ITEMS = [
 ];
 
 export function RdxGallerySection() {
-  useGSAPInit();
   const containerRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {

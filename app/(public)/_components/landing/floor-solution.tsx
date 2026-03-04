@@ -6,7 +6,11 @@ import { ArrowRight } from "lucide-react";
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { useGSAPInit } from "@/lib/hooks/useGSAPInit";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 const IMAGES = {
   floorMat: "/images/landing/floor-solution/57e9ba3f08e9becbf9b3d9c11be4bb6c027f1918.jpg",
@@ -15,7 +19,6 @@ const IMAGES = {
 };
 
 export function FloorSolution() {
-  useGSAPInit();
   const containerRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {

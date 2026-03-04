@@ -1,3 +1,5 @@
+"use client";
+
 import { HeroSection } from "./_components/landing/hero-section";
 import { ExploreCategories } from "./_components/landing/explore-categories";
 import { PreOrderSection } from "./_components/landing/pre-order-section";
