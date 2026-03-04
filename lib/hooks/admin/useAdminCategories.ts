@@ -23,11 +23,12 @@ export const useAdminCategories = (params?: { page?: number; per_page?: number }
   });
 };
 
-export const useAdminCategoryTree = (options?: UseQueryOptions) => {
+export const useAdminCategoryTree = (params?: { page?: number; per_page?: number }, options?: UseQueryOptions) => {
   return useQuery({
-    queryKey: ['admin', 'categories', 'tree'],
+    queryKey: ['admin', 'categories', 'tree', params],
     queryFn: async () => {
-      const response = await api.get('/api/admin/categories/tree');
+      // Use the same endpoint since tree structure is already in the response
+      const response = await api.get('/api/admin/categories', { params });
       return response.data;
     },
     ...options,

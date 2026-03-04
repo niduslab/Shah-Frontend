@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { Plus, Edit2, Trash2, ChevronRight, ChevronDown, Search, Filter } from 'lucide-react';
+import Pagination from '@/components/ui/Pagination';
+import { toast } from 'sonner';
 import { 
   useAdminCategories, 
   useAdminCategoryTree,
@@ -25,18 +27,55 @@ interface Category {
 export default function CategoriesPage() {
   const [view, setView] = useState<'list' | 'tree'>('tree');
   const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [expandedCategories, setExpandedCategories] = useState<Set<number>>(new Set());
 
-  const { data: categoriesData, isLoading } = useAdminCategories();
-  const { data: treeData } = useAdminCategoryTree();
+  // Fetch more items to ensure we have enough parent categories
+  // Since API returns all categories (parents + children), we need more items
+  const { data: categoriesData, isLoading, error: categoriesError } = useAdminCategories({ page: currentPage, per_page: 50 });
+  const { data: treeData, isLoading: isTreeLoading, error: treeError } = useAdminCategoryTree({ page: currentPage, per_page: 50 });
   const createMutation = useCreateCategory();
   const updateMutation = useUpdateCategory();
   const deleteMutation = useDeleteCategory();
 
-  const categories = view === 'tree' ? treeData?.data : categoriesData?.data;
+  // Response format: { success: true, data: { current_page: 1, data: [...], ... } }
+  const allCategories = view === 'tree' 
+    ? (treeData?.data?.data || [])
+    : (categoriesData?.data?.data || []);
+  
+  // Filter to show only parent categories (parent_id is null) in tree view
+  // Children are already nested in the 'children' property
+  const parentCategories = view === 'tree'
+    ? allCategories.filter((cat: Category) => cat.parent_id === null)
+    : allCategories;
+  
+  // Client-side pagination for tree view (10 parents per page)
+  const itemsPerPage = 10;
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const categories = view === 'tree' 
+    ? parentCategories.slice(startIndex, endIndex)
+    : parentCategories;
+  
+  // Calculate pagination data
+  const totalParents = parentCategories.length;
+  const totalPages = Math.ceil(totalParents / itemsPerPage);
+  
+  const paginationData = view === 'tree' 
+    ? {
+        current_page: currentPage,
+        last_page: totalPages,
+        total: totalParents,
+        per_page: itemsPerPage,
+        from: startIndex + 1,
+        to: Math.min(endIndex, totalParents)
+      }
+    : categoriesData?.data;
+  
+  const loading = view === 'tree' ? isTreeLoading : isLoading;
 
   const toggleExpand = (categoryId: number) => {
     const newExpanded = new Set(expandedCategories);
@@ -65,9 +104,18 @@ export default function CategoriesPage() {
 
   const confirmDelete = async () => {
     if (selectedCategory) {
-      await deleteMutation.mutateAsync(selectedCategory.id);
-      setIsDeleteModalOpen(false);
-      setSelectedCategory(null);
+      try {
+        await deleteMutation.mutateAsync(selectedCategory.id);
+        toast.success('Category deleted successfully', {
+          description: `"${selectedCategory.name}" has been removed from your categories.`
+        });
+        setIsDeleteModalOpen(false);
+        setSelectedCategory(null);
+      } catch (error) {
+        toast.error('Failed to delete category', {
+          description: 'Please try again or contact support if the problem persists.'
+        });
+      }
     }
   };
 
@@ -146,7 +194,7 @@ export default function CategoriesPage() {
     );
   };
 
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
         <div className="text-center">
@@ -194,7 +242,10 @@ export default function CategoriesPage() {
               {/* View Toggle */}
               <div className="flex items-center gap-1 rounded-xl bg-gray-100 p-1">
                 <button
-                  onClick={() => setView('tree')}
+                  onClick={() => {
+                    setView('tree');
+                    setCurrentPage(1);
+                  }}
                   className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
                     view === 'tree'
                       ? 'bg-white text-gray-900 shadow-sm'
@@ -204,7 +255,10 @@ export default function CategoriesPage() {
                   Tree View
                 </button>
                 <button
-                  onClick={() => setView('list')}
+                  onClick={() => {
+                    setView('list');
+                    setCurrentPage(1);
+                  }}
                   className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
                     view === 'list'
                       ? 'bg-white text-gray-900 shadow-sm'
@@ -228,8 +282,8 @@ export default function CategoriesPage() {
         </div>
 
         {/* Categories List */}
-        <div className="overflow-hidden rounded-2xl bg-white shadow-lg ring-1 ring-gray-200">
-          {!categories || categories.length === 0 ? (
+        <div className="rounded-2xl bg-white shadow-lg ring-1 ring-gray-200">
+          {!categories || !Array.isArray(categories) || categories.length === 0 ? (
             <div className="py-16 text-center">
               <div className="mb-5 inline-flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-gray-100 to-gray-200">
                 <Filter className="h-10 w-10 text-gray-400" />
@@ -249,6 +303,19 @@ export default function CategoriesPage() {
               {categories.map((category: Category) => renderTreeItem(category))}
             </div>
           )}
+
+          {/* Pagination */}
+          {paginationData && paginationData.last_page > 1 && (
+            <Pagination
+              currentPage={paginationData.current_page}
+              lastPage={paginationData.last_page}
+              total={paginationData.total}
+              perPage={paginationData.per_page}
+              from={paginationData.from}
+              to={paginationData.to}
+              onPageChange={(page) => setCurrentPage(page)}
+            />
+          )}
         </div>
 
         {/* Modals */}
@@ -259,15 +326,27 @@ export default function CategoriesPage() {
             setSelectedCategory(null);
           }}
           category={selectedCategory}
-          categories={categoriesData?.data || []}
+          categories={categoriesData?.data?.data || []}
           onSubmit={async (data) => {
-            if (selectedCategory) {
-              await updateMutation.mutateAsync({ id: selectedCategory.id, data });
-            } else {
-              await createMutation.mutateAsync(data);
+            try {
+              if (selectedCategory) {
+                await updateMutation.mutateAsync({ id: selectedCategory.id, data });
+                toast.success('Category updated successfully', {
+                  description: `"${data.name}" has been updated with your changes.`
+                });
+              } else {
+                await createMutation.mutateAsync(data);
+                toast.success('Category created successfully', {
+                  description: `"${data.name}" has been added to your categories.`
+                });
+              }
+              setIsModalOpen(false);
+              setSelectedCategory(null);
+            } catch (error) {
+              toast.error(selectedCategory ? 'Failed to update category' : 'Failed to create category', {
+                description: 'Please try again or contact support if the problem persists.'
+              });
             }
-            setIsModalOpen(false);
-            setSelectedCategory(null);
           }}
         />
 

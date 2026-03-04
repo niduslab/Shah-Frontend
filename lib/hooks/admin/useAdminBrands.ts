@@ -3,9 +3,9 @@ import api from '@/lib/api/axios';
 
 interface BrandData {
   name: string;
-  slug: string;
+  slug?: string;
   description?: string;
-  logo?: string;
+  logo?: File | string;
   is_active?: boolean;
   sort_order?: number;
 }
@@ -38,7 +38,30 @@ export const useCreateBrand = (options?: UseMutationOptions<any, any, BrandData>
   
   return useMutation({
     mutationFn: async (data: BrandData) => {
-      const response = await api.post('/api/admin/brands', data);
+      const formData = new FormData();
+      formData.append('name', data.name);
+      
+      if (data.description) {
+        formData.append('description', data.description);
+      }
+      
+      if (data.logo instanceof File) {
+        formData.append('logo', data.logo);
+      }
+      
+      if (data.is_active !== undefined) {
+        formData.append('is_active', data.is_active ? '1' : '0');
+      }
+      
+      if (data.sort_order !== undefined) {
+        formData.append('sort_order', data.sort_order.toString());
+      }
+      
+      const response = await api.post('/api/admin/brands', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       return response.data;
     },
     onSuccess: () => {
@@ -53,7 +76,36 @@ export const useUpdateBrand = (options?: UseMutationOptions<any, any, { id: numb
   
   return useMutation({
     mutationFn: async ({ id, data }: { id: number; data: Partial<BrandData> }) => {
-      const response = await api.put(`/api/admin/brands/${id}`, data);
+      const formData = new FormData();
+      
+      // Add _method for Laravel to handle PUT request with FormData
+      formData.append('_method', 'PUT');
+      
+      if (data.name) {
+        formData.append('name', data.name);
+      }
+      
+      if (data.description !== undefined) {
+        formData.append('description', data.description || '');
+      }
+      
+      if (data.logo instanceof File) {
+        formData.append('logo', data.logo);
+      }
+      
+      if (data.is_active !== undefined) {
+        formData.append('is_active', data.is_active ? '1' : '0');
+      }
+      
+      if (data.sort_order !== undefined) {
+        formData.append('sort_order', data.sort_order.toString());
+      }
+      
+      const response = await api.post(`/api/admin/brands/${id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       return response.data;
     },
     onSuccess: (_, variables) => {

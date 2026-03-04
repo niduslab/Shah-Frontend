@@ -60,13 +60,77 @@ export const useAdminProduct = (id: number, options?: UseQueryOptions) => {
   });
 };
 
-export const useCreateProduct = (options?: UseMutationOptions<any, any, ProductData>) => {
+export const useCreateProduct = (options?: UseMutationOptions<any, any, any>) => {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: async (data: ProductData) => {
-      const response = await api.post('/api/admin/products', data);
-      return response.data;
+    mutationFn: async (data: any) => {
+      // Check if data contains files
+      const hasFiles = data.images?.some((img: any) => img.file instanceof File);
+      
+      if (hasFiles) {
+        const formData = new FormData();
+        
+        // Add all product fields with proper type conversion
+        Object.keys(data).forEach(key => {
+          if (key !== 'images' && key !== 'variations' && data[key] !== undefined && data[key] !== null) {
+            // Convert booleans to 1/0 for Laravel
+            if (typeof data[key] === 'boolean') {
+              formData.append(key, data[key] ? '1' : '0');
+            } else {
+              formData.append(key, String(data[key]));
+            }
+          }
+        });
+        
+        // Add images
+        if (data.images) {
+          data.images.forEach((image: any, index: number) => {
+            if (image.file) {
+              formData.append(`images[${index}][file]`, image.file);
+              // Send placeholder path for validation, backend will replace with actual path
+              formData.append(`images[${index}][path]`, 'temp');
+            } else if (image.path) {
+              formData.append(`images[${index}][path]`, image.path);
+            }
+            // Always add alt_text even if empty
+            formData.append(`images[${index}][alt_text]`, image.alt_text || '');
+            formData.append(`images[${index}][is_primary]`, image.is_primary ? '1' : '0');
+            formData.append(`images[${index}][sort_order]`, String(image.sort_order || index));
+          });
+        }
+
+        // Add variations
+        if (data.variations && Array.isArray(data.variations)) {
+          data.variations.forEach((variation: any, index: number) => {
+            if (variation.id) {
+              formData.append(`variations[${index}][id]`, String(variation.id));
+            }
+            formData.append(`variations[${index}][sku]`, variation.sku);
+            formData.append(`variations[${index}][price]`, String(variation.price));
+            formData.append(`variations[${index}][quantity]`, String(variation.quantity));
+            
+            // Add attributes as JSON string or individual fields
+            if (variation.attributes && typeof variation.attributes === 'object') {
+              Object.entries(variation.attributes).forEach(([key, value]) => {
+                formData.append(`variations[${index}][attributes][${key}]`, String(value));
+              });
+            }
+            
+            if (variation.sort_order !== undefined) {
+              formData.append(`variations[${index}][sort_order]`, String(variation.sort_order));
+            }
+          });
+        }
+        
+        const response = await api.post('/api/admin/products', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        return response.data;
+      } else {
+        const response = await api.post('/api/admin/products', data);
+        return response.data;
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'products'] });
@@ -75,13 +139,78 @@ export const useCreateProduct = (options?: UseMutationOptions<any, any, ProductD
   });
 };
 
-export const useUpdateProduct = (options?: UseMutationOptions<any, any, { id: number; data: Partial<ProductData> }>) => {
+export const useUpdateProduct = (options?: UseMutationOptions<any, any, { id: number; data: any }>) => {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: async ({ id, data }: { id: number; data: Partial<ProductData> }) => {
-      const response = await api.put(`/api/admin/products/${id}`, data);
-      return response.data;
+    mutationFn: async ({ id, data }: { id: number; data: any }) => {
+      // Check if data contains files
+      const hasFiles = data.images?.some((img: any) => img.file instanceof File);
+      
+      if (hasFiles) {
+        const formData = new FormData();
+        formData.append('_method', 'PUT');
+        
+        // Add all product fields with proper type conversion
+        Object.keys(data).forEach(key => {
+          if (key !== 'images' && key !== 'variations' && data[key] !== undefined && data[key] !== null) {
+            // Convert booleans to 1/0 for Laravel
+            if (typeof data[key] === 'boolean') {
+              formData.append(key, data[key] ? '1' : '0');
+            } else {
+              formData.append(key, String(data[key]));
+            }
+          }
+        });
+        
+        // Add images
+        if (data.images) {
+          data.images.forEach((image: any, index: number) => {
+            if (image.file) {
+              formData.append(`images[${index}][file]`, image.file);
+              // Send placeholder path for validation, backend will replace with actual path
+              formData.append(`images[${index}][path]`, 'temp');
+            } else if (image.path) {
+              formData.append(`images[${index}][path]`, image.path);
+            }
+            // Always add alt_text even if empty
+            formData.append(`images[${index}][alt_text]`, image.alt_text || '');
+            formData.append(`images[${index}][is_primary]`, image.is_primary ? '1' : '0');
+            formData.append(`images[${index}][sort_order]`, String(image.sort_order || index));
+          });
+        }
+
+        // Add variations
+        if (data.variations && Array.isArray(data.variations)) {
+          data.variations.forEach((variation: any, index: number) => {
+            if (variation.id) {
+              formData.append(`variations[${index}][id]`, String(variation.id));
+            }
+            formData.append(`variations[${index}][sku]`, variation.sku);
+            formData.append(`variations[${index}][price]`, String(variation.price));
+            formData.append(`variations[${index}][quantity]`, String(variation.quantity));
+            
+            // Add attributes as JSON string or individual fields
+            if (variation.attributes && typeof variation.attributes === 'object') {
+              Object.entries(variation.attributes).forEach(([key, value]) => {
+                formData.append(`variations[${index}][attributes][${key}]`, String(value));
+              });
+            }
+            
+            if (variation.sort_order !== undefined) {
+              formData.append(`variations[${index}][sort_order]`, String(variation.sort_order));
+            }
+          });
+        }
+        
+        const response = await api.post(`/api/admin/products/${id}`, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        return response.data;
+      } else {
+        const response = await api.put(`/api/admin/products/${id}`, data);
+        return response.data;
+      }
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'products'] });
@@ -149,6 +278,155 @@ export const useDeleteProductVariation = (
       return response.data;
     },
     onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'product', variables.productId] });
+    },
+    ...options,
+  });
+};
+
+// ============================================
+// PRODUCT IMAGE MANAGEMENT HOOKS
+// ============================================
+
+interface ProductImageData {
+  path?: string;
+  file?: File;
+  alt_text?: string;
+  is_primary?: boolean;
+  sort_order?: number;
+}
+
+interface AddImagesData {
+  images: ProductImageData[];
+}
+
+interface UpdateImageData {
+  path?: string;
+  alt_text?: string;
+  is_primary?: boolean;
+  sort_order?: number;
+}
+
+interface ReorderImagesData {
+  image_ids: number[];
+}
+
+/**
+ * Add images to an existing product (without replacing existing ones)
+ */
+export const useAddProductImages = (
+  options?: UseMutationOptions<any, any, { productId: number; data: AddImagesData }>
+) => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async ({ productId, data }: { productId: number; data: AddImagesData }) => {
+      const formData = new FormData();
+      
+      data.images.forEach((image, index) => {
+        if (image.file) {
+          formData.append(`images[${index}][file]`, image.file);
+        } else if (image.path) {
+          formData.append(`images[${index}][path]`, image.path);
+        }
+        if (image.alt_text) {
+          formData.append(`images[${index}][alt_text]`, image.alt_text);
+        }
+        formData.append(`images[${index}][is_primary]`, image.is_primary ? '1' : '0');
+        formData.append(`images[${index}][sort_order]`, String(image.sort_order || index));
+      });
+      
+      const response = await api.post(`/api/admin/products/${productId}/images`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      return response.data;
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'products'] });
+      queryClient.invalidateQueries({ queryKey: ['admin', 'product', variables.productId] });
+    },
+    ...options,
+  });
+};
+
+/**
+ * Update a single product image
+ */
+export const useUpdateProductImage = (
+  options?: UseMutationOptions<any, any, { productId: number; imageId: number; data: UpdateImageData }>
+) => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async ({ productId, imageId, data }) => {
+      const response = await api.put(`/api/admin/products/${productId}/images/${imageId}`, data);
+      return response.data;
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'products'] });
+      queryClient.invalidateQueries({ queryKey: ['admin', 'product', variables.productId] });
+    },
+    ...options,
+  });
+};
+
+/**
+ * Delete a single product image
+ */
+export const useDeleteProductImage = (
+  options?: UseMutationOptions<any, any, { productId: number; imageId: number }>
+) => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async ({ productId, imageId }) => {
+      const response = await api.delete(`/api/admin/products/${productId}/images/${imageId}`);
+      return response.data;
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'products'] });
+      queryClient.invalidateQueries({ queryKey: ['admin', 'product', variables.productId] });
+    },
+    ...options,
+  });
+};
+
+/**
+ * Set an image as primary
+ */
+export const useSetPrimaryProductImage = (
+  options?: UseMutationOptions<any, any, { productId: number; imageId: number }>
+) => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async ({ productId, imageId }) => {
+      const response = await api.post(`/api/admin/products/${productId}/images/${imageId}/set-primary`);
+      return response.data;
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'products'] });
+      queryClient.invalidateQueries({ queryKey: ['admin', 'product', variables.productId] });
+    },
+    ...options,
+  });
+};
+
+/**
+ * Reorder product images
+ */
+export const useReorderProductImages = (
+  options?: UseMutationOptions<any, any, { productId: number; data: ReorderImagesData }>
+) => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async ({ productId, data }) => {
+      const response = await api.post(`/api/admin/products/${productId}/images/reorder`, data);
+      return response.data;
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'products'] });
       queryClient.invalidateQueries({ queryKey: ['admin', 'product', variables.productId] });
     },
     ...options,
