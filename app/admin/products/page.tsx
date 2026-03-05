@@ -6,6 +6,7 @@ import Pagination from '@/components/ui/Pagination';
 import { toast } from 'sonner';
 import { 
   useAdminProducts,
+  useAdminProduct,
   useCreateProduct, 
   useUpdateProduct, 
   useDeleteProduct 
@@ -44,6 +45,7 @@ export default function ProductsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [editingProductId, setEditingProductId] = useState<number | null>(null);
 
   const filters = {
     page: currentPage,
@@ -53,6 +55,10 @@ export default function ProductsPage() {
   };
 
   const { data: productsData, isLoading } = useAdminProducts(filters);
+  const { data: productDetailData, isLoading: isLoadingDetail } = useAdminProduct(
+    editingProductId!,
+    { enabled: !!editingProductId }
+  );
   const createMutation = useCreateProduct();
   const updateMutation = useUpdateProduct();
   const deleteMutation = useDeleteProduct();
@@ -62,11 +68,12 @@ export default function ProductsPage() {
 
   const handleCreate = () => {
     setSelectedProduct(null);
+    setEditingProductId(null);
     setIsModalOpen(true);
   };
 
   const handleEdit = (product: Product) => {
-    setSelectedProduct(product);
+    setEditingProductId(product.id);
     setIsModalOpen(true);
   };
 
@@ -332,12 +339,14 @@ export default function ProductsPage() {
           onClose={() => {
             setIsModalOpen(false);
             setSelectedProduct(null);
+            setEditingProductId(null);
           }}
-          product={selectedProduct}
+          product={editingProductId ? (productDetailData as any)?.data : null}
+          isLoading={isLoadingDetail}
           onSubmit={async (data) => {
             try {
-              if (selectedProduct) {
-                await updateMutation.mutateAsync({ id: selectedProduct.id, data });
+              if (editingProductId) {
+                await updateMutation.mutateAsync({ id: editingProductId, data });
                 toast.success('Product updated successfully', {
                   description: `"${data.name}" has been updated with your changes.`
                 });
@@ -349,8 +358,9 @@ export default function ProductsPage() {
               }
               setIsModalOpen(false);
               setSelectedProduct(null);
+              setEditingProductId(null);
             } catch (error) {
-              toast.error(selectedProduct ? 'Failed to update product' : 'Failed to create product', {
+              toast.error(editingProductId ? 'Failed to update product' : 'Failed to create product', {
                 description: 'Please try again or contact support if the problem persists.'
               });
             }

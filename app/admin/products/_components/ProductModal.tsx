@@ -29,10 +29,11 @@ interface ProductModalProps {
   isOpen: boolean;
   onClose: () => void;
   product: any | null;
+  isLoading?: boolean;
   onSubmit: (data: any) => Promise<void>;
 }
 
-export default function ProductModal({ isOpen, onClose, product, onSubmit }: ProductModalProps) {
+export default function ProductModal({ isOpen, onClose, product, isLoading = false, onSubmit }: ProductModalProps) {
   const [formData, setFormData] = useState({
     name: '',
     sku: '',
@@ -220,8 +221,19 @@ export default function ProductModal({ isOpen, onClose, product, onSubmit }: Pro
           </button>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6">
+        {/* Loading State */}
+        {isLoading ? (
+          <div className="flex items-center justify-center p-16">
+            <div className="text-center">
+              <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-xl">
+                <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-[#FF6F00]"></div>
+              </div>
+              <p className="text-sm font-medium text-gray-600">Loading product details...</p>
+            </div>
+          </div>
+        ) : (
+          /* Form */
+          <form onSubmit={handleSubmit} className="p-6">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             {/* Basic Information */}
             <div className="md:col-span-2">
@@ -548,6 +560,7 @@ export default function ProductModal({ isOpen, onClose, product, onSubmit }: Pro
             </button>
           </div>
         </form>
+        )}
       </div>
     </div>
   );
