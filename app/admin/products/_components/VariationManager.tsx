@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Plus, Trash2, Package, Settings } from 'lucide-react';
+import { useState } from 'react';
+import { Plus, Trash2, Package } from 'lucide-react';
 import { useAdminVariations } from '@/lib/hooks/admin/useAdminVariations';
 
 interface Variation {
@@ -22,6 +22,7 @@ interface VariationOption {
   value: string;
   label: string;
   color_code?: string;
+  sort_order?: number;
 }
 
 interface VariationType {
@@ -35,8 +36,31 @@ export default function VariationManager({ variations, onChange }: VariationMana
   const [customAttributeKey, setCustomAttributeKey] = useState('');
   const [customAttributeValue, setCustomAttributeValue] = useState('');
   
-  const { data: variationTypesData } = useAdminVariations();
-  const variationTypes: VariationType[] = (variationTypesData as any)?.data?.data || [];
+  const { data: variationTypesData, isLoading: isLoadingVariations } = useAdminVariations();
+  
+  // Handle both possible API response structures
+  let variationTypes: VariationType[] = [];
+  
+  if (variationTypesData) {
+    // Debug: Log the raw data structure
+    console.log('Raw variation types data:', variationTypesData);
+    
+    // Try different possible structures
+    if (Array.isArray(variationTypesData)) {
+      variationTypes = variationTypesData;
+    } else if ((variationTypesData as any)?.data) {
+      if (Array.isArray((variationTypesData as any).data)) {
+        variationTypes = (variationTypesData as any).data;
+      } else if (Array.isArray((variationTypesData as any).data?.data)) {
+        variationTypes = (variationTypesData as any).data.data;
+      }
+    }
+    
+    console.log('Extracted variation types:', variationTypes);
+    console.log('Has variation types:', variationTypes.length > 0);
+  }
+  
+  const hasVariationTypes = variationTypes.length > 0;
 
   const handleAdd = () => {
     const newVariation: Variation = {
@@ -222,63 +246,84 @@ export default function VariationManager({ variations, onChange }: VariationMana
                       </button>
                     </div>
 
-                    {/* Existing Variation Types */}
-                    {variationTypes.length > 0 && (
-                      <div className="mb-4 space-y-3">
-                        {variationTypes.map((type) => (
-                          <div key={type.id}>
-                            <p className="mb-2 text-xs font-medium text-gray-600">{type.name}</p>
-                            <div className="flex flex-wrap gap-2">
-                              {type.options.map((option) => (
-                                <button
-                                  key={option.id}
-                                  type="button"
-                                  onClick={() => handleSelectOption(index, type.name, option.value)}
-                                  className="flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs transition-all hover:border-[#FF6F00] hover:bg-orange-50"
-                                >
-                                  {option.color_code && (
-                                    <span
-                                      className="h-3 w-3 rounded-full border border-gray-300"
-                                      style={{ backgroundColor: option.color_code }}
-                                    />
-                                  )}
-                                  <span>{option.label}</span>
-                                </button>
-                              ))}
-                            </div>
+                    {isLoadingVariations ? (
+                      <div className="py-8 text-center">
+                        <div className="mx-auto mb-2 h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-[#FF6F00]"></div>
+                        <p className="text-xs text-gray-500">Loading variation types...</p>
+                      </div>
+                    ) : (
+                      <>
+                        {/* Existing Variation Types */}
+                        {hasVariationTypes ? (
+                          <div className="mb-4 space-y-3">
+                            <p className="text-xs font-medium text-gray-500">
+                              Select from predefined attributes:
+                            </p>
+                            {variationTypes.map((type) => (
+                              <div key={type.id}>
+                                <p className="mb-2 text-xs font-medium text-gray-700">{type.name}</p>
+                                <div className="flex flex-wrap gap-2">
+                                  {type.options.map((option) => (
+                                    <button
+                                      key={option.id}
+                                      type="button"
+                                      onClick={() => handleSelectOption(index, type.name, option.value)}
+                                      className="flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs transition-all hover:border-[#FF6F00] hover:bg-orange-50"
+                                    >
+                                      {option.color_code && (
+                                        <span
+                                          className="h-3 w-3 rounded-full border border-gray-300"
+                                          style={{ backgroundColor: option.color_code }}
+                                        />
+                                      )}
+                                      <span>{option.label}</span>
+                                    </button>
+                                  ))}
+                                </div>
+                              </div>
+                            ))}
                           </div>
-                        ))}
-                      </div>
-                    )}
+                        ) : (
+                          <div className="mb-4 rounded-lg border border-dashed border-gray-300 bg-gray-50 p-4 text-center">
+                            <p className="text-xs text-gray-600">No variation types configured yet</p>
+                            <p className="mt-1 text-xs text-gray-500">
+                              Go to Variations page to create types like Color, Size, etc.
+                            </p>
+                          </div>
+                        )}
 
-                    {/* Custom Attribute */}
-                    <div className="border-t border-gray-200 pt-3">
-                      <p className="mb-2 text-xs font-medium text-gray-600">Add Custom Attribute</p>
-                      <div className="flex gap-2">
-                        <input
-                          type="text"
-                          placeholder="Name (e.g., material)"
-                          value={customAttributeKey}
-                          onChange={(e) => setCustomAttributeKey(e.target.value)}
-                          className="flex-1 rounded-lg border border-gray-300 px-3 py-1.5 text-xs focus:border-[#FF6F00] focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
-                        />
-                        <input
-                          type="text"
-                          placeholder="Value (e.g., Cotton)"
-                          value={customAttributeValue}
-                          onChange={(e) => setCustomAttributeValue(e.target.value)}
-                          className="flex-1 rounded-lg border border-gray-300 px-3 py-1.5 text-xs focus:border-[#FF6F00] focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => handleAddCustomAttribute(index)}
-                          disabled={!customAttributeKey.trim() || !customAttributeValue.trim()}
-                          className="rounded-lg bg-[#FF6F00] px-3 py-1.5 text-xs text-white transition-all hover:bg-[#E65100] disabled:opacity-50"
-                        >
-                          Add
-                        </button>
-                      </div>
-                    </div>
+                        {/* Custom Attribute */}
+                        <div className={hasVariationTypes ? "border-t border-gray-200 pt-3" : ""}>
+                          <p className="mb-2 text-xs font-medium text-gray-600">
+                            {hasVariationTypes ? 'Or add custom attribute:' : 'Add custom attribute:'}
+                          </p>
+                          <div className="flex gap-2">
+                            <input
+                              type="text"
+                              placeholder="Name (e.g., material)"
+                              value={customAttributeKey}
+                              onChange={(e) => setCustomAttributeKey(e.target.value)}
+                              className="flex-1 rounded-lg border border-gray-300 px-3 py-1.5 text-xs focus:border-[#FF6F00] focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
+                            />
+                            <input
+                              type="text"
+                              placeholder="Value (e.g., Cotton)"
+                              value={customAttributeValue}
+                              onChange={(e) => setCustomAttributeValue(e.target.value)}
+                              className="flex-1 rounded-lg border border-gray-300 px-3 py-1.5 text-xs focus:border-[#FF6F00] focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => handleAddCustomAttribute(index)}
+                              disabled={!customAttributeKey.trim() || !customAttributeValue.trim()}
+                              className="rounded-lg bg-[#FF6F00] px-3 py-1.5 text-xs text-white transition-all hover:bg-[#E65100] disabled:opacity-50"
+                            >
+                              Add
+                            </button>
+                          </div>
+                        </div>
+                      </>
+                    )}
                   </div>
                 )}
 
@@ -320,10 +365,19 @@ export default function VariationManager({ variations, onChange }: VariationMana
       )}
 
       {variations.length > 0 && (
-        <div className="rounded-lg bg-blue-50 p-3">
-          <p className="text-xs text-blue-700">
-            💡 Tip: Each variation should have a unique SKU. Use format like: PRODUCT-COLOR-SIZE
-          </p>
+        <div className="space-y-2">
+          <div className="rounded-lg bg-blue-50 p-3">
+            <p className="text-xs text-blue-700">
+              💡 Tip: Each variation should have a unique SKU. Use format like: PRODUCT-COLOR-SIZE
+            </p>
+          </div>
+          {!hasVariationTypes && (
+            <div className="rounded-lg bg-amber-50 p-3">
+              <p className="text-xs text-amber-700">
+                ⚠️ No variation types found. Create variation types (Color, Size, etc.) in the Variations page to quickly add attributes.
+              </p>
+            </div>
+          )}
         </div>
       )}
     </div>

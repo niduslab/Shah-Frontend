@@ -91,10 +91,10 @@ export function HeroSection() {
   }, { scope: containerRef });
 
   return (
-    <div ref={containerRef} className="w-full bg-white px-4 py-4 md:px-6 md:py-6 overflow-hidden">
-      <div className="mx-auto grid w-full max-w-[1400px] grid-cols-1 gap-4 md:h-[600px] md:grid-cols-4">
+    <div ref={containerRef} className="w-full bg-white py-4 md:py-6 overflow-hidden">
+      <div className="mx-auto grid w-full max-w-[1400px] grid-cols-1 gap-4 px-4 md:px-6 md:h-[600px] md:grid-cols-4">
 
-        <div ref={mainImageRef} className="group relative col-span-1 overflow-hidden rounded-xs md:col-span-2 md:row-span-2">
+        <div ref={mainImageRef} className="group relative col-span-1 h-[400px] overflow-hidden rounded-xs md:col-span-2 md:row-span-2 md:h-full">
           <div className="relative h-full w-full overflow-hidden">
             <Image
                 src={HERO_IMAGES.main}
@@ -116,9 +116,19 @@ export function HeroSection() {
               Shop Now <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
+          
+          {/* Discount Badge */}
+          <div className="absolute bottom-8 right-8 z-10 flex h-32 w-32 items-center justify-center rounded-full bg-[#FF5722] shadow-2xl transition-transform duration-300 hover:scale-110 md:h-40 md:w-40">
+            <div className="text-center">
+              <div className="text-sm font-medium text-white md:text-base">Up to</div>
+              <div className="text-4xl font-bold leading-none text-white md:text-5xl">40%</div>
+              <div className="text-sm font-medium text-white md:text-base">Discounts</div>
+
+            </div>
+          </div>
         </div>
 
-        <div ref={topRightImageRef} className="group relative col-span-1 overflow-hidden rounded-xs md:col-span-1 md:row-span-1">
+        <div ref={topRightImageRef} className="group relative col-span-1 h-[250px] overflow-hidden rounded-xs md:col-span-1 md:row-span-1 md:h-full">
           <div className="relative h-full w-full overflow-hidden">
             <Image
                 src={HERO_IMAGES.topRight}
@@ -141,7 +151,7 @@ export function HeroSection() {
           </div>
         </div>
 
-        <div ref={tallImageRef} className="group relative col-span-1 overflow-hidden rounded-xs md:col-span-1 md:row-span-2">
+        <div ref={tallImageRef} className="group relative col-span-1 h-[450px] overflow-hidden rounded-xs md:col-span-1 md:row-span-2 md:h-full">
           <div className="relative h-full w-full overflow-hidden">
             <Image
                 src={HERO_IMAGES.tallRight}
@@ -167,7 +177,7 @@ export function HeroSection() {
           </div>
         </div>
 
-        <div ref={bottomRightImageRef} className="group relative col-span-1 overflow-hidden rounded-xs md:col-span-1 md:row-span-1">
+        <div ref={bottomRightImageRef} className="group relative col-span-1 h-[250px] overflow-hidden rounded-xs md:col-span-1 md:row-span-1 md:h-full">
            <div className="relative h-full w-full overflow-hidden">
             <Image
                 src={HERO_IMAGES.bottomRight}

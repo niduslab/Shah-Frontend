@@ -344,14 +344,26 @@ export default function ProductsPage() {
           product={editingProductId ? (productDetailData as any)?.data : null}
           isLoading={isLoadingDetail}
           onSubmit={async (data) => {
+            console.group('📤 Product API Call');
+            console.log('Operation:', editingProductId ? 'UPDATE' : 'CREATE');
+            if (editingProductId) {
+              console.log('Product ID:', editingProductId);
+            }
+            console.log('Data being sent to API:', data);
+            console.groupEnd();
+
             try {
               if (editingProductId) {
-                await updateMutation.mutateAsync({ id: editingProductId, data });
+                console.log('🔄 Calling UPDATE mutation...');
+                const result = await updateMutation.mutateAsync({ id: editingProductId, data });
+                console.log('✅ Update successful:', result);
                 toast.success('Product updated successfully', {
                   description: `"${data.name}" has been updated with your changes.`
                 });
               } else {
-                await createMutation.mutateAsync(data);
+                console.log('➕ Calling CREATE mutation...');
+                const result = await createMutation.mutateAsync(data);
+                console.log('✅ Create successful:', result);
                 toast.success('Product created successfully', {
                   description: `"${data.name}" has been added to your products.`
                 });
@@ -360,6 +372,12 @@ export default function ProductsPage() {
               setSelectedProduct(null);
               setEditingProductId(null);
             } catch (error) {
+              console.group('❌ Product API Error');
+              console.error('Error details:', error);
+              console.log('Failed operation:', editingProductId ? 'UPDATE' : 'CREATE');
+              console.log('Data that failed:', data);
+              console.groupEnd();
+              
               toast.error(editingProductId ? 'Failed to update product' : 'Failed to create product', {
                 description: 'Please try again or contact support if the problem persists.'
               });

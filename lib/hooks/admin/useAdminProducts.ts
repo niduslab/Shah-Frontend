@@ -65,8 +65,12 @@ export const useCreateProduct = (options?: UseMutationOptions<any, any, any>) =>
   
   return useMutation({
     mutationFn: async (data: any) => {
+      console.group('🔧 useCreateProduct - Processing Data');
+      console.log('Input data:', data);
+      
       // Check if data contains files
       const hasFiles = data.images?.some((img: any) => img.file instanceof File);
+      console.log('Has file uploads:', hasFiles);
       
       if (hasFiles) {
         const formData = new FormData();
@@ -85,15 +89,16 @@ export const useCreateProduct = (options?: UseMutationOptions<any, any, any>) =>
         
         // Add images
         if (data.images) {
+          console.log('Processing images:', data.images.length);
           data.images.forEach((image: any, index: number) => {
             if (image.file) {
               formData.append(`images[${index}][file]`, image.file);
-              // Send placeholder path for validation, backend will replace with actual path
               formData.append(`images[${index}][path]`, 'temp');
+              console.log(`Image ${index}: File upload - ${image.file.name}`);
             } else if (image.path) {
               formData.append(`images[${index}][path]`, image.path);
+              console.log(`Image ${index}: Existing path - ${image.path}`);
             }
-            // Always add alt_text even if empty
             formData.append(`images[${index}][alt_text]`, image.alt_text || '');
             formData.append(`images[${index}][is_primary]`, image.is_primary ? '1' : '0');
             formData.append(`images[${index}][sort_order]`, String(image.sort_order || index));
@@ -102,6 +107,7 @@ export const useCreateProduct = (options?: UseMutationOptions<any, any, any>) =>
 
         // Add variations
         if (data.variations && Array.isArray(data.variations)) {
+          console.log('Processing variations:', data.variations.length);
           data.variations.forEach((variation: any, index: number) => {
             if (variation.id) {
               formData.append(`variations[${index}][id]`, String(variation.id));
@@ -110,10 +116,19 @@ export const useCreateProduct = (options?: UseMutationOptions<any, any, any>) =>
             formData.append(`variations[${index}][price]`, String(variation.price));
             formData.append(`variations[${index}][quantity]`, String(variation.quantity));
             
+            console.log(`Variation ${index}:`, {
+              id: variation.id || 'NEW',
+              sku: variation.sku,
+              price: variation.price,
+              quantity: variation.quantity,
+              attributes: variation.attributes
+            });
+            
             // Add attributes as JSON string or individual fields
             if (variation.attributes && typeof variation.attributes === 'object') {
               Object.entries(variation.attributes).forEach(([key, value]) => {
                 formData.append(`variations[${index}][attributes][${key}]`, String(value));
+                console.log(`  - Attribute: ${key} = ${value}`);
               });
             }
             
@@ -123,11 +138,17 @@ export const useCreateProduct = (options?: UseMutationOptions<any, any, any>) =>
           });
         }
         
+        console.log('Sending FormData to API...');
+        console.groupEnd();
+        
         const response = await api.post('/api/admin/products', formData, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
         return response.data;
       } else {
+        console.log('Sending JSON data to API...');
+        console.groupEnd();
+        
         const response = await api.post('/api/admin/products', data);
         return response.data;
       }
@@ -144,8 +165,13 @@ export const useUpdateProduct = (options?: UseMutationOptions<any, any, { id: nu
   
   return useMutation({
     mutationFn: async ({ id, data }: { id: number; data: any }) => {
+      console.group('🔧 useUpdateProduct - Processing Data');
+      console.log('Product ID:', id);
+      console.log('Input data:', data);
+      
       // Check if data contains files
       const hasFiles = data.images?.some((img: any) => img.file instanceof File);
+      console.log('Has file uploads:', hasFiles);
       
       if (hasFiles) {
         const formData = new FormData();
@@ -165,15 +191,16 @@ export const useUpdateProduct = (options?: UseMutationOptions<any, any, { id: nu
         
         // Add images
         if (data.images) {
+          console.log('Processing images:', data.images.length);
           data.images.forEach((image: any, index: number) => {
             if (image.file) {
               formData.append(`images[${index}][file]`, image.file);
-              // Send placeholder path for validation, backend will replace with actual path
               formData.append(`images[${index}][path]`, 'temp');
+              console.log(`Image ${index}: File upload - ${image.file.name}`);
             } else if (image.path) {
               formData.append(`images[${index}][path]`, image.path);
+              console.log(`Image ${index}: Existing path - ${image.path}`);
             }
-            // Always add alt_text even if empty
             formData.append(`images[${index}][alt_text]`, image.alt_text || '');
             formData.append(`images[${index}][is_primary]`, image.is_primary ? '1' : '0');
             formData.append(`images[${index}][sort_order]`, String(image.sort_order || index));
@@ -182,6 +209,7 @@ export const useUpdateProduct = (options?: UseMutationOptions<any, any, { id: nu
 
         // Add variations
         if (data.variations && Array.isArray(data.variations)) {
+          console.log('Processing variations:', data.variations.length);
           data.variations.forEach((variation: any, index: number) => {
             if (variation.id) {
               formData.append(`variations[${index}][id]`, String(variation.id));
@@ -190,10 +218,19 @@ export const useUpdateProduct = (options?: UseMutationOptions<any, any, { id: nu
             formData.append(`variations[${index}][price]`, String(variation.price));
             formData.append(`variations[${index}][quantity]`, String(variation.quantity));
             
+            console.log(`Variation ${index}:`, {
+              id: variation.id || 'NEW',
+              sku: variation.sku,
+              price: variation.price,
+              quantity: variation.quantity,
+              attributes: variation.attributes
+            });
+            
             // Add attributes as JSON string or individual fields
             if (variation.attributes && typeof variation.attributes === 'object') {
               Object.entries(variation.attributes).forEach(([key, value]) => {
                 formData.append(`variations[${index}][attributes][${key}]`, String(value));
+                console.log(`  - Attribute: ${key} = ${value}`);
               });
             }
             
@@ -203,11 +240,17 @@ export const useUpdateProduct = (options?: UseMutationOptions<any, any, { id: nu
           });
         }
         
+        console.log('Sending FormData to API (POST with _method=PUT)...');
+        console.groupEnd();
+        
         const response = await api.post(`/api/admin/products/${id}`, formData, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
         return response.data;
       } else {
+        console.log('Sending JSON data to API (PUT)...');
+        console.groupEnd();
+        
         const response = await api.put(`/api/admin/products/${id}`, data);
         return response.data;
       }

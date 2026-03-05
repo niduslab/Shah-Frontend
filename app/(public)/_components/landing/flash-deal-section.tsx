@@ -102,7 +102,7 @@ export function FlashDealSection() {
 
   return (
     <section ref={containerRef} className="w-full bg-white px-4 py-8 md:px-6 md:py-12">
-      <div className="mx-auto w-full max-w-[1400px]">
+      <div className="mx-auto w-full max-w-[1400px] px-4 md:px-6">
         <div className="flash-deal-card relative h-[684px] w-full overflow-hidden rounded-xs md:h-[500px] lg:h-[684px]">
           {/* Background Image */}
           <div className="absolute inset-0 h-full w-full overflow-hidden">

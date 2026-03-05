@@ -87,7 +87,7 @@ export function RdxGallerySection() {
 
   return (
     <section ref={containerRef} className="w-full bg-white py-12">
-      <div className="mx-auto w-full max-w-[1400px]">
+      <div className="mx-auto w-full max-w-[1400px] px-4 md:px-6">
         <h2 className="mb-8 text-center text-3xl font-bold tracking-tight text-black md:text-4xl">
           Shop From Our New RDX Gallery
         </h2>

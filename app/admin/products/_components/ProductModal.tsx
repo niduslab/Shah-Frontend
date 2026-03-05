@@ -197,6 +197,56 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
         }));
       }
 
+      // ============================================
+      // DEBUG: Log product data before submission
+      // ============================================
+      console.group('🔍 Product Submission Debug');
+      console.log('Operation:', product ? 'UPDATE' : 'CREATE');
+      if (product) {
+        console.log('Product ID:', product.id);
+      }
+      console.log('Form Data:', formData);
+      console.log('Images Count:', images.length);
+      console.log('Images Data:', images);
+      console.log('Variations Count:', variations.length);
+      console.log('Variations Data:', variations);
+      console.log('Final Submit Data:', submitData);
+      
+      // Log variations in detail
+      if (submitData.variations && submitData.variations.length > 0) {
+        console.group('📦 Variations Details');
+        submitData.variations.forEach((v: any, index: number) => {
+          console.log(`Variation #${index + 1}:`, {
+            id: v.id || 'NEW',
+            sku: v.sku,
+            price: v.price,
+            quantity: v.quantity,
+            attributes: v.attributes,
+            sort_order: v.sort_order
+          });
+        });
+        console.groupEnd();
+      }
+      
+      // Log images in detail (excluding file objects for readability)
+      if (submitData.images && submitData.images.length > 0) {
+        console.group('🖼️ Images Details');
+        submitData.images.forEach((img: any, index: number) => {
+          console.log(`Image #${index + 1}:`, {
+            hasFile: !!img.file,
+            fileName: img.file?.name,
+            path: img.path,
+            alt_text: img.alt_text,
+            is_primary: img.is_primary,
+            sort_order: img.sort_order
+          });
+        });
+        console.groupEnd();
+      }
+      
+      console.groupEnd();
+      // ============================================
+
       await onSubmit(submitData);
     } finally {
       setIsSubmitting(false);

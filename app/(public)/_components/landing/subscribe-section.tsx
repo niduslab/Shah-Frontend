@@ -5,7 +5,7 @@ import { ArrowRight } from "lucide-react";
 export function SubscribeSection() {
   return (
     <section className="w-full bg-[#351C06] py-16">
-      <div className="mx-auto flex w-full max-w-[1400px] flex-col items-center justify-between gap-8 md:flex-row">
+      <div className="mx-auto flex w-full max-w-[1400px] flex-col items-center justify-between gap-8 md:flex-row px-4 md:px-6">
         <div className="w-full max-w-xl">
           <h2 className="text-3xl font-bold leading-tight text-white sm:text-4xl md:text-5xl">
             Get <span className="text-[#FFC107] italic">20%</span> Off for Your First Order

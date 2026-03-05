@@ -84,7 +84,7 @@ export function PerformanceFrameSection() {
 
   return (
     <section className="w-full bg-white py-20 overflow-hidden" ref={containerRef}>
-      <div className="mx-auto w-full max-w-[1400px] px-6">
+      <div className="mx-auto w-full max-w-[1400px] px-4 md:px-6">
         <h2 className="mb-12 text-center text-2xl font-bold text-black sm:text-3xl md:text-4xl">
           Performance in Every Frame
         </h2>

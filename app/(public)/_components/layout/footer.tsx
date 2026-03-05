@@ -24,7 +24,7 @@ const paymentIcons = [
 export function Footer() {
   return (
     <footer className="bg-black pt-16 pb-8 text-white">
-      <div className="mx-auto w-full max-w-[1400px]">
+      <div className="mx-auto w-full max-w-[1400px] px-4 md:px-6">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
           {/* Brand & About */}
           <div className="flex flex-col gap-6">

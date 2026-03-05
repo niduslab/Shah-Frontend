@@ -21,7 +21,7 @@ import { SubscribeSection } from "./_components/landing/subscribe-section";
 
 export default function Home() {
   return (
-    <div className="px-6 lg:px-0">
+    <div>
       <HeroSection />
       <ExploreCategories />
       {/* add preorder now section */}

@@ -81,7 +81,7 @@ export function SuccessStories() {
 
   return (
     <div ref={containerRef} className="w-full bg-[#FFF9F0] py-16 px-4 md:px-6">
-      <div className="mx-auto w-full max-w-[1400px]">
+      <div className="mx-auto w-full max-w-[1400px] px-4 md:px-6">
         {/* Header */}
         <div className="mb-10 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
           <h2 className="max-w-lg text-4xl font-semibold leading-tight text-black md:text-5xl">

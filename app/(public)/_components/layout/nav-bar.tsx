@@ -10,6 +10,7 @@ import { ShopMegaMenu } from "./shop-mega-menu";
 import { ShopMainMegaMenu } from "./shop-main-mega-menu";
 import { SportsMegaMenu } from "./sports-mega-menu";
 import { BrandsMegaMenu } from "./brands-mega-menu";
+import { FloorSolutionsMegaMenu } from "./floor-solutions-mega-menu";
 
 export function NavBar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -40,7 +41,7 @@ export function NavBar() {
 
   return (
     <header className="relative w-full bg-[#00072D] text-white z-50">
-      <div className="mx-auto flex w-full max-w-[1400px] items-center justify-between py-4">
+      <div className="mx-auto flex w-full max-w-[1400px] items-center justify-between py-4 px-4 md:px-6">
         
         {/* Left Section: Logo & Mobile Menu Toggle */}
         <div className="flex items-center gap-4 lg:gap-12">
@@ -95,6 +96,15 @@ export function NavBar() {
               
               <BrandsMegaMenu className="invisible translate-y-2 opacity-0 transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100" />
             </div>
+            <div className="group">
+              <button className="flex items-center gap-1 transition-colors duration-200 hover:text-[#ffb81e] group-hover:text-[#ffb81e] py-4">
+                Floor Solutions <ChevronDown className="h-4 w-4 transition-transform duration-200 group-hover:rotate-180" />
+              </button>
+              
+              <FloorSolutionsMegaMenu className="invisible translate-y-2 opacity-0 transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100" />
+            </div>
+            
+            
             <Link href="/about-us" className="transition-colors duration-200 hover:text-[#ffb81e]">
               About
             </Link>
@@ -249,6 +259,30 @@ export function NavBar() {
                   <Link href="#" className="py-1 hover:text-[#00072D]">Football</Link>
                   <Link href="#" className="py-1 hover:text-[#00072D]">Badminton</Link>
                   <Link href="#" className="py-1 hover:text-[#00072D]">Table Tennis</Link>
+                </div>
+              </div>
+            </div>
+
+            {/* Floor Solutions Accordion */}
+            <div className="border-b border-gray-100 py-2">
+              <button 
+                onClick={() => toggleSubMenu('floor-solutions')}
+                className="flex w-full items-center justify-between py-2 text-base font-bold hover:text-[#ffb81e]"
+              >
+                Floor Solutions
+                <ChevronRight className={cn("h-4 w-4 transition-transform", openSubMenu === 'floor-solutions' && "rotate-90")} />
+              </button>
+              <div className={cn("grid gap-2 overflow-hidden transition-all duration-300 pl-4", openSubMenu === 'floor-solutions' ? "grid-rows-[1fr] opacity-100 mt-2" : "grid-rows-[0fr] opacity-0")}>
+                <div className="overflow-hidden flex flex-col gap-2 text-sm text-gray-600">
+                  <div className="font-semibold text-[#00072D] mt-1">Floor Mats</div>
+                  <Link href="/floor-solutions/gym-mats" className="pl-2 py-1 hover:text-[#00072D]">Gym Floor Mats</Link>
+                  <Link href="/floor-solutions/rubber-mats" className="pl-2 py-1 hover:text-[#00072D]">Rubber Floor Mats</Link>
+                  <Link href="/floor-solutions/yoga-mats" className="pl-2 py-1 hover:text-[#00072D]">Yoga & Pilates Mats</Link>
+                  
+                  <div className="font-semibold text-[#00072D] mt-2">Flooring Solutions</div>
+                  <Link href="/floor-solutions/sports-court" className="pl-2 py-1 hover:text-[#00072D]">Sports Court Flooring</Link>
+                  <Link href="/floor-solutions/artificial-turf" className="pl-2 py-1 hover:text-[#00072D]">Artificial Turf</Link>
+                  <Link href="/floor-solutions" className="py-1 font-semibold text-[#ffb81e] mt-2">View All Solutions</Link>
                 </div>
               </div>
             </div>

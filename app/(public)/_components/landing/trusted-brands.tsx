@@ -39,7 +39,7 @@ export function TrustedBrands() {
 
   return (
     <section className="w-full bg-white py-12 overflow-hidden">
-      <div className="mx-auto w-full max-w-[1400px]">
+      <div className="mx-auto w-full max-w-[1400px] px-4 md:px-6">
         <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           <h2 className="text-3xl font-bold tracking-tight text-black">
             Trusted Brands We Carry

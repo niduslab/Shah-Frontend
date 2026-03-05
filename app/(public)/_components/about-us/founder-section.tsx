@@ -19,40 +19,47 @@ function FounderCard({
 }: FounderProps) {
   return (
     <div
-      className={`flex flex-col md:flex-row gap-6 md:gap-12 items-center ${
-        reverse ? "md:flex-row-reverse" : ""
+      className={`flex flex-col lg:flex-row gap-8 lg:gap-12 xl:gap-16 lg:items-center ${
+        reverse ? "lg:flex-row-reverse" : ""
       }`}
     >
       {/* Image Section */}
-      <div className={`w-full md:w-1/2 flex justify-center ${reverse ? "md:justify-center" : "md:justify-center"} relative group`}>
-        <div className="relative aspect-[3/4] w-full max-w-[450px] overflow-hidden bg-gray-100 shadow-xl rounded-sm">
+      <div className="w-full lg:w-[38%] flex-shrink-0">
+        <div className="relative aspect-[4/5] w-full overflow-hidden rounded-sm shadow-2xl group bg-gradient-to-br from-gray-100 to-gray-200">
           <Image
             src={imageSrc}
             alt={name}
             fill
-            className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
+            className="object-cover object-top transition-all duration-700 group-hover:scale-105"
+            sizes="(max-width: 1024px) 100vw, 38vw"
+            priority
           />
-          {/* Name Card Overlay */}
-          <div className="absolute bottom-6 left-6 right-6 bg-white p-6 shadow-sm border-l-4 border-[#ffb81e]">
-            <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-1 font-serif tracking-tight">
-              {name}
-            </h3>
-            <p className="text-xs font-bold tracking-[0.2em] text-gray-400 uppercase">
-              {title}
-            </p>
-          </div>
+        </div>
+        
+        {/* Name and Title Below Image - No Card */}
+        <div className="mt-6 space-y-1">
+          <h3 className="text-2xl lg:text-3xl font-bold text-gray-900 tracking-tight leading-tight">
+            {name}
+          </h3>
+          <p className="text-xs lg:text-sm font-bold tracking-[0.2em] text-gray-400 uppercase">
+            {title}
+          </p>
         </div>
       </div>
 
       {/* Text Section */}
-      <div className="w-full md:w-1/2 space-y-6 text-center md:text-left">
-        <h2 className="text-3xl md:text-5xl font-bold text-gray-900 leading-tight tracking-tight">
-          {heading}
-        </h2>
-        <div className="w-16 h-1 bg-[#ffb81e] mx-auto md:mx-0 opacity-80" />
-        <p className="text-base md:text-lg text-gray-600 leading-relaxed font-light">
-          {description}
-        </p>
+      <div className="w-full lg:w-[62%] flex flex-col justify-center">
+        <div className="space-y-5 lg:space-y-6">
+          <div>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 leading-tight tracking-tight mb-4">
+              {heading}
+            </h2>
+            <div className="w-16 lg:w-20 h-1 bg-[#ffb81e] rounded-full" />
+          </div>
+          <p className="text-base lg:text-lg text-gray-700 leading-relaxed lg:leading-loose">
+            {description}
+          </p>
+        </div>
       </div>
     </div>
   );
@@ -60,9 +67,9 @@ function FounderCard({
 
 export function FounderSection() {
   return (
-    <section className="py-20 md:py-32 bg-white">
-      <div className="container mx-auto px-4 md:px-0 max-w-[1400px]">
-        <div className="space-y-24 md:space-y-32">
+    <section className="py-12 sm:py-16 md:py-20 lg:py-28 xl:py-32 bg-white">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1400px]">
+        <div className="space-y-16 sm:space-y-20 lg:space-y-28 xl:space-y-36">
           {/* First Founder */}
           <FounderCard
             name="Syed Fida Hussain"
