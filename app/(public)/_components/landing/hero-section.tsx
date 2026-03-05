@@ -103,7 +103,6 @@ export function HeroSection() {
                 className="object-cover transition-transform duration-700 group-hover:scale-105 will-change-transform"
                 priority
             />
-            
           </div>
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
           <div className="absolute bottom-8 left-8 max-w-md z-10">
