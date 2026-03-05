@@ -57,7 +57,7 @@ export default function ProductsPage() {
   const { data: productsData, isLoading } = useAdminProducts(filters);
   const { data: productDetailData, isLoading: isLoadingDetail } = useAdminProduct(
     editingProductId!,
-    { enabled: !!editingProductId }
+    { enabled: !!editingProductId } as any
   );
   const createMutation = useCreateProduct();
   const updateMutation = useUpdateProduct();

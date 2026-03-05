@@ -48,7 +48,7 @@ export function ServicesHero() {
     // Parallax Effect
     const mm = gsap.matchMedia();
     mm.add("(prefers-reduced-motion: no-preference)", () => {
-      gsap.to(bgImageRef.current?.querySelector("img"), {
+      gsap.to(bgImageRef.current?.querySelector("img") as any, {
         yPercent: 20,
         ease: "none",
         scrollTrigger: {

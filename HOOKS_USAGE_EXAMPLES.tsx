@@ -4,6 +4,7 @@
 
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useProducts, useFeaturedProducts, useCategories } from '@/lib/hooks/public';
 import { useWishlist, useAddToWishlist, useOrders } from '@/lib/hooks/user';
 import { useAdminProducts, useAdminDashboard } from '@/lib/hooks/admin';
@@ -283,8 +284,6 @@ export function ProductCard({ product }: { product: any }) {
 }
 
 // Example 9: Search Products with Debounce
-import { useState, useEffect } from 'react';
-
 export function ProductSearch() {
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
@@ -299,7 +298,7 @@ export function ProductSearch() {
 
   const { data: products, isLoading } = useProducts(
     { search: debouncedSearch },
-    { enabled: debouncedSearch.length >= 3 }
+    { enabled: debouncedSearch.length >= 3 } as any
   );
 
   return (
@@ -328,8 +327,6 @@ export function ProductSearch() {
 }
 
 // Example 10: Pagination Component
-import { useState } from 'react';
-
 export function PaginatedProducts() {
   const [page, setPage] = useState(1);
   const { data, isLoading } = useProducts({ page, per_page: 12 });

@@ -6,7 +6,7 @@ interface OrderFilters {
   per_page?: number;
 }
 
-export const useOrders = (filters?: OrderFilters, options?: UseQueryOptions) => {
+export const useOrders = (filters?: OrderFilters, options?: UseQueryOptions<any>) => {
   return useQuery({
     queryKey: ['orders', filters],
     queryFn: async () => {
@@ -17,7 +17,7 @@ export const useOrders = (filters?: OrderFilters, options?: UseQueryOptions) => 
   });
 };
 
-export const useOrder = (orderNumber: string, options?: UseQueryOptions) => {
+export const useOrder = (orderNumber: string, options?: UseQueryOptions<any>) => {
   return useQuery({
     queryKey: ['order', orderNumber],
     queryFn: async () => {

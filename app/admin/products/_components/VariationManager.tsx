@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { Plus, Trash2, Package } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Plus, Trash2, Package, Settings } from 'lucide-react';
+import { useAdminVariations } from '@/lib/hooks/admin/useAdminVariations';
 
 interface Variation {
   id?: number;
@@ -16,16 +17,33 @@ interface VariationManagerProps {
   onChange: (variations: Variation[]) => void;
 }
 
+interface VariationOption {
+  id: number;
+  value: string;
+  label: string;
+  color_code?: string;
+}
+
+interface VariationType {
+  id: number;
+  name: string;
+  options: VariationOption[];
+}
+
 export default function VariationManager({ variations, onChange }: VariationManagerProps) {
+  const [showAttributeSelector, setShowAttributeSelector] = useState<number | null>(null);
+  const [customAttributeKey, setCustomAttributeKey] = useState('');
+  const [customAttributeValue, setCustomAttributeValue] = useState('');
+  
+  const { data: variationTypesData } = useAdminVariations();
+  const variationTypes: VariationType[] = (variationTypesData as any)?.data?.data || [];
+
   const handleAdd = () => {
     const newVariation: Variation = {
       sku: '',
       price: '',
       quantity: '',
-      attributes: {
-        color: '',
-        size: '',
-      },
+      attributes: {},
     };
     onChange([...variations, newVariation]);
   };
@@ -57,10 +75,17 @@ export default function VariationManager({ variations, onChange }: VariationMana
     onChange(updated);
   };
 
-  const handleAddAttribute = (index: number) => {
-    const key = prompt('Enter attribute name (e.g., material, model):');
-    if (key && key.trim()) {
-      handleAttributeChange(index, key.trim().toLowerCase(), '');
+  const handleSelectOption = (index: number, typeName: string, optionValue: string) => {
+    handleAttributeChange(index, typeName.toLowerCase(), optionValue);
+    setShowAttributeSelector(null);
+  };
+
+  const handleAddCustomAttribute = (index: number) => {
+    if (customAttributeKey.trim() && customAttributeValue.trim()) {
+      handleAttributeChange(index, customAttributeKey.trim().toLowerCase(), customAttributeValue.trim());
+      setCustomAttributeKey('');
+      setCustomAttributeValue('');
+      setShowAttributeSelector(null);
     }
   };
 
@@ -175,25 +200,100 @@ export default function VariationManager({ variations, onChange }: VariationMana
                   </label>
                   <button
                     type="button"
-                    onClick={() => handleAddAttribute(index)}
-                    className="text-xs text-[#FF6F00] hover:text-[#E65100]"
+                    onClick={() => setShowAttributeSelector(showAttributeSelector === index ? null : index)}
+                    className="flex items-center gap-1 text-xs text-[#FF6F00] hover:text-[#E65100]"
                   >
-                    + Add Custom Attribute
+                    <Plus className="h-3 w-3" />
+                    Add Attribute
                   </button>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
-                  {Object.entries(variation.attributes).map(([key, value]) => (
-                    <div key={key} className="relative">
-                      <input
-                        type="text"
-                        value={value}
-                        onChange={(e) => handleAttributeChange(index, key, e.target.value)}
-                        placeholder={`${key.charAt(0).toUpperCase() + key.slice(1)} (e.g., ${
-                          key === 'color' ? 'Red' : key === 'size' ? 'L' : 'Value'
-                        })`}
-                        className="w-full rounded-lg border border-gray-300 px-3 py-2 pr-8 text-sm transition-all focus:border-[#FF6F00] focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
-                      />
-                      {!['color', 'size'].includes(key) && (
+
+                {/* Attribute Selector Modal */}
+                {showAttributeSelector === index && (
+                  <div className="mb-3 rounded-lg border border-gray-300 bg-white p-4 shadow-lg">
+                    <div className="mb-3 flex items-center justify-between">
+                      <h4 className="text-sm font-semibold text-gray-900">Select Attribute</h4>
+                      <button
+                        type="button"
+                        onClick={() => setShowAttributeSelector(null)}
+                        className="text-gray-400 hover:text-gray-600"
+                      >
+                        ×
+                      </button>
+                    </div>
+
+                    {/* Existing Variation Types */}
+                    {variationTypes.length > 0 && (
+                      <div className="mb-4 space-y-3">
+                        {variationTypes.map((type) => (
+                          <div key={type.id}>
+                            <p className="mb-2 text-xs font-medium text-gray-600">{type.name}</p>
+                            <div className="flex flex-wrap gap-2">
+                              {type.options.map((option) => (
+                                <button
+                                  key={option.id}
+                                  type="button"
+                                  onClick={() => handleSelectOption(index, type.name, option.value)}
+                                  className="flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs transition-all hover:border-[#FF6F00] hover:bg-orange-50"
+                                >
+                                  {option.color_code && (
+                                    <span
+                                      className="h-3 w-3 rounded-full border border-gray-300"
+                                      style={{ backgroundColor: option.color_code }}
+                                    />
+                                  )}
+                                  <span>{option.label}</span>
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Custom Attribute */}
+                    <div className="border-t border-gray-200 pt-3">
+                      <p className="mb-2 text-xs font-medium text-gray-600">Add Custom Attribute</p>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          placeholder="Name (e.g., material)"
+                          value={customAttributeKey}
+                          onChange={(e) => setCustomAttributeKey(e.target.value)}
+                          className="flex-1 rounded-lg border border-gray-300 px-3 py-1.5 text-xs focus:border-[#FF6F00] focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
+                        />
+                        <input
+                          type="text"
+                          placeholder="Value (e.g., Cotton)"
+                          value={customAttributeValue}
+                          onChange={(e) => setCustomAttributeValue(e.target.value)}
+                          className="flex-1 rounded-lg border border-gray-300 px-3 py-1.5 text-xs focus:border-[#FF6F00] focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleAddCustomAttribute(index)}
+                          disabled={!customAttributeKey.trim() || !customAttributeValue.trim()}
+                          className="rounded-lg bg-[#FF6F00] px-3 py-1.5 text-xs text-white transition-all hover:bg-[#E65100] disabled:opacity-50"
+                        >
+                          Add
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Selected Attributes */}
+                {Object.keys(variation.attributes).length > 0 ? (
+                  <div className="grid grid-cols-2 gap-3">
+                    {Object.entries(variation.attributes).map(([key, value]) => (
+                      <div key={key} className="relative">
+                        <input
+                          type="text"
+                          value={value}
+                          onChange={(e) => handleAttributeChange(index, key, e.target.value)}
+                          placeholder={`Enter ${key}`}
+                          className="w-full rounded-lg border border-gray-300 px-3 py-2 pr-8 text-sm transition-all focus:border-[#FF6F00] focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
+                        />
                         <button
                           type="button"
                           onClick={() => handleRemoveAttribute(index, key)}
@@ -202,13 +302,17 @@ export default function VariationManager({ variations, onChange }: VariationMana
                         >
                           ×
                         </button>
-                      )}
-                      <span className="absolute -top-2 left-2 bg-white px-1 text-xs text-gray-500">
-                        {key}
-                      </span>
-                    </div>
-                  ))}
-                </div>
+                        <span className="absolute -top-2 left-2 bg-white px-1 text-xs text-gray-500">
+                          {key}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-3 text-center">
+                    <p className="text-xs text-gray-500">No attributes added yet</p>
+                  </div>
+                )}
               </div>
             </div>
           ))}

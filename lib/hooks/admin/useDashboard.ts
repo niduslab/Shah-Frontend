@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import api from '@/lib/api/axios';
 
-export const useAdminDashboard = (options?: UseQueryOptions) => {
+export const useAdminDashboard = (options?: UseQueryOptions<any>) => {
   return useQuery({
     queryKey: ['admin', 'dashboard'],
     queryFn: async () => {

@@ -65,7 +65,7 @@ export function HeroSection() {
     
     mm.add("(prefers-reduced-motion: no-preference)", () => {
         // Parallax for images
-        gsap.to(mainImageRef.current?.querySelector("img"), {
+        gsap.to(mainImageRef.current?.querySelector("img") as any, {
             yPercent: 10,
             ease: "none",
             scrollTrigger: {
@@ -76,7 +76,7 @@ export function HeroSection() {
             },
         });
 
-        gsap.to(tallImageRef.current?.querySelector("img"), {
+        gsap.to(tallImageRef.current?.querySelector("img") as any, {
             yPercent: 15, // Move slightly faster
             ease: "none",
             scrollTrigger: {

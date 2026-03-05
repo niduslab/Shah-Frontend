@@ -1,4 +1,4 @@
-import { useQuery, UseQueryOptions } from '@/lib/api/axios';
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import api from '@/lib/api/axios';
 
 interface ReportFilters {
@@ -8,7 +8,7 @@ interface ReportFilters {
   limit?: number;
 }
 
-export const useSalesReport = (filters?: ReportFilters, options?: UseQueryOptions) => {
+export const useSalesReport = (filters?: ReportFilters, options?: UseQueryOptions<any>) => {
   return useQuery({
     queryKey: ['admin', 'reports', 'sales', filters],
     queryFn: async () => {
@@ -19,7 +19,7 @@ export const useSalesReport = (filters?: ReportFilters, options?: UseQueryOption
   });
 };
 
-export const useProductsReport = (filters?: ReportFilters, options?: UseQueryOptions) => {
+export const useProductsReport = (filters?: ReportFilters, options?: UseQueryOptions<any>) => {
   return useQuery({
     queryKey: ['admin', 'reports', 'products', filters],
     queryFn: async () => {
@@ -30,7 +30,7 @@ export const useProductsReport = (filters?: ReportFilters, options?: UseQueryOpt
   });
 };
 
-export const useCustomersReport = (filters?: ReportFilters, options?: UseQueryOptions) => {
+export const useCustomersReport = (filters?: ReportFilters, options?: UseQueryOptions<any>) => {
   return useQuery({
     queryKey: ['admin', 'reports', 'customers', filters],
     queryFn: async () => {
@@ -41,7 +41,7 @@ export const useCustomersReport = (filters?: ReportFilters, options?: UseQueryOp
   });
 };
 
-export const useInventoryReport = (options?: UseQueryOptions) => {
+export const useInventoryReport = (options?: UseQueryOptions<any>) => {
   return useQuery({
     queryKey: ['admin', 'reports', 'inventory'],
     queryFn: async () => {
@@ -52,7 +52,7 @@ export const useInventoryReport = (options?: UseQueryOptions) => {
   });
 };
 
-export const useOrderStatusReport = (filters?: Omit<ReportFilters, 'group_by' | 'limit'>, options?: UseQueryOptions) => {
+export const useOrderStatusReport = (filters?: Omit<ReportFilters, 'group_by' | 'limit'>, options?: UseQueryOptions<any>) => {
   return useQuery({
     queryKey: ['admin', 'reports', 'order-status', filters],
     queryFn: async () => {
