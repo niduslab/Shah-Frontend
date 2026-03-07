@@ -53,6 +53,11 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
     status: 'active',
     meta_title: '',
     meta_description: '',
+    is_preorder: false,
+    preorder_release_date: '',
+    preorder_limit: '',
+    preorder_deposit_amount: '',
+    preorder_deposit_type: 'percentage',
   });
   const [images, setImages] = useState<ProductImage[]>([]);
   const [variations, setVariations] = useState<Variation[]>([]);
@@ -85,6 +90,11 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
         status: product.status || 'active',
         meta_title: product.meta_title || '',
         meta_description: product.meta_description || '',
+        is_preorder: product.is_preorder || false,
+        preorder_release_date: product.preorder_release_date ? new Date(product.preorder_release_date).toISOString().slice(0, 16) : '',
+        preorder_limit: product.preorder_limit?.toString() || '',
+        preorder_deposit_amount: product.preorder_deposit_amount?.toString() || '',
+        preorder_deposit_type: product.preorder_deposit_type || 'percentage',
       });
 
       // Load existing images
@@ -133,6 +143,11 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
         status: 'active',
         meta_title: '',
         meta_description: '',
+        is_preorder: false,
+        preorder_release_date: '',
+        preorder_limit: '',
+        preorder_deposit_amount: '',
+        preorder_deposit_type: 'percentage',
       });
       setImages([]);
       setVariations([]);
@@ -165,6 +180,15 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
       if (formData.weight_unit) submitData.weight_unit = formData.weight_unit;
       if (formData.meta_title) submitData.meta_title = formData.meta_title;
       if (formData.meta_description) submitData.meta_description = formData.meta_description;
+
+      // Add pre-order data
+      submitData.is_preorder = formData.is_preorder;
+      if (formData.is_preorder) {
+        if (formData.preorder_release_date) submitData.preorder_release_date = formData.preorder_release_date;
+        if (formData.preorder_limit) submitData.preorder_limit = parseInt(formData.preorder_limit);
+        if (formData.preorder_deposit_amount) submitData.preorder_deposit_amount = parseFloat(formData.preorder_deposit_amount);
+        submitData.preorder_deposit_type = formData.preorder_deposit_type;
+      }
 
       // Add images data
       if (images.length > 0) {
@@ -549,6 +573,108 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
                 Trending Product
               </label>
             </div>
+
+            {/* Pre-Order Settings */}
+            <div className="md:col-span-2">
+              <h3 className="mb-4 text-lg font-semibold text-gray-900">Pre-Order Settings</h3>
+            </div>
+
+            <div className="md:col-span-2">
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="is_preorder"
+                  checked={formData.is_preorder}
+                  onChange={(e) => setFormData({ ...formData, is_preorder: e.target.checked })}
+                  className="h-4 w-4 rounded border-gray-300 text-[#FF6F00] focus:ring-2 focus:ring-[#FF6F00]/20"
+                />
+                <label htmlFor="is_preorder" className="text-sm font-medium text-gray-700">
+                  Enable Pre-Order
+                </label>
+              </div>
+              <p className="mt-1 text-xs text-gray-500">
+                Allow customers to pre-order this product before it's available
+              </p>
+            </div>
+
+            {formData.is_preorder && (
+              <>
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-gray-700">
+                    Release Date
+                  </label>
+                  <input
+                    type="datetime-local"
+                    value={formData.preorder_release_date}
+                    onChange={(e) => setFormData({ ...formData, preorder_release_date: e.target.value })}
+                    className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm transition-all focus:border-[#FF6F00] focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
+                  />
+                  <p className="mt-1 text-xs text-gray-500">
+                    Expected product availability date
+                  </p>
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-gray-700">
+                    Pre-Order Limit
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={formData.preorder_limit}
+                    onChange={(e) => setFormData({ ...formData, preorder_limit: e.target.value })}
+                    className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm transition-all focus:border-[#FF6F00] focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
+                    placeholder="100"
+                  />
+                  <p className="mt-1 text-xs text-gray-500">
+                    Maximum number of pre-orders (leave empty for unlimited)
+                  </p>
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-gray-700">
+                    Deposit Type
+                  </label>
+                  <select
+                    value={formData.preorder_deposit_type}
+                    onChange={(e) => setFormData({ ...formData, preorder_deposit_type: e.target.value })}
+                    className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm transition-all focus:border-[#FF6F00] focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
+                  >
+                    <option value="percentage">Percentage</option>
+                    <option value="fixed">Fixed Amount</option>
+                  </select>
+                  <p className="mt-1 text-xs text-gray-500">
+                    How the deposit amount is calculated
+                  </p>
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-gray-700">
+                    Deposit Amount
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      max={formData.preorder_deposit_type === 'percentage' ? '100' : undefined}
+                      value={formData.preorder_deposit_amount}
+                      onChange={(e) => setFormData({ ...formData, preorder_deposit_amount: e.target.value })}
+                      className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm transition-all focus:border-[#FF6F00] focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
+                      placeholder={formData.preorder_deposit_type === 'percentage' ? '50' : '25.00'}
+                    />
+                    {formData.preorder_deposit_type === 'percentage' && (
+                      <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-gray-500">%</span>
+                    )}
+                  </div>
+                  <p className="mt-1 text-xs text-gray-500">
+                    {formData.preorder_deposit_type === 'percentage' 
+                      ? 'Percentage of product price (0-100%)'
+                      : 'Fixed deposit amount in currency'}
+                  </p>
+                </div>
+              </>
+            )}
 
             {/* SEO */}
             <div className="md:col-span-2">

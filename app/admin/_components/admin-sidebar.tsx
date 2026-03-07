@@ -1,18 +1,25 @@
 "use client";
 
-import { LayoutDashboard, Package, ShoppingCart, Users, Settings, LogOut, BarChart3, Percent, Link as LinkIcon, HelpCircle, FolderTree, Tag, Layers } from "lucide-react";
+import { LayoutDashboard, Package, ShoppingCart, Users, Settings, LogOut, BarChart3, Percent, Link as LinkIcon, HelpCircle, FolderTree, Tag, Layers, Zap, Ticket, PackageCheck, Truck, MessageSquare, CreditCard } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 const menuItems = [
   { icon: LayoutDashboard, label: "Dashboard", href: "/admin" },
+  { icon: CreditCard, label: "POS", href: "/admin/pos" },
   { icon: ShoppingCart, label: "Orders", href: "/admin/orders" },
   { icon: Package, label: "Products", href: "/admin/products" },
   { icon: FolderTree, label: "Categories", href: "/admin/categories" },
   { icon: Tag, label: "Brands", href: "/admin/brands" },
   { icon: Layers, label: "Variations", href: "/admin/variations" },
-  { icon: Users, label: "Customers", href: "/admin/customers" },
+  { icon: PackageCheck, label: "Inventory", href: "/admin/inventory" },
+  { icon: Truck, label: "Shipping Rates", href: "/admin/shipping-rates" },
+  { icon: Package, label: "Shipping Classes", href: "/admin/shipping-classes" },
+  { icon: Users, label: "Users", href: "/admin/users" },
+  { icon: MessageSquare, label: "Reviews", href: "/admin/reviews" },
+  { icon: Zap, label: "Flash Deals", href: "/admin/flash-deals" },
+  { icon: Ticket, label: "Coupons", href: "/admin/coupons" },
   { icon: BarChart3, label: "Reports", href: "/admin/reports" },
   { icon: Percent, label: "Discounts", href: "/admin/discounts" },
 ];

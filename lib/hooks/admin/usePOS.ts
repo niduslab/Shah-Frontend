@@ -17,12 +17,23 @@ interface POSOrderData {
   notes?: string;
 }
 
-export const useSearchPOSProducts = (search: string, options?: UseQueryOptions) => {
-  return useQuery({
+interface ApiResponse<T = any> {
+  success: boolean;
+  data: T;
+  message?: string;
+}
+
+export const useSearchPOSProducts = (search: string, options?: Omit<UseQueryOptions<ApiResponse>, 'queryKey' | 'queryFn'>) => {
+  return useQuery<ApiResponse>({
     queryKey: ['admin', 'pos', 'products', 'search', search],
     queryFn: async () => {
-      const response = await api.get('/api/admin/pos/products/search', {
-        params: { search },
+      // Use the existing products endpoint with search filter
+      const response = await api.get('/api/admin/products', {
+        params: { 
+          search,
+          per_page: 20,
+          status: 'active' // Only show active products in POS
+        },
       });
       return response.data;
     },
@@ -31,11 +42,18 @@ export const useSearchPOSProducts = (search: string, options?: UseQueryOptions) 
   });
 };
 
-export const useGetProductBySKU = (sku: string, options?: UseQueryOptions) => {
-  return useQuery({
+export const useGetProductBySKU = (sku: string, options?: Omit<UseQueryOptions<ApiResponse>, 'queryKey' | 'queryFn'>) => {
+  return useQuery<ApiResponse>({
     queryKey: ['admin', 'pos', 'products', 'sku', sku],
     queryFn: async () => {
-      const response = await api.get(`/api/admin/pos/products/sku/${sku}`);
+      // Use the existing products endpoint with SKU filter
+      const response = await api.get('/api/admin/products', {
+        params: { 
+          sku,
+          per_page: 1,
+          status: 'active'
+        },
+      });
       return response.data;
     },
     enabled: !!sku,
@@ -44,9 +62,9 @@ export const useGetProductBySKU = (sku: string, options?: UseQueryOptions) => {
 };
 
 export const useCalculatePOSOrder = (
-  options?: UseMutationOptions<any, any, { items: CartItem[]; discount?: number }>
+  options?: Omit<UseMutationOptions<ApiResponse, any, { items: CartItem[]; discount?: number }>, 'mutationFn'>
 ) => {
-  return useMutation({
+  return useMutation<ApiResponse, any, { items: CartItem[]; discount?: number }>({
     mutationFn: async (data) => {
       const response = await api.post('/api/admin/pos/calculate', data);
       return response.data;
@@ -55,8 +73,8 @@ export const useCalculatePOSOrder = (
   });
 };
 
-export const useCreatePOSOrder = (options?: UseMutationOptions<any, any, POSOrderData>) => {
-  return useMutation({
+export const useCreatePOSOrder = (options?: Omit<UseMutationOptions<ApiResponse, any, POSOrderData>, 'mutationFn'>) => {
+  return useMutation<ApiResponse, any, POSOrderData>({
     mutationFn: async (data: POSOrderData) => {
       const response = await api.post('/api/admin/pos/orders', data);
       return response.data;

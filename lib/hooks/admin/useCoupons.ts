@@ -2,17 +2,21 @@ import { useQuery, useMutation, useQueryClient, UseQueryOptions, UseMutationOpti
 import api from '@/lib/api/axios';
 
 interface CouponData {
-  code: string;
-  type: 'percentage' | 'fixed_amount' | 'free_shipping';
-  value: number;
-  max_discount_amount?: number;
+  code?: string;
+  name?: string;
+  discount_type: 'percentage' | 'fixed' | 'free_shipping';
+  discount_value: number;
+  applies_to: 'all' | 'products' | 'brands' | 'categories';
   min_purchase_amount?: number;
+  max_discount_amount?: number;
   usage_limit?: number;
-  per_user_limit?: number;
-  starts_at: string;
-  expires_at: string;
+  once_per_customer?: boolean;
+  starts_at?: string;
+  expires_at?: string;
   is_active?: boolean;
-  applicable_to: 'all' | 'specific_products' | 'specific_categories';
+  product_ids?: number[];
+  brand_ids?: number[];
+  category_ids?: number[];
 }
 
 export const useAdminCoupons = (params?: { page?: number; per_page?: number }, options?: UseQueryOptions) => {
