@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { useAdminCategories } from '@/lib/hooks/admin/useAdminCategories';
 import { useAdminBrands } from '@/lib/hooks/admin/useAdminBrands';
+import { useShippingClasses } from '@/lib/hooks/admin/useShipping';
 import ImageManager from './ImageManager';
 import VariationManager from './VariationManager';
 
@@ -41,6 +42,7 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
     short_description: '',
     category_id: '',
     brand_id: '',
+    shipping_class_id: '',
     price: '',
     compare_price: '',
     cost_price: '',
@@ -65,9 +67,11 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
 
   const { data: categoriesData } = useAdminCategories({ per_page: 100 });
   const { data: brandsData } = useAdminBrands({ per_page: 100 });
+  const { data: shippingClassesData } = useShippingClasses();
 
   const categories = (categoriesData as any)?.data?.data || [];
   const brands = (brandsData as any)?.data?.data || [];
+  const shippingClasses = (shippingClassesData as any)?.data || [];
 
   useEffect(() => {
     if (product) {
@@ -78,6 +82,7 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
         short_description: product.short_description || '',
         category_id: product.category_id?.toString() || '',
         brand_id: product.brand_id?.toString() || '',
+        shipping_class_id: product.shipping_class_id?.toString() || '',
         price: product.price?.toString() || '',
         compare_price: product.compare_price?.toString() || '',
         cost_price: product.cost_price?.toString() || '',
@@ -131,6 +136,7 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
         short_description: '',
         category_id: '',
         brand_id: '',
+        shipping_class_id: '',
         price: '',
         compare_price: '',
         cost_price: '',
@@ -173,6 +179,7 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
         status: formData.status,
       };
 
+      if (formData.shipping_class_id) submitData.shipping_class_id = parseInt(formData.shipping_class_id);
       if (formData.compare_price) submitData.compare_price = parseFloat(formData.compare_price);
       if (formData.cost_price) submitData.cost_price = parseFloat(formData.cost_price);
       if (formData.low_stock_threshold) submitData.low_stock_threshold = parseInt(formData.low_stock_threshold);
@@ -394,6 +401,27 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
                   </option>
                 ))}
               </select>
+            </div>
+
+            <div>
+              <label className="mb-2 block text-sm font-medium text-gray-700">
+                Shipping Class
+              </label>
+              <select
+                value={formData.shipping_class_id}
+                onChange={(e) => setFormData({ ...formData, shipping_class_id: e.target.value })}
+                className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm transition-all focus:border-[#FF6F00] focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
+              >
+                <option value="">No shipping class</option>
+                {shippingClasses.map((shippingClass: any) => (
+                  <option key={shippingClass.id} value={shippingClass.id}>
+                    {shippingClass.name}
+                  </option>
+                ))}
+              </select>
+              <p className="mt-1 text-xs text-gray-500">
+                Optional: Assign a shipping class for special shipping rates
+              </p>
             </div>
 
             <div className="md:col-span-2">

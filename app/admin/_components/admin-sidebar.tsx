@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutDashboard, Package, ShoppingCart, Users, Settings, LogOut, BarChart3, Percent, Link as LinkIcon, HelpCircle, FolderTree, Tag, Layers, Zap, Ticket, PackageCheck, Truck, MessageSquare, CreditCard } from "lucide-react";
+import { LayoutDashboard, Package, ShoppingCart, Users, Settings, LogOut, BarChart3, Percent, Link as LinkIcon, HelpCircle, FolderTree, Tag, Layers, Zap, Ticket, PackageCheck, Truck, MessageSquare, CreditCard, FileText } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -21,6 +21,7 @@ const menuItems = [
   { icon: Zap, label: "Flash Deals", href: "/admin/flash-deals" },
   { icon: Ticket, label: "Coupons", href: "/admin/coupons" },
   { icon: BarChart3, label: "Reports", href: "/admin/reports" },
+  { icon: FileText, label: "Dynamic Pages", href: "/admin/dynamic-pages" },
   { icon: Percent, label: "Discounts", href: "/admin/discounts" },
 ];
 
