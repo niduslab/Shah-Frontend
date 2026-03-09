@@ -1,44 +1,56 @@
-import { Zap, Gauge, Volume2, Smartphone } from "lucide-react";
+import { Zap, Gauge, Volume2, Smartphone, Package, Shield, Truck, Award } from "lucide-react";
 
-const FEATURES = [
+interface ProductPerformanceProps {
+  product: any;
+}
+
+const DEFAULT_FEATURES = [
   {
-    icon: Zap,
-    title: "Powerful Motor",
-    description: "3.75 CHP DurX™ Commercial Plus Motor delivers smooth, consistent power for intense workouts."
+    icon: Package,
+    title: "Quality Product",
+    description: "Premium quality materials and construction for long-lasting performance."
   },
   {
-    icon: Gauge,
-    title: "Advanced Incline",
-    description: "-3% decline to 15% incline simulates real-world terrain for effective training."
+    icon: Shield,
+    title: "Warranty Included",
+    description: "Comprehensive warranty coverage for your peace of mind."
   },
   {
-    icon: Volume2,
-    title: "Quiet Operation",
-    description: "Advanced cushioning and motor design for whisper-quiet performance at home."
+    icon: Truck,
+    title: "Fast Shipping",
+    description: "Quick and reliable delivery to your doorstep."
   },
   {
-    icon: Smartphone,
-    title: "Smart Connectivity",
-    description: "iFIT® enabled with personalized training programs and global workouts."
+    icon: Award,
+    title: "Trusted Brand",
+    description: "From a reputable manufacturer known for excellence."
   }
 ];
 
-export function ProductPerformance() {
+export function ProductPerformance({ product }: ProductPerformanceProps) {
+  const features = product.brand ? [
+    {
+      icon: Award,
+      title: product.brand.name,
+      description: product.brand.description || `Trusted brand known for quality products.`
+    },
+    ...DEFAULT_FEATURES.slice(1)
+  ] : DEFAULT_FEATURES;
+
   return (
     <section className="w-full bg-white py-16">
       <div className="mx-auto max-w-[1400px] px-4 md:px-6">
         <div className="mb-12 text-center">
           <h2 className="mb-4 text-3xl font-bold text-black md:text-4xl">
-            Built for Performance
+            Why Choose This Product
           </h2>
           <p className="mx-auto max-w-2xl text-lg text-gray-500">
-            Discover our most popular fitness equipment loved by
-            thousands of athletes and fitness enthusiasts
+            Discover the features that make this product stand out
           </p>
         </div>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {FEATURES.map((feature, index) => (
+          {features.map((feature, index) => (
             <div 
               key={index}
               className="flex flex-col items-center rounded-xl border border-gray-100 bg-[#FAFAFA] p-8 text-center transition-shadow hover:shadow-lg"

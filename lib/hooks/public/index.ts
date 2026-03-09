@@ -8,3 +8,4 @@ export * from './useCart';
 export * from './useReviews';
 export * from './useCMS';
 export * from './useOrderTracking';
+export * from './useShop';

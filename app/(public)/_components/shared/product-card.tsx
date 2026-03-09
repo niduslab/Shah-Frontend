@@ -1,10 +1,11 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Heart, ShoppingBag, Star } from "lucide-react";
+import { getPlaceholderImage } from "@/lib/utils/image";
 
 export interface Product {
   id: number;
   name: string;
+  slug?: string; // Add optional slug
   image: string;
   price: number;
   originalPrice?: number;
@@ -22,7 +23,9 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, imageHeight = "h-[372px]" }: ProductCardProps) {
-  const productSlug = product.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  // Use slug from API if available, otherwise generate from name
+  const productSlug = product.slug;
+  // console.log("final slug: ", productSlug)
 
   return (
     <div className="group relative flex flex-col gap-4">
@@ -44,11 +47,13 @@ export function ProductCard({ product, imageHeight = "h-[372px]" }: ProductCardP
         {/* Product Image */}
         <div className="block h-full w-full">
           <div className="relative h-full w-full">
-            <Image
+            <img
               src={product.image}
               alt={product.name}
-              fill
-              className="object-contain transition-transform duration-300 group-hover:scale-105"
+              className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
+              onError={(e) => {
+                e.currentTarget.src = getPlaceholderImage(product.name);
+              }}
             />
           </div>
         </div>

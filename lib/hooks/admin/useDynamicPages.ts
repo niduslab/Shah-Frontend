@@ -214,3 +214,51 @@ export const useUpdateSectionContent = (options?: UseMutationOptions<any, any, {
     ...options,
   });
 };
+
+// Template Hooks
+export const usePageTemplates = (params?: { page_type?: string; category?: string }, options?: UseQueryOptions) => {
+  return useQuery({
+    queryKey: ['admin', 'page-templates', params],
+    queryFn: async () => {
+      const response = await api.get('/api/admin/page-templates', { params });
+      return response.data;
+    },
+    ...options,
+  });
+};
+
+export const useTemplatesByPageType = (pageType: string, options?: UseQueryOptions) => {
+  return useQuery({
+    queryKey: ['admin', 'page-templates', 'page-type', pageType],
+    queryFn: async () => {
+      const response = await api.get(`/api/admin/page-templates/page-type/${pageType}`);
+      return response.data;
+    },
+    enabled: !!pageType,
+    ...options,
+  });
+};
+
+export const useTemplatesByCategory = (category: string, options?: UseQueryOptions) => {
+  return useQuery({
+    queryKey: ['admin', 'page-templates', 'category', category],
+    queryFn: async () => {
+      const response = await api.get(`/api/admin/page-templates/category/${category}`);
+      return response.data;
+    },
+    enabled: !!category,
+    ...options,
+  });
+};
+
+export const useTemplateSchema = (templateType: string, options?: UseQueryOptions) => {
+  return useQuery({
+    queryKey: ['admin', 'page-templates', 'schema', templateType],
+    queryFn: async () => {
+      const response = await api.get(`/api/admin/page-templates/${templateType}/schema`);
+      return response.data;
+    },
+    enabled: !!templateType,
+    ...options,
+  });
+};

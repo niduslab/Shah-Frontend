@@ -1,6 +1,6 @@
 /**
  * Get the full URL for an image stored on the backend
- * @param path - The relative path from the backend (e.g., "brands/logo.png")
+ * @param path - The relative path from the backend (e.g., "brands/logo.png" or "/storage/brands/logo.png")
  * @returns Full URL to the image
  */
 export function getImageUrl(path: string | null | undefined): string {
@@ -12,6 +12,11 @@ export function getImageUrl(path: string | null | undefined): string {
   }
   
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+  
+  // If path already starts with /storage, just prepend the API URL
+  if (path.startsWith('/storage/')) {
+    return `${apiUrl}${path}`;
+  }
   
   // Remove leading slash if present
   const cleanPath = path.startsWith('/') ? path.slice(1) : path;
@@ -32,25 +37,41 @@ export function getPlaceholderImage(text: string = 'No Image'): string {
 
 /**
  * Get the primary image URL from a product's images array
- * @param images - Array of product images
+ * @param images - Array of product images with either image_path or full_url
  * @returns URL of the primary image or placeholder
  */
-export function getPrimaryImageUrl(images?: Array<{ image_path: string; is_primary: boolean }> | null): string {
+export function getPrimaryImageUrl(
+  images?: Array<{ 
+    image_path?: string; 
+    full_url?: string; 
+    is_primary: boolean 
+  }> | null
+): string {
   if (!images || images.length === 0) return getPlaceholderImage();
   
   const primaryImage = images.find(img => img.is_primary);
   const imageToUse = primaryImage || images[0];
   
-  return getImageUrl(imageToUse.image_path);
+  // Use full_url if available, otherwise fall back to image_path
+  const imagePath = imageToUse.full_url || imageToUse.image_path;
+  return getImageUrl(imagePath);
 }
 
 /**
  * Get all image URLs from a product's images array
- * @param images - Array of product images
+ * @param images - Array of product images with either image_path or full_url
  * @returns Array of full image URLs
  */
-export function getAllImageUrls(images?: Array<{ image_path: string }> | null): string[] {
+export function getAllImageUrls(
+  images?: Array<{ 
+    image_path?: string; 
+    full_url?: string; 
+  }> | null
+): string[] {
   if (!images || images.length === 0) return [];
   
-  return images.map(img => getImageUrl(img.image_path));
+  return images.map(img => {
+    const imagePath = img.full_url || img.image_path;
+    return getImageUrl(imagePath);
+  });
 }

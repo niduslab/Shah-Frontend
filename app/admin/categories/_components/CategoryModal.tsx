@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { X, FolderTree, Tag, SortAsc, Eye, Search } from 'lucide-react';
+import { X, FolderTree, Tag, SortAsc, Eye, Search, Image as ImageIcon, Upload } from 'lucide-react';
+import { getImageUrl, getPlaceholderImage } from '@/lib/utils/image';
 
 interface Category {
   id: number;
@@ -11,6 +12,9 @@ interface Category {
   parent_id?: number | null;
   is_active: boolean;
   sort_order: number;
+  image?: string | null;
+  meta_title?: string;
+  meta_description?: string;
 }
 
 interface CategoryModalProps {
@@ -37,6 +41,8 @@ export default function CategoryModal({
     meta_title: '',
     meta_description: '',
   });
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [mounted, setMounted] = useState(false);
@@ -65,9 +71,22 @@ export default function CategoryModal({
         parent_id: category.parent_id || null,
         is_active: category.is_active ?? true,
         sort_order: category.sort_order || 0,
-        meta_title: '',
-        meta_description: '',
+        meta_title: category.meta_title || '',
+        meta_description: category.meta_description || '',
       });
+      
+      // Handle image preview - category.image is a string path from backend
+      if (category.image && category.image !== 'null' && category.image !== 'undefined') {
+        console.log('Category image from backend:', category.image);
+        const imageUrl = getImageUrl(category.image);
+        console.log('Constructed image URL:', imageUrl);
+        setImagePreview(imageUrl);
+      } else {
+        console.log('No category image found or image is null');
+        setImagePreview('');
+      }
+      
+      setImageFile(null);
     } else {
       setFormData({
         name: '',
@@ -78,9 +97,43 @@ export default function CategoryModal({
         meta_title: '',
         meta_description: '',
       });
+      setImagePreview('');
+      setImageFile(null);
     }
     setErrors({});
   }, [category, isOpen]);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Validate file type
+      const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+      if (!validTypes.includes(file.type)) {
+        setErrors({ ...errors, image: 'Please select a valid image file (JPEG, PNG, GIF, WEBP)' });
+        return;
+      }
+      
+      // Validate file size (max 2MB to match backend)
+      if (file.size > 2 * 1024 * 1024) {
+        setErrors({ ...errors, image: 'Image size must be less than 2MB' });
+        return;
+      }
+
+      // Store file and create preview
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+        setErrors({ ...errors, image: '' });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeImage = () => {
+    setImagePreview('');
+    setImageFile(null);
+  };
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
@@ -104,7 +157,31 @@ export default function CategoryModal({
 
     setIsSubmitting(true);
     try {
-      await onSubmit(formData);
+      // Create FormData for multipart/form-data submission
+      const submitData = new FormData();
+      submitData.append('name', formData.name);
+      submitData.append('description', formData.description);
+      submitData.append('is_active', formData.is_active ? '1' : '0');
+      submitData.append('sort_order', formData.sort_order.toString());
+      
+      if (formData.parent_id) {
+        submitData.append('parent_id', formData.parent_id.toString());
+      }
+      
+      if (formData.meta_title) {
+        submitData.append('meta_title', formData.meta_title);
+      }
+      
+      if (formData.meta_description) {
+        submitData.append('meta_description', formData.meta_description);
+      }
+      
+      // Add image file if selected
+      if (imageFile) {
+        submitData.append('image', imageFile);
+      }
+
+      await onSubmit(submitData);
       onClose();
     } catch (error: any) {
       if (error.response?.data?.errors) {
@@ -214,6 +291,79 @@ export default function CategoryModal({
                         placeholder="Brief description of this category..."
                         disabled={isSubmitting}
                       />
+                    </div>
+
+                    {/* Category Image */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <div className="flex items-center gap-2">
+                          <ImageIcon className="h-4 w-4 text-gray-500" />
+                          Category Image
+                        </div>
+                      </label>
+                      
+                      {imagePreview ? (
+                        <div className="relative">
+                          <div className="relative overflow-hidden rounded-lg border-2 border-gray-200">
+                            <img 
+                              src={imagePreview} 
+                              alt="Category preview" 
+                              className="h-48 w-full object-cover"
+                              onError={(e) => {
+                                // Use placeholder like products do
+                                console.error('Failed to load image:', imagePreview);
+                                e.currentTarget.src = getPlaceholderImage(formData.name || 'Category');
+                              }}
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                            {!imageFile && category?.image && (
+                              <div className="absolute bottom-2 left-2 rounded bg-blue-500/90 px-2 py-1 text-xs text-white">
+                                Current Image
+                              </div>
+                            )}
+                            {imageFile && (
+                              <div className="absolute bottom-2 left-2 rounded bg-green-500/90 px-2 py-1 text-xs text-white">
+                                New Image
+                              </div>
+                            )}
+                          </div>
+                          <button
+                            type="button"
+                            onClick={removeImage}
+                            className="absolute right-2 top-2 rounded-lg bg-red-500 p-2 text-white shadow-lg transition-all hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                            disabled={isSubmitting}
+                            title="Remove image"
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        </div>
+                      ) : (
+                        <label className="flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-6 py-8 transition-all hover:border-[#FF6F00] hover:bg-orange-50">
+                          <Upload className="mb-3 h-10 w-10 text-gray-400" />
+                          <span className="mb-1 text-sm font-medium text-gray-700">
+                            Click to upload image
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            PNG, JPG, GIF, WEBP up to 2MB
+                          </span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageChange}
+                            className="hidden"
+                            disabled={isSubmitting}
+                          />
+                        </label>
+                      )}
+                      {errors.image && (
+                        <p className="mt-1.5 flex items-center gap-1 text-sm text-red-600">
+                          <span className="inline-block h-1 w-1 rounded-full bg-red-600"></span>
+                          {errors.image}
+                        </p>
+                      )}
+                      <p className="mt-1.5 text-xs text-gray-500">
+                        Recommended: Square image (500x500px) for best display
+                      </p>
                     </div>
                   </div>
                 </div>

@@ -47,12 +47,15 @@ export const useAdminCategory = (id: number, options?: UseQueryOptions<any>) => 
   });
 };
 
-export const useCreateCategory = (options?: UseMutationOptions<any, any, CategoryData>) => {
+export const useCreateCategory = (options?: UseMutationOptions<any, any, FormData | CategoryData>) => {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: async (data: CategoryData) => {
-      const response = await api.post('/api/admin/categories', data);
+    mutationFn: async (data: FormData | CategoryData) => {
+      const config = data instanceof FormData 
+        ? { headers: { 'Content-Type': 'multipart/form-data' } }
+        : {};
+      const response = await api.post('/api/admin/categories', data, config);
       return response.data;
     },
     onSuccess: () => {
@@ -62,13 +65,22 @@ export const useCreateCategory = (options?: UseMutationOptions<any, any, Categor
   });
 };
 
-export const useUpdateCategory = (options?: UseMutationOptions<any, any, { id: number; data: Partial<CategoryData> }>) => {
+export const useUpdateCategory = (options?: UseMutationOptions<any, any, { id: number; data: FormData | Partial<CategoryData> }>) => {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: async ({ id, data }: { id: number; data: Partial<CategoryData> }) => {
-      const response = await api.put(`/api/admin/categories/${id}`, data);
-      return response.data;
+    mutationFn: async ({ id, data }: { id: number; data: FormData | Partial<CategoryData> }) => {
+      // Laravel requires _method field for FormData PUT requests
+      if (data instanceof FormData) {
+        data.append('_method', 'PUT');
+        const response = await api.post(`/api/admin/categories/${id}`, data, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        return response.data;
+      } else {
+        const response = await api.put(`/api/admin/categories/${id}`, data);
+        return response.data;
+      }
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'categories'] });
