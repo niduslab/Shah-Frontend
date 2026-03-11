@@ -237,7 +237,7 @@ export default function OrdersPage() {
             // Handle different order object structures
             const orderNumber = order.order_number || order.id || `ORDER-${index + 1}`;
             const orderStatus = order.status || 'pending';
-            const orderTotal = order.total || order.amount || '0.00';
+            const orderTotal = order.total_amount || order.amount || '0.00';
             const orderDate = order.created_at || order.date || new Date().toISOString();
             const itemsCount = order.items_count || order.items?.length || 1;
             const paymentStatus = order.payment_status || 'pending';

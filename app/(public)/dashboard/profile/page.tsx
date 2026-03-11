@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useProfile } from '@/lib/hooks/user';
+import { useProfile, useUpdateProfile, useChangePassword } from '@/lib/hooks/user/useDashboard';
 import { useAuth } from '@/lib/context/AuthContext';
+import { toast } from 'sonner';
 import { 
   User, 
   Mail, 
@@ -12,7 +13,10 @@ import {
   Save, 
   X,
   Camera,
-  Shield
+  Shield,
+  Lock,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -25,8 +29,20 @@ interface ProfileFormData {
   gender: string;
 }
 
+interface PasswordFormData {
+  current_password: string;
+  password: string;
+  password_confirmation: string;
+}
+
 export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [showPasswords, setShowPasswords] = useState({
+    current: false,
+    new: false,
+    confirm: false,
+  });
   const [formData, setFormData] = useState<ProfileFormData>({
     first_name: '',
     last_name: '',
@@ -35,11 +51,18 @@ export default function ProfilePage() {
     date_of_birth: '',
     gender: '',
   });
+  const [passwordData, setPasswordData] = useState<PasswordFormData>({
+    current_password: '',
+    password: '',
+    password_confirmation: '',
+  });
 
   const { user } = useAuth();
   const { data: profileData, isLoading, error } = useProfile();
+  const updateProfileMutation = useUpdateProfile();
+  const changePasswordMutation = useChangePassword();
 
-  const profile = profileData?.data || user;
+  const profile = (profileData as any)?.data || user;
 
   // Initialize form data when profile loads
   React.useEffect(() => {
@@ -78,11 +101,31 @@ export default function ProfilePage() {
     e.preventDefault();
     
     try {
-      // Implementation would use update profile mutation
-      console.log('Updating profile:', formData);
+      await updateProfileMutation.mutateAsync(formData);
       setIsEditing(false);
     } catch (error) {
       console.error('Failed to update profile:', error);
+    }
+  };
+
+  const handlePasswordChange = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (passwordData.password !== passwordData.password_confirmation) {
+      toast.error('New passwords do not match');
+      return;
+    }
+
+    try {
+      await changePasswordMutation.mutateAsync(passwordData);
+      setShowPasswordModal(false);
+      setPasswordData({
+        current_password: '',
+        password: '',
+        password_confirmation: '',
+      });
+    } catch (error) {
+      console.error('Failed to change password:', error);
     }
   };
 
@@ -334,10 +377,11 @@ export default function ProfilePage() {
                 </button>
                 <button
                   type="submit"
-                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-[#00072D] rounded-md hover:bg-[#00072D]/90 transition-colors"
+                  disabled={updateProfileMutation.isPending}
+                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-[#00072D] rounded-md hover:bg-[#00072D]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Save className="w-4 h-4 mr-2" />
-                  Save Changes
+                  {updateProfileMutation.isPending ? 'Saving...' : 'Save Changes'}
                 </button>
               </div>
             )}
@@ -352,35 +396,132 @@ export default function ProfilePage() {
           <h3 className="text-lg font-semibold text-gray-900">Account Security</h3>
         </div>
         <div className="space-y-4">
-          <div className="flex items-center justify-between py-3 border-b border-gray-200">
-            <div>
-              <h4 className="text-sm font-medium text-gray-900">Password</h4>
-              <p className="text-sm text-gray-500">Last updated 30 days ago</p>
-            </div>
-            <button className="text-sm text-[#00072D] hover:text-[#00072D]/80 font-medium">
-              Change Password
-            </button>
-          </div>
-          <div className="flex items-center justify-between py-3 border-b border-gray-200">
-            <div>
-              <h4 className="text-sm font-medium text-gray-900">Two-Factor Authentication</h4>
-              <p className="text-sm text-gray-500">Add an extra layer of security</p>
-            </div>
-            <button className="text-sm text-[#00072D] hover:text-[#00072D]/80 font-medium">
-              Enable 2FA
-            </button>
-          </div>
           <div className="flex items-center justify-between py-3">
             <div>
-              <h4 className="text-sm font-medium text-gray-900">Login Sessions</h4>
-              <p className="text-sm text-gray-500">Manage your active sessions</p>
+              <h4 className="text-sm font-medium text-gray-900">Password</h4>
+              <p className="text-sm text-gray-500">Update your password to keep your account secure</p>
             </div>
-            <button className="text-sm text-[#00072D] hover:text-[#00072D]/80 font-medium">
-              View Sessions
+            <button 
+              onClick={() => setShowPasswordModal(true)}
+              className="text-sm text-[#00072D] hover:text-[#00072D]/80 font-medium"
+            >
+              Change Password
             </button>
           </div>
         </div>
       </div>
+
+      {/* Change Password Modal */}
+      {showPasswordModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <div className="flex items-center">
+                <Lock className="w-6 h-6 text-[#00072D] mr-3" />
+                <h3 className="text-lg font-semibold text-gray-900">Change Password</h3>
+              </div>
+              <button
+                onClick={() => setShowPasswordModal(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handlePasswordChange} className="p-6 space-y-4">
+              {/* Current Password */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Current Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPasswords.current ? 'text' : 'password'}
+                    value={passwordData.current_password}
+                    onChange={(e) => setPasswordData({ ...passwordData, current_password: e.target.value })}
+                    className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#00072D] focus:border-transparent"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPasswords({ ...showPasswords, current: !showPasswords.current })}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    {showPasswords.current ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              {/* New Password */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  New Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPasswords.new ? 'text' : 'password'}
+                    value={passwordData.password}
+                    onChange={(e) => setPasswordData({ ...passwordData, password: e.target.value })}
+                    className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#00072D] focus:border-transparent"
+                    required
+                    minLength={8}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPasswords({ ...showPasswords, new: !showPasswords.new })}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    {showPasswords.new ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+                <p className="text-xs text-gray-500 mt-1">Must be at least 8 characters</p>
+              </div>
+
+              {/* Confirm New Password */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Confirm New Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPasswords.confirm ? 'text' : 'password'}
+                    value={passwordData.password_confirmation}
+                    onChange={(e) => setPasswordData({ ...passwordData, password_confirmation: e.target.value })}
+                    className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#00072D] focus:border-transparent"
+                    required
+                    minLength={8}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPasswords({ ...showPasswords, confirm: !showPasswords.confirm })}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    {showPasswords.confirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex items-center justify-end space-x-3 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setShowPasswordModal(false)}
+                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={changePasswordMutation.isPending}
+                  className="px-4 py-2 text-sm font-medium text-white bg-[#00072D] rounded-md hover:bg-[#00072D]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {changePasswordMutation.isPending ? 'Changing...' : 'Change Password'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

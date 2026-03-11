@@ -15,7 +15,6 @@ function LoginForm() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [isRedirecting, setIsRedirecting] = useState(false);
   
   const { login, user, loading: authLoading } = useAuth();
   const { addToCart } = useCart();
@@ -40,10 +39,13 @@ function LoginForm() {
   useEffect(() => {
     if (!authLoading && user && !hasRedirected.current && !isSubmitting.current) {
       hasRedirected.current = true;
-      console.log("User already logged in, redirecting based on user type");
+      console.log("User already logged in, redirecting");
       
-      // Simple direct redirect based on user type - NO RELOAD
-      if (user.user_type === 'admin') {
+      // Use redirect parameter if available, otherwise default based on user type
+      if (redirectTo && redirectTo !== '/') {
+        console.log("Redirecting to:", redirectTo);
+        router.push(redirectTo);
+      } else if (user.user_type === 'admin') {
         console.log("Redirecting admin to /admin");
         router.push('/admin');
       } else {
@@ -51,7 +53,7 @@ function LoginForm() {
         router.push('/dashboard');
       }
     }
-  }, [user, authLoading, router]);
+  }, [user, authLoading, router, redirectTo]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -89,7 +91,6 @@ function LoginForm() {
       
       // Check for pending cart item
       const pendingCartItem = sessionStorage.getItem('pendingCartItem');
-      const cartRedirectUrl = sessionStorage.getItem('cartRedirectUrl');
       
       if (pendingCartItem) {
         try {
@@ -102,8 +103,11 @@ function LoginForm() {
         }
       }
       
-      // Simple direct redirect based on user type - NO RELOAD
-      if (loggedInUser.user_type === 'admin') {
+      // Use redirect parameter if available, otherwise default based on user type
+      if (redirectTo && redirectTo !== '/') {
+        console.log('Login successful, redirecting to:', redirectTo);
+        router.push(redirectTo);
+      } else if (loggedInUser.user_type === 'admin') {
         console.log('Admin login successful, redirecting to /admin');
         router.push('/admin');
       } else {
@@ -126,19 +130,12 @@ function LoginForm() {
 
   return (
     <div className="w-full space-y-8">
-      {isRedirecting ? (
-        <div className="flex flex-col items-center justify-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0B3B2D] mb-4"></div>
-          <p className="text-sm text-gray-600">Redirecting to dashboard...</p>
-        </div>
-      ) : (
-        <>
-          <div className="flex flex-col space-y-2 text-left">
-            <h1 className="text-3xl font-semibold tracking-tight text-foreground">Welcome back</h1>
-            <p className="text-sm text-muted-foreground">
-              Enter your details to access your account.
-            </p>
-          </div>
+      <div className="flex flex-col space-y-2 text-left">
+        <h1 className="text-3xl font-semibold tracking-tight text-foreground">Welcome back</h1>
+        <p className="text-sm text-muted-foreground">
+          Enter your details to access your account.
+        </p>
+      </div>
 
       {error && (
         <div className="p-4 rounded-lg bg-red-50 border border-red-200 text-red-600 text-sm">
@@ -233,8 +230,6 @@ function LoginForm() {
           Sign up
         </Link>
       </div>
-      </>
-      )}
     </div>
   );
 }

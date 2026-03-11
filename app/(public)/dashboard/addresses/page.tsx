@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { 
   useAddresses, 
   useCreateAddress, 
@@ -41,6 +42,7 @@ const addressTypeConfig = {
 export default function AddressesPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingAddress, setEditingAddress] = useState<any>(null);
+  const [mounted, setMounted] = useState(false);
   const [formData, setFormData] = useState<AddressFormData>({
     address_line_1: '',
     address_line_2: '',
@@ -51,6 +53,10 @@ export default function AddressesPage() {
     address_type: 'user_address',
     is_default: false,
   });
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const { data: addressesData, isLoading, error } = useAddresses();
   const createAddressMutation = useCreateAddress();
@@ -273,12 +279,18 @@ export default function AddressesPage() {
       )}
 
       {/* Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 overflow-y-auto">
+      {mounted && isModalOpen && createPortal(
+        <div className="fixed inset-0 z-[9999] overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
           <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onClick={handleCloseModal}></div>
+            <div 
+              className="fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity" 
+              onClick={handleCloseModal} 
+              aria-hidden="true"
+            ></div>
 
-            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+            <div className="inline-block align-bottom bg-white rounded-xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full relative z-[10000]">
               <form onSubmit={handleSubmit}>
                 <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                   <div className="flex items-center justify-between mb-4">
@@ -424,7 +436,8 @@ export default function AddressesPage() {
               </form>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

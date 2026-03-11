@@ -1,7 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useOrder, useCancelOrder, useDownloadInvoice } from '@/lib/hooks/user';
+import { useOrderItemReviews, useSubmitReview } from '@/lib/hooks/user/useUserReviews';
 import Link from 'next/link';
 import Image from 'next/image';
 import { 
@@ -17,7 +19,10 @@ import {
   CreditCard,
   Calendar,
   DollarSign,
-  ShoppingBag
+  ShoppingBag,
+  Star,
+  MessageSquare,
+  Loader2
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getPrimaryImageUrl } from '@/lib/utils/image';
@@ -39,6 +44,14 @@ interface OrderDetailPageProps {
 
 export default function OrderDetailPage({ params }: OrderDetailPageProps) {
   const [orderNumber, setOrderNumber] = useState<string>('');
+  const [mounted, setMounted] = useState(false);
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<any>(null);
+  const [reviewForm, setReviewForm] = useState({
+    rating: 5,
+    title: '',
+    comment: '',
+  });
   
   // Handle params properly for Next.js 13+ app router
   useEffect(() => {
@@ -47,11 +60,14 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
       setOrderNumber(resolvedParams.orderNumber);
     };
     resolveParams();
+    setMounted(true);
   }, [params]);
 
   const { data: orderData, isLoading, error } = useOrder(orderNumber || '');
+  const { data: reviewsData } = useOrderItemReviews(orderNumber || '');
   const cancelOrderMutation = useCancelOrder();
   const downloadInvoice = useDownloadInvoice(orderNumber || '');
+  const submitReviewMutation = useSubmitReview();
 
   // Handle API response - the API returns {success: true, data: {order object}}
   let order = null;
@@ -71,6 +87,72 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
       order = orderData;
     }
   }
+
+  // Handle reviews data
+  let itemReviews: any = {};
+  if (reviewsData) {
+    const data = reviewsData as any;
+    if (data.success && data.data) {
+      const reviews = Array.isArray(data.data) ? data.data : [];
+      reviews.forEach((review: any) => {
+        if (review.order_item_id) {
+          itemReviews[review.order_item_id] = review;
+        }
+      });
+    }
+  }
+
+  const handleOpenReviewForm = (item: any) => {
+    setSelectedItem(item);
+    setReviewForm({
+      rating: 5,
+      title: '',
+      comment: '',
+    });
+    setShowReviewForm(true);
+  };
+
+  const handleCloseReviewForm = () => {
+    setShowReviewForm(false);
+    setSelectedItem(null);
+  };
+
+  const handleSubmitReview = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!selectedItem) return;
+
+    try {
+      await submitReviewMutation.mutateAsync({
+        product_id: selectedItem.product_id,
+        order_item_id: selectedItem.id,
+        rating: reviewForm.rating,
+        title: reviewForm.title,
+        comment: reviewForm.comment,
+      });
+      handleCloseReviewForm();
+    } catch (error) {
+      console.error('Failed to submit review:', error);
+    }
+  };
+
+  const renderStars = (rating: number, interactive = false, onChange?: (rating: number) => void) => {
+    return (
+      <div className="flex">
+        {[...Array(5)].map((_, i) => (
+          <Star
+            key={i}
+            className={cn(
+              "w-4 h-4",
+              interactive && "cursor-pointer hover:scale-110 transition-transform",
+              i < rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
+            )}
+            onClick={() => interactive && onChange && onChange(i + 1)}
+          />
+        ))}
+      </div>
+    );
+  };
 
   const handleCancelOrder = async () => {
     if (window.confirm('Are you sure you want to cancel this order?')) {
@@ -281,50 +363,96 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
               <div className="space-y-4">
                 {order.items.map((item: any, index: number) => {
                   const productSlug = item.product?.slug;
-                  const productImage = getPrimaryImageUrl(item.product?.images);
+                  // Handle images from various possible locations in the API response
+                  const productImages = item.product?.images || item.images || item.product_images;
+                  const productImage = getPrimaryImageUrl(productImages);
+                  const hasReview = itemReviews[item.id];
+                  const canReview = order.status === 'delivered' || order.status === 'shipped';
                   
                   return (
-                    <div key={item.id || index} className="flex items-center space-x-4 pb-4 border-b border-gray-100 last:border-0 last:pb-0">
-                      <Link 
-                        href={productSlug ? `/product/${productSlug}` : '#'}
-                        className="flex-shrink-0"
-                      >
-                        <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden hover:opacity-80 transition-opacity">
-                          <Image
-                            src={productImage}
-                            alt={item.product_name}
-                            width={64}
-                            height={64}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      </Link>
-                      
-                      <div className="flex-1 min-w-0">
+                    <div key={item.id || index} className="pb-4 border-b border-gray-100 last:border-0 last:pb-0">
+                      <div className="flex items-center space-x-4">
                         <Link 
                           href={productSlug ? `/product/${productSlug}` : '#'}
-                          className="hover:text-[#00072D]/80 transition-colors"
+                          className="flex-shrink-0"
                         >
-                          <h5 className="font-medium text-gray-900 truncate">{item.product_name}</h5>
+                          <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden hover:opacity-80 transition-opacity">
+                            <img
+                              src={productImage}
+                              alt={item.product_name}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).style.display = 'none';
+                              }}
+                            />
+                          </div>
                         </Link>
-                        {item.product_variation && item.product_variation.variation_values && (
-                          <p className="text-sm text-gray-600 truncate">
-                            {item.product_variation.variation_values.map((val: any) => 
-                              `${val.variation_option.variation.name}: ${val.variation_option.label}`
-                            ).join(', ')}
+                        
+                        <div className="flex-1 min-w-0">
+                          <Link 
+                            href={productSlug ? `/product/${productSlug}` : '#'}
+                            className="hover:text-[#00072D]/80 transition-colors"
+                          >
+                            <h5 className="font-medium text-gray-900 truncate">{item.product_name}</h5>
+                          </Link>
+                          {item.product_variation && item.product_variation.variation_values && (
+                            <p className="text-sm text-gray-600 truncate">
+                              {item.product_variation.variation_values.map((val: any) => 
+                                `${val.variation_option.variation.name}: ${val.variation_option.label}`
+                              ).join(', ')}
+                            </p>
+                          )}
+                          <p className="text-sm text-gray-500">SKU: {item.product?.sku || 'N/A'}</p>
+                        </div>
+                        
+                        <div className="text-right flex-shrink-0">
+                          <p className="text-sm text-gray-600">
+                            ${item.unit_price} × {item.quantity}
                           </p>
-                        )}
-                        <p className="text-sm text-gray-500">SKU: {item.product?.sku || 'N/A'}</p>
+                          <p className="font-semibold text-gray-900">
+                            ${item.total_price}
+                          </p>
+                        </div>
                       </div>
-                      
-                      <div className="text-right flex-shrink-0">
-                        <p className="text-sm text-gray-600">
-                          ${item.unit_price} × {item.quantity}
-                        </p>
-                        <p className="font-semibold text-gray-900">
-                          ${item.total_price}
-                        </p>
-                      </div>
+
+                      {/* Review Section for Item */}
+                      {canReview && (
+                        <div className="mt-3 pt-3 border-t border-gray-100">
+                          {hasReview ? (
+                            <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                              <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-2 mb-1">
+                                    <MessageSquare className="w-4 h-4 text-green-600" />
+                                    <span className="text-sm font-medium text-green-800">You reviewed this product</span>
+                                  </div>
+                                  {renderStars(hasReview.rating)}
+                                  {hasReview.title && (
+                                    <p className="text-sm font-medium text-gray-900 mt-2">{hasReview.title}</p>
+                                  )}
+                                  {hasReview.comment && (
+                                    <p className="text-sm text-gray-700 mt-1 line-clamp-2">{hasReview.comment}</p>
+                                  )}
+                                </div>
+                                <Link
+                                  href="/dashboard/reviews"
+                                  className="text-sm text-green-700 hover:text-green-800 font-medium ml-3"
+                                >
+                                  View
+                                </Link>
+                              </div>
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => handleOpenReviewForm(item)}
+                              className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-[#00072D] bg-orange-50 border border-orange-200 rounded-md hover:bg-orange-100 transition-colors"
+                            >
+                              <Star className="w-4 h-4 mr-1" />
+                              Write a Review
+                            </button>
+                          )}
+                        </div>
+                      )}
                     </div>
                   );
                 })}
@@ -503,6 +631,124 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
           </div>
         </div>
       </div>
+
+      {/* Review Form Modal */}
+      {mounted && showReviewForm && selectedItem && createPortal(
+        <div className="fixed inset-0 z-[9999] overflow-y-auto" role="dialog" aria-modal="true">
+          <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div 
+              className="fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity" 
+              onClick={handleCloseReviewForm}
+              aria-hidden="true"
+            ></div>
+
+            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+            <div className="inline-block align-bottom bg-white rounded-xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full relative z-[10000]">
+              <form onSubmit={handleSubmitReview}>
+                <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-medium text-gray-900">
+                      Write a Review
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={handleCloseReviewForm}
+                      className="text-gray-400 hover:text-gray-600"
+                    >
+                      <X className="h-6 w-6" />
+                    </button>
+                  </div>
+
+                  {/* Product Info */}
+                  <div className="flex gap-3 mb-6 p-3 bg-gray-50 rounded-lg">
+                    <div className="w-16 h-16 bg-gray-100 rounded overflow-hidden flex-shrink-0">
+                      <img
+                        src={getPrimaryImageUrl(selectedItem.product?.images)}
+                        alt={selectedItem.product_name}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).style.display = 'none';
+                        }}
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-medium text-gray-900 line-clamp-2 text-sm">
+                        {selectedItem.product_name}
+                      </h4>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Order #{orderNumber}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Rating *
+                      </label>
+                      {renderStars(reviewForm.rating, true, (rating) => setReviewForm({ ...reviewForm, rating }))}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Review Title *
+                      </label>
+                      <input
+                        type="text"
+                        value={reviewForm.title}
+                        onChange={(e) => setReviewForm({ ...reviewForm, title: e.target.value })}
+                        placeholder="Sum up your experience"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#00072D] focus:border-transparent"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Your Review *
+                      </label>
+                      <textarea
+                        value={reviewForm.comment}
+                        onChange={(e) => setReviewForm({ ...reviewForm, comment: e.target.value })}
+                        placeholder="Share your thoughts about this product"
+                        rows={4}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#00072D] focus:border-transparent resize-none"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                  <button
+                    type="submit"
+                    disabled={submitReviewMutation.isPending}
+                    className="w-full inline-flex justify-center items-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-[#00072D] text-base font-medium text-white hover:bg-[#00072D]/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00072D] sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50"
+                  >
+                    {submitReviewMutation.isPending ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Submitting...
+                      </>
+                    ) : (
+                      'Submit Review'
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleCloseReviewForm}
+                    className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
     </div>
   );
 }

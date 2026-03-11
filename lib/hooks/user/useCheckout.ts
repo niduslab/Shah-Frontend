@@ -60,3 +60,13 @@ export const useProcessCheckout = (options?: UseMutationOptions<any, any, Checko
     ...options,
   });
 };
+
+export const useSendRegistrationOtp = (options?: UseMutationOptions<any, any, { email: string }>) => {
+  return useMutation({
+    mutationFn: async (data: { email: string }) => {
+      const response = await api.post('/api/auth/send-registration-otp', data);
+      return response.data;
+    },
+    ...options,
+  });
+};

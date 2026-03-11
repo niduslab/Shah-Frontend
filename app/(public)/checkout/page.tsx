@@ -5,9 +5,11 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/context/AuthContext";
 import { useCart } from "@/lib/context/CartContext";
 import { useAddresses, useCreateAddress } from "@/lib/hooks/user";
-import { useProcessCheckout, useGetShippingMethods } from "@/lib/hooks/user/useCheckout";
+import { useProcessCheckout, useGetShippingMethods, useSendRegistrationOtp } from "@/lib/hooks/user/useCheckout";
+import { otpAuthService } from "@/lib/services/otpAuthService";
 import { toast } from "sonner";
 import { getPlaceholderImage } from "@/lib/utils/image";
+import OtpInput from "@/lib/components/OtpInput";
 import { 
   ChevronDown, 
   DollarSign, 
@@ -18,10 +20,11 @@ import {
   Check,
   MapPin,
   Plus,
-  Edit,
   Home,
   Building,
-  CreditCard
+  CreditCard,
+  Mail,
+  ShieldCheck
 } from "lucide-react";
 
 // Types
@@ -77,6 +80,7 @@ export default function CheckoutPage() {
   const createAddressMutation = useCreateAddress();
   const processCheckout = useProcessCheckout();
   const getShippingMethods = useGetShippingMethods();
+  const sendRegistrationOtp = useSendRegistrationOtp();
   
   const [paymentMethod, setPaymentMethod] = useState<"cod" | "ssl">("cod");
   const [isProcessing, setIsProcessing] = useState(false);
@@ -84,6 +88,14 @@ export default function CheckoutPage() {
   const [isClient, setIsClient] = useState(false);
   const [shippingMethods, setShippingMethods] = useState<ShippingMethod[]>([]);
   const [selectedShipping, setSelectedShipping] = useState<string>("");
+  
+  // Email OTP verification states
+  const [emailVerified, setEmailVerified] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [sendingOtp, setSendingOtp] = useState(false);
+  const [verifyingOtp, setVerifyingOtp] = useState(false);
+  const [otpTimer, setOtpTimer] = useState(0);
   
   // Address management
   const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
@@ -121,14 +133,28 @@ export default function CheckoutPage() {
     return acc + (price * item.quantity);
   }, 0);
   const totalItems = getCartCount();
-  const tax = subTotal * 0.05; // 5% tax
   const selectedShippingMethod = shippingMethods.find(m => m.code === selectedShipping);
   const shipping = selectedShippingMethod?.cost || 0;
-  const totalPrice = subTotal + tax + shipping;
+  const totalPrice = subTotal + shipping;
   // Set client-side flag
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  // OTP timer countdown
+  useEffect(() => {
+    if (otpTimer > 0) {
+      const timer = setTimeout(() => setOtpTimer(otpTimer - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [otpTimer]);
+
+  // Auto-verify email for authenticated users
+  useEffect(() => {
+    if (user) {
+      setEmailVerified(true);
+    }
+  }, [user]);
 
   // Auto-select default address for authenticated users
   useEffect(() => {
@@ -202,6 +228,82 @@ export default function CheckoutPage() {
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
     }
+    // Reset email verification if email changes
+    if (field === 'email' && typeof value === 'string') {
+      setEmailVerified(false);
+      setOtpSent(false);
+      setOtp("");
+    }
+  };
+
+  // Send OTP to email
+  const handleSendOtp = async () => {
+    // Validate email first
+    if (!guestData.email.trim()) {
+      toast.error('Please enter your email address');
+      return;
+    }
+    if (!isValidEmail(guestData.email)) {
+      toast.error('Please enter a valid email address');
+      return;
+    }
+
+    setSendingOtp(true);
+    try {
+      const data = await sendRegistrationOtp.mutateAsync({ email: guestData.email });
+      
+      if (data.success) {
+        toast.success('Verification code sent to your email');
+        setOtpSent(true);
+        setOtpTimer(120); // 2 minutes
+      } else {
+        toast.error(data.message || 'Failed to send verification code');
+      }
+    } catch (error: any) {
+      console.error('Send OTP error:', error);
+      const errorMessage = error.response?.data?.message || 
+                          error.response?.data?.error || 
+                          'Failed to send verification code. Please try again.';
+      toast.error(errorMessage);
+    } finally {
+      setSendingOtp(false);
+    }
+  };
+
+  // Verify OTP
+  const handleVerifyOtp = async () => {
+    if (otp.length !== 6) {
+      toast.error('Please enter the 6-digit verification code');
+      return;
+    }
+
+    setVerifyingOtp(true);
+    try {
+      const data = await otpAuthService.verifyOtp(guestData.email, otp);
+
+      if (data.success) {
+        toast.success('Email verified successfully!');
+        setEmailVerified(true);
+        setOtpTimer(0);
+      } else {
+        toast.error(data.message || 'Invalid or expired verification code');
+        // Don't clear OTP on error, let user try again
+      }
+    } catch (error: any) {
+      console.error('Verify OTP error:', error);
+      const errorMessage = error.response?.data?.message || 
+                          error.response?.data?.error || 
+                          'Failed to verify code. Please try again.';
+      toast.error(errorMessage);
+      // Don't clear OTP on error, let user try again
+    } finally {
+      setVerifyingOtp(false);
+    }
+  };
+
+  // Handle OTP input change (only update state, don't auto-verify)
+  const handleOtpChange = (value: string) => {
+    setOtp(value);
   };
 
   // Handle address form change
@@ -260,6 +362,8 @@ export default function CheckoutPage() {
         newErrors.email = 'Email is required';
       } else if (!isValidEmail(guestData.email)) {
         newErrors.email = 'Please enter a valid email address';
+      } else if (!emailVerified) {
+        newErrors.email = 'Please verify your email address';
       }
 
       if (!guestData.phone.trim()) {
@@ -402,12 +506,12 @@ export default function CheckoutPage() {
             return;
           }
         } else {
-          // For COD, clear cart and redirect to order confirmation
+          // For COD, clear cart and redirect to invoice page
           clearCart();
           const orderNumber = response.data?.order_number || response.data?.order?.order_number;
           if (orderNumber) {
             setTimeout(() => {
-              window.location.href = `/orders/${orderNumber}`;
+              window.location.href = `/invoice/${orderNumber}`;
             }, 100);
           } else {
             setTimeout(() => {
@@ -717,15 +821,125 @@ export default function CheckoutPage() {
                           <label className="text-sm font-medium text-gray-700">
                             Email Address <span className="text-red-500">*</span>
                           </label>
-                          <input 
-                            type="email"
-                            name="email"
-                            placeholder="your.email@example.com" 
-                            value={guestData.email}
-                            onChange={(e) => handleInputChange('email', e.target.value)}
-                            className={`w-full rounded-sm border ${errors.email ? 'border-red-500' : 'border-gray-200'} bg-white px-4 py-2.5 outline-none focus:border-black transition-colors`}
-                          />
+                          <div className="flex gap-2">
+                            <input 
+                              type="email"
+                              name="email"
+                              placeholder="your.email@example.com" 
+                              value={guestData.email}
+                              onChange={(e) => handleInputChange('email', e.target.value)}
+                              disabled={emailVerified}
+                              className={`flex-1 rounded-sm border ${errors.email ? 'border-red-500' : emailVerified ? 'border-green-500 bg-green-50' : 'border-gray-200'} bg-white px-4 py-2.5 outline-none focus:border-black transition-colors disabled:opacity-70`}
+                            />
+                            {!emailVerified && (
+                              <button
+                                type="button"
+                                onClick={handleSendOtp}
+                                disabled={sendingOtp || !guestData.email || !isValidEmail(guestData.email) || otpTimer > 0}
+                                className="px-4 py-2.5 bg-[#0B3B2D] text-white text-sm font-medium rounded-sm hover:bg-[#0B3B2D]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap flex items-center gap-2"
+                              >
+                                {sendingOtp ? (
+                                  <>
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                    Sending...
+                                  </>
+                                ) : otpTimer > 0 ? (
+                                  `Resend (${Math.floor(otpTimer / 60)}:${(otpTimer % 60).toString().padStart(2, '0')})`
+                                ) : otpSent ? (
+                                  <>
+                                    <Mail className="h-4 w-4" />
+                                    Resend Code
+                                  </>
+                                ) : (
+                                  <>
+                                    <Mail className="h-4 w-4" />
+                                    Verify Email
+                                  </>
+                                )}
+                              </button>
+                            )}
+                            {emailVerified && (
+                              <div className="px-4 py-2.5 bg-green-100 text-green-700 text-sm font-medium rounded-sm flex items-center gap-2">
+                                <ShieldCheck className="h-4 w-4" />
+                                Verified
+                              </div>
+                            )}
+                          </div>
                           {errors.email && <p className="text-xs text-red-500">{errors.email}</p>}
+                          
+                          {/* OTP Verification Section */}
+                          <div className={`mt-4 p-4 border rounded-sm space-y-4 transition-all ${
+                            !otpSent ? 'hidden' : emailVerified 
+                              ? 'bg-green-50 border-green-200' 
+                              : 'bg-blue-50 border-blue-200'
+                          }`}>
+                            <div className="flex items-start gap-2">
+                              {emailVerified ? (
+                                <ShieldCheck className="h-5 w-5 text-green-600 mt-0.5" />
+                              ) : (
+                                <Mail className="h-5 w-5 text-blue-600 mt-0.5" />
+                              )}
+                              <div className="flex-1">
+                                <h4 className={`font-medium mb-1 ${
+                                  emailVerified ? 'text-green-900' : 'text-blue-900'
+                                }`}>
+                                  {emailVerified ? 'Email Verified Successfully!' : 'Verify Your Email'}
+                                </h4>
+                                <p className={`text-sm ${
+                                  emailVerified ? 'text-green-700' : 'text-blue-700'
+                                }`}>
+                                  {emailVerified 
+                                    ? `Your email ${guestData.email} has been verified and you can now proceed with checkout.`
+                                    : `We've sent a 6-digit verification code to ${guestData.email}`
+                                  }
+                                </p>
+                              </div>
+                            </div>
+                            
+                            <div className={`space-y-3 ${emailVerified ? 'hidden' : 'block'}`}>
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2 text-center">
+                                  Enter Verification Code
+                                </label>
+                                <OtpInput
+                                  key="checkout-otp"
+                                  length={6}
+                                  value={otp}
+                                  onChange={handleOtpChange}
+                                  disabled={verifyingOtp}
+                                />
+                              </div>
+                              
+                              <button
+                                type="button"
+                                onClick={handleVerifyOtp}
+                                disabled={verifyingOtp || otp.length !== 6}
+                                className="w-full px-4 py-2.5 bg-[#0B3B2D] text-white text-sm font-medium rounded-sm hover:bg-[#0B3B2D]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                              >
+                                {verifyingOtp ? (
+                                  <>
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                    Verifying...
+                                  </>
+                                ) : (
+                                  <>
+                                    <ShieldCheck className="h-4 w-4" />
+                                    Verify Code
+                                  </>
+                                )}
+                              </button>
+                              
+                              <div className="text-center">
+                                <p className="text-xs text-gray-600">
+                                  {otpTimer > 0 ? (
+                                    <>Code expires in {Math.floor(otpTimer / 60)}:{(otpTimer % 60).toString().padStart(2, '0')}</>
+                                  ) : (
+                                    <>Code expired. <button type="button" onClick={handleSendOtp} className="text-[#0B3B2D] font-medium hover:underline">Resend code</button></>
+                                  )}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
                         </div>
 
                         <div className="space-y-1">
@@ -1053,14 +1267,35 @@ export default function CheckoutPage() {
                   {items.map((item, index) => {
                     const price = item.variation ? parseFloat(item.variation.price) : parseFloat(item.product?.price || '0');
                     const itemTotal = price * item.quantity;
+                    
+                    // Get image URL - handle both API format and direct URLs
+                    let imageUrl = getPlaceholderImage(item.product?.name || 'Product');
+                    if (item.product?.images && item.product.images.length > 0) {
+                      const firstImage = item.product.images[0];
+                      if (typeof firstImage === 'string') {
+                        // Direct URL from product card
+                        imageUrl = firstImage;
+                      } else if (firstImage?.image_path) {
+                        // API format with image_path
+                        imageUrl = firstImage.image_path.startsWith('http') 
+                          ? firstImage.image_path 
+                          : `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}/${firstImage.image_path}`;
+                      }
+                    } else if (item.product?.image) {
+                      // Fallback to product.image if available
+                      imageUrl = item.product.image;
+                    }
 
                     return (
                       <div key={`${item.product_id}-${item.variation_id || 'no-variation'}-${index}`} className="flex items-start gap-3">
                         <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-sm bg-gray-100">
                           <img
-                            src={getPlaceholderImage(item.product?.image)}
+                            src={imageUrl}
                             alt={item.product?.name || 'Product'}
                             className="h-full w-full object-cover"
+                            onError={(e) => {
+                              e.currentTarget.src = getPlaceholderImage(item.product?.name || 'Product');
+                            }}
                           />
                           <div className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-black text-xs font-bold text-white">
                             {item.quantity}
@@ -1103,11 +1338,6 @@ export default function CheckoutPage() {
                     <span className="font-medium text-black">
                       {selectedShippingMethod?.is_free ? 'FREE' : `$${shipping.toFixed(2)}`}
                     </span>
-                  </div>
-                  
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Tax (5%)</span>
-                    <span className="font-medium text-black">${tax.toFixed(2)}</span>
                   </div>
                   
                   <div className="flex justify-between border-t border-gray-200 pt-3 text-lg font-bold">

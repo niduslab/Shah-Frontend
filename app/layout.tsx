@@ -5,6 +5,7 @@ import { AuthProvider } from "@/lib/context/AuthContext";
 import { CartProvider } from "@/lib/context/CartContext";
 import QueryProvider from "@/lib/providers/QueryProvider";
 import { Toaster } from "sonner";
+import { ToastProvider } from "@/lib/components/ToastProvider";
 
 const instrumentSans = Instrument_Sans({
   variable: "--font-instrument-sans",
@@ -35,6 +36,7 @@ export default function RootLayout({
           </AuthProvider>
         </QueryProvider>
         <Toaster position="bottom-right" richColors />
+        <ToastProvider />
       </body>
     </html>
   );

@@ -54,7 +54,9 @@ export function getPrimaryImageUrl(
   
   // Use full_url if available, otherwise fall back to image_path
   const imagePath = imageToUse.full_url || imageToUse.image_path;
-  return getImageUrl(imagePath);
+  const url = getImageUrl(imagePath);
+  
+  return url || getPlaceholderImage();
 }
 
 /**

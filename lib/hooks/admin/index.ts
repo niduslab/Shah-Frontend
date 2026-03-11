@@ -11,3 +11,4 @@ export * from './useAdminFlashDeals';
 export * from './useCoupons';
 export * from './useAdminReviews';
 export * from './useAdminUsers';
+export * from './useAdminNotifications';

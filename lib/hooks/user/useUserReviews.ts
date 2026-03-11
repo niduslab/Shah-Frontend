@@ -21,6 +21,29 @@ export const useMyReviews = (options?: UseQueryOptions) => {
   });
 };
 
+export const useReviewableItems = (options?: UseQueryOptions) => {
+  return useQuery({
+    queryKey: ['reviewable-items'],
+    queryFn: async () => {
+      const response = await api.get('/api/reviews/reviewable-items');
+      return response.data;
+    },
+    ...options,
+  });
+};
+
+export const useOrderItemReviews = (orderNumber: string, options?: UseQueryOptions) => {
+  return useQuery({
+    queryKey: ['order-reviews', orderNumber],
+    queryFn: async () => {
+      const response = await api.get(`/api/reviews/order/${orderNumber}`);
+      return response.data;
+    },
+    enabled: !!orderNumber,
+    ...options,
+  });
+};
+
 export const useSubmitReview = (options?: UseMutationOptions<any, any, ReviewData>) => {
   const queryClient = useQueryClient();
   
@@ -31,6 +54,8 @@ export const useSubmitReview = (options?: UseMutationOptions<any, any, ReviewDat
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['my-reviews'] });
+      queryClient.invalidateQueries({ queryKey: ['reviewable-items'] });
+      queryClient.invalidateQueries({ queryKey: ['order-reviews'] });
       queryClient.invalidateQueries({ queryKey: ['product-reviews'] });
     },
     ...options,
@@ -46,3 +71,4 @@ export const useMarkReviewHelpful = (options?: UseMutationOptions<any, any, numb
     ...options,
   });
 };
+

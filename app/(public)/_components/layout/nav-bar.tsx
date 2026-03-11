@@ -13,6 +13,7 @@ import { ShopMainMegaMenu } from "./shop-main-mega-menu";
 import { SportsMegaMenu } from "./sports-mega-menu";
 import { BrandsMegaMenu } from "./brands-mega-menu";
 import { FloorSolutionsMegaMenu } from "./floor-solutions-mega-menu";
+import { UserNotificationBell } from "./UserNotificationBell";
 
 export function NavBar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -161,7 +162,7 @@ export function NavBar() {
             </div>
             <div className="group">
               <button className="flex items-center gap-1 transition-colors duration-200 hover:text-[#ffb81e] group-hover:text-[#ffb81e] py-4">
-                Floor Solutions <ChevronDown className="h-4 w-4 transition-transform duration-200 group-hover:rotate-180" />
+                Flooring <ChevronDown className="h-4 w-4 transition-transform duration-200 group-hover:rotate-180" />
               </button>
               
               <FloorSolutionsMegaMenu className="invisible translate-y-2 opacity-0 transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100" />
@@ -180,7 +181,7 @@ export function NavBar() {
         {/* Right Section: Search & Icons */}
         <div className="flex items-center gap-4 md:gap-6">
           {/* Search Bar (Desktop) */}
-          <div className="relative hidden w-[200px] xl:w-[300px] lg:block">
+          <div className="relative hidden w-[100px] xl:w-[150px] lg:block">
             <input
               type="text"
               placeholder="Search Products"
@@ -210,6 +211,9 @@ export function NavBar() {
               </div>
               <span className="hidden md:inline">Cart</span>
             </Link>
+
+            {/* Notification Bell - Only show for logged in users */}
+            {user && <UserNotificationBell />}
             
             {/* User Menu */}
             {!loading && (

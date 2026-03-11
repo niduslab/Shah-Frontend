@@ -10,11 +10,11 @@ export default function DashboardLayout({
 }) {
   return (
     <AuthGuard requireAuth>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 relative">
         <div className="flex justify-center">
           <div className="w-full max-w-6xl flex">
             <UserSidebar />
-            <main className="">
+            <main className="flex-1">
               <div className="p-4 lg:p-8">
                 {children}
               </div>

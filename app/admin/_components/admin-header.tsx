@@ -4,6 +4,8 @@ import { Bell, MessageSquare, Search, ChevronDown, LogOut, User, Settings } from
 import { useAuth } from "@/lib/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
+import { NotificationBell } from "@/lib/components/NotificationBell";
+import { useAdminNotifications, useAdminUnreadCount, useAdminMarkAsRead, useAdminMarkAllAsRead, useAdminDeleteNotification } from "@/lib/hooks/admin";
 
 // Temporary debug import - remove after testing
 if (process.env.NODE_ENV === 'development') {
@@ -17,6 +19,30 @@ export function AdminHeader() {
   const router = useRouter();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Notification hooks - fetch more notifications to get accurate unread count
+  const { data: notificationsData, isLoading: notificationsLoading } = useAdminNotifications({ page: 1, per_page: 20 });
+  const { data: unreadData } = useAdminUnreadCount();
+  const markAsReadMutation = useAdminMarkAsRead();
+  const markAllAsReadMutation = useAdminMarkAllAsRead();
+  const deleteNotificationMutation = useAdminDeleteNotification();
+
+  const allNotifications = (notificationsData as any)?.data?.data || [];
+  const notifications = allNotifications.slice(0, 5); // Show only 5 in dropdown
+  
+  // Calculate unread count from all fetched notifications
+  const unreadCount = (unreadData as any)?.count || (unreadData as any)?.unread_count || 
+    allNotifications.filter((n: any) => !n.read_at).length;
+
+  // Debug logging
+  useEffect(() => {
+    console.log('Admin Notifications:', {
+      total: allNotifications.length,
+      unreadCount,
+      unreadData,
+      notifications: allNotifications
+    });
+  }, [allNotifications, unreadCount, unreadData]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -79,11 +105,18 @@ export function AdminHeader() {
           <MessageSquare className="h-5 w-5" />
         </button>
 
-        {/* Notification */}
-        <button className="relative rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-50 hover:text-gray-700">
-          <Bell className="h-5 w-5" />
-          <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-red-500 ring-2 ring-white" />
-        </button>
+        {/* Notification Bell */}
+        <NotificationBell
+          notifications={notifications}
+          unreadCount={unreadCount}
+          onMarkAsRead={(id) => markAsReadMutation.mutate(id)}
+          onMarkAllAsRead={() => markAllAsReadMutation.mutate()}
+          onDelete={(id) => deleteNotificationMutation.mutate(id)}
+          onViewAll={() => router.push('/admin/notifications')}
+          isLoading={notificationsLoading}
+          variant="light"
+          isAdmin={true}
+        />
 
         {/* Profile Dropdown */}
         <div className="relative" ref={dropdownRef}>
