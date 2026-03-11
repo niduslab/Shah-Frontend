@@ -34,8 +34,8 @@ export default function FlashDealModal({ isOpen, onClose, flashDeal, onSubmit }:
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Fetch products and categories
-  const { data: productsData } = useAdminProducts({ search: productSearch, per_page: 50 }, { enabled: isOpen && selectionMode === 'products' });
-  const { data: categoriesData } = useAdminCategories({ per_page: 100 }, { enabled: isOpen });
+  const { data: productsData } = useAdminProducts({ search: productSearch, per_page: 50 });
+  const { data: categoriesData } = useAdminCategories({ per_page: 100 });
 
   const products = (productsData as any)?.data?.data || [];
   const categories = (categoriesData as any)?.data?.data || [];

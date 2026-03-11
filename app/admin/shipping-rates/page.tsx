@@ -19,8 +19,8 @@ export default function ShippingRatesPage() {
   const { data, isLoading } = useShippingRates({ ...filters, page, per_page: 15 });
   const deleteRate = useDeleteShippingRate();
 
-  const rates = data?.data?.data || [];
-  const pagination = data?.data?.pagination;
+  const rates = (data as any)?.data?.data || [];
+  const pagination = (data as any)?.data?.pagination;
 
   const handleEdit = (rate: any) => {
     setSelectedRate(rate);

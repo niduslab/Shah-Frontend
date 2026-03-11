@@ -14,7 +14,7 @@ export default function ShippingClassesPage() {
   const { data, isLoading } = useShippingClasses();
   const deleteClass = useDeleteShippingClass();
 
-  const classes = data?.data || [];
+  const classes = (data as any)?.data || [];
 
   const handleEdit = (cls: any) => {
     setSelectedClass(cls);

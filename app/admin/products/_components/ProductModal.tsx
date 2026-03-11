@@ -7,6 +7,7 @@ import { useAdminBrands } from '@/lib/hooks/admin/useAdminBrands';
 import { useShippingClasses } from '@/lib/hooks/admin/useShipping';
 import ImageManager from './ImageManager';
 import VariationManager from './VariationManager';
+import RichTextEditor from './RichTextEditor';
 
 interface ProductImage {
   id?: number;
@@ -63,6 +64,7 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
   });
   const [images, setImages] = useState<ProductImage[]>([]);
   const [variations, setVariations] = useState<Variation[]>([]);
+  const [deletedVariationIds, setDeletedVariationIds] = useState<number[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { data: categoriesData } = useAdminCategories({ per_page: 100 });
@@ -118,13 +120,16 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
 
       // Load existing variations
       if (product.variations && Array.isArray(product.variations)) {
-        setVariations(product.variations.map((v: any) => ({
+        console.log('📦 Loading existing variations:', product.variations);
+        const loadedVariations = product.variations.map((v: any) => ({
           id: v.id,
           sku: v.sku || '',
           price: v.price?.toString() || '',
           quantity: v.quantity?.toString() || '',
           attributes: v.attributes || {},
-        })));
+        }));
+        console.log('✅ Mapped variations:', loadedVariations);
+        setVariations(loadedVariations);
       } else {
         setVariations([]);
       }
@@ -157,6 +162,7 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
       });
       setImages([]);
       setVariations([]);
+      setDeletedVariationIds([]);
     }
   }, [product]);
 
@@ -228,6 +234,11 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
         }));
       }
 
+      // Add deleted variation IDs for update operations
+      if (product && deletedVariationIds.length > 0) {
+        submitData.deleted_variation_ids = deletedVariationIds;
+      }
+
       // ============================================
       // DEBUG: Log product data before submission
       // ============================================
@@ -256,6 +267,13 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
             sort_order: v.sort_order
           });
         });
+        console.groupEnd();
+      }
+
+      // Log deleted variations
+      if (submitData.deleted_variation_ids && submitData.deleted_variation_ids.length > 0) {
+        console.group('🗑️ Deleted Variations');
+        console.log('IDs to delete:', submitData.deleted_variation_ids);
         console.groupEnd();
       }
       
@@ -428,12 +446,12 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
               <label className="mb-2 block text-sm font-medium text-gray-700">
                 Short Description
               </label>
-              <input
-                type="text"
+              <textarea
                 value={formData.short_description}
                 onChange={(e) => setFormData({ ...formData, short_description: e.target.value })}
+                rows={3}
                 className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm transition-all focus:border-[#FF6F00] focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
-                placeholder="Brief product description"
+                placeholder="Brief product description (2-3 sentences)"
               />
             </div>
 
@@ -441,13 +459,14 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
               <label className="mb-2 block text-sm font-medium text-gray-700">
                 Description
               </label>
-              <textarea
+              <RichTextEditor
                 value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                rows={4}
-                className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm transition-all focus:border-[#FF6F00] focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
-                placeholder="Detailed product description"
+                onChange={(value) => setFormData({ ...formData, description: value })}
+                placeholder="Detailed product description with rich formatting"
               />
+              <p className="mt-2 text-xs text-gray-500">
+                Use the toolbar to format text, add images, links, lists, and tables. You can also paste content from other pages.
+              </p>
             </div>
 
             {/* Pricing */}
@@ -742,7 +761,21 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
 
             {/* Product Variations */}
             <div className="md:col-span-2">
-              <VariationManager variations={variations} onChange={setVariations} />
+              <VariationManager 
+                variations={variations} 
+                onChange={(newVariations) => {
+                  console.log('📝 Variations changed:', newVariations);
+                  setVariations(newVariations);
+                }}
+                onDelete={(deletedId) => {
+                  console.log('🗑️ ProductModal: Tracking deleted variation ID:', deletedId);
+                  setDeletedVariationIds(prev => {
+                    const updated = [...prev, deletedId];
+                    console.log('📋 Updated deletedVariationIds:', updated);
+                    return updated;
+                  });
+                }}
+              />
             </div>
           </div>
 

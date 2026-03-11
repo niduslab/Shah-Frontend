@@ -1,35 +1,49 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
 import { Lock, Mail } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/lib/context/AuthContext";
 
 export default function AdminLoginPage() {
   const router = useRouter();
+  const { login, user, loading } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
+  useEffect(() => {
+    if (!loading && user && user.user_type === 'admin') {
+      router.push('/admin');
+    }
+  }, [user, loading, router]);
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
     
-    // Simulate login delay
-    setTimeout(() => {
-      const cleanEmail = email.trim().toLowerCase();
-      const cleanPassword = password.trim();
+    try {
+      const response = await login(email, password);
+      const loggedInUser = response.data.user;
       
-      if (cleanEmail === "admin@shahsports.com" && cleanPassword === "12345678") {
-        router.push("/admin");
+      // Check if user is admin
+      if (loggedInUser.user_type === 'admin') {
+        // Direct navigation to admin dashboard
+        window.location.href = '/admin';
       } else {
-        setError("Invalid credentials. Please check your email and password.");
+        setError("Access denied. Admin privileges required.");
         setIsLoading(false);
       }
-    }, 1000);
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.message || 
+                          err.response?.data?.error || 
+                          'Login failed. Please check your credentials.';
+      setError(errorMessage);
+      setIsLoading(false);
+    }
   };
 
   return (

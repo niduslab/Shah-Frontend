@@ -39,9 +39,9 @@ export default function CouponModal({ isOpen, onClose, coupon, onSubmit }: Coupo
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Fetch data when selections are shown
-  const { data: productsData } = useAdminProducts({ search: searchQuery, per_page: 50 }, { enabled: isOpen && showProductSelection } as any);
-  const { data: brandsData } = useAdminBrands({ per_page: 100 }, { enabled: isOpen && showBrandSelection } as any);
-  const { data: categoriesData } = useAdminCategories({ per_page: 100 }, { enabled: isOpen && showCategorySelection } as any);
+  const { data: productsData } = useAdminProducts({ search: searchQuery, per_page: 50 });
+  const { data: brandsData } = useAdminBrands({ per_page: 100 });
+  const { data: categoriesData } = useAdminCategories({ per_page: 100 });
 
   const products = (productsData as any)?.data?.data || [];
   const brands = (brandsData as any)?.data?.data || [];

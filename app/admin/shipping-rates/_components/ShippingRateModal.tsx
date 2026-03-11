@@ -27,7 +27,7 @@ export default function ShippingRateModal({ rate, onClose }: ShippingRateModalPr
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const { data: classesData } = useShippingClasses();
-  const shippingClasses = classesData?.data || [];
+  const shippingClasses = (classesData as any)?.data || [];
 
   const createRate = useCreateShippingRate({
     onSuccess: () => {

@@ -27,7 +27,7 @@ export default function BulkAdjustmentModal({ isOpen, onClose }: BulkAdjustmentM
   const [notes, setNotes] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { data: productsData } = useAdminProducts({ search: productSearch, per_page: 20 }, { enabled: isOpen && !!productSearch });
+  const { data: productsData } = useAdminProducts({ search: productSearch, per_page: 20 });
   const bulkAdjustMutation = useBulkStockAdjustment();
 
   const products = (productsData as any)?.data?.data || [];

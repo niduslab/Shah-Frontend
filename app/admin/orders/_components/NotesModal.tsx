@@ -15,7 +15,7 @@ export default function NotesModal({ isOpen, onClose, orderId, onSubmit }: Notes
   const [notes, setNotes] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  const { data: orderData } = useAdminOrder(orderId, { enabled: isOpen });
+  const { data: orderData } = useAdminOrder(orderId);
   const order = (orderData as any)?.data;
 
   useEffect(() => {

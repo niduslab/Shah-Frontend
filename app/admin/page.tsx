@@ -1,6 +1,5 @@
 "use client";
 
-import ProtectedRoute from "@/app/_components/ProtectedRoute";
 import { DollarSign, ShoppingCart, Users, TrendingUp, TrendingDown, MoreHorizontal, ChevronDown } from "lucide-react";
 import { Area, AreaChart, Bar, BarChart, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
@@ -97,7 +96,6 @@ const recentActivity = [
 
 export default function AdminPage() {
   return (
-    <ProtectedRoute>
       <div className="space-y-6">
         {/* Stats Grid */}
         <div className="grid gap-6 md:grid-cols-3">
@@ -383,7 +381,6 @@ export default function AdminPage() {
           </div>
         </div>
       </div>
-    </ProtectedRoute>
   );
 }
 

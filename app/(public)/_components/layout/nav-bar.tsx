@@ -1,11 +1,13 @@
 "use client";
 
-import { Search, ShoppingBag, User, ChevronDown, Menu, X, ChevronRight } from "lucide-react";
+import { Search, ShoppingBag, User, ChevronDown, Menu, X, ChevronRight, LogOut, Settings } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useCart } from "@/lib/context/CartContext";
+import { useAuth } from "@/lib/context/AuthContext";
 import { ShopMegaMenu } from "./shop-mega-menu";
 import { ShopMainMegaMenu } from "./shop-main-mega-menu";
 import { SportsMegaMenu } from "./sports-mega-menu";
@@ -15,13 +17,37 @@ import { FloorSolutionsMegaMenu } from "./floor-solutions-mega-menu";
 export function NavBar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openSubMenu, setOpenSubMenu] = useState<string | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
   const pathname = usePathname();
+  const { getCartCount } = useCart();
+  const { user, logout, loading } = useAuth();
+  const cartCount = isMounted ? getCartCount() : 0;
+
+  // Set mounted flag to prevent hydration mismatch
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Close mobile menu when route changes
   useEffect(() => {
     setIsMobileMenuOpen(false);
     setOpenSubMenu(null);
+    setShowUserMenu(false);
   }, [pathname]);
+
+  // Close user menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (showUserMenu && !target.closest('.user-menu-container')) {
+        setShowUserMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showUserMenu]);
 
   // Prevent body scroll when menu is open
   useEffect(() => {
@@ -37,6 +63,43 @@ export function NavBar() {
 
   const toggleSubMenu = (name: string) => {
     setOpenSubMenu(openSubMenu === name ? null : name);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      setShowUserMenu(false);
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
+
+  const getUserDisplayName = () => {
+    if (!user) return '';
+    
+    // Priority: first_name > name > email
+    if (user.first_name) {
+      return user.first_name;
+    }
+    if (user.name) {
+      return user.name.split(' ')[0]; // Get first part of full name
+    }
+    return user.email.split('@')[0]; // Use email username as fallback
+  };
+
+  const getNavbarLabel = () => {
+    if (!user) return 'Login';
+    
+    if (user.user_type === 'admin') {
+      return 'Dashboard';
+    }
+    
+    return getUserDisplayName();
+  };
+
+  const getDashboardLink = () => {
+    if (!user) return '/';
+    return user.user_type === 'admin' ? '/admin' : '/dashboard';
   };
 
   return (
@@ -137,13 +200,64 @@ export function NavBar() {
             </button>
 
             <Link href="/cart" className="flex items-center gap-2 transition-colors duration-200 hover:text-[#ffb81e]">
-              <ShoppingBag className="h-5 w-5" />
+              <div className="relative">
+                <ShoppingBag className="h-5 w-5" />
+                {cartCount > 0 && (
+                  <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-[#ffb81e] text-xs font-bold text-[#00072D]">
+                    {cartCount > 9 ? '9+' : cartCount}
+                  </span>
+                )}
+              </div>
               <span className="hidden md:inline">Cart</span>
             </Link>
-            <Link href="/login" className="flex items-center gap-2 transition-colors duration-200 hover:text-[#ffb81e]">
-              <User className="h-5 w-5" />
-              <span className="hidden md:inline">Login</span>
-            </Link>
+            
+            {/* User Menu */}
+            {!loading && (
+              <>
+                {user ? (
+                  <div className="relative user-menu-container">
+                    <button 
+                      onClick={() => setShowUserMenu(!showUserMenu)}
+                      className="flex items-center gap-2 transition-colors duration-200 hover:text-[#ffb81e]"
+                    >
+                      <User className="h-5 w-5" />
+                      <span className="hidden md:inline">{getNavbarLabel()}</span>
+                      <ChevronDown className="h-4 w-4 hidden md:inline" />
+                    </button>
+                    
+                    {/* User Dropdown Menu */}
+                    {showUserMenu && (
+                      <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                        <div className="px-4 py-2 border-b border-gray-100">
+                          <p className="text-sm font-medium text-gray-900">{getUserDisplayName()}</p>
+                          <p className="text-xs text-gray-500">{user.email}</p>
+                        </div>
+                        <Link 
+                          href={getDashboardLink()}
+                          className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          onClick={() => setShowUserMenu(false)}
+                        >
+                          <Settings className="h-4 w-4" />
+                          {user.user_type === 'admin' ? 'Admin Dashboard' : 'Dashboard'}
+                        </Link>
+                        <button 
+                          onClick={handleLogout}
+                          className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          <LogOut className="h-4 w-4" />
+                          Logout
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <Link href="/login" className="flex items-center gap-2 transition-colors duration-200 hover:text-[#ffb81e]">
+                    <User className="h-5 w-5" />
+                    <span className="hidden md:inline">Login</span>
+                  </Link>
+                )}
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -317,12 +431,53 @@ export function NavBar() {
 
           {/* Footer Actions */}
           <div className="mt-8 flex flex-col gap-3 pt-4">
-            <Link href="/login" className="flex items-center justify-center gap-2 rounded-md border border-[#00072D] py-2.5 text-sm font-bold text-[#00072D] transition-colors hover:bg-[#00072D] hover:text-white">
-              <User className="h-4 w-4" />
-              Login / Register
-            </Link>
+            {!loading && (
+              <>
+                {user ? (
+                  <>
+                    <div className="px-4 py-3 border-b border-gray-200 bg-gray-50 rounded-md mb-3">
+                      <p className="text-sm font-medium text-gray-900">{getUserDisplayName()}</p>
+                      <p className="text-xs text-gray-500">{user.email}</p>
+                      <p className="text-xs text-[#ffb81e] font-medium mt-1">
+                        {user.user_type === 'admin' ? 'Administrator' : 'Customer'}
+                      </p>
+                    </div>
+                    <Link 
+                      href={getDashboardLink()}
+                      className="flex items-center justify-center gap-2 rounded-md border border-[#00072D] py-2.5 text-sm font-bold text-[#00072D] transition-colors hover:bg-[#00072D] hover:text-white"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <Settings className="h-4 w-4" />
+                      {user.user_type === 'admin' ? 'Admin Dashboard' : 'Dashboard'}
+                    </Link>
+                    <button 
+                      onClick={() => {
+                        handleLogout();
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="flex items-center justify-center gap-2 rounded-md border border-red-500 py-2.5 text-sm font-bold text-red-500 transition-colors hover:bg-red-500 hover:text-white"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  <Link href="/login" className="flex items-center justify-center gap-2 rounded-md border border-[#00072D] py-2.5 text-sm font-bold text-[#00072D] transition-colors hover:bg-[#00072D] hover:text-white">
+                    <User className="h-4 w-4" />
+                    Login / Register
+                  </Link>
+                )}
+              </>
+            )}
             <Link href="/cart" className="flex items-center justify-center gap-2 rounded-md bg-[#ffb81e] py-2.5 text-sm font-bold text-[#00072D] transition-colors hover:bg-[#e5a61b]">
-              <ShoppingBag className="h-4 w-4" />
+              <div className="relative">
+                <ShoppingBag className="h-4 w-4" />
+                {cartCount > 0 && (
+                  <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-[#00072D] text-[10px] font-bold text-white">
+                    {cartCount > 9 ? '9+' : cartCount}
+                  </span>
+                )}
+              </div>
               View Cart
             </Link>
           </div>

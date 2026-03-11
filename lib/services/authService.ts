@@ -1,4 +1,5 @@
 import api from '../api/axios';
+import axios from 'axios';
 
 interface RegisterData {
   name: string;
@@ -40,10 +41,16 @@ interface PasswordChangeData {
   password_confirmation: string;
 }
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+
 const authService = {
-  // Get CSRF cookie before login/register
+  // Get CSRF cookie before login/register - use raw axios to avoid interceptor
   async getCsrfCookie() {
-    await api.get('/sanctum/csrf-cookie');
+    await axios.get(`${API_URL}/sanctum/csrf-cookie`, {
+      withCredentials: true,
+    });
+    // Wait a bit for cookie to be properly set
+    await new Promise(resolve => setTimeout(resolve, 100));
   },
 
   // Register
@@ -65,8 +72,16 @@ const authService = {
 
   // Logout
   async logout() {
-    const response = await api.post('/api/auth/logout');
-    return response.data;
+    try {
+      // Get fresh CSRF cookie before logout
+      await this.getCsrfCookie();
+      const response = await api.post('/api/auth/logout');
+      return response.data;
+    } catch (error) {
+      // If logout fails, still clear local state
+      console.error('Logout API error:', error);
+      throw error;
+    }
   },
 
   // Get authenticated user
@@ -77,12 +92,14 @@ const authService = {
 
   // Update profile
   async updateProfile(data: ProfileUpdateData) {
+    await this.getCsrfCookie();
     const response = await api.put('/api/auth/profile', data);
     return response.data;
   },
 
   // Change password
   async changePassword(data: PasswordChangeData) {
+    await this.getCsrfCookie();
     const response = await api.put('/api/auth/password', data);
     return response.data;
   },

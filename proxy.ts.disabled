@@ -1,0 +1,18 @@
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+
+export function proxy(request: NextRequest) {
+  // DISABLED: All admin route protection removed
+  // Allow direct access to all admin routes without authentication
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: [
+    // DISABLED: No routes are protected anymore
+    // '/admin/:path*',
+    // '/login',
+    // '/register', 
+    // '/forgot-password'
+  ]
+};

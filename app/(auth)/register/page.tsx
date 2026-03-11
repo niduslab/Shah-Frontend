@@ -17,6 +17,7 @@ export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [acceptTerms, setAcceptTerms] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
   
   const { register } = useAuth();
   const router = useRouter();
@@ -54,14 +55,29 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      await register({
+      const response = await register({
         name,
         email,
         phone,
         password,
         password_confirmation: passwordConfirmation,
       });
-      router.push('/');
+      
+      // Get the registered user from response
+      const registeredUser = response.data.user;
+      
+      // Set redirecting state
+      setIsRedirecting(true);
+      
+      // Small delay to ensure state is updated
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      // Simple direct redirect based on user type
+      if (registeredUser.user_type === 'admin') {
+        window.location.href = '/admin';
+      } else {
+        window.location.href = '/dashboard';
+      }
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || 
                           err.response?.data?.error || 
@@ -74,12 +90,19 @@ export default function RegisterPage() {
 
   return (
     <div className="w-full space-y-8">
-      <div className="flex flex-col space-y-2 text-left">
-        <h1 className="text-3xl font-semibold tracking-tight text-foreground">Create account</h1>
-        <p className="text-sm text-muted-foreground">
-          Sign up to start shopping.
-        </p>
-      </div>
+      {isRedirecting ? (
+        <div className="flex flex-col items-center justify-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0B3B2D] mb-4"></div>
+          <p className="text-sm text-gray-600">Creating your account...</p>
+        </div>
+      ) : (
+        <>
+          <div className="flex flex-col space-y-2 text-left">
+            <h1 className="text-3xl font-semibold tracking-tight text-foreground">Create account</h1>
+            <p className="text-sm text-muted-foreground">
+              Sign up to start shopping.
+            </p>
+          </div>
 
       {error && (
         <div className="p-4 rounded-lg bg-red-50 border border-red-200 text-red-600 text-sm">
@@ -242,6 +265,8 @@ export default function RegisterPage() {
           Sign in
         </Link>
       </div>
+      </>
+      )}
     </div>
   );
 }

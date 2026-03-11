@@ -47,7 +47,7 @@ export function AdminSidebar() {
               <div className="h-1.5 w-1.5 rounded-sm bg-white"></div>
             </div>
           </div>
-          <span className="text-lg font-bold text-gray-900">EzMart</span>
+          <span className="text-lg font-bold text-gray-900">Shah Sports</span>
         </div>
       </div>
 

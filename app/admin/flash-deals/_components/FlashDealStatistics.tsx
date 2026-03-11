@@ -16,7 +16,7 @@ export default function FlashDealStatistics({
   flashDealId,
   flashDealTitle,
 }: FlashDealStatisticsProps) {
-  const { data: statsData, isLoading } = useFlashDealStatistics(flashDealId, { enabled: isOpen });
+  const { data: statsData, isLoading } = useFlashDealStatistics(flashDealId);
 
   if (!isOpen) return null;
 

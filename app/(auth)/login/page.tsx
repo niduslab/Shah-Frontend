@@ -3,8 +3,10 @@
 
 import { useState, FormEvent, useEffect, useRef, Suspense } from 'react';
 import { useAuth } from '@/lib/context/AuthContext';
+import { useCart } from '@/lib/context/CartContext';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { toast } from 'sonner';
 
 function LoginForm() {
   const [email, setEmail] = useState('');
@@ -13,11 +15,14 @@ function LoginForm() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
   
-  const { login, user } = useAuth();
+  const { login, user, loading: authLoading } = useAuth();
+  const { addToCart } = useCart();
   const router = useRouter();
   const searchParams = useSearchParams();
   const hasRedirected = useRef(false);
+  const isSubmitting = useRef(false);
   
   // Get redirect URL from query params or default to home
   const redirectTo = searchParams.get('redirect') || '/';
@@ -31,18 +36,22 @@ function LoginForm() {
     }
   }, []);
 
-  // Redirect if already logged in
+  // Redirect if already logged in (when page loads) - but NOT during form submission
   useEffect(() => {
-    if (user && !hasRedirected.current) {
+    if (!authLoading && user && !hasRedirected.current && !isSubmitting.current) {
       hasRedirected.current = true;
-      // Redirect based on user type
+      console.log("User already logged in, redirecting based on user type");
+      
+      // Simple direct redirect based on user type - NO RELOAD
       if (user.user_type === 'admin') {
+        console.log("Redirecting admin to /admin");
         router.push('/admin');
       } else {
-        router.push(redirectTo);
+        console.log("Redirecting user to /dashboard");
+        router.push('/dashboard');
       }
     }
-  }, [user, redirectTo]); // Removed router from dependencies to prevent reload loops
+  }, [user, authLoading, router]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -60,9 +69,11 @@ function LoginForm() {
     }
 
     setLoading(true);
+    isSubmitting.current = true; // Mark that we're in submission flow
+    hasRedirected.current = true; // Prevent useEffect redirect
 
     try {
-      await login(email, password);
+      const response = await login(email, password);
       
       // Store remember me preference
       if (rememberMe) {
@@ -71,25 +82,63 @@ function LoginForm() {
         localStorage.removeItem('rememberEmail');
       }
       
-      // Router.push is handled by useEffect above
+      // Get the logged-in user from response
+      const loggedInUser = response.data.user;
+      
+      console.log('Login successful, user data:', loggedInUser);
+      
+      // Check for pending cart item
+      const pendingCartItem = sessionStorage.getItem('pendingCartItem');
+      const cartRedirectUrl = sessionStorage.getItem('cartRedirectUrl');
+      
+      if (pendingCartItem) {
+        try {
+          const item = JSON.parse(pendingCartItem);
+          addToCart(item);
+          sessionStorage.removeItem('pendingCartItem');
+          toast.success('Product added to cart successfully!');
+        } catch (error) {
+          console.error('Failed to add pending cart item:', error);
+        }
+      }
+      
+      // Simple direct redirect based on user type - NO RELOAD
+      if (loggedInUser.user_type === 'admin') {
+        console.log('Admin login successful, redirecting to /admin');
+        router.push('/admin');
+      } else {
+        console.log('User login successful, redirecting to /dashboard');
+        router.push('/dashboard');
+      }
     } catch (err: any) {
+      // Reset submission flag on error
+      isSubmitting.current = false;
+      hasRedirected.current = false;
+      
       const errorMessage = err.response?.data?.message || 
                           err.response?.data?.error || 
                           'Login failed. Please check your credentials.';
       setError(errorMessage);
-    } finally {
       setLoading(false);
     }
+    // Don't set loading to false on success - we're redirecting
   };
 
   return (
     <div className="w-full space-y-8">
-      <div className="flex flex-col space-y-2 text-left">
-        <h1 className="text-3xl font-semibold tracking-tight text-foreground">Welcome back</h1>
-        <p className="text-sm text-muted-foreground">
-          Enter your details to access your account.
-        </p>
-      </div>
+      {isRedirecting ? (
+        <div className="flex flex-col items-center justify-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0B3B2D] mb-4"></div>
+          <p className="text-sm text-gray-600">Redirecting to dashboard...</p>
+        </div>
+      ) : (
+        <>
+          <div className="flex flex-col space-y-2 text-left">
+            <h1 className="text-3xl font-semibold tracking-tight text-foreground">Welcome back</h1>
+            <p className="text-sm text-muted-foreground">
+              Enter your details to access your account.
+            </p>
+          </div>
 
       {error && (
         <div className="p-4 rounded-lg bg-red-50 border border-red-200 text-red-600 text-sm">
@@ -184,6 +233,8 @@ function LoginForm() {
           Sign up
         </Link>
       </div>
+      </>
+      )}
     </div>
   );
 }

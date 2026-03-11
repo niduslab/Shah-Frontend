@@ -1,6 +1,13 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Heart, ShoppingBag, Star } from "lucide-react";
+import { useAuth } from "@/lib/context/AuthContext";
+import { useCart } from "@/lib/context/CartContext";
 import { getPlaceholderImage } from "@/lib/utils/image";
+import { toast } from "sonner";
 
 export interface Product {
   id: number;
@@ -23,9 +30,35 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, imageHeight = "h-[372px]" }: ProductCardProps) {
+  const router = useRouter();
+  const { user } = useAuth();
+  const { addToCart, isInCart } = useCart();
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  
   // Use slug from API if available, otherwise generate from name
   const productSlug = product.slug;
-  // console.log("final slug: ", productSlug)
+  const itemInCart = isInCart(product.id);
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
+
+    if (isAddingToCart) return;
+    
+    setIsAddingToCart(true);
+
+    const cartItem = {
+      product_id: product.id,
+      variation_id: null,
+      quantity: 1,
+      product: product,
+    };
+
+    addToCart(cartItem, window.location.pathname);
+    
+    setTimeout(() => setIsAddingToCart(false), 500);
+  };
 
   return (
     <div className="group relative flex flex-col gap-4">
@@ -50,7 +83,7 @@ export function ProductCard({ product, imageHeight = "h-[372px]" }: ProductCardP
             <img
               src={product.image}
               alt={product.name}
-              className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
+              className="h-full w-full object-contain p-4 transition-transform duration-300 group-hover:scale-105"
               onError={(e) => {
                 e.currentTarget.src = getPlaceholderImage(product.name);
               }}
@@ -60,9 +93,14 @@ export function ProductCard({ product, imageHeight = "h-[372px]" }: ProductCardP
 
         {/* Add to Cart Button (Slide up on hover) */}
         <div className="absolute bottom-0 left-0 right-0 z-20 p-4 translate-y-full transition-transform duration-300 group-hover:translate-y-0">
-          <button className="flex h-11 w-full items-center justify-center gap-2 rounded-xs bg-primary text-[16px] font-semibold text-black shadow-sm transition-colors hover:bg-primary/90">
+          <button 
+            onClick={handleAddToCart}
+            type="button"
+            disabled={isAddingToCart}
+            className="flex h-11 w-full items-center justify-center gap-2 rounded-xs bg-primary text-[16px] font-semibold text-black shadow-sm transition-colors hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
             <ShoppingBag className="h-4 w-4" />
-            Add to Cart
+            {isAddingToCart ? 'Adding...' : (itemInCart ? 'Update Cart' : 'Add to Cart')}
           </button>
         </div>
       </div>

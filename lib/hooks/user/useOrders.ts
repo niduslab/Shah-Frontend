@@ -4,6 +4,11 @@ import api from '@/lib/api/axios';
 interface OrderFilters {
   page?: number;
   per_page?: number;
+  status?: string;
+  search?: string;
+  payment_status?: string;
+  date_from?: string;
+  date_to?: string;
 }
 
 export const useOrders = (filters?: OrderFilters, options?: UseQueryOptions<any>) => {
@@ -47,17 +52,23 @@ export const useCancelOrder = (options?: UseMutationOptions<any, any, { orderNum
 
 export const useDownloadInvoice = (orderNumber: string) => {
   return async () => {
-    const response = await api.get(`/api/orders/${orderNumber}/invoice`, {
-      responseType: 'blob',
-    });
-    
-    // Create download link
-    const url = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', `invoice-${orderNumber}.pdf`);
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
+    try {
+      const response = await api.get(`/api/orders/${orderNumber}/invoice`, {
+        responseType: 'blob',
+      });
+      
+      // Create download link
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `invoice-${orderNumber}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Failed to download invoice:', error);
+      throw error;
+    }
   };
 };

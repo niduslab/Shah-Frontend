@@ -53,8 +53,8 @@ export default function PageSectionsPage({ params: propsParams }: { params: { id
   const [selectedSection, setSelectedSection] = useState<Section | null>(null);
   const [draggedSection, setDraggedSection] = useState<Section | null>(null);
 
-  const { data: pageData, isLoading: pageLoading } = useAdminPage(pageId, { enabled: isValidId });
-  const { data: sectionsData, isLoading: sectionsLoading } = usePageSections(pageId, { enabled: isValidId });
+  const { data: pageData, isLoading: pageLoading } = useAdminPage(pageId);
+  const { data: sectionsData, isLoading: sectionsLoading } = usePageSections(pageId);
   const createMutation = useCreateSection();
   const updateMutation = useUpdateSection();
   const deleteMutation = useDeleteSection();

@@ -9,7 +9,8 @@ interface CartItem {
 
 interface ShippingMethodsRequest {
   items: CartItem[];
-  shipping_address_id: number;
+  address_id?: number;
+  subtotal: number;
 }
 
 interface OrderPreviewRequest {

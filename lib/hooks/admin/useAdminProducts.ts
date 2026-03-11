@@ -137,6 +137,14 @@ export const useCreateProduct = (options?: UseMutationOptions<any, any, any>) =>
             }
           });
         }
+
+        // Add deleted variation IDs (for updates only)
+        if (data.deleted_variation_ids && Array.isArray(data.deleted_variation_ids)) {
+          console.log('Processing deleted variations:', data.deleted_variation_ids);
+          data.deleted_variation_ids.forEach((id: number, index: number) => {
+            formData.append(`deleted_variation_ids[${index}]`, String(id));
+          });
+        }
         
         console.log('Sending FormData to API...');
         console.groupEnd();
@@ -237,6 +245,14 @@ export const useUpdateProduct = (options?: UseMutationOptions<any, any, { id: nu
             if (variation.sort_order !== undefined) {
               formData.append(`variations[${index}][sort_order]`, String(variation.sort_order));
             }
+          });
+        }
+
+        // Add deleted variation IDs (for updates only)
+        if (data.deleted_variation_ids && Array.isArray(data.deleted_variation_ids)) {
+          console.log('Processing deleted variations:', data.deleted_variation_ids);
+          data.deleted_variation_ids.forEach((id: number, index: number) => {
+            formData.append(`deleted_variation_ids[${index}]`, String(id));
           });
         }
         

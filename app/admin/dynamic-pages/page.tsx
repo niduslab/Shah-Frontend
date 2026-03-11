@@ -24,6 +24,7 @@ interface Page {
   is_active: boolean;
   sort_order: number;
   sections_count?: number;
+  sections?: any[]; // Optional sections array
   created_at: string;
   updated_at: string;
 }

@@ -10,7 +10,7 @@ interface UserDetailsModalProps {
 }
 
 export default function UserDetailsModal({ isOpen, onClose, userId }: UserDetailsModalProps) {
-  const { data: userData, isLoading } = useAdminUser(userId, { enabled: isOpen && !!userId });
+  const { data: userData, isLoading } = useAdminUser(userId);
   
   if (!isOpen) return null;
 

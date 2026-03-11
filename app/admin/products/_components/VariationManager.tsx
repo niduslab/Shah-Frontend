@@ -15,6 +15,7 @@ interface Variation {
 interface VariationManagerProps {
   variations: Variation[];
   onChange: (variations: Variation[]) => void;
+  onDelete?: (deletedId: number) => void;
 }
 
 interface VariationOption {
@@ -31,7 +32,7 @@ interface VariationType {
   options: VariationOption[];
 }
 
-export default function VariationManager({ variations, onChange }: VariationManagerProps) {
+export default function VariationManager({ variations, onChange, onDelete }: VariationManagerProps) {
   const [showAttributeSelector, setShowAttributeSelector] = useState<number | null>(null);
   const [customAttributeKey, setCustomAttributeKey] = useState('');
   const [customAttributeValue, setCustomAttributeValue] = useState('');
@@ -73,7 +74,30 @@ export default function VariationManager({ variations, onChange }: VariationMana
   };
 
   const handleRemove = (index: number) => {
-    onChange(variations.filter((_, i) => i !== index));
+    console.log('🔴 REMOVE BUTTON CLICKED! Index:', index);
+    
+    const variationToRemove = variations[index];
+    
+    console.log('🗑️ Removing variation:', {
+      index,
+      variation: variationToRemove,
+      hasId: !!variationToRemove?.id,
+      hasOnDelete: !!onDelete,
+      allVariations: variations
+    });
+    
+    // If the variation has an ID, it exists in the backend and needs to be deleted
+    if (variationToRemove?.id && onDelete) {
+      console.log('✅ Calling onDelete for variation ID:', variationToRemove.id);
+      onDelete(variationToRemove.id);
+    } else {
+      console.log('ℹ️ Variation is new (no ID) or onDelete not provided');
+    }
+    
+    // Remove from the list
+    const newVariations = variations.filter((_, i) => i !== index);
+    console.log('📋 New variations list:', newVariations);
+    onChange(newVariations);
   };
 
   const handleUpdate = (index: number, field: keyof Variation, value: any) => {
@@ -149,7 +173,7 @@ export default function VariationManager({ variations, onChange }: VariationMana
         <div className="space-y-3">
           {variations.map((variation, index) => (
             <div
-              key={index}
+              key={variation.id || `new-${index}`}
               className="rounded-xl border border-gray-200 bg-white p-4 transition-all hover:border-gray-300"
             >
               <div className="mb-3 flex items-center justify-between">

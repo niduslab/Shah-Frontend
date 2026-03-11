@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { 
   Star, 
@@ -12,6 +13,8 @@ import {
   ChevronRight,
   Heart
 } from "lucide-react";
+import { useAuth } from "@/lib/context/AuthContext";
+import { useCart } from "@/lib/context/CartContext";
 import { getPrimaryImageUrl, getAllImageUrls, getPlaceholderImage } from "@/lib/utils/image";
 import { ProductAccordions } from "./product-accordions";
 
@@ -20,12 +23,17 @@ interface ProductInfoProps {
 }
 
 export function ProductInfo({ product }: ProductInfoProps) {
+  const router = useRouter();
+  const { user } = useAuth();
+  const { addToCart, isInCart } = useCart();
+  
   const allImages = getAllImageUrls(product.images);
   const images = allImages.length > 0 ? allImages : [getPlaceholderImage(product.name)];
   
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [selectedVariation, setSelectedVariation] = useState<any>(null);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
 
   // Initialize with default variation or first variation
   useEffect(() => {
@@ -95,6 +103,59 @@ export function ProductInfo({ product }: ProductInfoProps) {
     );
     return variation ? variation.quantity <= 0 : false;
   };
+
+  // Handle add to cart
+  const handleAddToCart = (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    
+    if (isAddingToCart) return;
+    
+    setIsAddingToCart(true);
+    
+    const cartItem = {
+      product_id: product.id,
+      variation_id: selectedVariation?.id || null,
+      quantity: quantity,
+      product: product,
+      variation: selectedVariation,
+    };
+
+    addToCart(cartItem, window.location.pathname);
+    
+    setTimeout(() => setIsAddingToCart(false), 500);
+  };
+
+  // Handle buy now
+  const handleBuyNow = (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    
+    if (isAddingToCart) return;
+    
+    setIsAddingToCart(true);
+    
+    const cartItem = {
+      product_id: product.id,
+      variation_id: selectedVariation?.id || null,
+      quantity: quantity,
+      product: product,
+      variation: selectedVariation,
+    };
+
+    addToCart(cartItem);
+    
+    setTimeout(() => {
+      setIsAddingToCart(false);
+      router.push('/cart');
+    }, 300);
+  };
+
+  const itemInCart = isInCart(product.id, selectedVariation?.id || null);
 
   return (
     <div className="w-full bg-white py-8">
@@ -246,41 +307,77 @@ export function ProductInfo({ product }: ProductInfoProps) {
             {/* Variations */}
             {Object.keys(variationAttributes).length > 0 && (
               <div className="mb-8 space-y-4">
-                {Object.entries(variationAttributes).map(([attributeKey, values]) => (
-                  <div key={attributeKey}>
-                    <label className="mb-2 block text-sm font-semibold text-black capitalize">
-                      {attributeKey}:
-                      {selectedVariation?.attributes?.[attributeKey] && (
-                        <span className="ml-2 font-normal text-gray-600">
-                          {selectedVariation.attributes[attributeKey]}
-                        </span>
-                      )}
-                    </label>
-                    <div className="flex flex-wrap gap-2">
-                      {Array.from(values).map((value) => {
-                        const isSelected = isVariationSelected(attributeKey, value);
-                        const isOutOfStock = isVariationOutOfStock(attributeKey, value);
-                        
-                        return (
-                          <button
-                            key={value}
-                            onClick={() => !isOutOfStock && handleVariationChange(attributeKey, value)}
-                            disabled={isOutOfStock}
-                            className={`min-w-[60px] rounded-xs border px-4 py-2 text-sm font-medium transition-colors ${
-                              isSelected
-                                ? 'border-black bg-black text-white'
-                                : isOutOfStock
-                                ? 'border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed line-through'
-                                : 'border-gray-300 bg-white text-black hover:border-black'
-                            }`}
-                          >
-                            {value}
-                          </button>
-                        );
-                      })}
+                {Object.entries(variationAttributes).map(([attributeKey, values]) => {
+                  const isColorAttribute = attributeKey.toLowerCase() === 'color';
+                  
+                  return (
+                    <div key={attributeKey}>
+                      <label className="mb-2 block text-sm font-semibold text-black capitalize">
+                        {attributeKey}:
+                        {selectedVariation?.attributes?.[attributeKey] && (
+                          <span className="ml-2 font-normal text-gray-600">
+                            {selectedVariation.attributes[attributeKey]}
+                          </span>
+                        )}
+                      </label>
+                      <div className="flex flex-wrap gap-2">
+                        {Array.from(values).map((value) => {
+                          const isSelected = isVariationSelected(attributeKey, value);
+                          const isOutOfStock = isVariationOutOfStock(attributeKey, value);
+                          const isHexColor = /^#[0-9A-F]{6}$/i.test(value);
+                          
+                          // Render color swatch for hex colors
+                          if (isColorAttribute && isHexColor) {
+                            return (
+                              <button
+                                key={value}
+                                onClick={() => !isOutOfStock && handleVariationChange(attributeKey, value)}
+                                disabled={isOutOfStock}
+                                className={`relative h-10 w-10 rounded-full border-2 transition-all ${
+                                  isSelected
+                                    ? 'border-black scale-110'
+                                    : isOutOfStock
+                                    ? 'border-gray-200 cursor-not-allowed opacity-50'
+                                    : 'border-gray-300 hover:border-black hover:scale-105'
+                                }`}
+                                title={value}
+                                aria-label={`Color ${value}`}
+                              >
+                                <span 
+                                  className="absolute inset-1 rounded-full"
+                                  style={{ backgroundColor: value }}
+                                />
+                                {isOutOfStock && (
+                                  <span className="absolute inset-0 flex items-center justify-center">
+                                    <span className="h-px w-full rotate-45 bg-gray-400" />
+                                  </span>
+                                )}
+                              </button>
+                            );
+                          }
+                          
+                          // Render regular button for non-color attributes
+                          return (
+                            <button
+                              key={value}
+                              onClick={() => !isOutOfStock && handleVariationChange(attributeKey, value)}
+                              disabled={isOutOfStock}
+                              className={`min-w-[60px] rounded-xs border px-4 py-2 text-sm font-medium transition-colors ${
+                                isSelected
+                                  ? 'border-black bg-black text-white'
+                                  : isOutOfStock
+                                  ? 'border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed line-through'
+                                  : 'border-gray-300 bg-white text-black hover:border-black'
+                              }`}
+                            >
+                              {value}
+                            </button>
+                          );
+                        })}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
 
@@ -307,14 +404,24 @@ export function ProductInfo({ product }: ProductInfoProps) {
                 </div>
 
                 {/* Add to Cart */}
-                <button className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xs bg-primary px-8 font-bold text-black transition-colors hover:bg-primary/90">
+                <button 
+                  onClick={(e) => handleAddToCart(e)}
+                  type="button"
+                  disabled={isAddingToCart}
+                  className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xs bg-primary px-8 font-bold text-black transition-colors hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
                   <ShoppingBag className="h-5 w-5" />
-                  Add to Cart
+                  {isAddingToCart ? 'Adding...' : (itemInCart ? 'Update Cart' : 'Add to Cart')}
                 </button>
 
                 {/* Buy Now */}
-                <button className="flex h-12 flex-1 items-center justify-center rounded-xs border border-black px-8 font-bold text-black transition-colors hover:bg-gray-50">
-                  Buy Now
+                <button 
+                  onClick={(e) => handleBuyNow(e)}
+                  type="button"
+                  disabled={isAddingToCart}
+                  className="flex h-12 flex-1 items-center justify-center rounded-xs border border-black px-8 font-bold text-black transition-colors hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isAddingToCart ? 'Processing...' : 'Buy Now'}
                 </button>
               </div>
             )}

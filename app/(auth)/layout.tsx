@@ -1,3 +1,4 @@
+'use client';
 
 import Link from 'next/link';
 import { TopBar } from "../(public)/_components/layout/top-bar";

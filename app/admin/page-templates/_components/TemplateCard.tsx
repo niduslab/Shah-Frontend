@@ -3,11 +3,12 @@
 import { Eye, Copy, Info } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { ReactElement } from 'react';
 
 interface TemplateCardProps {
   template: any;
   onPreview: (template: any) => void;
-  getCategoryBadge: (category: string) => JSX.Element;
+  getCategoryBadge: (category: string) => ReactElement;
 }
 
 export default function TemplateCard({ template, onPreview, getCategoryBadge }: TemplateCardProps) {

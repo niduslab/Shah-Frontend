@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Instrument_Sans } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/lib/context/AuthContext";
+import { CartProvider } from "@/lib/context/CartContext";
 import QueryProvider from "@/lib/providers/QueryProvider";
 import { Toaster } from "sonner";
 
@@ -23,11 +24,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
+        suppressHydrationWarning={true}
         className={`${instrumentSans.variable} font-sans antialiased`}
       >
         <QueryProvider>
           <AuthProvider>
-            {children}
+            <CartProvider>
+              {children}
+            </CartProvider>
           </AuthProvider>
         </QueryProvider>
         <Toaster position="bottom-right" richColors />

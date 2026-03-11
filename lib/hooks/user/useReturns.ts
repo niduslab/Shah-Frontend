@@ -9,11 +9,24 @@ interface ReturnRequestData {
   images?: string[];
 }
 
-export const useReturns = (options?: UseQueryOptions) => {
+interface ReturnsQueryParams {
+  page?: number;
+  per_page?: number;
+  status?: string;
+  search?: string;
+}
+
+export const useReturns = (params?: ReturnsQueryParams, options?: UseQueryOptions) => {
   return useQuery({
-    queryKey: ['returns'],
+    queryKey: ['returns', params],
     queryFn: async () => {
-      const response = await api.get('/api/returns');
+      const searchParams = new URLSearchParams();
+      if (params?.page) searchParams.append('page', params.page.toString());
+      if (params?.per_page) searchParams.append('per_page', params.per_page.toString());
+      if (params?.status) searchParams.append('status', params.status);
+      if (params?.search) searchParams.append('search', params.search);
+      
+      const response = await api.get(`/api/returns?${searchParams.toString()}`);
       return response.data;
     },
     ...options,

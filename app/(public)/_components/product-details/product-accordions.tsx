@@ -8,18 +8,13 @@ interface ProductAccordionsProps {
 }
 
 export function ProductAccordions({ product }: ProductAccordionsProps) {
-  const [openSection, setOpenSection] = useState<string | null>("details");
+  const [openSection, setOpenSection] = useState<string | null>("specs");
 
   const toggleSection = (id: string) => {
     setOpenSection(prev => prev === id ? null : id);
   };
 
   const sections = [
-    {
-      id: "details",
-      title: "Product Details",
-      content: product.description || product.short_description || "No description available."
-    },
     {
       id: "specs",
       title: "Product Specifications",
@@ -30,12 +25,14 @@ export function ProductAccordions({ product }: ProductAccordionsProps) {
         ${product.category?.name ? `\nCategory: ${product.category.name}` : ''}
         ${product.stock_status ? `\nStock Status: ${product.stock_status.replace('_', ' ')}` : ''}
         ${product.quantity ? `\nAvailable Quantity: ${product.quantity}` : ''}
-      `.trim() || "No specifications available."
+      `.trim() || "No specifications available.",
+      isHtml: false
     },
     {
       id: "shipping",
       title: "Shipping & Return",
-      content: product.shipping_notes || "Free shipping on all orders over $50. We offer a 30-day money-back guarantee on all products. If you are not satisfied with your purchase, you can return it for a full refund within 30 days of delivery. Return shipping costs may apply."
+      content: product.shipping_notes || "Free shipping on all orders over $50. We offer a 30-day money-back guarantee on all products. If you are not satisfied with your purchase, you can return it for a full refund within 30 days of delivery. Return shipping costs may apply.",
+      isHtml: false
     }
   ];
 
@@ -58,12 +55,19 @@ export function ProductAccordions({ product }: ProductAccordionsProps) {
             
             <div 
               className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                openSection === section.id ? "max-h-[500px] opacity-100 mb-4" : "max-h-0 opacity-0"
+                openSection === section.id ? "max-h-[1000px] opacity-100 mb-4" : "max-h-0 opacity-0"
               }`}
             >
-              <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">
-                {section.content}
-              </p>
+              {section.isHtml ? (
+                <div 
+                  className="prose prose-sm max-w-none text-gray-600"
+                  dangerouslySetInnerHTML={{ __html: section.content }}
+                />
+              ) : (
+                <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">
+                  {section.content}
+                </p>
+              )}
             </div>
           </div>
         ))}

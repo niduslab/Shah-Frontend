@@ -94,3 +94,387 @@ body {
 .zoom-in-95 {
   animation-name: zoom-in-95;
 }
+
+/* Product Description Prose Styles */
+.prose {
+  color: #4b5563;
+  /* Removed max-width to allow full-width content */
+}
+
+.prose p {
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.75;
+}
+
+.prose h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: #1f2937;
+  line-height: 1.3;
+}
+
+.prose h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: #374151;
+  line-height: 1.4;
+}
+
+.prose ul,
+.prose ol {
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+  padding-left: 1.5rem;
+}
+
+.prose ul {
+  list-style-type: disc;
+}
+
+.prose ol {
+  list-style-type: decimal;
+}
+
+.prose li {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+  line-height: 1.75;
+}
+
+.prose li > p {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose strong {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.prose em {
+  font-style: italic;
+}
+
+.prose code {
+  background-color: #f3f4f6;
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.875em;
+  color: #1f2937;
+}
+
+.prose pre {
+  background-color: #1f2937;
+  color: #f9fafb;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.prose pre code {
+  background-color: transparent;
+  color: inherit;
+  padding: 0;
+  font-size: 0.875rem;
+}
+
+.prose a {
+  color: #FF6F00;
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+.prose a:hover {
+  color: #E65100;
+}
+
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+
+.prose table td,
+.prose table th {
+  border: 1px solid #d1d5db;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.prose table th {
+  background-color: #f3f4f6;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.prose table tr:nth-child(even) {
+  background-color: #f9fafb;
+}
+
+.prose blockquote {
+  border-left: 4px solid #FF6F00;
+  padding-left: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  font-style: italic;
+  color: #6b7280;
+}
+
+.prose hr {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Responsive prose sizing */
+.prose-sm {
+  font-size: 0.875rem;
+}
+
+.prose-sm p {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose-sm h2 {
+  font-size: 1.25rem;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose-sm h3 {
+  font-size: 1.125rem;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose-sm ul,
+.prose-sm ol {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose-sm li {
+  margin-top: 0.125rem;
+  margin-bottom: 0.125rem;
+}
+
+
+/* Medium prose sizing for tablets and desktop */
+.prose-base {
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.prose-base p {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.prose-base h2 {
+  font-size: 1.75rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.prose-base h3 {
+  font-size: 1.5rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose-base ul,
+.prose-base ol {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding-left: 1.75rem;
+}
+
+.prose-base li {
+  margin-top: 0.375rem;
+  margin-bottom: 0.375rem;
+}
+
+.prose-base table {
+  font-size: 1rem;
+}
+
+.prose-base img {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.prose-base blockquote {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding-left: 1.25rem;
+}
+
+.prose-base code {
+  font-size: 0.9em;
+}
+
+
+/* Large prose sizing for large desktop screens */
+.prose-lg {
+  font-size: 1.125rem;
+  line-height: 1.75;
+}
+
+.prose-lg p {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.prose-lg h2 {
+  font-size: 2rem;
+  margin-top: 2.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.prose-lg h3 {
+  font-size: 1.75rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.prose-lg ul,
+.prose-lg ol {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+  padding-left: 2rem;
+}
+
+.prose-lg li {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose-lg table {
+  font-size: 1.125rem;
+}
+
+.prose-lg table td,
+.prose-lg table th {
+  padding: 0.75rem 1rem;
+}
+
+.prose-lg img {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.prose-lg blockquote {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  padding-left: 1.5rem;
+}
+
+.prose-lg code {
+  font-size: 0.9em;
+  padding: 0.25rem 0.5rem;
+}
+
+
+/* Product Description Content - Preserve all pasted styles */
+.product-description-content {
+  /* Allow all content to display with original styles */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+/* Ensure images display properly in product description */
+.product-description-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1rem 0;
+}
+
+/* Preserve all inline styles from pasted content */
+.product-description-content * {
+  /* Don't override inline styles */
+  max-width: 100%;
+}
+
+/* Ensure tables display properly */
+.product-description-content table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.product-description-content table td,
+.product-description-content table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+/* Preserve background colors and fonts */
+.product-description-content [style*="background-color"],
+.product-description-content [style*="color"],
+.product-description-content [style*="font-family"],
+.product-description-content [style*="font-size"] {
+  /* Inline styles are preserved automatically */
+}
+
+/* Ensure divs maintain their layout */
+.product-description-content div {
+  /* Preserve original layout */
+}
+
+/* Links styling */
+.product-description-content a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+/* Lists */
+.product-description-content ul,
+.product-description-content ol {
+  margin: 1rem 0;
+  padding-left: 2rem;
+}
+
+.product-description-content ul {
+  list-style-type: disc;
+}
+
+.product-description-content ol {
+  list-style-type: decimal;
+}
+
+/* Headings */
+.product-description-content h1,
+.product-description-content h2,
+.product-description-content h3,
+.product-description-content h4,
+.product-description-content h5,
+.product-description-content h6 {
+  margin: 1.5rem 0 1rem;
+  font-weight: bold;
+}
+
+/* Paragraphs */
+.product-description-content p {
+  margin: 0.75rem 0;
+}

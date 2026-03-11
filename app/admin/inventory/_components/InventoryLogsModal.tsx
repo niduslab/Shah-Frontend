@@ -23,7 +23,7 @@ export default function InventoryLogsModal({ isOpen, onClose, productId, product
     page: currentPage,
   };
 
-  const { data: logsData, isLoading } = useInventoryLogs(filters, { enabled: isOpen });
+  const { data: logsData, isLoading } = useInventoryLogs(filters);
 
   const logs = (logsData as any)?.data?.data || [];
   const paginationData = (logsData as any)?.data;
