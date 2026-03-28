@@ -44,15 +44,43 @@ export default function CategoriesPage() {
   const updateMutation = useUpdateCategory();
   const deleteMutation = useDeleteCategory();
 
+  // Helper function to build nested tree structure from flat list
+  const buildCategoryTree = (categories: Category[]): Category[] => {
+    const categoryMap = new Map<number, Category>();
+    const rootCategories: Category[] = [];
+
+    // First pass: create a map of all categories with empty children arrays
+    categories.forEach(cat => {
+      categoryMap.set(cat.id, { ...cat, children: [] });
+    });
+
+    // Second pass: build the tree structure
+    categories.forEach(cat => {
+      const category = categoryMap.get(cat.id)!;
+      if (cat.parent_id === null || cat.parent_id === undefined) {
+        rootCategories.push(category);
+      } else {
+        const parent = categoryMap.get(cat.parent_id);
+        if (parent) {
+          if (!parent.children) {
+            parent.children = [];
+          }
+          parent.children.push(category);
+        }
+      }
+    });
+
+    return rootCategories;
+  };
+
   // Response format: { success: true, data: { current_page: 1, data: [...], ... } }
   const allCategories = view === 'tree' 
     ? (treeData?.data?.data || [])
     : (categoriesData?.data?.data || []);
   
-  // Filter to show only parent categories (parent_id is null) in tree view
-  // Children are already nested in the 'children' property
+  // Build proper tree structure for tree view
   const parentCategories = view === 'tree'
-    ? allCategories.filter((cat: Category) => cat.parent_id === null)
+    ? buildCategoryTree(allCategories)
     : allCategories;
   
   // Client-side pagination for tree view (10 parents per page)
@@ -189,7 +217,7 @@ export default function CategoriesPage() {
         </div>
 
         {hasChildren && isExpanded && (
-          <div className="border-l-2 border-gray-200" style={{ marginLeft: `${level * 2 + 2}rem` }}>
+          <div>
             {category.children!.map(child => renderTreeItem(child, level + 1))}
           </div>
         )}
