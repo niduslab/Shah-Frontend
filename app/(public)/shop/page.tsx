@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { ChevronDown, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, Loader2, Search } from "lucide-react";
 import { ShopSidebar } from "../_components/shop/shop-sidebar";
 import { ProductCard } from "../_components/shared/product-card";
 import { useShopProducts } from "@/lib/hooks/public";
@@ -19,17 +20,103 @@ const SORT_OPTIONS = [
 ];
 
 export default function ShopPage() {
+  const searchParams = useSearchParams();
+  const urlSearch = searchParams.get("search") || "";
+  const urlPreorder = searchParams.get("is_preorder") === "true";
+  const urlCategoryId = searchParams.get("category_id");
+  const urlFlashDealId = searchParams.get("flash_deal_id");
+  const urlHasFlashDeal = searchParams.get("has_flash_deal") === "true";
+  const urlHasDiscount = searchParams.get("has_discount") === "true";
+  const urlHasPromotion = searchParams.get("has_promotion") === "true";
+  const urlPromotionId = searchParams.get("promotion_id");
+  const urlHasCoupon = searchParams.get("has_coupon") === "true";
+  
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState<"price" | "name" | "created_at">("created_at");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [showSortDropdown, setShowSortDropdown] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(urlSearch);
+  const [searchInput, setSearchInput] = useState(urlSearch);
+  const [minPrice, setMinPrice] = useState<number | undefined>();
+  const [maxPrice, setMaxPrice] = useState<number | undefined>();
+  const [inStock, setInStock] = useState<boolean | undefined>();
+  const [brandId, setBrandId] = useState<number | undefined>();
+  const [categoryId, setCategoryId] = useState<number | undefined>(
+    urlCategoryId ? parseInt(urlCategoryId) : undefined
+  );
+  const [isPreorder, setIsPreorder] = useState(urlPreorder);
+  const [flashDealId, setFlashDealId] = useState<number | undefined>(
+    urlFlashDealId ? parseInt(urlFlashDealId) : undefined
+  );
+  const [hasFlashDeal, setHasFlashDeal] = useState(urlHasFlashDeal);
+  const [hasDiscount, setHasDiscount] = useState(urlHasDiscount);
+  const [hasPromotion, setHasPromotion] = useState(urlHasPromotion);
+  const [promotionId, setPromotionId] = useState<number | undefined>(
+    urlPromotionId ? parseInt(urlPromotionId) : undefined
+  );
+  const [hasCoupon, setHasCoupon] = useState(urlHasCoupon);
   const perPage = 20;
+
+  // Update search when URL parameter changes
+  useEffect(() => {
+    if (urlSearch) {
+      setSearchQuery(urlSearch);
+      setSearchInput(urlSearch);
+    }
+    if (urlPreorder) {
+      setIsPreorder(true);
+    }
+    if (urlCategoryId) {
+      setCategoryId(parseInt(urlCategoryId));
+    }
+    if (urlFlashDealId) {
+      setFlashDealId(parseInt(urlFlashDealId));
+    }
+    if (urlHasFlashDeal) {
+      setHasFlashDeal(true);
+    }
+    if (urlHasDiscount) {
+      setHasDiscount(true);
+    }
+    if (urlHasPromotion) {
+      setHasPromotion(true);
+    }
+    if (urlPromotionId) {
+      setPromotionId(parseInt(urlPromotionId));
+    }
+    if (urlHasCoupon) {
+      setHasCoupon(true);
+    }
+  }, [urlSearch, urlPreorder, urlCategoryId, urlFlashDealId, urlHasFlashDeal, urlHasDiscount, urlHasPromotion, urlPromotionId, urlHasCoupon]);
+
+  // Debounced search - auto-search as user types
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearchQuery(searchInput);
+      setCurrentPage(1);
+    }, 500); // 500ms debounce
+
+    return () => clearTimeout(timer);
+  }, [searchInput]);
 
   const { data, isLoading, error } = useShopProducts({
     page: currentPage,
     per_page: perPage,
     sort_by: sortBy,
     sort_order: sortOrder,
+    search: searchQuery || undefined,
+    min_price: minPrice,
+    max_price: maxPrice,
+    in_stock: inStock,
+    brand_id: brandId,
+    category_id: categoryId,
+    is_preorder: isPreorder || undefined,
+    flash_deal_id: flashDealId,
+    has_flash_deal: hasFlashDeal || undefined,
+    has_discount: hasDiscount || undefined,
+    has_promotion: hasPromotion || undefined,
+    promotion_id: promotionId,
+    has_coupon: hasCoupon || undefined,
   });
 
   const products = data?.data?.data || [];
@@ -49,31 +136,70 @@ export default function ShopPage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const handlePriceRangeChange = (min: number | undefined, max: number | undefined) => {
+    setMinPrice(min);
+    setMaxPrice(max);
+    setCurrentPage(1);
+  };
+
+  const handleAvailabilityChange = (availability: boolean | undefined) => {
+    setInStock(availability);
+    setCurrentPage(1);
+  };
+
+  const handleBrandChange = (brand: number | undefined) => {
+    setBrandId(brand);
+    setCurrentPage(1);
+  };
+
+  const handleCategoryChange = (category: number | undefined) => {
+    setCategoryId(category);
+    setCurrentPage(1);
+  };
+
+  const handlePreorderChange = (preorder: boolean | undefined) => {
+    setIsPreorder(preorder || false);
+    setCurrentPage(1);
+  };
+
   const selectedSortOption = SORT_OPTIONS.find(
     (opt) => opt.value === sortBy && opt.order === sortOrder
   ) || SORT_OPTIONS[0];
 
   // Transform API products to match ProductCard interface
-  const transformedProducts = products.map((product: any) => ({
-    id: product.id,
-    name: product.name,
-    slug: product.slug, // Add slug from API
-    image: getPrimaryImageUrl(product.images),
-    price: parseFloat(product.price),
-    originalPrice: product.compare_price ? parseFloat(product.compare_price) : undefined,
-    rating: product.average_rating || 5,
-    reviews: product.review_count || 0,
-    badge: product.compare_price
-      ? {
-          text: `-${Math.round(((parseFloat(product.compare_price) - parseFloat(product.price)) / parseFloat(product.compare_price)) * 100)}% off`,
-          className: "bg-red-500",
-        }
-      : product.is_featured
-      ? { text: "Featured", className: "bg-[#3E4C24]" }
-      : product.is_trending
-      ? { text: "Trending", className: "bg-blue-500" }
-      : undefined,
-  }));
+  const transformedProducts = products.map((product: any) => {
+    // Check if preorder date is still active
+    const isPreorderActive = product.is_preorder && 
+      product.preorder_release_date && 
+      new Date(product.preorder_release_date) > new Date();
+    
+    return {
+      id: product.id,
+      name: product.name,
+      slug: product.slug,
+      image: getPrimaryImageUrl(product.images),
+      price: parseFloat(product.price),
+      // Hide original price if preorder is active
+      originalPrice: isPreorderActive ? undefined : (product.compare_price ? parseFloat(product.compare_price) : undefined),
+      rating: product.average_rating || 5,
+      reviews: product.review_count || 0,
+      is_preorder: product.is_preorder,
+      preorder_release_date: product.preorder_release_date,
+      kinomap: product.kinomap,
+      badge: isPreorderActive
+        ? { text: "Pre-Order", className: "bg-blue-600" }
+        : product.compare_price
+        ? {
+            text: `-${Math.round(((parseFloat(product.compare_price) - parseFloat(product.price)) / parseFloat(product.compare_price)) * 100)}% off`,
+            className: "bg-red-500",
+          }
+        : product.is_featured
+        ? { text: "Featured", className: "bg-[#3E4C24]" }
+        : product.is_trending
+        ? { text: "Trending", className: "bg-blue-500" }
+        : undefined,
+    };
+  });
 
   return (
     <div className="w-full bg-white pb-20 pt-8">
@@ -99,25 +225,47 @@ export default function ShopPage() {
 
         <div className="flex flex-col gap-12 lg:flex-row">
           {/* Sidebar */}
-          <ShopSidebar />
+          <ShopSidebar 
+            onPriceRangeChange={handlePriceRangeChange}
+            onAvailabilityChange={handleAvailabilityChange}
+            onBrandChange={handleBrandChange}
+            onCategoryChange={handleCategoryChange}
+            onPreorderChange={handlePreorderChange}
+          />
 
           {/* Main Content */}
           <div className="flex-1">
-            {/* Toolbar */}
-            <div className="mb-8 flex flex-col items-start justify-between gap-4 border-b border-gray-100 pb-6 sm:flex-row sm:items-center">
-              <p className="text-sm text-gray-500">
-                {isLoading ? "Loading..." : `${totalProducts} products are available`}
+            {/* Toolbar - All in One Line */}
+            <div className="mb-8 flex flex-col gap-3 border-b border-gray-100 pb-6 sm:flex-row sm:items-center sm:gap-4 sm:justify-between">
+              {/* Product Count */}
+              <p className="text-sm text-gray-500 whitespace-nowrap">
+                {isLoading ? "Loading..." : `${totalProducts} products available`}
               </p>
 
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-500">Sort By:</span>
+              {/* Search Bar */}
+              <div className="flex-1 min-w-0 max-w-[500]">
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
+                    placeholder="Search for products..."
+                    className="w-full rounded-md border border-gray-200 bg-white px-4 py-2 pl-10 text-sm text-black placeholder:text-gray-400 focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
+                  />
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                </div>
+              </div>
+
+              {/* Sort By Dropdown */}
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <span className="text-sm text-gray-500 whitespace-nowrap">Sort By:</span>
                 <div className="relative">
                   <button
                     onClick={() => setShowSortDropdown(!showSortDropdown)}
-                    className="flex items-center gap-2 rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-black hover:border-gray-300"
+                    className="flex items-center gap-2 rounded-md border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-black hover:border-gray-300 whitespace-nowrap"
                   >
                     {selectedSortOption.label}
-                    <ChevronDown className="h-4 w-4 text-gray-500" />
+                    <ChevronDown className="h-4 w-4 text-gray-500 flex-shrink-0" />
                   </button>
 
                   {showSortDropdown && (

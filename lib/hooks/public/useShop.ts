@@ -10,6 +10,13 @@ export interface ShopFilters {
   in_stock?: boolean;
   is_featured?: boolean;
   is_trending?: boolean;
+  is_preorder?: boolean;
+  flash_deal_id?: number;
+  has_flash_deal?: boolean;
+  has_discount?: boolean;
+  has_promotion?: boolean;
+  promotion_id?: number;
+  has_coupon?: boolean;
   sort_by?: 'price' | 'name' | 'created_at';
   sort_order?: 'asc' | 'desc';
   per_page?: number;

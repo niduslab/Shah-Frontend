@@ -32,6 +32,7 @@ export function RecommendedProducts({ currentProductId, categoryId }: Recommende
       originalPrice: product.compare_price ? parseFloat(product.compare_price) : undefined,
       rating: product.average_rating || 5,
       reviews: product.review_count || 0,
+      kinomap: product.kinomap,
       badge: product.compare_price
         ? {
             text: `-${Math.round(((parseFloat(product.compare_price) - parseFloat(product.price)) / parseFloat(product.compare_price)) * 100)}% off`,

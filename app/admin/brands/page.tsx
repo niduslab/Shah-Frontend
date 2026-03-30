@@ -220,6 +220,14 @@ export default function BrandsPage() {
                         Edit
                       </button>
                       <button
+                        onClick={() => window.location.href = `/admin/dynamic-contents/brand-pages-db/${brand.id}`}
+                        className="flex-1 flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-blue-600 transition-all hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        title="Manage brand page content"
+                      >
+                        <ImageIcon className="h-4 w-4" />
+                        Page
+                      </button>
+                      <button
                         onClick={() => handleDelete(brand)}
                         className="flex-1 flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-red-600 transition-all hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500"
                       >

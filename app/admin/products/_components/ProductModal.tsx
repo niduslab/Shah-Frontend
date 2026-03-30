@@ -53,6 +53,7 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
     weight_unit: 'kg',
     is_featured: false,
     is_trending: false,
+    kinomap: false,
     status: 'active',
     meta_title: '',
     meta_description: '',
@@ -94,6 +95,7 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
         weight_unit: product.weight_unit || 'kg',
         is_featured: product.is_featured || false,
         is_trending: product.is_trending || false,
+        kinomap: product.kinomap || false,
         status: product.status || 'active',
         meta_title: product.meta_title || '',
         meta_description: product.meta_description || '',
@@ -151,6 +153,7 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
         weight_unit: 'kg',
         is_featured: false,
         is_trending: false,
+        kinomap: false,
         status: 'active',
         meta_title: '',
         meta_description: '',
@@ -182,6 +185,7 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
         quantity: parseInt(formData.quantity),
         is_featured: formData.is_featured,
         is_trending: formData.is_trending,
+        kinomap: formData.kinomap,
         status: formData.status,
       };
 
@@ -595,30 +599,45 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
               <h3 className="mb-4 text-lg font-semibold text-gray-900">Features</h3>
             </div>
 
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="is_featured"
-                checked={formData.is_featured}
-                onChange={(e) => setFormData({ ...formData, is_featured: e.target.checked })}
-                className="h-4 w-4 rounded border-gray-300 text-[#FF6F00] focus:ring-2 focus:ring-[#FF6F00]/20"
-              />
-              <label htmlFor="is_featured" className="text-sm font-medium text-gray-700">
-                Featured Product
-              </label>
-            </div>
+            <div className="md:col-span-2 flex items-center gap-6">
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="is_featured"
+                  checked={formData.is_featured}
+                  onChange={(e) => setFormData({ ...formData, is_featured: e.target.checked })}
+                  className="h-4 w-4 rounded border-gray-300 text-[#FF6F00] focus:ring-2 focus:ring-[#FF6F00]/20"
+                />
+                <label htmlFor="is_featured" className="text-sm font-medium text-gray-700">
+                  Featured Product
+                </label>
+              </div>
 
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="is_trending"
-                checked={formData.is_trending}
-                onChange={(e) => setFormData({ ...formData, is_trending: e.target.checked })}
-                className="h-4 w-4 rounded border-gray-300 text-[#FF6F00] focus:ring-2 focus:ring-[#FF6F00]/20"
-              />
-              <label htmlFor="is_trending" className="text-sm font-medium text-gray-700">
-                Trending Product
-              </label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="is_trending"
+                  checked={formData.is_trending}
+                  onChange={(e) => setFormData({ ...formData, is_trending: e.target.checked })}
+                  className="h-4 w-4 rounded border-gray-300 text-[#FF6F00] focus:ring-2 focus:ring-[#FF6F00]/20"
+                />
+                <label htmlFor="is_trending" className="text-sm font-medium text-gray-700">
+                  Trending Product
+                </label>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="kinomap"
+                  checked={formData.kinomap}
+                  onChange={(e) => setFormData({ ...formData, kinomap: e.target.checked })}
+                  className="h-4 w-4 rounded border-gray-300 text-[#FF6F00] focus:ring-2 focus:ring-[#FF6F00]/20"
+                />
+                <label htmlFor="kinomap" className="text-sm font-medium text-gray-700">
+                  Kinomap Compatible
+                </label>
+              </div>
             </div>
 
             {/* Pre-Order Settings */}

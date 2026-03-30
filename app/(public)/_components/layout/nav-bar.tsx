@@ -20,6 +20,8 @@ export function NavBar() {
   const [openSubMenu, setOpenSubMenu] = useState<string | null>(null);
   const [isMounted, setIsMounted] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [mobileSearchQuery, setMobileSearchQuery] = useState("");
   const pathname = usePathname();
   const { getCartCount } = useCart();
   const { user, logout, loading } = useAuth();
@@ -103,6 +105,21 @@ export function NavBar() {
     return user.user_type === 'admin' ? '/admin' : '/dashboard';
   };
 
+  const handleDesktopSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      window.location.href = `/shop?search=${encodeURIComponent(searchQuery.trim())}`;
+    }
+  };
+
+  const handleMobileSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (mobileSearchQuery.trim()) {
+      setIsMobileMenuOpen(false);
+      window.location.href = `/shop?search=${encodeURIComponent(mobileSearchQuery.trim())}`;
+    }
+  };
+
   return (
     <header className="relative w-full bg-[#00072D] text-white z-50">
       <div className="mx-auto flex w-full max-w-[1400px] items-center justify-between py-4 px-4 md:px-6">
@@ -121,11 +138,11 @@ export function NavBar() {
           {/* Logo */}
           <Link href="/" className="flex items-center">
             <Image
-              src="/Shah Sports.png"
+              src="/shah-sports-logo.png"
               alt="Shah Sports"
-              width={180}
-              height={50}
-              className="h-8 w-auto object-contain md:h-12"
+              width={220}
+              height={70}
+              className="h-10 w-auto object-contain md:h-16"
               priority
             />
           </Link>
@@ -169,26 +186,30 @@ export function NavBar() {
             </div>
             
             
-            <Link href="/about-us" className="transition-colors duration-200 hover:text-[#ffb81e]">
+            {/* <Link href="/about-us" className="transition-colors duration-200 hover:text-[#ffb81e]">
               About
             </Link>
             <Link href="/contact" className="transition-colors duration-200 hover:text-[#ffb81e]">
               Contact
-            </Link>
+            </Link> */}
           </nav>
         </div>
 
         {/* Right Section: Search & Icons */}
         <div className="flex items-center gap-4 md:gap-6">
           {/* Search Bar (Desktop) */}
-          <div className="relative hidden w-[100px] xl:w-[150px] lg:block">
+          <form onSubmit={handleDesktopSearch} className="relative hidden w-[100px] xl:w-[300px] lg:block">
             <input
               type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search Products"
               className="h-10 w-full rounded-xs border-none bg-white px-4 py-2 text-sm outline-none placeholder:text-gray-500 text-black"
             />
-            <Search className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
-          </div>
+            <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2">
+              <Search className="h-4 w-4 text-gray-500 hover:text-gray-700" />
+            </button>
+          </form>
 
           {/* Icons */}
           <div className="flex items-center gap-4 text-sm font-medium md:gap-6">
@@ -309,14 +330,18 @@ export function NavBar() {
           </div>
 
           {/* Search Mobile */}
-          <div className="relative mb-3">
+          <form onSubmit={handleMobileSearch} className="relative mb-3">
             <input
               type="text"
+              value={mobileSearchQuery}
+              onChange={(e) => setMobileSearchQuery(e.target.value)}
               placeholder="Search Products..."
               className="h-10 w-full rounded-md border border-gray-200 bg-gray-50 px-4 py-2 text-sm outline-none focus:border-[#00072D] transition-colors placeholder:text-gray-400"
             />
-            <Search className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-          </div>
+            <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2">
+              <Search className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+            </button>
+          </form>
 
           {/* Links */}
           <div className="flex flex-col gap-2 flex-1">

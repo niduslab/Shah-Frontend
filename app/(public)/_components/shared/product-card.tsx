@@ -12,7 +12,7 @@ import { toast } from "sonner";
 export interface Product {
   id: number;
   name: string;
-  slug?: string; // Add optional slug
+  slug?: string;
   image: string;
   price: number;
   originalPrice?: number;
@@ -22,6 +22,9 @@ export interface Product {
     text: string;
     className: string;
   };
+  is_preorder?: boolean;
+  preorder_release_date?: string;
+  kinomap?: boolean;
 }
 
 interface ProductCardProps {
@@ -35,9 +38,13 @@ export function ProductCard({ product, imageHeight = "h-[372px]" }: ProductCardP
   const { addToCart, isInCart } = useCart();
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   
-  // Use slug from API if available, otherwise generate from name
   const productSlug = product.slug;
   const itemInCart = isInCart(product.id);
+  
+  // Check if preorder is active
+  const isPreorderActive = product.is_preorder && 
+    product.preorder_release_date && 
+    new Date(product.preorder_release_date) > new Date();
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -59,6 +66,30 @@ export function ProductCard({ product, imageHeight = "h-[372px]" }: ProductCardP
     
     setTimeout(() => setIsAddingToCart(false), 500);
   };
+  
+  const handleBuyNow = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
+
+    if (isAddingToCart) return;
+    
+    setIsAddingToCart(true);
+
+    const cartItem = {
+      product_id: product.id,
+      variation_id: null,
+      quantity: 1,
+      product: product,
+    };
+
+    addToCart(cartItem);
+    
+    setTimeout(() => {
+      setIsAddingToCart(false);
+      router.push('/checkout');
+    }, 300);
+  };
 
   return (
     <div className="group relative flex flex-col gap-4">
@@ -77,6 +108,21 @@ export function ProductCard({ product, imageHeight = "h-[372px]" }: ProductCardP
           <Heart className="h-4 w-4" />
         </button>
 
+        {/* Kinomap icon if product supports kinomap */}
+        {product.kinomap && (
+          <Link 
+            href="/kino-map"
+            className="absolute right-3 top-15 z-20"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src="/kinomap_icon_lg.png"
+              alt="Kinomap Compatible"
+              className="h-10 w-10 object-contain"
+            />
+          </Link>
+        )}
+
         {/* Product Image */}
         <div className="block h-full w-full">
           <div className="relative h-full w-full">
@@ -91,17 +137,29 @@ export function ProductCard({ product, imageHeight = "h-[372px]" }: ProductCardP
           </div>
         </div>
 
-        {/* Add to Cart Button (Slide up on hover) */}
+        {/* Add to Cart / Buy Now Button (Slide up on hover) */}
         <div className="absolute bottom-0 left-0 right-0 z-20 p-4 translate-y-full transition-transform duration-300 group-hover:translate-y-0">
-          <button 
-            onClick={handleAddToCart}
-            type="button"
-            disabled={isAddingToCart}
-            className="flex h-11 w-full items-center justify-center gap-2 rounded-xs bg-primary text-[16px] font-semibold text-black shadow-sm transition-colors hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <ShoppingBag className="h-4 w-4" />
-            {isAddingToCart ? 'Adding...' : (itemInCart ? 'Update Cart' : 'Add to Cart')}
-          </button>
+          {isPreorderActive ? (
+            <button 
+              onClick={handleBuyNow}
+              type="button"
+              disabled={isAddingToCart}
+              className="flex h-11 w-full items-center justify-center gap-2 rounded-xs bg-blue-600 text-[16px] font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <ShoppingBag className="h-4 w-4" />
+              {isAddingToCart ? 'Processing...' : 'Pre-Order Now'}
+            </button>
+          ) : (
+            <button 
+              onClick={handleAddToCart}
+              type="button"
+              disabled={isAddingToCart}
+              className="flex h-11 w-full items-center justify-center gap-2 rounded-xs bg-primary text-[16px] font-semibold text-black shadow-sm transition-colors hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <ShoppingBag className="h-4 w-4" />
+              {isAddingToCart ? 'Adding...' : (itemInCart ? 'Update Cart' : 'Add to Cart')}
+            </button>
+          )}
         </div>
       </div>
 
@@ -129,7 +187,8 @@ export function ProductCard({ product, imageHeight = "h-[372px]" }: ProductCardP
           <span className="text-xl font-bold text-black">
             ${product.price.toFixed(2)}
           </span>
-          {product.originalPrice && (
+          {/* Hide original price if preorder is active */}
+          {!isPreorderActive && product.originalPrice && (
             <span className="text-sm text-gray-400 line-through">
               ${product.originalPrice.toFixed(2)}
             </span>

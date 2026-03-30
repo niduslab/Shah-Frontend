@@ -3,6 +3,9 @@ import { NavBar } from "./_components/layout/nav-bar";
 import { Footer } from "./_components/layout/footer";
 import { SubscribeSection } from "./_components/landing/subscribe-section";
 import { ScrollToTop } from "./_components/shared/scroll-to-top";
+import { WhatsAppButton } from "./_components/shared/whatsapp-button";
+import { CookieConsent } from "./_components/shared/cookie-consent";
+import { VisitorPopup } from "./_components/shared/visitor-popup";
 
 export default function PublicLayout({
   children,
@@ -17,7 +20,10 @@ export default function PublicLayout({
       <SubscribeSection />
       
       <Footer />
+      <WhatsAppButton />
       <ScrollToTop />
+      <CookieConsent />
+      <VisitorPopup delay={5000} />
     </div>
   );
 }

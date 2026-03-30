@@ -1,0 +1,87 @@
+{
+  "content": {
+    "hero": {
+      "enabled": true,
+      "backgroundImage": "/images/brand-page/hero/1774149748215-01efcdda54f2939318e56abd1cb4a3ec3a013a77.jpg",
+      "title": "Freemotion ",
+      "highlightedText": "Freemotion ",
+      "description": "",
+      "buttonText": "Shop Now",
+      "buttonUrl": "/shop"
+    },
+    "categories": {
+      "enabled": true,
+      "sectionTitle": "Explore Categories",
+      "items": [
+        {
+          "id": "cat-1773642967703",
+          "name": "Freemotion ",
+          "image": "/images/brand-page/categories/1774149807680-hero__bsveixlwbms2_xlarge_2x.jpg",
+          "href": "/shop"
+        },
+        {
+          "id": "cat-1773642978152",
+          "name": "Freemotion ",
+          "image": "/images/brand-page/categories/1774149809895-merelvanvlerken_A_happy_young_man_is_carrying_an_enormous_cardb_36051df2-a370-4457-a120-418b20b09a7a.webp",
+          "href": "/shop"
+        },
+        {
+          "id": "cat-1773642978379",
+          "name": "Freemotion ",
+          "image": "/images/brand-page/categories/1774149812335-Scherm_afbeelding_2024-10-22_om_13.41.46_1.webp",
+          "href": "/shop"
+        },
+        {
+          "id": "cat-1773642978814",
+          "name": "Freemotion ",
+          "image": "/images/brand-page/categories/1774149814865-oolaboo3.webp",
+          "href": "/shop"
+        }
+      ]
+    },
+    "behindTheWork": {
+      "enabled": true,
+      "title": "Thinking Behind the Work",
+      "description": "Freemotion ",
+      "stats": [
+        {
+          "value": "51+",
+          "label": "Years of Experience"
+        },
+        {
+          "value": "1M+",
+          "label": "Happy Customers"
+        },
+        {
+          "value": "50+",
+          "label": "Available In Countries"
+        }
+      ],
+      "images": {
+        "left": "/images/brand-page/behind-work/1774149773942-771a12335c5beeac1941a99ebc074bb0310ef69f.jpg",
+        "center": "/images/brand-page/behind-work/1774149777493-Scherm_afbeelding_2024-10-22_om_13.41.46_1.webp",
+        "right": "/images/brand-page/behind-work/1774149780063-hero__bsveixlwbms2_xlarge_2x.jpg"
+      }
+    },
+    "shopBy": {
+      "enabled": true,
+      "cards": [
+        {
+          "id": "card-1773642988079",
+          "image": "/images/brand-page/shop-by/t-series.png",
+          "title": "Freemotion ",
+          "buttonText": "Shop Now",
+          "buttonUrl": "/shop"
+        },
+        {
+          "id": "card-1773642988297",
+          "image": "/images/brand-page/shop-by/t-series.png",
+          "title": "Freemotion ",
+          "buttonText": "Shop Now",
+          "buttonUrl": "/shop"
+        }
+      ]
+    }
+  },
+  "updatedAt": "2026-03-22T03:23:38.505Z"
+}

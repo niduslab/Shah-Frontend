@@ -14,28 +14,28 @@ if (typeof window !== "undefined") {
 
 const CATEGORIES = [
   {
-    id: 1,
+    id: 10,
     name: "Bike",
     image: "/images/landing/explore-categories/image-1.png",
-    href: "/shop",
+    href: "/shop?category_id=10",
   },
   {
-    id: 2,
+    id: 11,
     name: "Treadmill",
     image: "/images/landing/explore-categories/image-2.png",
-    href: "/shop",
+    href: "/shop?category_id=11",
   },
   {
-    id: 3,
+    id: 23,
     name: "Dumbbell",
     image: "/images/landing/explore-categories/image-3.png",
-    href: "/shop",
+    href: "/shop?category_id=23",
   },
   {
-    id: 4,
+    id: 25,
     name: "Weight Plate",
     image: "/images/landing/explore-categories/image-4.png",
-    href: "/shop",
+    href: "/shop?category_id=25",
   },
 ];
 
@@ -82,12 +82,18 @@ export function ExploreCategories() {
             Explore Our Categories
           </h2>
           <div className="flex gap-2">
-            <button className="category-nav-btn flex h-10 w-10 items-center justify-center rounded-xs bg-gray-100 text-black transition-colors hover:bg-gray-200">
+            <Link 
+              href="/shop"
+              className="category-nav-btn flex h-10 w-10 items-center justify-center rounded-xs bg-gray-100 text-black transition-colors hover:bg-gray-200"
+            >
               <ArrowLeft className="h-5 w-5" />
-            </button>
-            <button className="category-nav-btn flex h-10 w-10 items-center justify-center rounded-xs bg-primary text-black transition-colors hover:bg-primary/90">
+            </Link>
+            <Link 
+              href="/shop"
+              className="category-nav-btn flex h-10 w-10 items-center justify-center rounded-xs bg-primary text-black transition-colors hover:bg-primary/90"
+            >
               <ArrowRight className="h-5 w-5" />
-            </button>
+            </Link>
           </div>
         </div>
 

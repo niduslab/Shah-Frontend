@@ -15,8 +15,20 @@ export const useOrders = (filters?: OrderFilters, options?: UseQueryOptions<any>
   return useQuery({
     queryKey: ['orders', filters],
     queryFn: async () => {
-      const response = await api.get('/api/orders', { params: filters });
-      return response.data;
+      try {
+        // Try the Laravel backend first
+        const response = await api.get('/api/orders', { params: filters });
+        return response.data;
+      } catch (error: any) {
+        // If Laravel endpoint fails, try the Next.js API
+        if (error.response?.status === 404 || error.response?.status === 500) {
+          console.log('Laravel endpoint failed, trying Next.js API...');
+          const response = await fetch(`/api/orders?${new URLSearchParams(filters as any).toString()}`);
+          if (!response.ok) throw new Error('Failed to fetch orders');
+          return response.json();
+        }
+        throw error;
+      }
     },
     ...options,
   });

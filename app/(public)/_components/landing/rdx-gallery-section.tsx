@@ -103,16 +103,16 @@ export function RdxGallerySection() {
             {/* Training - Top Left */}
             <Link
               href={GALLERY_ITEMS[0].href}
-              className="gallery-item group relative block h-[280px] overflow-hidden rounded-[2px] bg-gray-100"
+              className="gallery-item group relative block h-[280px] overflow-hidden rounded-[2px] bg-gray-100 cursor-pointer"
             >
               <Image
                 src={GALLERY_ITEMS[0].image}
                 alt={GALLERY_ITEMS[0].title}
                 fill
-                className="object-cover transition-transform duration-500 group-hover:scale-105 will-change-transform"
+                className="object-cover transition-transform duration-500 group-hover:scale-105 will-change-transform pointer-events-none"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
-              <div className="absolute bottom-4 left-4 z-10 md:bottom-6 md:left-6">
+              <div className="absolute bottom-4 left-4 z-10 md:bottom-6 md:left-6 pointer-events-none">
                 <h3 className="text-xl font-semibold text-white md:text-2xl">
                   {GALLERY_ITEMS[0].title}
                 </h3>
@@ -122,16 +122,16 @@ export function RdxGallerySection() {
             {/* Apparel - Top Right */}
             <Link
               href={GALLERY_ITEMS[1].href}
-              className="gallery-item group relative block h-[280px] overflow-hidden rounded-[2px] bg-gray-100"
+              className="gallery-item group relative block h-[280px] overflow-hidden rounded-[2px] bg-gray-100 cursor-pointer"
             >
               <Image
                 src={GALLERY_ITEMS[1].image}
                 alt={GALLERY_ITEMS[1].title}
                 fill
-                className="object-cover transition-transform duration-500 group-hover:scale-105 will-change-transform"
+                className="object-cover transition-transform duration-500 group-hover:scale-105 will-change-transform pointer-events-none"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
-              <div className="absolute bottom-4 left-4 z-10 md:bottom-6 md:left-6">
+              <div className="absolute bottom-4 left-4 z-10 md:bottom-6 md:left-6 pointer-events-none">
                 <h3 className="text-xl font-semibold text-white md:text-2xl">
                   {GALLERY_ITEMS[1].title}
                 </h3>
@@ -141,16 +141,16 @@ export function RdxGallerySection() {
             {/* Yoga - Bottom Left */}
             <Link
               href={GALLERY_ITEMS[3].href}
-              className="gallery-item group relative block h-[280px] overflow-hidden rounded-[2px] bg-gray-100"
+              className="gallery-item group relative block h-[280px] overflow-hidden rounded-[2px] bg-gray-100 cursor-pointer"
             >
               <Image
                 src={GALLERY_ITEMS[3].image}
                 alt={GALLERY_ITEMS[3].title}
                 fill
-                className="object-cover transition-transform duration-500 group-hover:scale-105 will-change-transform"
+                className="object-cover transition-transform duration-500 group-hover:scale-105 will-change-transform pointer-events-none"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
-              <div className="absolute bottom-4 left-4 z-10 md:bottom-6 md:left-6">
+              <div className="absolute bottom-4 left-4 z-10 md:bottom-6 md:left-6 pointer-events-none">
                 <h3 className="text-xl font-semibold text-white md:text-2xl">
                   {GALLERY_ITEMS[3].title}
                 </h3>
@@ -160,16 +160,16 @@ export function RdxGallerySection() {
             {/* Weight Lifting - Bottom Right */}
             <Link
               href={GALLERY_ITEMS[4].href}
-              className="gallery-item group relative block h-[280px] overflow-hidden rounded-[2px] bg-gray-100"
+              className="gallery-item group relative block h-[280px] overflow-hidden rounded-[2px] bg-gray-100 cursor-pointer"
             >
               <Image
                 src={GALLERY_ITEMS[4].image}
                 alt={GALLERY_ITEMS[4].title}
                 fill
-                className="object-cover transition-transform duration-500 group-hover:scale-105 will-change-transform"
+                className="object-cover transition-transform duration-500 group-hover:scale-105 will-change-transform pointer-events-none"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
-              <div className="absolute bottom-4 left-4 z-10 md:bottom-6 md:left-6">
+              <div className="absolute bottom-4 left-4 z-10 md:bottom-6 md:left-6 pointer-events-none">
                 <h3 className="text-xl font-semibold text-white md:text-2xl">
                   {GALLERY_ITEMS[4].title}
                 </h3>
@@ -180,16 +180,17 @@ export function RdxGallerySection() {
           {/* Boxing - Right side tall card */}
           <Link
             href={GALLERY_ITEMS[2].href}
-            className="gallery-item group relative block h-[280px] overflow-hidden rounded-[2px] bg-gray-100 md:h-full"
+            className="gallery-item group relative block h-[280px] overflow-hidden rounded-[2px] bg-gray-100 md:h-full cursor-pointer"
           >
             <Image
               src={GALLERY_ITEMS[2].image}
               alt={GALLERY_ITEMS[2].title}
               fill
-              className="object-cover transition-transform duration-500 group-hover:scale-105 will-change-transform"
+              className="object-cover transition-transform duration-500 group-hover:scale-105 will-change-transform pointer-events-none"
+              priority
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
-            <div className="absolute bottom-4 left-4 z-10 md:bottom-6 md:left-6">
+            <div className="absolute bottom-4 left-4 z-10 md:bottom-6 md:left-6 pointer-events-none">
               <h3 className="text-xl font-semibold text-white md:text-2xl">
                 {GALLERY_ITEMS[2].title}
               </h3>

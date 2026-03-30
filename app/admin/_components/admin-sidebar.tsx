@@ -1,9 +1,10 @@
 "use client";
 
-import { LayoutDashboard, Package, ShoppingCart, Users, Settings, LogOut, BarChart3, Percent, Link as LinkIcon, HelpCircle, FolderTree, Tag, Layers, Zap, Ticket, PackageCheck, Truck, MessageSquare, CreditCard, FileText, Bell } from "lucide-react";
+import { LayoutDashboard, Package, ShoppingCart, Users, Settings, LogOut, BarChart3, Percent, Link as LinkIcon, HelpCircle, FolderTree, Tag, Layers, Zap, Ticket, PackageCheck, Truck, MessageSquare, CreditCard, FileText, Bell, ChevronDown, ChevronRight, FileEdit } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
 
 const menuItems = [
   { icon: LayoutDashboard, label: "Dashboard", href: "/admin" },
@@ -26,6 +27,15 @@ const menuItems = [
   { icon: Percent, label: "Discounts", href: "/admin/discounts" },
 ];
 
+const dynamicContentsMenu = {
+  icon: FileEdit,
+  label: "Dynamic Contents",
+  subItems: [
+    { label: "Landing Page", href: "/admin/dynamic-contents/landing-page" },
+    { label: "Brand Pages", href: "/admin/dynamic-contents/brand-pages" },
+  ],
+};
+
 const bottomMenuItems = [
   { icon: LinkIcon, label: "Integrations", href: "/admin/integrations" },
   { icon: HelpCircle, label: "Help", href: "/admin/help" },
@@ -34,6 +44,7 @@ const bottomMenuItems = [
 
 export function AdminSidebar() {
   const pathname = usePathname();
+  const [isDynamicContentsOpen, setIsDynamicContentsOpen] = useState(false);
 
   return (
     <div className="flex h-screen w-64 flex-col bg-white shadow-sm">
@@ -53,7 +64,7 @@ export function AdminSidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 space-y-1 px-3 py-4">
+      <nav className="flex-1 space-y-1 px-3 py-4 overflow-y-auto">
         {menuItems.map((item) => {
           const isActive = pathname === item.href;
           return (
@@ -72,6 +83,43 @@ export function AdminSidebar() {
             </Link>
           );
         })}
+
+        {/* Dynamic Contents Menu */}
+        <div>
+          <button
+            onClick={() => setIsDynamicContentsOpen(!isDynamicContentsOpen)}
+            className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-gray-600 transition-all hover:bg-gray-50"
+          >
+            <dynamicContentsMenu.icon className="h-5 w-5" />
+            {dynamicContentsMenu.label}
+            {isDynamicContentsOpen ? (
+              <ChevronDown className="ml-auto h-4 w-4" />
+            ) : (
+              <ChevronRight className="ml-auto h-4 w-4" />
+            )}
+          </button>
+          {isDynamicContentsOpen && (
+            <div className="ml-4 mt-1 space-y-1">
+              {dynamicContentsMenu.subItems.map((subItem) => {
+                const isActive = pathname === subItem.href;
+                return (
+                  <Link
+                    key={subItem.href}
+                    href={subItem.href}
+                    className={cn(
+                      "flex items-center gap-3 rounded-lg px-4 py-2 text-sm font-medium transition-all",
+                      isActive
+                        ? "bg-gradient-to-r from-orange-400 to-orange-500 text-white shadow-md"
+                        : "text-gray-600 hover:bg-gray-50"
+                    )}
+                  >
+                    {subItem.label}
+                  </Link>
+                );
+              })}
+            </div>
+          )}
+        </div>
       </nav>
 
       {/* Bottom Menu */}

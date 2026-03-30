@@ -1,416 +1,265 @@
-# Product Image Upload Guide
+# Image Upload Guide - Dynamic Content System
 
-## 🎯 Overview
+## Overview
+The admin pages now have a visual content editor with built-in image upload functionality. No more manual JSON editing for images!
 
-The system now supports **direct image uploads** from the frontend. Users can upload images directly through the UI instead of manually entering file paths.
+## Features
 
-## ✨ Features
+### 1. Visual Content Editor
+- **Two Modes:**
+  - **Visual Mode:** User-friendly form with image uploads
+  - **JSON Mode:** Advanced JSON editor for custom structures
 
-### Upload Methods
-1. **File Upload** - Upload images directly from your computer
-2. **Path Entry** - Manually enter existing image paths (legacy support)
-3. **Mixed Mode** - Combine uploaded files and existing paths
+### 2. Image Upload Component
+- Drag & drop or click to upload
+- Live image preview
+- Remove/replace images
+- File validation (images only, max 5MB)
+- Loading states
+- Error handling
 
-### Key Capabilities
-- ✅ Multiple file selection (upload multiple images at once)
-- ✅ Drag-and-drop reordering
-- ✅ Real-time image preview
-- ✅ File size display
-- ✅ Primary image selection
-- ✅ Alt text for SEO
-- ✅ Max 10 images per product
-- ✅ Automatic FormData handling
+### 3. Auto-Detection
+The editor automatically detects your section type and shows relevant fields:
 
-## 🚀 How to Use
+- **Hero Section:** Background image, title, button, discount badge
+- **Categories Section:** Multiple items with images
+- **Behind The Work:** Three images (left, center, right) + stats
+- **Custom Sections:** Falls back to JSON mode
 
-### 1. Upload Images When Creating a Product
+## How to Use
 
-1. Click "Add Product" button
-2. Fill in product details
-3. Scroll to "Product Images" section
-4. Click "Upload Images" button
-5. Select one or multiple images from your computer
-6. Images will appear with preview
-7. Add alt text for each image
-8. Click star icon to set primary image
-9. Drag to reorder if needed
-10. Click "Create Product"
+### Creating a Hero Section with Image
 
-### 2. Upload Images to Existing Product
+1. Go to `/admin/dynamic-contents/landing-page-db`
+2. Click **"Add Section"**
+3. Fill in basic info:
+   - Section Name: `hero`
+   - Title: `Hero Section`
+   - Sort Order: `1`
+4. In the **Content** area:
+   - Editor auto-switches to Visual mode
+   - Click **"Background Image"** field
+   - Upload your hero image
+   - Fill in Title, Description, Button Text, Button URL
+   - Toggle discount badge if needed
+5. Click **"Save"**
 
-1. Click edit icon on a product
-2. Scroll to "Product Images" section
-3. Click "Upload More Images" button
-4. Select additional images
-5. Update alt text and primary image as needed
-6. Click "Update Product"
+### Creating Categories with Images
 
-### 3. Mix Uploaded Files and Paths
+1. Section Name: `categories`
+2. Visual editor shows:
+   - Section Title field
+   - Categories list (empty initially)
+3. Click **"Add Item"**
+4. For each category:
+   - Enter Name
+   - Upload Image (click image field)
+   - Enter Link URL
+5. Add more categories as needed
+6. Click **"Save"**
 
-You can have both:
-- Images uploaded through the UI (shows filename and size)
-- Images referenced by path (shows path input field)
+### Creating Behind The Work Section
 
-## 📋 Technical Details
+1. Section Name: `behind-the-work`
+2. Visual editor shows:
+   - Title & Description
+   - Stats (add multiple with +)
+   - Three image fields:
+     - Left Image
+     - Center Image
+     - Right Image
+3. Upload each image
+4. Click **"Save"**
 
-### Frontend Changes
+## Image Upload Details
 
-#### ImageManager Component
-```typescript
-interface ProductImage {
-  id?: number;           // Existing image ID
-  path?: string;         // Path for existing images
-  file?: File;           // File object for uploads
-  preview?: string;      // Object URL for preview
-  alt_text?: string;     // SEO alt text
-  is_primary: boolean;   // Primary flag
-  sort_order: number;    // Display order
-}
-```
+### Supported Formats
+- PNG
+- JPG/JPEG
+- GIF
+- WebP
 
-#### File Handling
-- Uses `<input type="file" accept="image/*" multiple>`
-- Creates object URLs for preview: `URL.createObjectURL(file)`
-- Cleans up object URLs on remove: `URL.revokeObjectURL(preview)`
-- Displays file name and size
+### File Size Limit
+- Maximum: 5MB per image
 
-#### API Hooks Updated
-- `useCreateProduct` - Handles FormData for file uploads
-- `useUpdateProduct` - Handles FormData for file uploads
-- `useAddProductImages` - Handles FormData for file uploads
+### Storage Location
+- Images saved to: `public/images/page-content/`
+- URL format: `/images/page-content/1234567890-filename.jpg`
 
-### Backend Requirements
+### Naming Convention
+- Timestamp + original filename
+- Example: `1710518400000-hero-background.jpg`
 
-Your backend needs to handle `multipart/form-data` requests:
+## Tips & Tricks
 
-```php
-// ProductController.php
-public function store(Request $request)
+### 1. Quick Image Replacement
+- Hover over existing image
+- Click "Remove" button
+- Upload new image
+
+### 2. Switch Between Modes
+- Use Visual mode for common sections
+- Switch to JSON mode for custom structures
+- Changes sync between modes
+
+### 3. Reusing Images
+- Copy image URL from one section
+- Paste in JSON mode for another section
+- Or re-upload the same image
+
+### 4. Bulk Image Upload
+For multiple images:
+1. Upload first image
+2. Click "Add Item" for next
+3. Upload next image
+4. Repeat
+
+### 5. Image Optimization
+Before uploading:
+- Resize to appropriate dimensions
+- Compress to reduce file size
+- Use WebP for better performance
+
+## Common Section Structures
+
+### Hero Section Content
+```json
 {
-    $validated = $request->validate([
-        'name' => 'required|string|max:255',
-        // ... other fields
-        'images' => 'nullable|array|max:10',
-        'images.*.file' => 'nullable|image|max:5120', // 5MB max
-        'images.*.path' => 'nullable|string|max:500',
-        'images.*.alt_text' => 'nullable|string|max:255',
-        'images.*.is_primary' => 'boolean',
-        'images.*.sort_order' => 'integer',
-    ]);
-
-    // Handle file uploads
-    if ($request->has('images')) {
-        foreach ($request->images as $index => $imageData) {
-            if (isset($imageData['file'])) {
-                // Store uploaded file
-                $path = $imageData['file']->store('products', 'public');
-                $validated['images'][$index]['path'] = $path;
-                unset($validated['images'][$index]['file']);
-            }
-        }
-    }
-
-    // Create product with images
-    $product = Product::create($validated);
-    
-    return response()->json($product->load('images'));
-}
-```
-
-## 🎨 UI/UX Features
-
-### Image Preview
-- Shows thumbnail preview immediately after selection
-- Displays filename and file size for uploads
-- Shows path input for existing images
-- Fallback to placeholder on error
-
-### Visual Indicators
-- **Uploaded File**: Shows filename + size (e.g., "laptop.jpg 245.3 KB")
-- **Existing Path**: Shows editable path input field
-- **Primary Image**: Orange star icon and border
-- **Position**: Shows #1, #2, etc. for ordering
-
-### User Feedback
-- File input hidden, triggered by button click
-- Multiple file selection supported
-- Remaining slots shown (e.g., "Upload More Images (3/10)")
-- Disabled state when limit reached
-
-## 📝 Code Examples
-
-### Creating Product with Uploaded Images
-
-```typescript
-import { useCreateProduct } from '@/lib/hooks/admin/useAdminProducts';
-
-const createProduct = useCreateProduct();
-
-// User selects files through UI
-// ImageManager handles file selection and preview
-// On submit:
-
-await createProduct.mutateAsync({
-  name: "Premium Laptop",
-  sku: "LAP-001",
-  category_id: 5,
-  brand_id: 3,
-  price: 1299.99,
-  quantity: 50,
-  status: "active",
-  images: [
-    {
-      file: File, // Actual File object
-      alt_text: "Laptop front view",
-      is_primary: true,
-      sort_order: 0
-    },
-    {
-      file: File, // Another File object
-      alt_text: "Laptop side view",
-      is_primary: false,
-      sort_order: 1
-    }
-  ]
-});
-
-// Hook automatically converts to FormData
-// Backend receives multipart/form-data request
-```
-
-### Mixing Uploads and Paths
-
-```typescript
-await createProduct.mutateAsync({
-  name: "Product Name",
-  // ... other fields
-  images: [
-    {
-      file: File, // New upload
-      alt_text: "New image",
-      is_primary: true,
-      sort_order: 0
-    },
-    {
-      path: "products/existing.jpg", // Existing image
-      alt_text: "Existing image",
-      is_primary: false,
-      sort_order: 1
-    }
-  ]
-});
-```
-
-## 🔧 FormData Structure
-
-When files are present, the request is sent as `multipart/form-data`:
-
-```
-POST /api/admin/products
-Content-Type: multipart/form-data
-
-name: "Premium Laptop"
-sku: "LAP-001"
-category_id: 5
-brand_id: 3
-price: 1299.99
-quantity: 50
-status: "active"
-images[0][file]: <File object>
-images[0][alt_text]: "Laptop front view"
-images[0][is_primary]: 1
-images[0][sort_order]: 0
-images[1][file]: <File object>
-images[1][alt_text]: "Laptop side view"
-images[1][is_primary]: 0
-images[1][sort_order]: 1
-```
-
-For updates with PUT method:
-```
-POST /api/admin/products/5
-Content-Type: multipart/form-data
-
-_method: PUT
-name: "Updated Name"
-images[0][file]: <File object>
-...
-```
-
-## 🎯 File Validation
-
-### Frontend Validation
-- File type: `accept="image/*"` (only images)
-- Max images: 10 per product
-- File size: Displayed to user
-
-### Backend Validation (Recommended)
-```php
-'images.*.file' => [
-    'nullable',
-    'image',              // Must be image
-    'mimes:jpeg,png,jpg,gif,webp', // Allowed types
-    'max:5120',          // Max 5MB
-],
-```
-
-## 🐛 Troubleshooting
-
-### Issue: Images Not Uploading
-
-**Check:**
-1. Backend accepts `multipart/form-data`
-2. File size within limits
-3. Correct MIME types allowed
-4. Storage directory writable
-5. Network tab shows FormData request
-
-### Issue: Preview Not Showing
-
-**Check:**
-1. Object URL created: `URL.createObjectURL(file)`
-2. File is valid image type
-3. Browser supports File API
-4. No CORS issues
-
-### Issue: FormData Not Sent
-
-**Check:**
-1. At least one image has `file` property
-2. Hook detects files: `hasFiles` check
-3. Content-Type header set correctly
-4. File input not empty
-
-### Issue: Memory Leaks
-
-**Solution:**
-- Object URLs are revoked on image remove
-- Cleanup in `handleRemoveImage`:
-```typescript
-if (imageToRemove.preview) {
-  URL.revokeObjectURL(imageToRemove.preview);
-}
-```
-
-## 📊 Performance Considerations
-
-### Client-Side
-- Object URLs are lightweight (just pointers)
-- Files not loaded into memory until upload
-- Preview generation is instant
-- Cleanup prevents memory leaks
-
-### Server-Side
-- Use chunked uploads for large files
-- Implement progress tracking
-- Compress images on server
-- Generate thumbnails asynchronously
-
-### Optimization Tips
-1. **Compress before upload** (optional)
-   ```typescript
-   // Use library like browser-image-compression
-   const compressed = await imageCompression(file, {
-     maxSizeMB: 1,
-     maxWidthOrHeight: 1920
-   });
-   ```
-
-2. **Show upload progress**
-   ```typescript
-   await api.post('/api/admin/products', formData, {
-     headers: { 'Content-Type': 'multipart/form-data' },
-     onUploadProgress: (progressEvent) => {
-       const percentCompleted = Math.round(
-         (progressEvent.loaded * 100) / progressEvent.total
-       );
-       setUploadProgress(percentCompleted);
-     }
-   });
-   ```
-
-3. **Lazy load images**
-   ```typescript
-   <img loading="lazy" src={preview} alt={altText} />
-   ```
-
-## 🔐 Security Best Practices
-
-### Frontend
-1. Validate file types before upload
-2. Check file size limits
-3. Sanitize filenames
-4. Don't trust MIME types alone
-
-### Backend
-1. Validate file types server-side
-2. Check magic bytes (file signatures)
-3. Scan for malware
-4. Store outside web root
-5. Generate unique filenames
-6. Set proper permissions
-7. Limit upload rate
-
-## 🎓 Advanced Features
-
-### Drag-and-Drop Upload (Future Enhancement)
-```typescript
-const handleDrop = (e: React.DragEvent) => {
-  e.preventDefault();
-  const files = Array.from(e.dataTransfer.files);
-  // Process files
-};
-
-<div
-  onDrop={handleDrop}
-  onDragOver={(e) => e.preventDefault()}
-  className="border-dashed border-2"
->
-  Drop images here
-</div>
-```
-
-### Image Cropping (Future Enhancement)
-```typescript
-import Cropper from 'react-easy-crop';
-
-// Allow users to crop before upload
-<Cropper
-  image={preview}
-  crop={crop}
-  zoom={zoom}
-  aspect={4 / 3}
-  onCropComplete={onCropComplete}
-/>
-```
-
-### Bulk Upload (Future Enhancement)
-```typescript
-// Upload multiple products with images
-const bulkUpload = async (productsWithImages) => {
-  for (const product of productsWithImages) {
-    await createProduct.mutateAsync(product);
+  "backgroundImage": "/images/page-content/123-hero.jpg",
+  "title": "Your Title Here",
+  "highlightedText": "Highlighted",
+  "description": "Description text...",
+  "buttonText": "Shop Now",
+  "buttonUrl": "/shop",
+  "discountBadge": {
+    "enabled": true,
+    "text": "Up to",
+    "percentage": "40%"
   }
-};
+}
 ```
 
-## 📚 Related Documentation
+### Categories Section Content
+```json
+{
+  "sectionTitle": "Explore Categories",
+  "items": [
+    {
+      "name": "Bikes",
+      "image": "/images/page-content/456-bikes.jpg",
+      "href": "/shop/bikes"
+    },
+    {
+      "name": "Treadmills",
+      "image": "/images/page-content/789-treadmills.jpg",
+      "href": "/shop/treadmills"
+    }
+  ]
+}
+```
 
-- `FRONTEND_IMAGE_MANAGEMENT.md` - Complete system documentation
-- `FRONTEND_IMAGE_QUICK_REFERENCE.md` - Quick code reference
-- `INTEGRATION_CHECKLIST.md` - Testing guide
-- `IMAGE_SYSTEM_ARCHITECTURE.md` - System architecture
+### Behind The Work Content
+```json
+{
+  "title": "Thinking Behind the Work",
+  "description": "Long description here...",
+  "stats": [
+    { "value": "51+", "label": "Years of Experience" },
+    { "value": "1M+", "label": "Happy Customers" }
+  ],
+  "images": {
+    "left": "/images/page-content/111-left.jpg",
+    "center": "/images/page-content/222-center.jpg",
+    "right": "/images/page-content/333-right.jpg"
+  }
+}
+```
 
-## ✅ Summary
+## Troubleshooting
 
-Your system now supports:
-- ✅ Direct file uploads from UI
-- ✅ Multiple file selection
-- ✅ Real-time preview
-- ✅ File size display
-- ✅ Automatic FormData handling
-- ✅ Mixed upload/path mode
-- ✅ Memory leak prevention
-- ✅ Drag-and-drop reordering
+### Image Not Uploading
+- Check file size (must be < 5MB)
+- Verify file type (must be image)
+- Check browser console for errors
+- Ensure upload API is working
 
-Users can now upload images directly without manually managing file paths!
+### Image Not Displaying
+- Verify URL is correct
+- Check if file exists in `public/images/page-content/`
+- Clear browser cache
+- Check Next.js image optimization settings
+
+### Visual Editor Not Showing
+- Section might not match known templates
+- Switch to JSON mode
+- Manually structure content
+- Or create custom template
+
+### JSON Parse Error
+- Check for valid JSON syntax
+- Use JSON validator
+- Switch to Visual mode to auto-fix
+
+## Best Practices
+
+1. **Image Dimensions:**
+   - Hero backgrounds: 1920x1080px or larger
+   - Category images: 800x1000px (portrait)
+   - Behind The Work: 600x800px
+
+2. **File Naming:**
+   - Use descriptive names
+   - Avoid spaces (use hyphens)
+   - Example: `hero-background-nordictrack.jpg`
+
+3. **Organization:**
+   - Keep images organized by section
+   - Use consistent naming conventions
+   - Document image sources
+
+4. **Performance:**
+   - Compress images before upload
+   - Use appropriate formats (WebP for web)
+   - Consider lazy loading for frontend
+
+5. **Backup:**
+   - Keep original high-res images
+   - Document image sources
+   - Version control for important images
+
+## API Endpoint
+
+The image upload uses:
+```
+POST /api/admin/content/upload
+```
+
+Request:
+```
+FormData {
+  file: File
+  folder: "page-content" (optional)
+}
+```
+
+Response:
+```json
+{
+  "success": true,
+  "url": "/images/page-content/123456-filename.jpg",
+  "filename": "123456-filename.jpg"
+}
+```
+
+## Summary
+
+✅ Visual editor with image uploads
+✅ Drag & drop support
+✅ Auto-detection of section types
+✅ Real-time preview
+✅ JSON fallback for custom sections
+✅ File validation & error handling
+✅ Easy image replacement
+✅ No manual URL entry needed
+
+Images are now fully integrated into the dynamic content system!

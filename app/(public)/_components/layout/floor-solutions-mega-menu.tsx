@@ -17,24 +17,18 @@ const floorCategories = [
     image: "/images/landing/floor-solution/b54b7f7c87e2a09fb14f9ba6f305a970c2bcdacf.jpg",
     description: "Complete court and surface solutions"
   },
-  {
-    title: "Sports Equipments",
-    href: "/floor-solutions/sports-equipment",
-    image: "/images/landing/floor-solution/df5e4936e4ad26eabb5d4f68226f4b8e0cbd16f3.jpg",
-    description: "Professional training gear"
-  },
 ];
 
 export function FloorSolutionsMegaMenu({ className }: { className?: string }) {
   return (
-    <div className={cn("absolute left-0 top-full z-50 mt-0 w-full border-t border-gray-100 bg-white shadow-xl before:absolute before:-top-10 before:left-0 before:h-10 before:w-full before:bg-transparent", className)}>
-      <div className="mx-auto max-w-[1400px] px-8 py-10">
-        <div className="grid grid-cols-3 gap-8">
+    <div className={cn("absolute left-1/2 top-full z-50 mt-4 -translate-x-1/2 w-max rounded-2xl border border-gray-100 bg-white shadow-xl before:absolute before:-top-10 before:left-0 before:h-10 before:w-full before:bg-transparent", className)}>
+      <div className="p-6">
+        <div className="grid grid-cols-2 gap-6">
           {floorCategories.map((category) => (
             <Link
               key={category.title}
               href={category.href}
-              className="group relative overflow-hidden rounded-lg bg-gray-50 transition-all duration-300 hover:shadow-2xl"
+              className="group relative overflow-hidden rounded-lg bg-gray-50 transition-all duration-300 hover:shadow-2xl w-[400px]"
             >
               {/* Image Container */}
               <div className="relative aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">

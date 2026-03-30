@@ -46,21 +46,42 @@ export default function OrdersPage() {
   let pagination: any = {};
 
   if (ordersData) {
-    // Try different response structures
-    if (ordersData.data?.data) {
-      // Laravel paginated response
+    // Check for new standardized format with pagination key
+    if (ordersData.success && ordersData.pagination) {
+      orders = ordersData.data || [];
+      pagination = ordersData.pagination;
+    }
+    // Laravel paginated response with data.data structure
+    else if (ordersData.data?.data && Array.isArray(ordersData.data.data)) {
       orders = ordersData.data.data;
-      pagination = ordersData.data;
-    } else if (ordersData.data && Array.isArray(ordersData.data)) {
-      // Direct array in data
+      pagination = {
+        total: ordersData.data.total,
+        per_page: ordersData.data.per_page,
+        current_page: ordersData.data.current_page,
+        last_page: ordersData.data.last_page,
+        from: ordersData.data.from,
+        to: ordersData.data.to,
+      };
+    }
+    // Direct array in data with pagination at root
+    else if (ordersData.data && Array.isArray(ordersData.data)) {
       orders = ordersData.data;
-      pagination = ordersData;
-    } else if (Array.isArray(ordersData)) {
-      // Direct array response
+      pagination = {
+        total: ordersData.total || ordersData.data.length,
+        per_page: ordersData.per_page || ordersData.data.length,
+        current_page: ordersData.current_page || 1,
+        last_page: ordersData.last_page || 1,
+        from: ordersData.from || 1,
+        to: ordersData.to || ordersData.data.length,
+      };
+    }
+    // Direct array response
+    else if (Array.isArray(ordersData)) {
       orders = ordersData;
-      pagination = { total: ordersData.length, current_page: 1, last_page: 1 };
-    } else {
-      // Fallback
+      pagination = { total: ordersData.length, current_page: 1, last_page: 1, per_page: ordersData.length, from: 1, to: ordersData.length };
+    }
+    // Fallback
+    else {
       orders = [];
       pagination = {};
     }
@@ -102,6 +123,7 @@ export default function OrdersPage() {
 
   console.log('Orders API Response:', ordersData); // Debug log
   console.log('Processed Orders:', orders); // Debug log
+  console.log('Pagination Data:', pagination); // Debug log
 
   const handleCancelOrder = async (orderNumber: string) => {
     if (window.confirm('Are you sure you want to cancel this order?')) {
@@ -145,6 +167,7 @@ export default function OrdersPage() {
 
   if (error) {
     console.error('Orders API Error:', error); // Debug log
+    console.error('Error Response:', (error as any)?.response); // Debug log
     return (
       <div className="bg-red-50 border border-red-200 rounded-lg p-6">
         <div className="flex items-center">
@@ -154,6 +177,14 @@ export default function OrdersPage() {
             <p className="text-red-600 text-sm mt-1">
               {(error as any)?.response?.data?.message || (error as any)?.message || 'Unable to load your orders. Please try refreshing the page.'}
             </p>
+            {process.env.NODE_ENV === 'development' && (
+              <details className="mt-2">
+                <summary className="cursor-pointer text-red-700 text-xs">View Error Details</summary>
+                <pre className="text-xs text-red-700 overflow-auto mt-2 p-2 bg-white rounded">
+                  {JSON.stringify((error as any)?.response?.data, null, 2)}
+                </pre>
+              </details>
+            )}
           </div>
         </div>
       </div>

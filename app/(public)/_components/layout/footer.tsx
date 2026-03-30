@@ -29,9 +29,13 @@ export function Footer() {
           {/* Brand & About */}
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-4">
-              <h2 className="text-4xl font-bold italic tracking-tight text-[#FFB81E]">
-                Shah Sports
-              </h2>
+              <Image
+                src="/shah-sports-logo.png"
+                alt="Shah Sports"
+                width={220}
+                height={70}
+                className="h-12 object-contain md:h-16"
+              />
               <p className="text-sm leading-relaxed text-gray-300">
                 Your trusted partner for premium fitness and sports equipment.
                 Quality products for champions.
@@ -120,6 +124,11 @@ export function Footer() {
               <li>
                 <Link href="/category/sports" className="hover:text-[#FFB81E] transition-colors">
                   Sports Equipment
+                </Link>
+              </li>
+              <li>
+                <Link href="/kino-map" className="hover:text-[#FFB81E] transition-colors">
+                  Kinomap
                 </Link>
               </li>
             </ul>

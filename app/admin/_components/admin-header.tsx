@@ -8,7 +8,7 @@ import { NotificationBell } from "@/lib/components/NotificationBell";
 import { useAdminNotifications, useAdminUnreadCount, useAdminMarkAsRead, useAdminMarkAllAsRead, useAdminDeleteNotification } from "@/lib/hooks/admin";
 
 // Temporary debug import - remove after testing
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
   import('@/lib/utils/csrf-debug').then(({ debugCSRFToken }) => {
     (window as any).debugCSRF = debugCSRFToken;
   });

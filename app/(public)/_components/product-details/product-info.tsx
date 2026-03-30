@@ -59,6 +59,11 @@ export function ProductInfo({ product }: ProductInfoProps) {
   const comparePrice = product.compare_price ? parseFloat(product.compare_price) : null;
   const discount = comparePrice ? Math.round(((comparePrice - currentPrice) / comparePrice) * 100) : 0;
   const inStock = currentStock > 0;
+  
+  // Check if preorder is active
+  const isPreorderActive = product.is_preorder && 
+    product.preorder_release_date && 
+    new Date(product.preorder_release_date) > new Date();
 
   // Group variations by attribute type (e.g., size, color)
   const variationAttributes: Record<string, Set<string>> = {};
@@ -151,7 +156,8 @@ export function ProductInfo({ product }: ProductInfoProps) {
     
     setTimeout(() => {
       setIsAddingToCart(false);
-      router.push('/cart');
+      // For preorder, go directly to checkout
+      router.push(isPreorderActive ? '/checkout' : '/cart');
     }, 300);
   };
 
@@ -279,7 +285,8 @@ export function ProductInfo({ product }: ProductInfoProps) {
             {/* Price */}
             <div className="mb-6 flex items-center gap-3">
               <span className="text-3xl font-bold text-black">${currentPrice.toFixed(2)}</span>
-              {comparePrice && comparePrice > currentPrice && (
+              {/* Hide original price if preorder is active */}
+              {!isPreorderActive && comparePrice && comparePrice > currentPrice && (
                 <>
                   <span className="text-xl text-gray-400 line-through">${comparePrice.toFixed(2)}</span>
                   <span className="rounded bg-red-500 px-2 py-1 text-sm font-bold text-white">
@@ -287,15 +294,43 @@ export function ProductInfo({ product }: ProductInfoProps) {
                   </span>
                 </>
               )}
+              {isPreorderActive && (
+                <span className="rounded bg-blue-600 px-3 py-1 text-sm font-bold text-white">
+                  Pre-Order
+                </span>
+              )}
             </div>
 
-            {/* Stock Status */}
-            <div className="mb-8 flex items-center gap-2">
-              <div className={`h-3 w-3 rounded-full ${inStock ? 'bg-green-500' : 'bg-red-500'}`} />
-              <span className={`font-medium ${inStock ? 'text-green-500' : 'text-red-500'}`}>
-                {inStock ? `Available in stock (${currentStock})` : 'Out of stock'}
-              </span>
-            </div>
+            {/* Stock Status / Preorder Info */}
+            {isPreorderActive ? (
+              <div className="mb-8 rounded-lg bg-blue-50 border border-blue-200 p-4">
+                <div className="flex items-start gap-3">
+                  <div className="h-3 w-3 rounded-full bg-blue-600 mt-1" />
+                  <div>
+                    <p className="font-semibold text-blue-900">Pre-Order Available</p>
+                    <p className="text-sm text-blue-700 mt-1">
+                      Expected release: {new Date(product.preorder_release_date).toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                      })}
+                    </p>
+                    {product.preorder_limit && (
+                      <p className="text-sm text-blue-700 mt-1">
+                        Limited to {product.preorder_limit} units
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="mb-8 flex items-center gap-2">
+                <div className={`h-3 w-3 rounded-full ${inStock ? 'bg-green-500' : 'bg-red-500'}`} />
+                <span className={`font-medium ${inStock ? 'text-green-500' : 'text-red-500'}`}>
+                  {inStock ? `Available in stock (${currentStock})` : 'Out of stock'}
+                </span>
+              </div>
+            )}
 
             {/* Short Description */}
             {product.short_description && (
@@ -382,7 +417,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
             )}
 
             {/* Actions */}
-            {inStock && (
+            {(inStock || isPreorderActive) && (
               <div className="mb-8 flex flex-wrap gap-4">
                 {/* Quantity */}
                 <div className="flex h-12 items-center rounded-xs border border-gray-200">
@@ -395,7 +430,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
                   </button>
                   <span className="w-12 text-center font-semibold">{quantity}</span>
                   <button 
-                    onClick={() => setQuantity(q => Math.min(currentStock, q + 1))}
+                    onClick={() => setQuantity(q => Math.min(isPreorderActive ? (product.preorder_limit || 999) : currentStock, q + 1))}
                     className="flex h-full w-12 items-center justify-center text-gray-500 hover:text-black"
                     aria-label="Increase quantity"
                   >
@@ -403,26 +438,41 @@ export function ProductInfo({ product }: ProductInfoProps) {
                   </button>
                 </div>
 
-                {/* Add to Cart */}
-                <button 
-                  onClick={(e) => handleAddToCart(e)}
-                  type="button"
-                  disabled={isAddingToCart}
-                  className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xs bg-primary px-8 font-bold text-black transition-colors hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <ShoppingBag className="h-5 w-5" />
-                  {isAddingToCart ? 'Adding...' : (itemInCart ? 'Update Cart' : 'Add to Cart')}
-                </button>
+                {isPreorderActive ? (
+                  /* Pre-Order Now Button - Goes directly to checkout */
+                  <button 
+                    onClick={(e) => handleBuyNow(e)}
+                    type="button"
+                    disabled={isAddingToCart}
+                    className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xs bg-blue-600 px-8 font-bold text-white transition-colors hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <ShoppingBag className="h-5 w-5" />
+                    {isAddingToCart ? 'Processing...' : 'Pre-Order Now'}
+                  </button>
+                ) : (
+                  <>
+                    {/* Add to Cart */}
+                    <button 
+                      onClick={(e) => handleAddToCart(e)}
+                      type="button"
+                      disabled={isAddingToCart}
+                      className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xs bg-primary px-8 font-bold text-black transition-colors hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <ShoppingBag className="h-5 w-5" />
+                      {isAddingToCart ? 'Adding...' : (itemInCart ? 'Update Cart' : 'Add to Cart')}
+                    </button>
 
-                {/* Buy Now */}
-                <button 
-                  onClick={(e) => handleBuyNow(e)}
-                  type="button"
-                  disabled={isAddingToCart}
-                  className="flex h-12 flex-1 items-center justify-center rounded-xs border border-black px-8 font-bold text-black transition-colors hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isAddingToCart ? 'Processing...' : 'Buy Now'}
-                </button>
+                    {/* Buy Now */}
+                    <button 
+                      onClick={(e) => handleBuyNow(e)}
+                      type="button"
+                      disabled={isAddingToCart}
+                      className="flex h-12 flex-1 items-center justify-center rounded-xs border border-black px-8 font-bold text-black transition-colors hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isAddingToCart ? 'Processing...' : 'Buy Now'}
+                    </button>
+                  </>
+                )}
               </div>
             )}
 

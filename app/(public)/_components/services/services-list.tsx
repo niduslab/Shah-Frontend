@@ -252,7 +252,7 @@ export function ServicesList() {
                   {service.price}
                 </div>
                 <Link 
-                  href={`https://wa.me/880123456789?text=Hi, I am interested in ${service.title} service.`}
+                  href={`https://web.whatsapp.com/send?phone=8801615550080&text=Hello!%20I%20would%20like%20to%20inquire%20about%20the%20following%20service%3A%0A%0AService%3A%20${encodeURIComponent(service.title)}%0APrice%20Range%3A%20${encodeURIComponent(service.price)}%0ADetails%3A%20${encodeURIComponent(service.description)}%0A%0ACould%20you%20please%20provide%20more%20information%20and%20help%20me%20schedule%20this%20service%3F`}
                   target="_blank"
                   className="flex items-center gap-2 rounded-full bg-[#25D366] px-4 py-2 text-sm font-bold text-white transition-all hover:bg-[#128C7E] hover:scale-105 shadow-sm"
                 >

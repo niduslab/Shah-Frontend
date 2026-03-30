@@ -3,100 +3,69 @@
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { cn } from "@/lib/utils";
-
-const categories = [
-  {
-    id: "cardio",
-    label: "Cardio",
-    items: [
-      { name: "Bike", href: "#" },
-      { name: "Treadmill", href: "#" },
-      { name: "Elliptical", href: "#" },
-      { name: "Rowing", href: "#" },
-      { name: "Stair Climber", href: "#" },
-    ],
-    featured: [
-      {
-        name: "Pro Runner 5000",
-        image: "/images/landing/pre-order/606b82b85373e30dc10d2f79a0253f7d20502b39.png",
-        price: "$1,299",
-      },
-      {
-        name: "Elite Cycle",
-        image: "/images/landing/pre-order/63594412e77df42c02a5f16d3a2eceb8d4f91d99.png",
-        price: "$899",
-      },
-      {
-        name: "Air Rower",
-        image: "/images/landing/pre-order/a1d135ac0387f5fbbc33cdd695d09e992dc2d274.png",
-        price: "$999",
-      },
-    ],
-  },
-  {
-    id: "strength",
-    label: "Strength",
-    items: [
-      { name: "Selectorized Series", href: "#" },
-      { name: "Plate Loaded Series", href: "#" },
-      { name: "Hammer Series", href: "#" },
-      { name: "Multi Station Gym", href: "#" },
-      { name: "Functional Trainer", href: "#" },
-    ],
-    featured: [
-      {
-        name: "Power Rack X",
-        image: "/images/landing/pre-order/a1d135ac0387f5fbbc33cdd695d09e992dc2d274.png",
-        price: "$1,499",
-      },
-      {
-        name: "Dumbbell Set",
-        image: "/images/landing/pre-order/a9bf5425dbad371e93771b044cfeaccd4402283d.png",
-        price: "$499",
-      },
-      {
-        name: "Multi Gym Pro",
-        image: "/images/landing/pre-order/c7b139cd4aecc159bde32e9387c0dcb372021ab9.png",
-        price: "$2,499",
-      },
-    ],
-  },
-  {
-    id: "free-weight",
-    label: "Free Weight",
-    items: [
-      { name: "Barbell", href: "#" },
-      { name: "Dumbbell", href: "#" },
-      { name: "Bench", href: "#" },
-      { name: "Weight Plate", href: "#" },
-      { name: "Fitness Accessories", href: "#" },
-    ],
-    featured: [
-      {
-        name: "Olympic Barbell",
-        image: "/images/landing/pre-order/c7b139cd4aecc159bde32e9387c0dcb372021ab9.png",
-        price: "$299",
-      },
-      {
-        name: "Adjustable Bench",
-        image: "/images/landing/pre-order/606b82b85373e30dc10d2f79a0253f7d20502b39.png",
-        price: "$199",
-      },
-      {
-        name: "Weight Plates Set",
-        image: "/images/landing/pre-order/63594412e77df42c02a5f16d3a2eceb8d4f91d99.png",
-        price: "$349",
-      },
-    ],
-  },
-];
+import { useCategories } from "@/lib/hooks/public/useCategories";
 
 export function ShopMegaMenu({ className }: { className?: string }) {
-  const [activeCategory, setActiveCategory] = useState("cardio");
+  const { data: categoriesData, isLoading } = useCategories();
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
-  const currentCategory = categories.find((c) => c.id === activeCategory);
+  // Process categories data
+  const categories = useMemo(() => {
+    if (!categoriesData?.data) return [];
+
+    const fitnessCategory = categoriesData.data.find(
+      (cat: any) => cat.is_active && !cat.parent_id && cat.slug === 'fitness'
+    );
+
+    if (!fitnessCategory) return [];
+
+    const level2Children = (fitnessCategory.children || []).filter((child: any) => child.is_active);
+
+    // Find the specific categories we want to display (Cardio, Strength, Free Weight)
+    const targetCategories = ['fitness-cardio', 'strength', 'free-weight'];
+    
+    const formattedCategories = level2Children
+      .filter((level2: any) => targetCategories.includes(level2.slug))
+      .map((level2: any) => {
+        const level3Children = (level2.children || []).filter((child: any) => child.is_active);
+        
+        return {
+          id: level2.slug,
+          categoryId: level2.id,
+          label: level2.name,
+          slug: level2.slug,
+          items: level3Children.map((level3: any) => ({
+            name: level3.name,
+            slug: level3.slug,
+            categoryId: level3.id,
+            href: `/shop?category_id=${level3.id}`,
+          })),
+        };
+      });
+
+    return formattedCategories;
+  }, [categoriesData]);
+
+  // Set initial active category
+  useEffect(() => {
+    if (categories.length > 0 && !activeCategory) {
+      setActiveCategory(categories[0].id);
+    }
+  }, [categories, activeCategory]);
+
+  const currentCategory = categories.find((c: any) => c.id === activeCategory);
+
+  if (isLoading || categories.length === 0) {
+    return (
+      <div className={cn("absolute left-0 top-full z-50 mt-0 w-full border-t border-gray-100 bg-white shadow-xl before:absolute before:-top-10 before:left-0 before:h-10 before:w-full before:bg-transparent", className)}>
+        <div className="mx-auto flex max-w-[1400px] p-8">
+          <div className="text-gray-500">Loading categories...</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={cn("absolute left-0 top-full z-50 mt-0 w-full border-t border-gray-100 bg-white shadow-xl before:absolute before:-top-10 before:left-0 before:h-10 before:w-full before:bg-transparent", className)}>
@@ -104,7 +73,7 @@ export function ShopMegaMenu({ className }: { className?: string }) {
         {/* Sidebar */}
         <div className="w-64 border-r border-gray-100 py-6">
           <ul className="flex flex-col">
-            {categories.map((category) => (
+            {categories.map((category: any) => (
               <li key={category.id}>
                 <button
                   onMouseEnter={() => setActiveCategory(category.id)}
@@ -134,16 +103,27 @@ export function ShopMegaMenu({ className }: { className?: string }) {
                 {currentCategory?.label} Categories
               </h3>
               <ul className="flex flex-col gap-2.5">
-                {currentCategory?.items.map((item) => (
-                  <li key={item.name}>
+                {currentCategory?.items && currentCategory.items.length > 0 ? (
+                  currentCategory.items.map((item: any) => (
+                    <li key={item.slug}>
+                      <Link
+                        href={item.href}
+                        className="text-sm text-gray-600 transition-all hover:text-black hover:font-bold"
+                      >
+                        {item.name}
+                      </Link>
+                    </li>
+                  ))
+                ) : (
+                  <li>
                     <Link
-                      href={item.href}
+                      href={`/shop?category_id=${currentCategory?.categoryId}`}
                       className="text-sm text-gray-600 transition-all hover:text-black hover:font-bold"
                     >
-                      {item.name}
+                      View All {currentCategory?.label}
                     </Link>
                   </li>
-                ))}
+                )}
               </ul>
             </div>
 
@@ -153,26 +133,41 @@ export function ShopMegaMenu({ className }: { className?: string }) {
                 Trending Products
               </h3>
               <div className="grid grid-cols-3 gap-5">
-                {currentCategory?.featured.map((product, index) => (
-                  <div key={index} className="group cursor-pointer rounded-lg p-2 transition-all hover:bg-gray-50 hover:shadow-sm">
-                    <div className="relative mb-3 aspect-[4/3] overflow-hidden rounded-md bg-white p-2">
-                      <Image
-                        src={product.image}
-                        alt={product.name}
-                        fill
-                        className="object-contain transition-transform duration-300 group-hover:scale-105"
-                      />
-                    </div>
-                    <div className="flex flex-col px-1">
-                      <span className="text-sm font-medium text-gray-900 group-hover:text-black group-hover:font-bold">
-                        {product.name}
-                      </span>
-                      <span className="text-xs text-gray-500 font-semibold mt-1">
-                        {product.price}
-                      </span>
-                    </div>
-                  </div>
-                ))}
+                {categories.map((category: any, index: number) => {
+                  // Define images for each category
+                  const images = [
+                    '/images/landing/pre-order/63594412e77df42c02a5f16d3a2eceb8d4f91d99.png',
+                    '/images/landing/pre-order/a1d135ac0387f5fbbc33cdd695d09e992dc2d274.png',
+                    '/images/landing/pre-order/c7b139cd4aecc159bde32e9387c0dcb372021ab9.png',
+                  ];
+                  
+                  return (
+                    <Link 
+                      key={category.id}
+                      href={`/shop?category_id=${category.categoryId}`}
+                      className="group relative cursor-pointer rounded-lg overflow-hidden transition-all hover:shadow-xl"
+                    >
+                      {/* Full Card Image */}
+                      <div className="relative aspect-[4/3] overflow-hidden bg-gray-50">
+                        <Image
+                          src={images[index]}
+                          alt={`${category.label} Equipment`}
+                          fill
+                          className="object-contain transition-transform duration-500 group-hover:scale-105"
+                        />
+                        {/* Overlay Gradient */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                      </div>
+                      
+                      {/* Category Label */}
+                      <div className="absolute bottom-0 left-0 right-0 p-4 text-center">
+                        <span className="text-lg font-bold text-white group-hover:text-[#ffb81e] transition-colors drop-shadow-lg">
+                          {category.label}
+                        </span>
+                      </div>
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           </div>

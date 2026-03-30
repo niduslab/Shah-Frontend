@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -12,14 +12,80 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const HERO_IMAGES = {
-  main: "/images/landing/hero-section/6da4e59475159602882c3fabee07c1388d618dbb.png",
-  topRight: "/images/landing/hero-section/d7c609f1a7f9028a48f85f6b588e7ae4e6803c45.png",
-  bottomRight: "/images/landing/hero-section/efc3fc0e7c591b4a8aaa86acf5dae5a7e6ef5118.png",
-  tallRight: "/images/landing/hero-section/e2e807f93cc803b571ae315331b10d75e097223b.png",
-};
+interface HeroSection {
+  id: string;
+  title: string;
+  buttonText: string;
+  buttonUrl: string;
+  image: string;
+  position: "main" | "topRight" | "bottomRight" | "tallRight";
+  discountBadge?: {
+    enabled: boolean;
+    text: string;
+    percentage: string;
+  };
+}
+
+const DEFAULT_SECTIONS: HeroSection[] = [
+  {
+    id: "main",
+    position: "main",
+    title: "Elevate Your\nFitness Journey",
+    buttonText: "Shop Now",
+    buttonUrl: "/shop",
+    image: "/images/landing/hero-section/6da4e59475159602882c3fabee07c1388d618dbb.png",
+    discountBadge: {
+      enabled: true,
+      text: "Up to",
+      percentage: "40%",
+    },
+  },
+  {
+    id: "topRight",
+    position: "topRight",
+    title: "Perfect Gear\nAwaits",
+    buttonText: "Shop Now",
+    buttonUrl: "/shop",
+    image: "/images/landing/hero-section/d7c609f1a7f9028a48f85f6b588e7ae4e6803c45.png",
+  },
+  {
+    id: "bottomRight",
+    position: "bottomRight",
+    title: "Shine Bright with\nWeights",
+    buttonText: "Shop Now",
+    buttonUrl: "/shop",
+    image: "/images/landing/hero-section/efc3fc0e7c591b4a8aaa86acf5dae5a7e6ef5118.png",
+  },
+  {
+    id: "tallRight",
+    position: "tallRight",
+    title: "TOP\nPICKS",
+    buttonText: "Shop Now",
+    buttonUrl: "/shop",
+    image: "/images/landing/hero-section/e2e807f93cc803b571ae315331b10d75e097223b.png",
+  },
+];
 
 export function HeroSection() {
+  const [sections, setSections] = useState<HeroSection[]>(DEFAULT_SECTIONS);
+
+  useEffect(() => {
+    const fetchHeroSections = async () => {
+      try {
+        const response = await fetch("/api/hero-sections");
+        if (response.ok) {
+          const data = await response.json();
+          if (data.sections && data.sections.length > 0) {
+            setSections(data.sections);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching hero sections:", error);
+      }
+    };
+
+    fetchHeroSections();
+  }, []);
   const containerRef = useRef<HTMLDivElement>(null);
   const mainImageRef = useRef<HTMLDivElement>(null);
   const tallImageRef = useRef<HTMLDivElement>(null);
@@ -90,115 +156,143 @@ export function HeroSection() {
 
   }, { scope: containerRef });
 
+  const mainSection = sections.find((s) => s.position === "main");
+  const topRightSection = sections.find((s) => s.position === "topRight");
+  const bottomRightSection = sections.find((s) => s.position === "bottomRight");
+  const tallRightSection = sections.find((s) => s.position === "tallRight");
+
+  const renderTitle = (title: string) => {
+    return title.split("\n").map((line, index) => (
+      <span key={index}>
+        {line}
+        {index < title.split("\n").length - 1 && <br />}
+      </span>
+    ));
+  };
+
   return (
     <div ref={containerRef} className="w-full bg-white py-4 md:py-6 overflow-hidden">
       <div className="mx-auto grid w-full max-w-[1400px] grid-cols-1 gap-4 px-4 md:px-6 md:h-[600px] md:grid-cols-4">
 
-        <div ref={mainImageRef} className="group relative col-span-1 h-[400px] overflow-hidden rounded-xs md:col-span-2 md:row-span-2 md:h-full">
-          <div className="relative h-full w-full overflow-hidden">
-            <Image
-                src={HERO_IMAGES.main}
-                alt="Elevate Your Fitness Journey"
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105 will-change-transform"
-                priority
-            />
+        {/* Main Section */}
+        {mainSection && (
+          <div ref={mainImageRef} className="group relative col-span-1 h-[400px] overflow-hidden rounded-xs md:col-span-2 md:row-span-2 md:h-full">
+            <div className="relative h-full w-full overflow-hidden">
+              <Image
+                  src={mainSection.image}
+                  alt={mainSection.title}
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-105 will-change-transform"
+                  priority
+              />
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+            <div className="absolute bottom-8 left-8 max-w-md z-10">
+              <h2 className="mb-6 text-2xl font-semibold leading-tight text-white sm:text-3xl md:text-[36px]">
+                {renderTitle(mainSection.title)}
+              </h2>
+              <Link
+                href={mainSection.buttonUrl}
+                className="inline-flex h-12 items-center gap-2 rounded-md bg-primary px-6 text-[16px] font-semibold text-black transition-colors hover:bg-primary/90"
+              >
+                {mainSection.buttonText} <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+            
+            {/* Discount Badge */}
+            {mainSection.discountBadge?.enabled && (
+              <div className="absolute bottom-8 right-8 z-10 flex h-32 w-32 items-center justify-center rounded-full bg-[#FF5722] shadow-2xl transition-transform duration-300 hover:scale-110 md:h-40 md:w-40">
+                <div className="text-center">
+                  <div className="text-sm font-medium text-white md:text-base">
+                    {mainSection.discountBadge.text}
+                  </div>
+                  <div className="text-4xl font-bold leading-none text-white md:text-5xl">
+                    {mainSection.discountBadge.percentage}
+                  </div>
+                  <div className="text-sm font-medium text-white md:text-base">Discounts</div>
+                </div>
+              </div>
+            )}
           </div>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
-          <div className="absolute bottom-8 left-8 max-w-md z-10">
-            <h2 className="mb-6 text-2xl font-semibold leading-tight text-white sm:text-3xl md:text-[36px]">
-              Elevate Your <br /> Fitness Journey
-            </h2>
-            <Link
-              href="/shop"
-              className="inline-flex h-12 items-center gap-2 rounded-md bg-primary px-6 text-[16px] font-semibold text-black transition-colors hover:bg-primary/90"
-            >
-              Shop Now <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-          
-          {/* Discount Badge */}
-          <div className="absolute bottom-8 right-8 z-10 flex h-32 w-32 items-center justify-center rounded-full bg-[#FF5722] shadow-2xl transition-transform duration-300 hover:scale-110 md:h-40 md:w-40">
-            <div className="text-center">
-              <div className="text-sm font-medium text-white md:text-base">Up to</div>
-              <div className="text-4xl font-bold leading-none text-white md:text-5xl">40%</div>
-              <div className="text-sm font-medium text-white md:text-base">Discounts</div>
+        )}
 
+        {/* Top Right Section */}
+        {topRightSection && (
+          <div ref={topRightImageRef} className="group relative col-span-1 h-[250px] overflow-hidden rounded-xs md:col-span-1 md:row-span-1 md:h-full">
+            <div className="relative h-full w-full overflow-hidden">
+              <Image
+                  src={topRightSection.image}
+                  alt={topRightSection.title}
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-105 will-change-transform"
+              />
+            </div>
+            <div className="absolute inset-0 bg-black/20 pointer-events-none" />
+            <div className="absolute left-6 top-6 z-10">
+              <h3 className="mb-2 text-xl font-semibold text-white sm:text-2xl">
+                {renderTitle(topRightSection.title)}
+              </h3>
+              <Link
+                href={topRightSection.buttonUrl}
+                className="inline-flex items-center gap-2 text-[16px] font-semibold text-primary hover:text-primary/80"
+              >
+                {topRightSection.buttonText} <ArrowRight className="h-4 w-4" />
+              </Link>
             </div>
           </div>
-        </div>
+        )}
 
-        <div ref={topRightImageRef} className="group relative col-span-1 h-[250px] overflow-hidden rounded-xs md:col-span-1 md:row-span-1 md:h-full">
-          <div className="relative h-full w-full overflow-hidden">
-            <Image
-                src={HERO_IMAGES.topRight}
-                alt="Perfect Gear Awaits"
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105 will-change-transform"
-            />
+        {/* Tall Right Section */}
+        {tallRightSection && (
+          <div ref={tallImageRef} className="group relative col-span-1 h-[450px] overflow-hidden rounded-xs md:col-span-1 md:row-span-2 md:h-full">
+            <div className="relative h-full w-full overflow-hidden">
+              <Image
+                  src={tallRightSection.image}
+                  alt={tallRightSection.title}
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-105 will-change-transform"
+              />
+            </div>
+            <div className="absolute inset-0 bg-black/20 pointer-events-none" />
+            <div className="absolute bottom-8 left-0 right-0 text-center z-10">
+              <h3 className="mb-8 text-3xl font-semibold italic tracking-wider text-white sm:text-4xl md:text-[48px]">
+                {renderTitle(tallRightSection.title)}
+              </h3>
+              <Link
+                href={tallRightSection.buttonUrl}
+                className="inline-flex h-12 items-center gap-2 rounded-md bg-primary px-6 text-[16px] font-semibold text-black transition-colors hover:bg-primary/90"
+              >
+                {tallRightSection.buttonText} <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
           </div>
-          <div className="absolute inset-0 bg-black/20 pointer-events-none" />
-          <div className="absolute left-6 top-6 z-10">
-            <h3 className="mb-2 text-xl font-semibold text-white sm:text-2xl">
-              Perfect Gear <br /> Awaits
-            </h3>
-            <Link
-              href="/shop"
-              className="inline-flex items-center gap-2 text-[16px] font-semibold text-primary hover:text-primary/80"
-            >
-              Shop Now <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </div>
+        )}
 
-        <div ref={tallImageRef} className="group relative col-span-1 h-[450px] overflow-hidden rounded-xs md:col-span-1 md:row-span-2 md:h-full">
-          <div className="relative h-full w-full overflow-hidden">
-            <Image
-                src={HERO_IMAGES.tallRight}
-                alt="Top Picks"
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105 will-change-transform"
-            />
+        {/* Bottom Right Section */}
+        {bottomRightSection && (
+          <div ref={bottomRightImageRef} className="group relative col-span-1 h-[250px] overflow-hidden rounded-xs md:col-span-1 md:row-span-1 md:h-full">
+             <div className="relative h-full w-full overflow-hidden">
+              <Image
+                  src={bottomRightSection.image}
+                  alt={bottomRightSection.title}
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-105 will-change-transform"
+              />
+            </div>
+            <div className="absolute inset-0 bg-black/20 pointer-events-none" />
+            <div className="absolute bottom-6 left-6 z-10">
+              <h3 className="mb-2 text-xl font-bold text-white">
+                {renderTitle(bottomRightSection.title)}
+              </h3>
+              <Link
+                href={bottomRightSection.buttonUrl}
+                className="inline-flex items-center gap-2 text-[16px] font-semibold text-primary hover:text-primary/80"
+              >
+                {bottomRightSection.buttonText} <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
           </div>
-          <div className="absolute inset-0 bg-black/20 pointer-events-none" />
-          <div className="absolute bottom-8 left-0 right-0 text-center z-10">
-            <h3 className="mb-1 text-3xl font-semibold italic tracking-wider text-white sm:text-4xl md:text-[48px]">
-              TOP
-            </h3>
-            <h3 className="mb-8 text-3xl font-semibold italic tracking-wider text-white sm:text-4xl md:text-[48px]">
-              PICKS
-            </h3>
-            <Link
-              href="/shop"
-              className="inline-flex h-12 items-center gap-2 rounded-md bg-primary px-6 text-[16px] font-semibold text-black transition-colors hover:bg-primary/90"
-            >
-              Shop Now <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </div>
-
-        <div ref={bottomRightImageRef} className="group relative col-span-1 h-[250px] overflow-hidden rounded-xs md:col-span-1 md:row-span-1 md:h-full">
-           <div className="relative h-full w-full overflow-hidden">
-            <Image
-                src={HERO_IMAGES.bottomRight}
-                alt="Shine Bright with Weights"
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105 will-change-transform"
-            />
-          </div>
-          <div className="absolute inset-0 bg-black/20 pointer-events-none" />
-          <div className="absolute bottom-6 left-6 z-10">
-            <h3 className="mb-2 text-xl font-bold text-white">
-              Shine Bright with <br /> Weights
-            </h3>
-            <Link
-              href="/shop"
-              className="inline-flex items-center gap-2 text-[16px] font-semibold text-primary hover:text-primary/80"
-            >
-              Shop Now <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );

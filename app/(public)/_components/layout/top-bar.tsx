@@ -1,4 +1,5 @@
 import { Phone, Mail, MapPin } from "lucide-react";
+import Link from "next/link";
 
 export function TopBar() {
   return (
@@ -17,14 +18,16 @@ export function TopBar() {
           </div>
         </div>
         <div className="hidden items-center gap-6 sm:flex">
-          <div className="flex items-center gap-2">
+          <Link href="/find-store" className="flex items-center gap-2 hover:text-orange-500 transition-colors">
             <MapPin className="h-3.5 w-3.5" />
             <span>Find Store</span>
-          </div>
+          </Link>
           <div className="flex items-center gap-2">
             <span className="h-3 border-l border-secondary-foreground/40"></span>
-            <span>Track Order</span>
           </div>
+          <Link href="/track-order" className="flex items-center gap-2 hover:text-orange-500 transition-colors">
+            <span>Track Order</span>
+          </Link>
         </div>
       </div>
     </div>

@@ -1,73 +1,24 @@
 "use client";
 
-import { useState } from "react";
-import { Minus, Plus, Search } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Minus, Plus } from "lucide-react";
+import { useBrands } from "@/lib/hooks/public/useBrands";
+import { useCategories } from "@/lib/hooks/public/useCategories";
 
 const FILTERS = {
   availability: [
-    { label: "In Stock", count: 55 },
-    { label: "Out of Stock", count: 8 },
+    { label: "In Stock", value: true },
+    { label: "Out of Stock", value: false },
   ],
-  brand: [
-    { label: "Addidas", count: 24 },
-    { label: "Shua", count: 37 },
-    { label: "Reebok", count: 20 },
-    { label: "NordicTrack", count: 12 },
-    { label: "UFC", count: 35 },
-    { label: "Wave", count: 10 },
-    { label: "Spirit", count: 73 },
-    { label: "XPD", count: 10 },
-  ],
-  color: [
-    { label: "Black", color: "#000000", count: 22 },
-    { label: "Green", color: "#22c55e", count: 14 },
-    { label: "Purple", color: "#a855f7", count: 11 },
-    { label: "Blue", color: "#3b82f6", count: 7 },
-    { label: "Red", color: "#ef4444", count: 25 },
-    { label: "Brown", color: "#a16207", count: 10 },
-    { label: "Teal", color: "#14b8a6", count: 6 },
-    { label: "Orange", color: "#f97316", count: 32 },
-  ],
-  size: [
-    { label: "XS", count: 14 },
-    { label: "S", count: 13 },
-    { label: "M", count: 12 },
-    { label: "L", count: 17 },
-    { label: "XL", count: 16 },
-  ],
-  categories: {
-    cardio: [
-      { label: "Bike", count: 14 },
-      { label: "Treadmill", count: 13 },
-      { label: "Elliptical", count: 12 },
-      { label: "Rowing Machine", count: 17 },
-    ],
-    strength: [
-      { label: "Setectorized Series", count: 14 },
-      { label: "Plate Loaded Series", count: 14 },
-      { label: "Hammer Series", count: 13 },
-      { label: "Multi Station Gym", count: 12 },
-      { label: "Functional Trainer", count: 17 },
-    ],
-    freeWeight: [
-      { label: "Dumbbell", count: 14 },
-      { label: "Barbell", count: 14 },
-      { label: "Bench", count: 13 },
-      { label: "Weight Plate", count: 12 },
-      { label: "Fitness Accessories", count: 36 },
-    ],
-    sports: [
-      { label: "Cricket", count: 14 },
-      { label: "Football", count: 14 },
-      { label: "Table Tennis", count: 12 },
-      { label: "Hockey", count: 36 },
-      { label: "Basketball", count: 13 },
-      { label: "Boxing", count: 36 },
-      { label: "Billiards", count: 36 },
-      { label: "Swimming", count: 36 },
-    ],
-  },
 };
+
+interface ShopSidebarProps {
+  onPriceRangeChange?: (min: number | undefined, max: number | undefined) => void;
+  onAvailabilityChange?: (inStock: boolean | undefined) => void;
+  onBrandChange?: (brandId: number | undefined) => void;
+  onCategoryChange?: (categoryId: number | undefined) => void;
+  onPreorderChange?: (isPreorder: boolean | undefined) => void;
+}
 
 function FilterSection({ title, children, defaultOpen = true }: { title: string; children: React.ReactNode; defaultOpen?: boolean }) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
@@ -88,12 +39,17 @@ function FilterSection({ title, children, defaultOpen = true }: { title: string;
   );
 }
 
-function CheckboxItem({ label, count }: { label: string; count: number }) {
+function CheckboxItem({ label, count, checked, onChange }: { label: string; count?: number; checked?: boolean; onChange?: (checked: boolean) => void }) {
   return (
     <label className="flex cursor-pointer items-center justify-between group">
       <div className="flex items-center gap-3">
         <div className="relative flex items-center">
-          <input type="checkbox" className="peer h-5 w-5 appearance-none rounded-sm border border-gray-200 checked:bg-black checked:border-black transition-colors" />
+          <input 
+            type="checkbox" 
+            checked={checked}
+            onChange={(e) => onChange?.(e.target.checked)}
+            className="peer h-5 w-5 appearance-none rounded-sm border border-gray-200 checked:bg-black checked:border-black transition-colors" 
+          />
           <svg
             className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-white opacity-0 peer-checked:opacity-100"
             xmlns="http://www.w3.org/2000/svg"
@@ -111,111 +67,201 @@ function CheckboxItem({ label, count }: { label: string; count: number }) {
         </div>
         <span className="text-[15px] text-gray-600 group-hover:text-black">{label}</span>
       </div>
-      <span className="text-sm text-gray-400">({count < 10 ? `0${count}` : count})</span>
+      {count !== undefined && (
+        <span className="text-sm text-gray-400">({count < 10 ? `0${count}` : count})</span>
+      )}
     </label>
   );
 }
 
-export function ShopSidebar() {
-  const [priceRange, setPriceRange] = useState([0, 0]);
+export function ShopSidebar({ onPriceRangeChange, onAvailabilityChange, onBrandChange, onCategoryChange, onPreorderChange }: ShopSidebarProps) {
+  const [minPriceInput, setMinPriceInput] = useState("");
+  const [maxPriceInput, setMaxPriceInput] = useState("");
+  const [selectedAvailability, setSelectedAvailability] = useState<boolean | undefined>();
+  const [selectedBrand, setSelectedBrand] = useState<number | undefined>();
+  const [selectedCategory, setSelectedCategory] = useState<number | undefined>();
+  const [selectedPreorder, setSelectedPreorder] = useState<boolean | undefined>();
+  const [showAllBrands, setShowAllBrands] = useState(false);
+
+  // Fetch brands and categories
+  const { data: brandsData } = useBrands();
+  const { data: categoriesData } = useCategories();
+
+  const brands = (brandsData as any)?.data || [];
+  const categories = (categoriesData as any)?.data || [];
+
+  const handlePriceChange = () => {
+    const min = minPriceInput ? parseFloat(minPriceInput) : undefined;
+    const max = maxPriceInput ? parseFloat(maxPriceInput) : undefined;
+    onPriceRangeChange?.(min, max);
+  };
+
+  const handleAvailabilityClick = (value: boolean) => {
+    if (selectedAvailability === value) {
+      setSelectedAvailability(undefined);
+      onAvailabilityChange?.(undefined);
+    } else {
+      setSelectedAvailability(value);
+      onAvailabilityChange?.(value);
+    }
+  };
+
+  const handleBrandClick = (brandId: number) => {
+    if (selectedBrand === brandId) {
+      setSelectedBrand(undefined);
+      onBrandChange?.(undefined);
+    } else {
+      setSelectedBrand(brandId);
+      onBrandChange?.(brandId);
+    }
+  };
+
+  const handleCategoryClick = (categoryId: number) => {
+    if (selectedCategory === categoryId) {
+      setSelectedCategory(undefined);
+      onCategoryChange?.(undefined);
+    } else {
+      setSelectedCategory(categoryId);
+      onCategoryChange?.(categoryId);
+    }
+  };
+
+  const handlePreorderClick = (value: boolean) => {
+    if (selectedPreorder === value) {
+      setSelectedPreorder(undefined);
+      onPreorderChange?.(undefined);
+    } else {
+      setSelectedPreorder(value);
+      onPreorderChange?.(value);
+    }
+  };
+
+  // Trigger price change when inputs change
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      handlePriceChange();
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [minPriceInput, maxPriceInput]);
 
   return (
     <div className="w-full lg:w-[300px] flex-shrink-0">
       {/* Availability */}
       <FilterSection title="Availability">
         {FILTERS.availability.map((item) => (
-          <CheckboxItem key={item.label} label={item.label} count={item.count} />
+          <CheckboxItem 
+            key={item.label} 
+            label={item.label} 
+            checked={selectedAvailability === item.value}
+            onChange={() => handleAvailabilityClick(item.value)}
+          />
         ))}
+      </FilterSection>
+
+      {/* Pre-Order */}
+      <FilterSection title="Pre-Order">
+        <CheckboxItem 
+          label="Pre-Order Items" 
+          checked={selectedPreorder === true}
+          onChange={() => handlePreorderClick(true)}
+        />
       </FilterSection>
 
       {/* Price Range */}
       <FilterSection title="Price Range">
         <div className="px-1">
-          <div className="relative mb-6 h-1 w-full rounded-full bg-gray-200">
-            <div className="absolute left-0 right-0 h-full rounded-full bg-black"></div>
-            <div className="absolute left-0 top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full border border-gray-200 bg-white shadow-sm"></div>
-            <div className="absolute right-0 top-1/2 h-4 w-4 translate-x-1/2 -translate-y-1/2 rounded-full border border-gray-200 bg-white shadow-sm"></div>
-          </div>
           <div className="flex gap-4">
             <div className="flex-1">
+              <label className="mb-1 block text-xs text-gray-500">Min Price</label>
               <input
-                type="text"
-                value="$0.00"
-                readOnly
-                className="w-full rounded-sm border border-gray-200 px-3 py-2 text-sm text-center text-gray-600"
+                type="number"
+                value={minPriceInput}
+                onChange={(e) => setMinPriceInput(e.target.value)}
+                placeholder="$0"
+                className="w-full rounded-sm border border-gray-200 px-3 py-2 text-sm text-gray-600 focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
               />
             </div>
             <div className="flex-1">
+              <label className="mb-1 block text-xs text-gray-500">Max Price</label>
               <input
-                type="text"
-                value="$0.00"
-                readOnly
-                className="w-full rounded-sm border border-gray-200 px-3 py-2 text-sm text-center text-gray-600"
+                type="number"
+                value={maxPriceInput}
+                onChange={(e) => setMaxPriceInput(e.target.value)}
+                placeholder="$1000"
+                className="w-full rounded-sm border border-gray-200 px-3 py-2 text-sm text-gray-600 focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
               />
             </div>
           </div>
+          {(minPriceInput || maxPriceInput) && (
+            <button
+              onClick={() => {
+                setMinPriceInput("");
+                setMaxPriceInput("");
+                onPriceRangeChange?.(undefined, undefined);
+              }}
+              className="mt-3 text-xs text-gray-500 hover:text-black underline"
+            >
+              Clear price filter
+            </button>
+          )}
         </div>
       </FilterSection>
 
       {/* Brand */}
       <FilterSection title="Brand">
-        {FILTERS.brand.map((item) => (
-          <CheckboxItem key={item.label} label={item.label} count={item.count} />
-        ))}
-        <button className="text-sm font-medium text-black underline mt-2">Show More</button>
+        {brands.length > 0 ? (
+          <>
+            {(showAllBrands ? brands : brands.slice(0, 8)).map((brand: any) => (
+              <CheckboxItem 
+                key={brand.id} 
+                label={brand.name} 
+                count={brand.products_count}
+                checked={selectedBrand === brand.id}
+                onChange={() => handleBrandClick(brand.id)}
+              />
+            ))}
+            {brands.length > 8 && (
+              <button 
+                onClick={() => setShowAllBrands(!showAllBrands)}
+                className="text-sm font-medium text-black underline mt-2"
+              >
+                {showAllBrands ? "Show Less" : "Show More"}
+              </button>
+            )}
+          </>
+        ) : (
+          <p className="text-sm text-gray-400">No brands available</p>
+        )}
       </FilterSection>
 
-      {/* Color */}
-      <FilterSection title="Color">
-        {FILTERS.color.map((item) => (
-          <label key={item.label} className="flex cursor-pointer items-center justify-between group">
-            <div className="flex items-center gap-3">
-              <div
-                className="h-5 w-5 rounded-sm border border-gray-200"
-                style={{ backgroundColor: item.color }}
-              ></div>
-              <span className="text-[15px] text-gray-600 group-hover:text-black">{item.label}</span>
+      {/* Categories */}
+      {categories.length > 0 && categories.map((category: any) => (
+        <FilterSection key={category.id} title={category.name}>
+          {/* Parent Category */}
+          <CheckboxItem 
+            label={`All ${category.name}`}
+            count={category.products_count}
+            checked={selectedCategory === category.id}
+            onChange={() => handleCategoryClick(category.id)}
+          />
+          
+          {/* Child Categories */}
+          {category.children && category.children.length > 0 && (
+            <div className="ml-4 mt-2 space-y-2 border-l-2 border-gray-100 pl-3">
+              {category.children.map((child: any) => (
+                <CheckboxItem 
+                  key={child.id}
+                  label={child.name}
+                  count={child.products_count}
+                  checked={selectedCategory === child.id}
+                  onChange={() => handleCategoryClick(child.id)}
+                />
+              ))}
             </div>
-            <span className="text-sm text-gray-400">({item.count < 10 ? `0${item.count}` : item.count})</span>
-          </label>
-        ))}
-        <button className="text-sm font-medium text-black underline mt-2">Show More</button>
-      </FilterSection>
-
-      {/* Size */}
-      <FilterSection title="Size">
-        {FILTERS.size.map((item) => (
-          <CheckboxItem key={item.label} label={item.label} count={item.count} />
-        ))}
-      </FilterSection>
-
-      {/* Cardio */}
-      <FilterSection title="Cardio">
-        {FILTERS.categories.cardio.map((item) => (
-          <CheckboxItem key={item.label} label={item.label} count={item.count} />
-        ))}
-      </FilterSection>
-
-      {/* Strength */}
-      <FilterSection title="Strength">
-        {FILTERS.categories.strength.map((item) => (
-          <CheckboxItem key={item.label} label={item.label} count={item.count} />
-        ))}
-      </FilterSection>
-
-      {/* Free Weight */}
-      <FilterSection title="Free Weight">
-        {FILTERS.categories.freeWeight.map((item) => (
-          <CheckboxItem key={item.label} label={item.label} count={item.count} />
-        ))}
-      </FilterSection>
-
-      {/* Sports */}
-      <FilterSection title="Sports">
-        {FILTERS.categories.sports.map((item) => (
-          <CheckboxItem key={item.label} label={item.label} count={item.count} />
-        ))}
-      </FilterSection>
+          )}
+        </FilterSection>
+      ))}
     </div>
   );
 }
