@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Heart, ShoppingBag, Star } from "lucide-react";
 import { useAuth } from "@/lib/context/AuthContext";
 import { useCart } from "@/lib/context/CartContext";
+import { useCheckWishlist, useAddToWishlist, useRemoveFromWishlistByProduct } from "@/lib/hooks/user/useWishlist";
 import { getPlaceholderImage } from "@/lib/utils/image";
 import { toast } from "sonner";
 
@@ -37,6 +38,13 @@ export function ProductCard({ product, imageHeight = "h-[372px]" }: ProductCardP
   const { user } = useAuth();
   const { addToCart, isInCart } = useCart();
   const [isAddingToCart, setIsAddingToCart] = useState(false);
+  
+  // Wishlist hooks
+  const { data: wishlistCheck } = useCheckWishlist(product.id);
+  const addToWishlistMutation = useAddToWishlist();
+  const removeFromWishlistMutation = useRemoveFromWishlistByProduct();
+  
+  const isInWishlist = user && wishlistCheck?.data?.in_wishlist ? true : false;
   
   const productSlug = product.slug;
   const itemInCart = isInCart(product.id);
@@ -91,6 +99,31 @@ export function ProductCard({ product, imageHeight = "h-[372px]" }: ProductCardP
     }, 300);
   };
 
+  const handleToggleWishlist = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
+
+    if (!user) {
+      toast.error('Please login to add items to your wishlist');
+      router.push('/login');
+      return;
+    }
+
+    try {
+      if (isInWishlist) {
+        await removeFromWishlistMutation.mutateAsync(product.id);
+        toast.success('Removed from wishlist');
+      } else {
+        await addToWishlistMutation.mutateAsync({ product_id: product.id });
+        toast.success('Added to wishlist');
+      }
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || 'Failed to update wishlist';
+      toast.error(errorMessage);
+    }
+  };
+
   return (
     <div className="group relative flex flex-col gap-4">
       {/* Image Container */}
@@ -104,8 +137,17 @@ export function ProductCard({ product, imageHeight = "h-[372px]" }: ProductCardP
           </div>
         )}
         
-        <button className="absolute right-4 top-4 z-20 rounded-full bg-white p-2 text-gray-400 shadow-sm transition-colors hover:text-red-500">
-          <Heart className="h-4 w-4" />
+        <button 
+          onClick={handleToggleWishlist}
+          disabled={addToWishlistMutation.isPending || removeFromWishlistMutation.isPending}
+          className={`absolute right-4 top-4 z-20 rounded-full bg-white p-2 shadow-sm transition-colors disabled:opacity-50 ${
+            isInWishlist 
+              ? 'text-red-500 hover:text-red-600' 
+              : 'text-gray-400 hover:text-red-500'
+          }`}
+          aria-label={isInWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
+        >
+          <Heart className={`h-4 w-4 ${isInWishlist ? 'fill-current' : ''}`} />
         </button>
 
         {/* Kinomap icon if product supports kinomap */}

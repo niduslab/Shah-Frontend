@@ -32,6 +32,7 @@ export default function Home() {
       <FlashDealSection />
       {/* floor solution  */}
       <FloorSolution />
+      
       <TrustedBrands />
 
       <SuccessStories />

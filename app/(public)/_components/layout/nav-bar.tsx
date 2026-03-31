@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, ShoppingBag, User, ChevronDown, Menu, X, ChevronRight, LogOut, Settings } from "lucide-react";
+import { Search, ShoppingBag, User, ChevronDown, Menu, X, ChevronRight, LogOut, Settings, Heart } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useCart } from "@/lib/context/CartContext";
 import { useAuth } from "@/lib/context/AuthContext";
+import { useWishlist } from "@/lib/hooks/user/useWishlist";
 import { ShopMegaMenu } from "./shop-mega-menu";
 import { ShopMainMegaMenu } from "./shop-main-mega-menu";
 import { SportsMegaMenu } from "./sports-mega-menu";
@@ -25,7 +26,9 @@ export function NavBar() {
   const pathname = usePathname();
   const { getCartCount } = useCart();
   const { user, logout, loading } = useAuth();
+  const { data: wishlistData } = useWishlist();
   const cartCount = isMounted ? getCartCount() : 0;
+  const wishlistCount = user && wishlistData?.data?.length ? wishlistData.data.length : 0;
 
   // Set mounted flag to prevent hydration mismatch
   useEffect(() => {
@@ -221,6 +224,21 @@ export function NavBar() {
               <Search className="h-5 w-5" />
             </button>
 
+            {/* Wishlist - Only show for logged in users */}
+            {user && (
+              <Link href="/dashboard/wishlist" className="flex items-center gap-2 transition-colors duration-200 hover:text-[#ffb81e]">
+                <div className="relative">
+                  <Heart className="h-5 w-5" />
+                  {wishlistCount > 0 && (
+                    <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">
+                      {wishlistCount > 9 ? '9+' : wishlistCount}
+                    </span>
+                  )}
+                </div>
+                {/* <span className="hidden md:inline">Wishlist</span> */}
+              </Link>
+            )}
+
             <Link href="/cart" className="flex items-center gap-2 transition-colors duration-200 hover:text-[#ffb81e]">
               <div className="relative">
                 <ShoppingBag className="h-5 w-5" />
@@ -230,7 +248,7 @@ export function NavBar() {
                   </span>
                 )}
               </div>
-              <span className="hidden md:inline">Cart</span>
+              {/* <span className="hidden md:inline">Cart</span> */}
             </Link>
 
             {/* Notification Bell - Only show for logged in users */}
@@ -497,6 +515,19 @@ export function NavBar() {
                   </Link>
                 )}
               </>
+            )}
+            {user && (
+              <Link href="/dashboard/wishlist" className="flex items-center justify-center gap-2 rounded-md border border-[#00072D] py-2.5 text-sm font-bold text-[#00072D] transition-colors hover:bg-[#00072D] hover:text-white">
+                <div className="relative">
+                  <Heart className="h-4 w-4" />
+                  {wishlistCount > 0 && (
+                    <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+                      {wishlistCount > 9 ? '9+' : wishlistCount}
+                    </span>
+                  )}
+                </div>
+                Wishlist
+              </Link>
             )}
             <Link href="/cart" className="flex items-center justify-center gap-2 rounded-md bg-[#ffb81e] py-2.5 text-sm font-bold text-[#00072D] transition-colors hover:bg-[#e5a61b]">
               <div className="relative">

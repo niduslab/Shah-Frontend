@@ -59,7 +59,7 @@ export function FloorSolution() {
               Floor Mat
             </h3>
             <Link
-              href="/shop"
+              href="/floor-mat"
               className="inline-flex h-12 w-fit items-center gap-2 rounded-xs bg-yellow-400 px-8 text-[16px] font-semibold text-black transition-colors hover:bg-yellow-500"
             >
               Shop Now <ArrowRight className="h-4 w-4" />
@@ -81,10 +81,10 @@ export function FloorSolution() {
               Flooring Solution
             </h3>
             <Link
-              href="/shop"
+              href="/flooring-solution"
               className="inline-flex h-12 w-fit items-center gap-2 rounded-xs bg-yellow-400 px-8 text-[16px] font-semibold text-black transition-colors hover:bg-yellow-500"
             >
-              Shop Now <ArrowRight className="h-4 w-4" />
+              Learn More <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </div>
