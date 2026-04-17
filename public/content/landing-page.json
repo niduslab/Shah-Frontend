@@ -109,5 +109,114 @@
         }
       }
     ]
+  },
+  "rdxGallerySection": {
+    "id": "rdx-gallery",
+    "enabled": true,
+    "sectionTitle": "Shop From Our New RDX Gallery",
+    "items": [
+      {
+        "id": "training",
+        "title": "Training",
+        "image": "/images/landing/rdx-gallery/9006e7dd80ecf645e78b83702112aee120de3a11.png",
+        "href": "/shop/training"
+      },
+      {
+        "id": "apparel",
+        "title": "Apparel",
+        "image": "/images/landing/rdx-gallery/12297c9eef97e322f7c7a0fa9318ed7d1d10ec28.png",
+        "href": "/shop/apparel"
+      },
+      {
+        "id": "boxing",
+        "title": "Boxing pro",
+        "image": "/images/landing/rdx-gallery/9126b5c957ee5df27dff7a87011a99f338fd0203.png",
+        "href": "/shop/boxing"
+      },
+      {
+        "id": "yoga",
+        "title": "Yoga",
+        "image": "/images/landing/rdx-gallery/09869b02227fe933f21baa27ed5b13a449885fed.png",
+        "href": "/shop/yoga"
+      },
+      {
+        "id": "weight-lifting",
+        "title": "Weight Lifting",
+        "image": "/images/landing/rdx-gallery/eed8082ab239304497367efe632ede29a9b94f41.png",
+        "href": "/shop/weight-lifting"
+      }
+    ]
+  },
+  "successStoriesSection": {
+    "id": "success-stories",
+    "enabled": true,
+    "sectionTitle": "Success Stories That Inspire Us",
+    "stories": [
+      {
+        "id": "bangladesh-navy",
+        "name": "Bangladesh Navy",
+        "media": "/images/landing/success-stories/1776431696394-Austin_DM.mp4",
+        "mediaType": "video",
+        "description": "The quality of equipment is exceptional, and their customer service is outstanding."
+      },
+      {
+        "id": "huawei",
+        "name": "Huawei Enterprise",
+        "media": "/images/landing/success-stories/1776431718270-Arvin_DM.mp4",
+        "mediaType": "video",
+        "description": "The durability and performance of their equipment is unmatched in the market."
+      },
+      {
+        "id": "gulshan-club",
+        "name": "Gulshan Club",
+        "media": "/images/landing/success-stories/c720ec2c5e57a0bc8d6ddfb287ceee26a9140229.png",
+        "mediaType": "image",
+        "description": "The yoga and flexibility equipment from Shah Sports is top-notch. Great value for money!"
+      },
+      {
+        "id": "cocord",
+        "name": "Cocord Real-Estate",
+        "media": "/images/landing/success-stories/cfa8138ad5135723dcedad5236627bc4d080c002.png",
+        "mediaType": "image",
+        "description": "The quality of equipment is exceptional, and their customer service is outstanding."
+      }
+    ]
+  },
+  "performanceFrameSection": {
+    "id": "performance-frame",
+    "enabled": true,
+    "sectionTitle": "Performance in Every Frame",
+    "frames": [
+      {
+        "id": "frame-1",
+        "image": "/images/landing/performance-frame/image-1.jpg",
+        "alt": "Strength Training"
+      },
+      {
+        "id": "frame-2",
+        "image": "/images/landing/performance-frame/image-2.jpg",
+        "alt": "Boxing"
+      },
+      {
+        "id": "frame-3",
+        "image": "/images/landing/performance-frame/image-3.jpg",
+        "alt": "Cycling"
+      },
+      {
+        "id": "frame-4",
+        "image": "/images/landing/performance-frame/image-4.jpg",
+        "alt": "Cardio"
+      },
+      {
+        "id": "frame-5",
+        "image": "/images/landing/performance-frame/image-5.png",
+        "alt": "Tennis"
+      },
+      {
+        "id": "frame-1776432987348",
+        "image": "/images/landing/performance-frame/1776433000457-cfa8138ad5135723dcedad5236627bc4d080c002.png",
+        "alt": "New Frame"
+      }
+    ]
   }
 }

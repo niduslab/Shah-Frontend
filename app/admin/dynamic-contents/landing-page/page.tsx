@@ -63,6 +63,48 @@ interface PromoCardsSection {
   cards: PromoCard[];
 }
 
+interface GalleryItem {
+  id: string;
+  title: string;
+  image: string;
+  href: string;
+}
+
+interface RdxGallerySection {
+  id: string;
+  enabled: boolean;
+  sectionTitle: string;
+  items: GalleryItem[];
+}
+
+interface SuccessStory {
+  id: string;
+  name: string;
+  media: string;
+  mediaType: "image" | "video";
+  description: string;
+}
+
+interface SuccessStoriesSection {
+  id: string;
+  enabled: boolean;
+  sectionTitle: string;
+  stories: SuccessStory[];
+}
+
+interface PerformanceFrame {
+  id: string;
+  image: string;
+  alt: string;
+}
+
+interface PerformanceFrameSection {
+  id: string;
+  enabled: boolean;
+  sectionTitle: string;
+  frames: PerformanceFrame[];
+}
+
 export default function LandingPageManagement() {
   const [sections, setSections] = useState<HeroSection[]>([]);
   const [preOrderSection, setPreOrderSection] = useState<PreOrderSection>({
@@ -121,6 +163,90 @@ export default function LandingPageManagement() {
       },
     ],
   });
+  const [rdxGallerySection, setRdxGallerySection] = useState<RdxGallerySection>({
+    id: "rdx-gallery",
+    enabled: true,
+    sectionTitle: "Shop From Our New RDX Gallery",
+    items: [
+      {
+        id: "training",
+        title: "Training",
+        image: "/images/landing/rdx-gallery/9006e7dd80ecf645e78b83702112aee120de3a11.png",
+        href: "/shop/training",
+      },
+      {
+        id: "apparel",
+        title: "Apparel",
+        image: "/images/landing/rdx-gallery/12297c9eef97e322f7c7a0fa9318ed7d1d10ec28.png",
+        href: "/shop/apparel",
+      },
+      {
+        id: "boxing",
+        title: "Boxing",
+        image: "/images/landing/rdx-gallery/9126b5c957ee5df27dff7a87011a99f338fd0203.png",
+        href: "/shop/boxing",
+      },
+      {
+        id: "yoga",
+        title: "Yoga",
+        image: "/images/landing/rdx-gallery/09869b02227fe933f21baa27ed5b13a449885fed.png",
+        href: "/shop/yoga",
+      },
+      {
+        id: "weight-lifting",
+        title: "Weight Lifting",
+        image: "/images/landing/rdx-gallery/eed8082ab239304497367efe632ede29a9b94f41.png",
+        href: "/shop/weight-lifting",
+      },
+    ],
+  });
+  const [successStoriesSection, setSuccessStoriesSection] = useState<SuccessStoriesSection>({
+    id: "success-stories",
+    enabled: true,
+    sectionTitle: "Success Stories That Inspire Us",
+    stories: [
+      {
+        id: "bangladesh-navy",
+        name: "Bangladesh Navy",
+        media: "/images/landing/success-stories/536c8bf6ec7eb35b36b1b8ec1953f4c098029a49.png",
+        mediaType: "image",
+        description: "The quality of equipment is exceptional, and their customer service is outstanding.",
+      },
+      {
+        id: "huawei",
+        name: "Huawei Enterprise",
+        media: "/images/landing/success-stories/91409c62d10476f009ceb549f50a2ad82eecdbf1.png",
+        mediaType: "image",
+        description: "The durability and performance of their equipment is unmatched in the market.",
+      },
+      {
+        id: "gulshan-club",
+        name: "Gulshan Club",
+        media: "/images/landing/success-stories/c720ec2c5e57a0bc8d6ddfb287ceee26a9140229.png",
+        mediaType: "image",
+        description: "The yoga and flexibility equipment from Shah Sports is top-notch. Great value for money!",
+      },
+      {
+        id: "cocord",
+        name: "Cocord Real-Estate",
+        media: "/images/landing/success-stories/cfa8138ad5135723dcedad5236627bc4d080c002.png",
+        mediaType: "image",
+        description: "The quality of equipment is exceptional, and their customer service is outstanding.",
+      },
+    ],
+  });
+  const [performanceFrameSection, setPerformanceFrameSection] = useState<PerformanceFrameSection>({
+    id: "performance-frame",
+    enabled: true,
+    sectionTitle: "Performance in Every Frame",
+    frames: [
+      { id: "frame-1", image: "/images/landing/performance-frame/image-1.jpg", alt: "Strength Training" },
+      { id: "frame-2", image: "/images/landing/performance-frame/image-2.jpg", alt: "Boxing" },
+      { id: "frame-3", image: "/images/landing/performance-frame/image-3.jpg", alt: "Cycling" },
+      { id: "frame-4", image: "/images/landing/performance-frame/image-4.jpg", alt: "Cardio" },
+      { id: "frame-5", image: "/images/landing/performance-frame/image-5.png", alt: "Tennis" },
+    ],
+  });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [editingSection, setEditingSection] = useState<string | null>(null);
@@ -140,6 +266,15 @@ export default function LandingPageManagement() {
         }
         if (data.promoCardsSection) {
           setPromoCardsSection(data.promoCardsSection);
+        }
+        if (data.rdxGallerySection) {
+          setRdxGallerySection(data.rdxGallerySection);
+        }
+        if (data.successStoriesSection) {
+          setSuccessStoriesSection(data.successStoriesSection);
+        }
+        if (data.performanceFrameSection) {
+          setPerformanceFrameSection(data.performanceFrameSection);
         }
       } else {
         setSections(getDefaultSections());
@@ -314,6 +449,127 @@ export default function LandingPageManagement() {
     }
   };
 
+  const handleRdxGalleryImageUpload = async (itemId: string, file: File, inputElement?: HTMLInputElement) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("folder", "landing/rdx-gallery");
+
+    try {
+      const response = await fetch("/api/admin/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const newItems = rdxGallerySection.items.map(item =>
+          item.id === itemId ? { ...item, image: data.url } : item
+        );
+        setRdxGallerySection({
+          ...rdxGallerySection,
+          items: newItems,
+        });
+        if (inputElement) {
+          inputElement.value = "";
+        }
+      } else {
+        alert("Failed to upload image");
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      alert("Error uploading image");
+    }
+  };
+
+  const handleSuccessStoryImageUpload = async (storyId: string, file: File, inputElement?: HTMLInputElement) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("folder", "landing/success-stories");
+
+    try {
+      const response = await fetch("/api/admin/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const mediaType: "image" | "video" = file.type.startsWith("video/") ? "video" : "image";
+        const newStories = successStoriesSection.stories.map(story =>
+          story.id === storyId ? { ...story, media: data.url, mediaType } : story
+        );
+        setSuccessStoriesSection({
+          ...successStoriesSection,
+          stories: newStories,
+        });
+        if (inputElement) {
+          inputElement.value = "";
+        }
+      } else {
+        alert("Failed to upload media");
+      }
+    } catch (error) {
+      console.error("Error uploading media:", error);
+      alert("Error uploading media");
+    }
+  };
+
+  const handlePerformanceFrameImageUpload = async (frameId: string, file: File, inputElement?: HTMLInputElement) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("folder", "landing/performance-frame");
+
+    try {
+      const response = await fetch("/api/admin/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const newFrames = performanceFrameSection.frames.map(frame =>
+          frame.id === frameId ? { ...frame, image: data.url } : frame
+        );
+        setPerformanceFrameSection({
+          ...performanceFrameSection,
+          frames: newFrames,
+        });
+        if (inputElement) {
+          inputElement.value = "";
+        }
+      } else {
+        alert("Failed to upload image");
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      alert("Error uploading image");
+    }
+  };
+
+  const handleAddPerformanceFrame = () => {
+    const newFrame: PerformanceFrame = {
+      id: `frame-${Date.now()}`,
+      image: "/images/landing/performance-frame/image-1.jpg",
+      alt: "New Frame",
+    };
+    setPerformanceFrameSection({
+      ...performanceFrameSection,
+      frames: [...performanceFrameSection.frames, newFrame],
+    });
+  };
+
+  const handleRemovePerformanceFrame = (frameId: string) => {
+    if (performanceFrameSection.frames.length <= 3) {
+      alert("You must have at least 3 frames in the carousel");
+      return;
+    }
+    const newFrames = performanceFrameSection.frames.filter(frame => frame.id !== frameId);
+    setPerformanceFrameSection({
+      ...performanceFrameSection,
+      frames: newFrames,
+    });
+  };
+
   const updateSection = (sectionId: string, updates: Partial<HeroSection>) => {
     setSections((prev) =>
       prev.map((section) =>
@@ -328,7 +584,7 @@ export default function LandingPageManagement() {
       const response = await fetch("/api/admin/hero-sections", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sections, preOrderSection, promoCardsSection }),
+        body: JSON.stringify({ sections, preOrderSection, promoCardsSection, rdxGallerySection, successStoriesSection, performanceFrameSection }),
       });
 
       if (response.ok) {
@@ -720,6 +976,308 @@ export default function LandingPageManagement() {
                   </div>
                 </div>
               ))}
+            </div>
+          )}
+        </div>
+
+        {/* RDX Gallery Section Preview */}
+        <div className="mb-8 rounded-xl bg-white p-6 shadow-lg">
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-xl font-semibold text-gray-900">RDX Gallery Section Preview</h2>
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={rdxGallerySection.enabled}
+                onChange={(e) => setRdxGallerySection({ ...rdxGallerySection, enabled: e.target.checked })}
+                className="h-4 w-4 rounded border-gray-300 text-orange-500 focus:ring-orange-500"
+              />
+              <span className="text-sm text-gray-700">Enable Section</span>
+            </label>
+          </div>
+
+          {rdxGallerySection.enabled && (
+            <div className="mx-auto w-full max-w-[1400px]">
+              <h2 className="mb-8 text-center text-3xl font-bold tracking-tight text-black md:text-4xl">
+                {rdxGallerySection.sectionTitle}
+              </h2>
+
+              {/* Grid Layout matching the public view */}
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-[2fr_1fr]">
+                {/* Left side: 2x2 grid */}
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-[60fr_40fr] md:grid-rows-2">
+                  {/* Training - Top Left */}
+                  <div
+                    className="group relative h-[280px] cursor-pointer overflow-hidden rounded-[2px] bg-gray-100"
+                    onClick={() => setEditingSection(`rdx-gallery-${rdxGallerySection.items[0].id}`)}
+                  >
+                    <Image
+                      src={rdxGallerySection.items[0].image}
+                      alt={rdxGallerySection.items[0].title}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all group-hover:bg-black/30 group-hover:opacity-100">
+                      <div className="flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-medium text-gray-900 shadow-lg">
+                        <Edit2 className="h-4 w-4" />
+                        Click to Edit
+                      </div>
+                    </div>
+                    <div className="absolute bottom-4 left-4 z-10 md:bottom-6 md:left-6">
+                      <h3 className="text-xl font-semibold text-white md:text-2xl">
+                        {rdxGallerySection.items[0].title}
+                      </h3>
+                    </div>
+                  </div>
+
+                  {/* Apparel - Top Right */}
+                  <div
+                    className="group relative h-[280px] cursor-pointer overflow-hidden rounded-[2px] bg-gray-100"
+                    onClick={() => setEditingSection(`rdx-gallery-${rdxGallerySection.items[1].id}`)}
+                  >
+                    <Image
+                      src={rdxGallerySection.items[1].image}
+                      alt={rdxGallerySection.items[1].title}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all group-hover:bg-black/30 group-hover:opacity-100">
+                      <div className="flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-medium text-gray-900 shadow-lg">
+                        <Edit2 className="h-4 w-4" />
+                        Click to Edit
+                      </div>
+                    </div>
+                    <div className="absolute bottom-4 left-4 z-10 md:bottom-6 md:left-6">
+                      <h3 className="text-xl font-semibold text-white md:text-2xl">
+                        {rdxGallerySection.items[1].title}
+                      </h3>
+                    </div>
+                  </div>
+
+                  {/* Yoga - Bottom Left */}
+                  <div
+                    className="group relative h-[280px] cursor-pointer overflow-hidden rounded-[2px] bg-gray-100"
+                    onClick={() => setEditingSection(`rdx-gallery-${rdxGallerySection.items[3].id}`)}
+                  >
+                    <Image
+                      src={rdxGallerySection.items[3].image}
+                      alt={rdxGallerySection.items[3].title}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all group-hover:bg-black/30 group-hover:opacity-100">
+                      <div className="flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-medium text-gray-900 shadow-lg">
+                        <Edit2 className="h-4 w-4" />
+                        Click to Edit
+                      </div>
+                    </div>
+                    <div className="absolute bottom-4 left-4 z-10 md:bottom-6 md:left-6">
+                      <h3 className="text-xl font-semibold text-white md:text-2xl">
+                        {rdxGallerySection.items[3].title}
+                      </h3>
+                    </div>
+                  </div>
+
+                  {/* Weight Lifting - Bottom Right */}
+                  <div
+                    className="group relative h-[280px] cursor-pointer overflow-hidden rounded-[2px] bg-gray-100"
+                    onClick={() => setEditingSection(`rdx-gallery-${rdxGallerySection.items[4].id}`)}
+                  >
+                    <Image
+                      src={rdxGallerySection.items[4].image}
+                      alt={rdxGallerySection.items[4].title}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all group-hover:bg-black/30 group-hover:opacity-100">
+                      <div className="flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-medium text-gray-900 shadow-lg">
+                        <Edit2 className="h-4 w-4" />
+                        Click to Edit
+                      </div>
+                    </div>
+                    <div className="absolute bottom-4 left-4 z-10 md:bottom-6 md:left-6">
+                      <h3 className="text-xl font-semibold text-white md:text-2xl">
+                        {rdxGallerySection.items[4].title}
+                      </h3>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Boxing - Right side tall card */}
+                <div
+                  className="group relative h-[280px] cursor-pointer overflow-hidden rounded-[2px] bg-gray-100 md:h-full"
+                  onClick={() => setEditingSection(`rdx-gallery-${rdxGallerySection.items[2].id}`)}
+                >
+                  <Image
+                    src={rdxGallerySection.items[2].image}
+                    alt={rdxGallerySection.items[2].title}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all group-hover:bg-black/30 group-hover:opacity-100">
+                    <div className="flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-medium text-gray-900 shadow-lg">
+                      <Edit2 className="h-4 w-4" />
+                      Click to Edit
+                    </div>
+                  </div>
+                  <div className="absolute bottom-4 left-4 z-10 md:bottom-6 md:left-6">
+                    <h3 className="text-xl font-semibold text-white md:text-2xl">
+                      {rdxGallerySection.items[2].title}
+                    </h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Success Stories Section Preview */}
+        <div className="mb-8 rounded-xl bg-white p-6 shadow-lg">
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-xl font-semibold text-gray-900">Success Stories Section Preview</h2>
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={successStoriesSection.enabled}
+                onChange={(e) => setSuccessStoriesSection({ ...successStoriesSection, enabled: e.target.checked })}
+                className="h-4 w-4 rounded border-gray-300 text-orange-500 focus:ring-orange-500"
+              />
+              <span className="text-sm text-gray-700">Enable Section</span>
+            </label>
+          </div>
+
+          {successStoriesSection.enabled && (
+            <div className="mx-auto w-full max-w-[1400px]">
+              <h2 className="mb-10 max-w-lg text-4xl font-semibold leading-tight text-black md:text-5xl">
+                {successStoriesSection.sectionTitle}
+              </h2>
+
+              {/* Grid */}
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                {successStoriesSection.stories.map((story) => (
+                  <div
+                    key={story.id}
+                    className="group relative h-[400px] cursor-pointer overflow-hidden rounded-xs bg-gray-100"
+                    onClick={() => setEditingSection(`success-story-${story.id}`)}
+                  >
+                    {story.mediaType === "video" ? (
+                      <video
+                        src={story.media}
+                        className="h-full w-full object-cover"
+                        muted
+                        loop
+                        playsInline
+                      />
+                    ) : (
+                      <Image
+                        src={story.media}
+                        alt={story.name}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    )}
+
+                    {/* Overlay Gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+
+                    {/* Edit Overlay */}
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all group-hover:bg-black/30 group-hover:opacity-100">
+                      <div className="flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-medium text-gray-900 shadow-lg">
+                        <Edit2 className="h-4 w-4" />
+                        Click to Edit
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="absolute bottom-6 left-6 right-6 z-10">
+                      <h3 className="mb-2 text-xl font-bold text-white">{story.name}</h3>
+                      <p className="text-sm leading-relaxed text-gray-200">{story.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Performance Frame Section Preview */}
+        <div className="mb-8 rounded-xl bg-white p-6 shadow-lg">
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-xl font-semibold text-gray-900">Performance Frame Section Preview</h2>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={handleAddPerformanceFrame}
+                className="flex items-center gap-2 rounded-lg bg-green-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-600"
+              >
+                <Upload className="h-4 w-4" />
+                Add Frame
+              </button>
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={performanceFrameSection.enabled}
+                  onChange={(e) => setPerformanceFrameSection({ ...performanceFrameSection, enabled: e.target.checked })}
+                  className="h-4 w-4 rounded border-gray-300 text-orange-500 focus:ring-orange-500"
+                />
+                <span className="text-sm text-gray-700">Enable Section</span>
+              </label>
+            </div>
+          </div>
+
+          {performanceFrameSection.enabled && (
+            <div className="mx-auto w-full max-w-[1400px]">
+              <h2 className="mb-8 text-center text-3xl font-bold tracking-tight text-black md:text-4xl">
+                {performanceFrameSection.sectionTitle}
+              </h2>
+
+              {/* Grid Layout - Dynamic frames */}
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                {performanceFrameSection.frames.map((frame) => (
+                  <div
+                    key={frame.id}
+                    className="group relative h-[200px] overflow-hidden rounded-lg bg-gray-100"
+                  >
+                    <Image
+                      src={frame.image}
+                      alt={frame.alt}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    
+                    {/* Edit and Delete Buttons */}
+                    <div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/0 opacity-0 transition-all group-hover:bg-black/30 group-hover:opacity-100">
+                      <button
+                        onClick={() => setEditingSection(`performance-frame-${frame.id}`)}
+                        className="flex items-center gap-2 rounded-lg bg-white px-3 py-2 text-sm font-medium text-gray-900 shadow-lg hover:bg-gray-100"
+                      >
+                        <Edit2 className="h-4 w-4" />
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleRemovePerformanceFrame(frame.id)}
+                        className="flex items-center gap-2 rounded-lg bg-red-500 px-3 py-2 text-sm font-medium text-white shadow-lg hover:bg-red-600"
+                      >
+                        ✕
+                      </button>
+                    </div>
+
+                    {/* Alt Text Label */}
+                    <div className="absolute bottom-2 left-2 right-2 z-10">
+                      <p className="text-xs font-medium text-white bg-black/50 px-2 py-1 rounded truncate">
+                        {frame.alt}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <p className="mt-4 text-center text-sm text-gray-600">
+                Total Frames: {performanceFrameSection.frames.length} (Minimum: 3)
+              </p>
             </div>
           )}
         </div>
@@ -1297,6 +1855,368 @@ export default function LandingPageManagement() {
                           />
                         </div>
                       </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+        </EditModal>
+
+        {/* Edit Modal for RDX Gallery Items */}
+        <EditModal
+          isOpen={!!(editingSection?.startsWith("rdx-gallery-"))}
+          onClose={() => setEditingSection(null)}
+          title={`Edit ${rdxGallerySection.items.find(item => editingSection === `rdx-gallery-${item.id}`)?.title || "Gallery Item"}`}
+        >
+          {editingSection?.startsWith("rdx-gallery-") && (() => {
+            const itemId = editingSection.replace("rdx-gallery-", "");
+            const item = rdxGallerySection.items.find(i => i.id === itemId);
+            
+            if (!item) return null;
+
+            return (
+              <div className="grid gap-6 md:grid-cols-2">
+                {/* Image Upload */}
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-gray-700">
+                    Gallery Image
+                  </label>
+                  <div className="relative h-64 overflow-hidden rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:border-orange-400">
+                    {item.image && (
+                      <Image
+                        src={item.image}
+                        alt={item.title}
+                        fill
+                        className="object-cover"
+                      />
+                    )}
+                    {!item.image && (
+                      <div className="flex h-full items-center justify-center">
+                        <Upload className="h-12 w-12 text-gray-400" />
+                      </div>
+                    )}
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all hover:bg-black/50 hover:opacity-100">
+                      <div className="text-center text-white">
+                        <Upload className="mx-auto h-8 w-8 mb-2" />
+                        <p className="text-sm font-medium">
+                          {item.image ? "Change Image" : "Upload Image"}
+                        </p>
+                      </div>
+                    </div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) handleRdxGalleryImageUpload(itemId, file, e.target);
+                      }}
+                      className="absolute inset-0 z-10 cursor-pointer opacity-0"
+                    />
+                  </div>
+                </div>
+
+                {/* Content Fields */}
+                <div className="space-y-4">
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-gray-700">
+                      Section Title
+                    </label>
+                    <input
+                      type="text"
+                      value={rdxGallerySection.sectionTitle}
+                      onChange={(e) => setRdxGallerySection({ ...rdxGallerySection, sectionTitle: e.target.value })}
+                      className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+                      placeholder="Shop From Our New RDX Gallery"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-gray-700">
+                      Title
+                    </label>
+                    <input
+                      type="text"
+                      value={item.title}
+                      onChange={(e) => {
+                        const newItems = rdxGallerySection.items.map(i =>
+                          i.id === itemId ? { ...i, title: e.target.value } : i
+                        );
+                        setRdxGallerySection({ ...rdxGallerySection, items: newItems });
+                      }}
+                      className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+                      placeholder="Training"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-gray-700">
+                      Link URL
+                    </label>
+                    <input
+                      type="text"
+                      value={item.href}
+                      onChange={(e) => {
+                        const newItems = rdxGallerySection.items.map(i =>
+                          i.id === itemId ? { ...i, href: e.target.value } : i
+                        );
+                        setRdxGallerySection({ ...rdxGallerySection, items: newItems });
+                      }}
+                      className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+                      placeholder="/shop/training"
+                    />
+                  </div>
+
+                  <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
+                    <p className="text-sm text-gray-600">
+                      This gallery item will be displayed in the RDX Gallery section on the landing page.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+        </EditModal>
+
+        {/* Edit Modal for Success Stories */}
+        <EditModal
+          isOpen={!!(editingSection?.startsWith("success-story-"))}
+          onClose={() => setEditingSection(null)}
+          title={`Edit ${successStoriesSection.stories.find(story => editingSection === `success-story-${story.id}`)?.name || "Success Story"}`}
+        >
+          {editingSection?.startsWith("success-story-") && (() => {
+            const storyId = editingSection.replace("success-story-", "");
+            const story = successStoriesSection.stories.find(s => s.id === storyId);
+            
+            if (!story) return null;
+
+            return (
+              <div className="grid gap-6 md:grid-cols-2">
+                {/* Media Upload */}
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-gray-700">
+                    Story Media (Image or Video)
+                  </label>
+                  <div className="relative h-64 overflow-hidden rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:border-orange-400">
+                    {story.media && story.mediaType === "video" ? (
+                      <video
+                        src={story.media}
+                        className="h-full w-full object-cover"
+                        muted
+                        loop
+                        autoPlay
+                        playsInline
+                      />
+                    ) : story.media ? (
+                      <Image
+                        src={story.media}
+                        alt={story.name}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-full items-center justify-center">
+                        <Upload className="h-12 w-12 text-gray-400" />
+                      </div>
+                    )}
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all hover:bg-black/50 hover:opacity-100">
+                      <div className="text-center text-white">
+                        <Upload className="mx-auto h-8 w-8 mb-2" />
+                        <p className="text-sm font-medium">
+                          {story.media ? "Change Media" : "Upload Media"}
+                        </p>
+                        <p className="text-xs mt-1">Image or Video (Max 50MB)</p>
+                      </div>
+                    </div>
+                    <input
+                      type="file"
+                      accept="image/*,video/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          // Check file size (50MB max)
+                          if (file.size > 50 * 1024 * 1024) {
+                            alert("File size must be less than 50MB");
+                            e.target.value = "";
+                            return;
+                          }
+                          handleSuccessStoryImageUpload(storyId, file, e.target);
+                        }
+                      }}
+                      className="absolute inset-0 z-10 cursor-pointer opacity-0"
+                    />
+                  </div>
+                  <p className="mt-2 text-xs text-gray-500">
+                    Current type: <span className="font-medium">{story.mediaType}</span>
+                  </p>
+                </div>
+
+                {/* Content Fields */}
+                <div className="space-y-4">
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-gray-700">
+                      Section Title
+                    </label>
+                    <input
+                      type="text"
+                      value={successStoriesSection.sectionTitle}
+                      onChange={(e) => setSuccessStoriesSection({ ...successStoriesSection, sectionTitle: e.target.value })}
+                      className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+                      placeholder="Success Stories That Inspire Us"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-gray-700">
+                      Client Name
+                    </label>
+                    <input
+                      type="text"
+                      value={story.name}
+                      onChange={(e) => {
+                        const newStories = successStoriesSection.stories.map(s =>
+                          s.id === storyId ? { ...s, name: e.target.value } : s
+                        );
+                        setSuccessStoriesSection({ ...successStoriesSection, stories: newStories });
+                      }}
+                      className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+                      placeholder="Bangladesh Navy"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-gray-700">
+                      Description
+                    </label>
+                    <textarea
+                      value={story.description}
+                      onChange={(e) => {
+                        const newStories = successStoriesSection.stories.map(s =>
+                          s.id === storyId ? { ...s, description: e.target.value } : s
+                        );
+                        setSuccessStoriesSection({ ...successStoriesSection, stories: newStories });
+                      }}
+                      rows={4}
+                      className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+                      placeholder="The quality of equipment is exceptional..."
+                    />
+                  </div>
+
+                  <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
+                    <p className="text-sm text-gray-600">
+                      Upload an image or video (max 50MB). Videos will autoplay on hover in the public view.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+        </EditModal>
+
+        {/* Edit Modal for Performance Frame */}
+        <EditModal
+          isOpen={!!(editingSection?.startsWith("performance-frame-"))}
+          onClose={() => setEditingSection(null)}
+          title={`Edit ${performanceFrameSection.frames.find(frame => editingSection === `performance-frame-${frame.id}`)?.alt || "Performance Frame"}`}
+        >
+          {editingSection?.startsWith("performance-frame-") && (() => {
+            const frameId = editingSection.replace("performance-frame-", "");
+            const frame = performanceFrameSection.frames.find(f => f.id === frameId);
+            
+            if (!frame) return null;
+
+            return (
+              <div className="grid gap-6 md:grid-cols-2">
+                {/* Image Upload */}
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-gray-700">
+                    Frame Image
+                  </label>
+                  <div className="relative h-64 overflow-hidden rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:border-orange-400">
+                    {frame.image ? (
+                      <Image
+                        src={frame.image}
+                        alt={frame.alt}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-full items-center justify-center">
+                        <Upload className="h-12 w-12 text-gray-400" />
+                      </div>
+                    )}
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all hover:bg-black/50 hover:opacity-100">
+                      <div className="text-center text-white">
+                        <Upload className="mx-auto h-8 w-8 mb-2" />
+                        <p className="text-sm font-medium">
+                          {frame.image ? "Change Image" : "Upload Image"}
+                        </p>
+                      </div>
+                    </div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) handlePerformanceFrameImageUpload(frameId, file, e.target);
+                      }}
+                      className="absolute inset-0 z-10 cursor-pointer opacity-0"
+                    />
+                  </div>
+                </div>
+
+                {/* Content Fields */}
+                <div className="space-y-4">
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-gray-700">
+                      Section Title
+                    </label>
+                    <input
+                      type="text"
+                      value={performanceFrameSection.sectionTitle}
+                      onChange={(e) => setPerformanceFrameSection({ ...performanceFrameSection, sectionTitle: e.target.value })}
+                      className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+                      placeholder="Performance in Every Frame"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-gray-700">
+                      Alt Text / Description
+                    </label>
+                    <input
+                      type="text"
+                      value={frame.alt}
+                      onChange={(e) => {
+                        const newFrames = performanceFrameSection.frames.map(f =>
+                          f.id === frameId ? { ...f, alt: e.target.value } : f
+                        );
+                        setPerformanceFrameSection({ ...performanceFrameSection, frames: newFrames });
+                      }}
+                      className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+                      placeholder="Strength Training"
+                    />
+                  </div>
+
+                  <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
+                    <p className="text-sm text-gray-600 mb-3">
+                      This frame will be displayed in the Performance Frame carousel section on the landing page. The carousel auto-plays every 2 seconds.
+                    </p>
+                    {performanceFrameSection.frames.length > 3 && (
+                      <button
+                        onClick={() => {
+                          handleRemovePerformanceFrame(frameId);
+                          setEditingSection(null);
+                        }}
+                        className="w-full rounded-lg bg-red-500 px-4 py-2 text-sm font-medium text-white hover:bg-red-600"
+                      >
+                        Delete This Frame
+                      </button>
+                    )}
+                    {performanceFrameSection.frames.length <= 3 && (
+                      <p className="text-xs text-gray-500 text-center">
+                        Cannot delete - minimum 3 frames required
+                      </p>
                     )}
                   </div>
                 </div>

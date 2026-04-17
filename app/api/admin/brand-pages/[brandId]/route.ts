@@ -11,10 +11,10 @@ if (!fs.existsSync(CONTENT_DIR)) {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { brandId: string } }
+  { params }: { params: Promise<{ brandId: string }> }
 ) {
   try {
-    const { brandId } = params;
+    const { brandId } = await params;
     const filePath = path.join(CONTENT_DIR, `${brandId}.json`);
 
     if (!fs.existsSync(filePath)) {
@@ -36,10 +36,10 @@ export async function GET(
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { brandId: string } }
+  { params }: { params: Promise<{ brandId: string }> }
 ) {
   try {
-    const { brandId } = params;
+    const { brandId } = await params;
     const body = await request.json();
     const { content } = body;
 

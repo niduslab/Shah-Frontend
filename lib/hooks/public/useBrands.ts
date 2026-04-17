@@ -1,8 +1,13 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import api from '@/lib/api/axios';
 
-export const useBrands = (options?: UseQueryOptions) => {
-  return useQuery({
+interface BrandsResponse {
+  success: boolean;
+  data: any[];
+}
+
+export const useBrands = (options?: Partial<UseQueryOptions<BrandsResponse>>) => {
+  return useQuery<BrandsResponse>({
     queryKey: ['brands'],
     queryFn: async () => {
       const response = await api.get('/api/catalog/brands');

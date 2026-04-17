@@ -1,11 +1,12 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import { useBrands } from "@/lib/hooks/public/useBrands";
 
 interface Brand {
   id: number;
@@ -18,42 +19,54 @@ interface Brand {
 export function TrustedBrands() {
   const containerRef = useRef<HTMLDivElement>(null);
   const tweenRef = useRef<gsap.core.Tween | null>(null);
-  const [brands, setBrands] = useState<Brand[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    const fetchBrands = async () => {
-      try {
-        const response = await fetch('/api/catalog/brands?active=true&per_page=12');
-        const data = await response.json();
-        setBrands(data.data || []);
-      } catch (error) {
-        console.error('Error fetching brands:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBrands();
+    setIsMounted(true);
   }, []);
+
+  const { data: brandsData, isLoading, error } = useBrands({
+    enabled: isMounted,
+  }) as any;
+
+  const brands = brandsData?.data || [];
+
+  // Helper function to get full image URL
+  const getImageUrl = (logoPath: string) => {
+    if (!logoPath) return '';
+    if (logoPath.startsWith('http://') || logoPath.startsWith('https://')) {
+      return logoPath;
+    }
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+    const cleanPath = logoPath.startsWith('/') ? logoPath.slice(1) : logoPath;
+    return `${apiUrl}/storage/${cleanPath}`;
+  };
 
   useGSAP(() => {
     if (!containerRef.current || brands.length === 0) return;
 
+    // Cleanup previous tween
+    if (tweenRef.current) {
+      tweenRef.current.kill();
+    }
+
     // Seamless infinite scroll animation
-    // Duplicating the list creates a seamless loop
     const totalWidth = containerRef.current.scrollWidth;
     const singleSetWidth = totalWidth / 2;
 
     tweenRef.current = gsap.to(containerRef.current, {
       x: -singleSetWidth,
-      duration: 20,
+      duration: 80,
       ease: "none",
       repeat: -1,
     });
+
+    return () => {
+      tweenRef.current?.kill();
+    };
   }, { scope: containerRef, dependencies: [brands] });
 
-  if (loading) {
+  if (isLoading) {
     return (
       <section className="w-full bg-white py-12 overflow-hidden">
         <div className="mx-auto w-full max-w-[1400px] px-4 md:px-6">
@@ -72,7 +85,7 @@ export function TrustedBrands() {
     );
   }
 
-  if (brands.length === 0) {
+  if (error || brands.length === 0) {
     return null;
   }
 
@@ -102,7 +115,7 @@ export function TrustedBrands() {
             className="flex w-max gap-4"
           >
             {/* First Set */}
-            {brands.map((brand) => (
+            {brands.map((brand: Brand) => (
               <Link
                 key={`first-${brand.id}`}
                 href={`/brand/${brand.slug}`}
@@ -110,16 +123,17 @@ export function TrustedBrands() {
               >
                 <div className="relative h-12 w-32">
                   <Image
-                    src={brand.logo}
+                    src={getImageUrl(brand.logo)}
                     alt={brand.name}
                     fill
                     className="object-contain opacity-80 transition-opacity hover:opacity-100"
+                    unoptimized={getImageUrl(brand.logo).includes('localhost')}
                   />
                 </div>
               </Link>
             ))}
             {/* Second Set (Duplicate for seamless loop) */}
-            {brands.map((brand) => (
+            {brands.map((brand: Brand) => (
               <Link
                 key={`second-${brand.id}`}
                 href={`/brand/${brand.slug}`}
@@ -127,10 +141,11 @@ export function TrustedBrands() {
               >
                 <div className="relative h-12 w-32">
                   <Image
-                    src={brand.logo}
+                    src={getImageUrl(brand.logo)}
                     alt={brand.name}
                     fill
                     className="object-contain opacity-80 transition-opacity hover:opacity-100"
+                    unoptimized={getImageUrl(brand.logo).includes('localhost')}
                   />
                 </div>
               </Link>

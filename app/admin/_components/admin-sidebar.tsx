@@ -123,7 +123,7 @@ export function AdminSidebar() {
       </nav>
 
       {/* Bottom Menu */}
-      <div className="border-t border-gray-100 px-3 py-4 space-y-1">
+      {/* <div className="border-t border-gray-100 px-3 py-4 space-y-1">
         {bottomMenuItems.map((item) => {
           const isActive = pathname === item.href;
           return (
@@ -142,7 +142,7 @@ export function AdminSidebar() {
             </Link>
           );
         })}
-      </div>
+      </div> */}
 
       {/* Upgrade Banner */}
       <div className="m-4 rounded-2xl bg-gradient-to-br from-orange-400 to-orange-500 p-6 text-white">

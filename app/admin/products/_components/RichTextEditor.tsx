@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { 
   Bold, 
   Italic, 
@@ -23,18 +23,42 @@ interface RichTextEditorProps {
 }
 
 export default function RichTextEditor({ value, onChange }: RichTextEditorProps) {
-  const [content, setContent] = useState(value || '');
   const [isHtmlMode, setIsHtmlMode] = useState(false);
+  const editorRef = useRef<HTMLDivElement>(null);
+  const isTypingRef = useRef(false);
 
-  // Sync with parent value
+  // Only update editor content when value changes externally (not from typing)
   useEffect(() => {
-    if (value !== content) {
-      setContent(value || '');
+    if (!isTypingRef.current && editorRef.current) {
+      const currentContent = editorRef.current.innerHTML;
+      if (currentContent !== value) {
+        // Save cursor position
+        const selection = window.getSelection();
+        const range = selection && selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
+        const cursorOffset = range ? range.startOffset : 0;
+        const cursorNode = range ? range.startContainer : null;
+
+        editorRef.current.innerHTML = value || '';
+
+        // Restore cursor position if possible
+        if (cursorNode && editorRef.current.contains(cursorNode)) {
+          try {
+            const newRange = document.createRange();
+            newRange.setStart(cursorNode, Math.min(cursorOffset, cursorNode.textContent?.length || 0));
+            newRange.collapse(true);
+            selection?.removeAllRanges();
+            selection?.addRange(newRange);
+          } catch (e) {
+            // Cursor restoration failed, ignore
+          }
+        }
+      }
     }
+    isTypingRef.current = false;
   }, [value]);
 
   const handleContentChange = (newContent: string) => {
-    setContent(newContent);
+    isTypingRef.current = true;
     onChange(newContent);
   };
 
@@ -49,8 +73,12 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
       const selection = window.getSelection();
       if (!selection || selection.rangeCount === 0) {
         // If no selection, append to end
-        const newContent = content + html;
+        const currentContent = editorRef.current?.innerHTML || '';
+        const newContent = currentContent + html;
         handleContentChange(newContent);
+        if (editorRef.current) {
+          editorRef.current.innerHTML = newContent;
+        }
         return;
       }
       
@@ -257,17 +285,17 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
       <div className="bg-white">
         {isHtmlMode ? (
           <textarea
-            value={content}
+            value={value}
             onChange={(e) => handleContentChange(e.target.value)}
             className="w-full min-h-[200px] px-4 py-3 font-mono text-sm focus:outline-none border-0 resize-none"
             placeholder="HTML code..."
           />
         ) : (
           <div
+            ref={editorRef}
             contentEditable
             onInput={handleInput}
             onPaste={handlePaste}
-            dangerouslySetInnerHTML={{ __html: content }}
             className="min-h-[200px] px-4 py-3 focus:outline-none"
             suppressContentEditableWarning
             style={{ 

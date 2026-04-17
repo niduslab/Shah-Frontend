@@ -1,0 +1,88 @@
+{
+  "brandId": "2",
+  "content": {
+    "hero": {
+      "enabled": true,
+      "backgroundImage": "/images/brand-page/hero/1776413319602-18afe27e021b3b5b293d07807a171ee3c5770c31.jpg",
+      "title": "Turn Your Home\nInto A Complete asdfads asdf dsaf adsf asdf asfd",
+      "highlightedText": "Fitness Space asfsadf",
+      "description": "Great product",
+      "buttonText": "Shop Now",
+      "buttonUrl": "/shop"
+    },
+    "categories": {
+      "enabled": true,
+      "sectionTitle": "Explore Categories",
+      "items": [
+        {
+          "id": "cat-1776403214358",
+          "name": "New Category",
+          "image": "/images/brand-page/categories/1776403222247-536c8bf6ec7eb35b36b1b8ec1953f4c098029a49.png",
+          "href": "/shop"
+        },
+        {
+          "id": "cat-1776403214541",
+          "name": "New Category",
+          "image": "/images/brand-page/categories/1776403225967-c720ec2c5e57a0bc8d6ddfb287ceee26a9140229.png",
+          "href": "/shop"
+        },
+        {
+          "id": "cat-1776403214719",
+          "name": "New Category",
+          "image": "/images/brand-page/categories/1776403229766-cfa8138ad5135723dcedad5236627bc4d080c002.png",
+          "href": "/shop"
+        },
+        {
+          "id": "cat-1776403214905",
+          "name": "New Category",
+          "image": "/images/brand-page/categories/1776403234093-merelvanvlerken_A_happy_young_man_is_carrying_an_enormous_cardb_36051df2-a370-4457-a120-418b20b09a7a.webp",
+          "href": "/shop"
+        }
+      ]
+    },
+    "behindTheWork": {
+      "enabled": true,
+      "title": "Thinking Behind the Work",
+      "description": "",
+      "stats": [
+        {
+          "value": "51+",
+          "label": "Years of Experience"
+        },
+        {
+          "value": "1M+",
+          "label": "Happy Customers"
+        },
+        {
+          "value": "50+",
+          "label": "Available In Countries"
+        }
+      ],
+      "images": {
+        "left": "/images/brand-page/behind-work/1776403238888-91409c62d10476f009ceb549f50a2ad82eecdbf1.png",
+        "center": "/images/brand-page/behind-work/1776403242215-91409c62d10476f009ceb549f50a2ad82eecdbf1.png",
+        "right": "/images/brand-page/behind-work/1776403246584-ec666fa61d6b3d15f3de8eb76251e0feb4e1c1df.png"
+      }
+    },
+    "shopBy": {
+      "enabled": true,
+      "cards": [
+        {
+          "id": "card-1776403248351",
+          "image": "/images/brand-page/shop-by/1776403253799-gallery01.jpg-768x512.jpg",
+          "title": "New Product",
+          "buttonText": "Shop Now",
+          "buttonUrl": "/shop"
+        },
+        {
+          "id": "card-1776403250047",
+          "image": "/images/brand-page/shop-by/1776403266023-cfa8138ad5135723dcedad5236627bc4d080c002.png",
+          "title": "New Product",
+          "buttonText": "Shop Now",
+          "buttonUrl": "/shop"
+        }
+      ]
+    }
+  },
+  "updatedAt": "2026-04-17T08:08:51.062Z"
+}

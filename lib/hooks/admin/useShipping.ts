@@ -88,10 +88,11 @@ export const useCreateShippingRate = (options?: UseMutationOptions<any, any, Shi
       const response = await api.post('/api/admin/shipping-rates', data);
       return response.data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin', 'shipping-rates'] });
+    onSuccess: async (data, variables, context) => {
+      await queryClient.invalidateQueries({ queryKey: ['admin', 'shipping-rates'] });
+      options?.onSuccess?.(data, variables, context);
     },
-    ...options,
+    onError: options?.onError,
   });
 };
 
@@ -105,11 +106,12 @@ export const useUpdateShippingRate = (
       const response = await api.put(`/api/admin/shipping-rates/${id}`, data);
       return response.data;
     },
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['admin', 'shipping-rates'] });
-      queryClient.invalidateQueries({ queryKey: ['admin', 'shipping-rate', variables.id] });
+    onSuccess: async (data, variables, context) => {
+      await queryClient.invalidateQueries({ queryKey: ['admin', 'shipping-rates'] });
+      await queryClient.invalidateQueries({ queryKey: ['admin', 'shipping-rate', variables.id] });
+      options?.onSuccess?.(data, variables, context);
     },
-    ...options,
+    onError: options?.onError,
   });
 };
 

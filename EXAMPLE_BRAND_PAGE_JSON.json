@@ -1,0 +1,122 @@
+{
+  "brandId": 1,
+  "content": {
+    "hero": {
+      "enabled": true,
+      "backgroundImage": "/images/brand-page/nordictrack-hero-bg.png",
+      "title": "Turn Your Home\nInto A Complete",
+      "highlightedText": "Fitness Space",
+      "description": "Experience premium fitness equipment designed for serious athletes and fitness enthusiasts. NordicTrack brings professional-grade equipment to your home.",
+      "buttonText": "Shop Now",
+      "buttonUrl": "/shop?brand=nordictrack"
+    },
+    "categories": {
+      "enabled": true,
+      "sectionTitle": "Explore Categories",
+      "items": [
+        {
+          "id": "cat-1",
+          "name": "Treadmills",
+          "image": "/images/brand-page/categories/treadmills.png",
+          "href": "/shop?category=treadmill&brand=nordictrack"
+        },
+        {
+          "id": "cat-2",
+          "name": "Ellipticals",
+          "image": "/images/brand-page/categories/ellipticals.png",
+          "href": "/shop?category=elliptical&brand=nordictrack"
+        },
+        {
+          "id": "cat-3",
+          "name": "Exercise Bikes",
+          "image": "/images/brand-page/categories/bikes.png",
+          "href": "/shop?category=bike&brand=nordictrack"
+        },
+        {
+          "id": "cat-4",
+          "name": "Rowers",
+          "image": "/images/brand-page/categories/rowers.png",
+          "href": "/shop?category=rower&brand=nordictrack"
+        }
+      ]
+    },
+    "behindTheWork": {
+      "enabled": true,
+      "title": "Thinking Behind the Work",
+      "description": "For over 50 years, NordicTrack has been at the forefront of home fitness innovation. We combine cutting-edge technology with ergonomic design to create equipment that transforms your fitness journey. Our commitment to excellence has made us the trusted choice for millions of fitness enthusiasts worldwide.",
+      "stats": [
+        {
+          "value": "51+",
+          "label": "Years of Experience"
+        },
+        {
+          "value": "1M+",
+          "label": "Happy Customers"
+        },
+        {
+          "value": "50+",
+          "label": "Available In Countries"
+        }
+      ],
+      "images": {
+        "left": "/images/brand-page/behind-work/left.png",
+        "center": "/images/brand-page/behind-work/center.png",
+        "right": "/images/brand-page/behind-work/right.png"
+      }
+    },
+    "shopBy": {
+      "enabled": true,
+      "cards": [
+        {
+          "id": "card-1",
+          "image": "/images/brand-page/shop-by/t-series-16.png",
+          "title": "T Series 16 Treadmill",
+          "buttonText": "Shop Treadmill",
+          "buttonUrl": "/product/t-series-16-treadmill",
+          "badge": {
+            "enabled": true,
+            "value": "12",
+            "label": "MPH Speed"
+          }
+        },
+        {
+          "id": "card-2",
+          "image": "/images/brand-page/shop-by/elite-elliptical.png",
+          "title": "Elite Elliptical",
+          "buttonText": "Shop Elliptical",
+          "buttonUrl": "/product/elite-elliptical",
+          "badge": {
+            "enabled": true,
+            "value": "25",
+            "label": "Resistance Levels"
+          }
+        },
+        {
+          "id": "card-3",
+          "image": "/images/brand-page/shop-by/stationary-bike.png",
+          "title": "Stationary Exercise Bike",
+          "buttonText": "Shop Bike",
+          "buttonUrl": "/product/stationary-exercise-bike",
+          "badge": {
+            "enabled": false,
+            "value": "",
+            "label": ""
+          }
+        },
+        {
+          "id": "card-4",
+          "image": "/images/brand-page/shop-by/rower.png",
+          "title": "Premium Rowing Machine",
+          "buttonText": "Shop Rower",
+          "buttonUrl": "/product/premium-rowing-machine",
+          "badge": {
+            "enabled": true,
+            "value": "NEW",
+            "label": "Latest Model"
+          }
+        }
+      ]
+    }
+  },
+  "updatedAt": "2024-03-31T10:30:00.000Z"
+}

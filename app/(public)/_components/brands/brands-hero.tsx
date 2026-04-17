@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export function BrandsHero() {
   return (
-    <div className="relative h-[600px] w-full overflow-hidden">
+    <div className="relative h-[700px] w-full overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0">
         <Image
@@ -17,7 +17,7 @@ export function BrandsHero() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 flex h-full items-center px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 flex h-full items-center px-4 sm:px-6 lg:px-8 mx-auto w-full max-w-[1400px]">
         <div className="max-w-2xl">
           <h1 className="mb-6 text-4xl font-bold text-white sm:text-5xl md:text-6xl lg:text-[64px] leading-tight">
             Our Trusted <br />

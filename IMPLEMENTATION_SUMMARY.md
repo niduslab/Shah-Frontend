@@ -1,263 +1,358 @@
-# Cookie Consent & Visitor Popup - Implementation Summary
+# Dynamic Brand Pages - Implementation Summary
 
-## ✅ What Was Implemented
+## 🎯 What You Now Have
 
-### 1. Cookie Consent Banner
-A bottom-positioned banner that appears once per visitor to request cookie consent.
+A complete dynamic brand page system that allows admins to create and manage brand pages without touching code.
 
-**Features:**
-- Shows at the bottom of every page
-- Appears only once (tracked via localStorage)
-- Two action buttons: "Accept All" and "Decline"
-- Link to privacy policy
-- Fully responsive design
-- Matches site design system (orange theme)
-
-**User Experience:**
-1. Visitor lands on any page
-2. Banner slides up from bottom
-3. Visitor can accept or decline
-4. Choice is saved in localStorage
-5. Banner never shows again for that browser
-
-### 2. Visitor Popup Modal
-A modal popup that collects visitor information after a configurable delay.
-
-**Features:**
-- Appears 5 seconds after page load (configurable)
-- Shows only once per visitor (tracked via localStorage)
-- Collects: Name (required), Email (optional), Phone (optional)
-- Form validation with error messages
-- Success animation after submission
-- Close button (X) in top-right
-- Fully responsive design
-- API integration with backend
-
-**User Experience:**
-1. Visitor lands on the site
-2. After 5 seconds, popup appears
-3. Visitor can fill form or close it
-4. On submit, data is sent to backend
-5. Success message is shown
-6. Popup auto-closes after 2 seconds
-7. Never shows again for that browser
-
-### 3. Admin Dashboard
-A complete admin interface to view and manage visitor submissions.
-
-**Features:**
-- Statistics cards showing:
-  - Total submissions
-  - Submissions with email
-  - Submissions with phone
-  - Today's submissions
-- Search by name, email, or phone
-- Filter by contact info (all, email, phone, both)
-- Pagination for large datasets
-- View detailed submission info (modal)
-- Delete submissions with confirmation
-- Export all data to CSV
-- Responsive design matching admin theme
-
-**Admin Experience:**
-1. Admin logs in
-2. Navigates to `/admin/visitor-popups`
-3. Sees statistics overview
-4. Can search and filter submissions
-5. Can view full details of any submission
-6. Can export data to CSV
-7. Can delete unwanted submissions
+---
 
 ## 📁 Files Created
 
 ### Frontend Components
 ```
-app/(public)/_components/shared/
-├── cookie-consent.tsx          # Cookie consent banner
-└── visitor-popup.tsx           # Visitor information popup
-
-app/admin/visitor-popups/
-├── page.tsx                    # Admin dashboard page
-└── _components/
-    ├── VisitorDetailsModal.tsx # View submission details
-    └── DeleteConfirmModal.tsx  # Delete confirmation dialog
+app/(public)/_components/brand/
+├── DynamicHeroSection.tsx          ← Hero banner with image & CTA
+├── DynamicCategoriesSection.tsx    ← Category grid
+├── DynamicBehindTheWorkSection.tsx ← Brand story with stats
+└── DynamicShopBySection.tsx        ← Product showcase cards
 ```
 
-### Backend Integration
+### Dynamic Page Template
 ```
-lib/hooks/admin/
-└── useVisitorPopups.ts         # React Query hooks for API calls
+app/(public)/brand/
+└── [slug]/
+    ├── page.tsx        ← Main dynamic page (fetches & renders)
+    └── not-found.tsx   ← 404 page for missing brands
 ```
 
 ### Documentation
 ```
-VISITOR_POPUP_COOKIE_CONSENT_IMPLEMENTATION.md
-IMPLEMENTATION_SUMMARY.md
+├── DYNAMIC_BRAND_PAGES_IMPLEMENTATION.md  ← Architecture overview
+├── BRAND_PAGES_SETUP_GUIDE.md             ← Complete setup guide
+├── BRAND_PAGE_DATA_STRUCTURE.md           ← Data structure reference
+└── IMPLEMENTATION_SUMMARY.md              ← This file
 ```
-
-## 🔧 Configuration
-
-### Adjust Popup Delay
-Edit `app/(public)/layout.tsx`:
-```tsx
-<VisitorPopup delay={5000} /> // Change 5000 to desired milliseconds
-```
-
-### Customize Popup Content
-Edit `app/(public)/_components/shared/visitor-popup.tsx`:
-- Line 95: Change title "Welcome to Our Store!"
-- Line 98: Change description text
-- Line 223: Change button text "Get Exclusive Deals"
-
-### Customize Cookie Consent
-Edit `app/(public)/_components/shared/cookie-consent.tsx`:
-- Line 32: Change consent message
-- Line 34: Update privacy policy link
-
-## 🧪 Testing Instructions
-
-### Test Cookie Consent
-1. Open the site in a browser
-2. Cookie banner should appear at bottom
-3. Click "Accept All"
-4. Refresh page - banner should not appear
-5. Open DevTools > Application > Local Storage
-6. Find key `cookie_consent_accepted` with value "true"
-7. Delete the key and refresh to test again
-
-### Test Visitor Popup
-1. Open the site in a browser
-2. Wait 5 seconds
-3. Popup should appear in center of screen
-4. Try submitting without name - should show error
-5. Fill in name and submit
-6. Should show success message
-7. Refresh page - popup should not appear
-8. Open DevTools > Application > Local Storage
-9. Find key `visitor_popup_submitted` with value "true"
-10. Delete the key and refresh to test again
-
-### Test Admin Dashboard
-1. Login as admin user
-2. Navigate to `/admin/visitor-popups`
-3. Should see statistics cards
-4. Try searching for a submission
-5. Click eye icon to view details
-6. Click trash icon to delete (with confirmation)
-7. Click "Export CSV" to download data
-
-## 🔌 API Endpoints
-
-### Public (No Auth Required)
-```
-POST /api/visitor-popup
-Content-Type: application/json
-
-{
-  "name": "John Doe",
-  "email": "john@example.com",
-  "phone": "+1234567890"
-}
-```
-
-### Admin (Auth + Admin Role Required)
-```
-GET    /api/admin/visitor-popups              # List all
-GET    /api/admin/visitor-popups/statistics   # Get stats
-GET    /api/admin/visitor-popups/export       # Export CSV
-GET    /api/admin/visitor-popups/{id}         # Get one
-DELETE /api/admin/visitor-popups/{id}         # Delete one
-```
-
-## 💾 LocalStorage Keys
-
-| Key | Value | Purpose |
-|-----|-------|---------|
-| `cookie_consent_accepted` | "true" or "false" | Tracks cookie consent choice |
-| `visitor_popup_submitted` | "true" | Tracks if visitor submitted popup |
-
-## 🎨 Design System
-
-Both components follow the existing design system:
-- Primary color: `#FF6F00` (Orange)
-- Secondary color: `#E65100` (Dark Orange)
-- Tailwind CSS utility classes
-- Consistent spacing and typography
-- Lucide React icons
-- Responsive breakpoints (sm, md, lg, xl)
-
-## 🚀 Next Steps
-
-1. **Test the implementation:**
-   - Test cookie consent on different pages
-   - Test visitor popup with various inputs
-   - Test admin dashboard features
-
-2. **Customize content:**
-   - Update popup welcome message
-   - Update cookie consent text
-   - Add your privacy policy link
-
-3. **Optional enhancements:**
-   - Add email notifications when popup is submitted
-   - Add more statistics to admin dashboard
-   - Add date range filter for submissions
-   - Add bulk delete functionality
-
-4. **Production checklist:**
-   - Verify API endpoints are working
-   - Test on mobile devices
-   - Test on different browsers
-   - Verify localStorage works correctly
-   - Test CSV export functionality
-
-## 📱 Browser Compatibility
-
-✅ Chrome/Edge (latest)
-✅ Firefox (latest)
-✅ Safari (latest)
-✅ Mobile Safari (iOS)
-✅ Chrome Mobile (Android)
-
-## 🐛 Troubleshooting
-
-### CSRF Token Mismatch (419 Error)
-**Fixed!** The visitor popup now uses the configured `api` instance that handles CSRF tokens automatically.
-
-If you still get 419 errors:
-1. Check backend CORS configuration (`supports_credentials: true`)
-2. Verify `SANCTUM_STATEFUL_DOMAINS` includes your frontend domain
-3. Clear browser cookies and localStorage
-4. See `CSRF_FIX_GUIDE.md` for detailed backend configuration
-
-### Popup not appearing?
-- Check browser console for errors
-- Verify localStorage is not disabled
-- Check if `visitor_popup_submitted` key exists
-- Verify API_URL environment variable is set
-
-### Cookie banner not appearing?
-- Check if `cookie_consent_accepted` key exists in localStorage
-- Clear localStorage and refresh
-- Check browser console for errors
-
-### Admin dashboard not loading?
-- Verify user is logged in as admin
-- Check API authentication token
-- Verify backend endpoints are accessible
-- Check browser console for API errors
-
-## 📞 Support
-
-If you encounter any issues:
-1. Check browser console for errors
-2. Verify all files were created correctly
-3. Ensure backend API is running
-4. Check environment variables are set
-5. Verify database migrations were run
 
 ---
 
-**Implementation completed successfully! 🎉**
+## 🔄 How It Works
 
-All components are ready to use. Simply visit your site to see the cookie consent banner and visitor popup in action. Admin users can access the dashboard at `/admin/visitor-popups`.
+### Admin Creates Content
+```
+Admin Panel (/admin/dynamic-contents/brand-pages-db/1)
+    ↓
+Configures sections (Hero, Categories, Behind Work, Shop By)
+    ↓
+Uploads images
+    ↓
+Clicks "Save Changes"
+    ↓
+Saved to: public/content/brand-pages/1.json
+```
+
+### User Views Brand Page
+```
+User clicks brand from "Trusted Brands"
+    ↓
+Navigates to /brand/nordictrack
+    ↓
+Dynamic page fetches:
+  • Brand data from API
+  • Brand page content from /api/admin/brand-pages/1
+    ↓
+Renders sections based on admin configuration
+    ↓
+User sees fully styled brand page
+```
+
+---
+
+## 🚀 Quick Start
+
+### 1. Admin Creates Brand Page Content
+1. Go to `/admin/dynamic-contents/brand-pages-db/1` (replace 1 with brand ID)
+2. Configure sections:
+   - ✅ Enable/disable each section
+   - ✅ Upload images
+   - ✅ Add text content
+   - ✅ Configure buttons and links
+3. Click "Save Changes"
+
+### 2. User Visits Brand Page
+1. Click any brand from "Trusted Brands" section
+2. Automatically navigates to `/brand/{slug}`
+3. Sees dynamically rendered content from admin panel
+
+### 3. Update Content Anytime
+- No code changes needed
+- No deployment required
+- Changes appear immediately (after cache expires)
+
+---
+
+## 📊 Data Flow Diagram
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    ADMIN PANEL                              │
+│  /admin/dynamic-contents/brand-pages-db/[brandId]          │
+│                                                              │
+│  • Configure Hero Section                                   │
+│  • Configure Categories                                     │
+│  • Configure Behind The Work                                │
+│  • Configure Shop By                                        │
+│  • Upload Images                                            │
+│  • Save Changes                                             │
+└────────────────────┬────────────────────────────────────────┘
+                     │
+                     ↓ POST /api/admin/brand-pages/{brandId}
+                     │
+┌────────────────────────────────────────────────────────────┐
+│              FILE SYSTEM (Server)                           │
+│  public/content/brand-pages/{brandId}.json                 │
+│                                                             │
+│  {                                                          │
+│    "brandId": 1,                                            │
+│    "content": {                                             │
+│      "hero": { ... },                                       │
+│      "categories": { ... },                                 │
+│      "behindTheWork": { ... },                              │
+│      "shopBy": { ... }                                      │
+│    },                                                       │
+│    "updatedAt": "2024-03-31T10:30:00Z"                     │
+│  }                                                          │
+└────────────────────┬────────────────────────────────────────┘
+                     │
+                     ↓ GET /api/admin/brand-pages/{brandId}
+                     │
+┌────────────────────────────────────────────────────────────┐
+│              FRONTEND (Browser)                             │
+│  /brand/[slug]/page.tsx                                    │
+│                                                             │
+│  • Fetch brand data by slug                                │
+│  • Fetch brand page content                                │
+│  • Render DynamicHeroSection                               │
+│  • Render DynamicCategoriesSection                         │
+│  • Render DynamicBehindTheWorkSection                      │
+│  • Render DynamicShopBySection                             │
+└────────────────────────────────────────────────────────────┘
+                     │
+                     ↓
+┌────────────────────────────────────────────────────────────┐
+│              USER SEES                                      │
+│  Fully styled brand page with admin-configured content     │
+└────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🎨 Section Types
+
+### 1. Hero Section
+- Full-width banner with background image
+- Title with line breaks
+- Highlighted text (orange gradient)
+- Description
+- Call-to-action button
+
+### 2. Categories Section
+- Grid of category cards
+- Each card has image and link
+- Hover effects
+- Responsive layout
+
+### 3. Behind The Work Section
+- Brand story/description
+- Statistics display (3 stats)
+- Three images (left, center, right)
+- Professional layout
+
+### 4. Shop By Section
+- Product showcase cards
+- Product image
+- Product title
+- Optional badge (e.g., "12 MPH")
+- Call-to-action button
+
+---
+
+## 🔗 Integration Points
+
+### Existing Components
+- **TrustedBrands** - Already links to `/brand/{slug}` ✅
+- **Brands Page** - Can link to `/brand/{slug}` ✅
+- **Navigation** - Can add brand links ✅
+
+### API Endpoints Used
+- `GET /api/brands` - Fetch all brands
+- `GET /api/admin/brand-pages/{brandId}` - Fetch brand page content
+- `POST /api/admin/brand-pages/{brandId}` - Save brand page content
+
+---
+
+## 📝 Admin Panel Features
+
+### Hero Section
+- [ ] Enable/Disable toggle
+- [ ] Background image upload
+- [ ] Title input (with line break support)
+- [ ] Highlighted text input
+- [ ] Description textarea
+- [ ] Button text input
+- [ ] Button URL input
+
+### Categories Section
+- [ ] Enable/Disable toggle
+- [ ] Section title input
+- [ ] Add/Remove category items
+- [ ] Category image upload
+- [ ] Category name input
+- [ ] Category link input
+
+### Behind The Work Section
+- [ ] Enable/Disable toggle
+- [ ] Title input
+- [ ] Description textarea
+- [ ] Edit 3 statistics (value + label)
+- [ ] Upload 3 images (left, center, right)
+
+### Shop By Section
+- [ ] Enable/Disable toggle
+- [ ] Add/Remove product cards
+- [ ] Product image upload
+- [ ] Product title input
+- [ ] Button text input
+- [ ] Button URL input
+- [ ] Badge enable/disable
+- [ ] Badge value input
+- [ ] Badge label input
+
+---
+
+## 🎯 Benefits
+
+✅ **No Code Changes** - Update content via admin panel
+✅ **Scalable** - Add unlimited brands without code
+✅ **Consistent** - All brands use same template
+✅ **Fast** - Content cached for 1 hour
+✅ **SEO Friendly** - Server-side rendering with metadata
+✅ **Responsive** - Mobile-first design
+✅ **Type Safe** - Full TypeScript support
+✅ **Accessible** - Semantic HTML and ARIA labels
+
+---
+
+## 🔍 Testing Checklist
+
+- [ ] Admin can create brand page content
+- [ ] Admin can upload images
+- [ ] Admin can enable/disable sections
+- [ ] Admin can save changes
+- [ ] User can navigate to brand page
+- [ ] Brand page loads content from API
+- [ ] All enabled sections render correctly
+- [ ] Disabled sections don't appear
+- [ ] Images display properly
+- [ ] Links work correctly
+- [ ] Responsive design works on mobile
+- [ ] Page metadata is correct (SEO)
+- [ ] 404 page shows for missing brands
+
+---
+
+## 🚨 Troubleshooting
+
+### Brand page shows "Content Being Prepared"
+- Check if brand page content exists in admin panel
+- Verify brand ID is correct
+- Check API response in browser DevTools
+
+### Images not loading
+- Verify image URLs in admin panel
+- Check if images are uploaded to correct folder
+- Ensure image paths are accessible
+
+### Styling looks wrong
+- Clear browser cache
+- Check if Tailwind CSS is loaded
+- Verify component imports
+
+### Links not working
+- Check button URLs in admin panel
+- Verify URLs are correct format
+- Test links in browser
+
+---
+
+## 📚 Documentation Files
+
+1. **DYNAMIC_BRAND_PAGES_IMPLEMENTATION.md**
+   - Architecture overview
+   - Current vs target state
+   - Implementation strategy
+
+2. **BRAND_PAGES_SETUP_GUIDE.md**
+   - Complete setup instructions
+   - How to use admin panel
+   - Configuration guide
+   - Migration from static pages
+
+3. **BRAND_PAGE_DATA_STRUCTURE.md**
+   - Complete JSON structure
+   - Field descriptions
+   - API response formats
+   - Validation rules
+   - Example data
+
+4. **IMPLEMENTATION_SUMMARY.md** (this file)
+   - Quick overview
+   - File structure
+   - Data flow
+   - Quick start guide
+
+---
+
+## 🎓 Next Steps
+
+1. **Review** the setup guide
+2. **Test** by creating brand page content in admin
+3. **Visit** a brand page to see it in action
+4. **Customize** components if needed
+5. **Deploy** to production
+
+---
+
+## 💡 Pro Tips
+
+1. **Use relative URLs** for internal links: `/shop`, `/product/123`
+2. **Optimize images** before uploading (compress, right size)
+3. **Keep text concise** for better readability
+4. **Test on mobile** to ensure responsive design
+5. **Use line breaks** in hero title for better formatting
+6. **Enable badges** only when needed (e.g., for special products)
+7. **Cache expires** after 1 hour - changes appear automatically
+
+---
+
+## 📞 Support
+
+For questions about:
+- **Admin panel usage** → See BRAND_PAGES_SETUP_GUIDE.md
+- **Data structure** → See BRAND_PAGE_DATA_STRUCTURE.md
+- **Architecture** → See DYNAMIC_BRAND_PAGES_IMPLEMENTATION.md
+- **Code** → Check component files with inline comments
+
+---
+
+## ✨ Summary
+
+You now have a complete, production-ready dynamic brand page system that:
+- Allows admins to create brand pages without code
+- Renders content dynamically from JSON files
+- Supports multiple sections with enable/disable toggles
+- Includes image uploads and management
+- Provides a great user experience
+- Is fully typed with TypeScript
+- Is optimized for performance and SEO
+
+**Ready to use!** 🚀

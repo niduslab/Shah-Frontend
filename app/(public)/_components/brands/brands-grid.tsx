@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useBrands } from "@/lib/hooks/public/useBrands";
 
 interface Brand {
   id: number;
@@ -16,30 +17,33 @@ interface Brand {
 }
 
 export function BrandsGrid() {
-  const [brands, setBrands] = useState<Brand[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(false);
-
+  const [isMounted, setIsMounted] = useState(false);
+  
   useEffect(() => {
-    const fetchBrands = async () => {
-      try {
-        setIsLoading(true);
-        const response = await fetch('/api/catalog/brands?active=true&per_page=100');
-        const data = await response.json();
-        setBrands(data.data || []);
-        setError(false);
-      } catch (err) {
-        console.error('Error fetching brands:', err);
-        setError(true);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchBrands();
+    setIsMounted(true);
   }, []);
 
-  if (isLoading) {
+  const { data, isLoading, error } = useBrands({
+    enabled: isMounted, // Only fetch when component is mounted on client
+  }) as any;
+  
+  const brands = data?.data || [];
+
+  // Helper function to get full image URL
+  const getImageUrl = (logoPath: string) => {
+    if (!logoPath) return '';
+    // If already a full URL, return as is
+    if (logoPath.startsWith('http://') || logoPath.startsWith('https://')) {
+      return logoPath;
+    }
+    // Otherwise, prepend the API URL
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+    // Remove leading slash if present to avoid double slashes
+    const cleanPath = logoPath.startsWith('/') ? logoPath.slice(1) : logoPath;
+    return `${apiUrl}/storage/${cleanPath}`;
+  };
+
+  if (!isMounted || isLoading) {
     return (
       <section className="bg-white py-12 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -87,23 +91,27 @@ export function BrandsGrid() {
             <Link
               key={brand.id}
               href={`/brand/${brand.slug}`}
-              className="group relative flex aspect-[3/2] w-full items-center justify-center bg-gray-50 p-6 transition-all hover:bg-gray-100 hover:shadow-md rounded-sm"
+              className="group relative flex aspect-[3/2] w-full items-center justify-center bg-gray-50 p-6 transition-all hover:bg-gray-100 hover:shadow-lg hover:ring-2 hover:ring-orange-500/50 rounded-lg cursor-pointer"
+              title={`View ${brand.name} products`}
             >
               <div className="relative h-full w-full">
                 <Image
-                  src={brand.logo}
-                  alt={brand.name}
+                  src={getImageUrl(brand.logo)}
+                  alt={`${brand.name} logo`}
                   fill
-                  className="object-contain transition-all duration-300 group-hover:scale-105"
+                  className="object-contain transition-all duration-300 group-hover:scale-110"
                   sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, (max-width: 1280px) 20vw, 16vw"
+                  unoptimized={getImageUrl(brand.logo).includes('localhost')}
                 />
               </div>
 
-              <div className="absolute bottom-2 left-2 right-2 bg-black/80 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                <p className="truncate font-medium">{brand.name}</p>
+              {/* Hover overlay with brand info */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg flex flex-col justify-end p-3">
+                <p className="text-white font-semibold text-sm truncate">{brand.name}</p>
                 {brand.products_count > 0 && (
-                  <p className="text-gray-300">{brand.products_count} products</p>
+                  <p className="text-orange-400 text-xs font-medium">{brand.products_count} products</p>
                 )}
+                <p className="text-white/80 text-xs mt-1">Click to explore →</p>
               </div>
             </Link>
           ))}
