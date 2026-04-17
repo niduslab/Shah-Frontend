@@ -241,7 +241,7 @@ export default function OrdersPage() {
       </div>
 
       {/* Debug Info - Remove in production */}
-      {process.env.NODE_ENV === 'development' && (
+      {/* {process.env.NODE_ENV === 'development' && (
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
           <h3 className="text-blue-800 font-medium mb-2">Debug Info (Development Only)</h3>
           <div className="space-y-2 text-sm">
@@ -259,7 +259,7 @@ export default function OrdersPage() {
             )}
           </div>
         </div>
-      )}
+      )} */}
 
       {/* Orders List */}
       {orders && orders.length > 0 ? (

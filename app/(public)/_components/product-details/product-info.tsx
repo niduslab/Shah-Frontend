@@ -17,6 +17,7 @@ import { useAuth } from "@/lib/context/AuthContext";
 import { useCart } from "@/lib/context/CartContext";
 import { getPrimaryImageUrl, getAllImageUrls, getPlaceholderImage } from "@/lib/utils/image";
 import { ProductAccordions } from "./product-accordions";
+import { useProductReviews } from "@/lib/hooks/public/useProductReviews";
 
 interface ProductInfoProps {
   product: any;
@@ -26,6 +27,23 @@ export function ProductInfo({ product }: ProductInfoProps) {
   const router = useRouter();
   const { user } = useAuth();
   const { addToCart, isInCart } = useCart();
+  
+  // Fetch reviews - always fetch to get latest reviews
+  const { data: reviewsData, isLoading: reviewsLoading } = useProductReviews(product.id, true);
+  
+  // Use reviews from fetched data or fallback to product data
+  const approvedReviews = reviewsData?.data || product.approved_reviews || [];
+  
+  // Debug: Log product data to see if approved_reviews exists
+  useEffect(() => {
+    console.log('Product ID:', product.id);
+    console.log('Product data:', product);
+    console.log('Approved reviews from product:', product.approved_reviews);
+    console.log('Reviews API response:', reviewsData);
+    console.log('Approved reviews from API:', reviewsData?.data);
+    console.log('Final approved reviews:', approvedReviews);
+    console.log('Reviews loading:', reviewsLoading);
+  }, [product, reviewsData, approvedReviews, reviewsLoading]);
   
   const allImages = getAllImageUrls(product.images);
   const images = allImages.length > 0 ? allImages : [getPlaceholderImage(product.name)];
@@ -258,28 +276,53 @@ export function ProductInfo({ product }: ProductInfoProps) {
               {product.name}
             </h1>
 
+            {/* Reviews Summary - Click to view all reviews */}
+            {approvedReviews && approvedReviews.length > 0 ? (
+              <button
+                onClick={() => {
+                  const event = new CustomEvent('openReviewsModal', { 
+                    detail: { product: { ...product, approved_reviews: approvedReviews } } 
+                  });
+                  window.dispatchEvent(event);
+                }}
+                className="mb-4 flex items-center gap-3 text-left hover:opacity-80 transition-opacity group"
+              >
+                <div className="flex items-center gap-2">
+                  <div className="flex text-[#ffb81e]">
+                    {[...Array(5)].map((_, i) => {
+                      const avgRating = approvedReviews.reduce((acc: number, review: any) => acc + review.rating, 0) / approvedReviews.length;
+                      return (
+                        <Star 
+                          key={i} 
+                          className={`h-5 w-5 ${i < Math.round(avgRating) ? "fill-current" : "text-gray-300"}`}
+                        />
+                      );
+                    })}
+                  </div>
+                  <span className="text-sm font-medium text-gray-700">
+                    {(approvedReviews.reduce((acc: number, review: any) => acc + review.rating, 0) / approvedReviews.length).toFixed(1)}
+                  </span>
+                </div>
+                <span className="text-sm text-blue-600 underline decoration-blue-600 underline-offset-4 group-hover:text-blue-700">
+                  ({approvedReviews.length} {approvedReviews.length === 1 ? 'Review' : 'Reviews'})
+                </span>
+              </button>
+            ) : (
+              <div className="mb-4 flex items-center gap-2">
+                <div className="flex text-gray-300">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-5 w-5" />
+                  ))}
+                </div>
+                <span className="text-sm text-gray-500">No reviews yet</span>
+              </div>
+            )}
+
             {/* SKU */}
             {currentSku && (
               <p className="mb-4 text-sm text-gray-500">
                 SKU: <span className="font-mono">{currentSku}</span>
               </p>
-            )}
-
-            {/* Rating */}
-            {product.review_count > 0 && (
-              <div className="mb-6 flex items-center gap-2">
-                <div className="flex text-[#8CB43F]">
-                  {[...Array(5)].map((_, i) => (
-                    <Star 
-                      key={i} 
-                      className={`h-5 w-5 ${i < Math.round(product.average_rating) ? "fill-current" : "text-gray-300"}`}
-                    />
-                  ))}
-                </div>
-                <span className="text-sm text-gray-500 underline decoration-gray-300 underline-offset-4">
-                  ({product.review_count} {product.review_count === 1 ? 'Review' : 'Reviews'})
-                </span>
-              </div>
             )}
 
             {/* Price */}

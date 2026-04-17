@@ -88,18 +88,48 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
     }
   }
 
-  // Handle reviews data
+  // Handle reviews data - Updated to handle new API structure
   let itemReviews: any = {};
   if (reviewsData) {
     const data = reviewsData as any;
+    console.log('Reviews API Response:', data);
+    
     if (data.success && data.data) {
-      const reviews = Array.isArray(data.data) ? data.data : [];
-      reviews.forEach((review: any) => {
-        if (review.order_item_id) {
-          itemReviews[review.order_item_id] = review;
-        }
-      });
+      // New API structure: reviews are in data.products array
+      if (data.data.products && Array.isArray(data.data.products)) {
+        data.data.products.forEach((product: any) => {
+          if (product.has_reviewed && product.review) {
+            // Map by product_id since we don't have order_item_id in this structure
+            itemReviews[product.product_id] = {
+              ...product.review,
+              product_id: product.product_id,
+            };
+          }
+        });
+      }
+      // Old API structure: reviews are in data array
+      else if (Array.isArray(data.data)) {
+        data.data.forEach((review: any) => {
+          if (review.order_item_id) {
+            itemReviews[review.order_item_id] = review;
+          }
+        });
+      }
     }
+    
+    console.log('Extracted item reviews:', itemReviews);
+  }
+  
+  // Also check if reviews are embedded in order items
+  if (order && order.items) {
+    order.items.forEach((item: any) => {
+      if (item.has_reviewed && item.review) {
+        itemReviews[item.product_id] = {
+          ...item.review,
+          product_id: item.product_id,
+        };
+      }
+    });
   }
 
   const handleOpenReviewForm = (item: any) => {
@@ -366,7 +396,8 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
                   // Handle images from various possible locations in the API response
                   const productImages = item.product?.images || item.images || item.product_images;
                   const productImage = getPrimaryImageUrl(productImages);
-                  const hasReview = itemReviews[item.id];
+                  // Check for review by product_id (new API structure) or item.id (old structure)
+                  const hasReview = itemReviews[item.product_id] || itemReviews[item.id];
                   const canReview = order.status === 'delivered' || order.status === 'shipped';
                   
                   return (
@@ -425,18 +456,36 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
                                   <div className="flex items-center gap-2 mb-1">
                                     <MessageSquare className="w-4 h-4 text-green-600" />
                                     <span className="text-sm font-medium text-green-800">You reviewed this product</span>
+                                    {hasReview.status && (
+                                      <span className={cn(
+                                        "px-2 py-0.5 rounded-full text-xs font-medium",
+                                        hasReview.status === 'approved' ? 'bg-green-100 text-green-800' :
+                                        hasReview.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                                        'bg-gray-100 text-gray-800'
+                                      )}>
+                                        {hasReview.status}
+                                      </span>
+                                    )}
                                   </div>
-                                  {renderStars(hasReview.rating)}
+                                  <div className="flex items-center gap-2 mb-2">
+                                    {renderStars(hasReview.rating)}
+                                    <span className="text-sm text-gray-600">{hasReview.rating}.0</span>
+                                  </div>
                                   {hasReview.title && (
                                     <p className="text-sm font-medium text-gray-900 mt-2">{hasReview.title}</p>
                                   )}
                                   {hasReview.comment && (
                                     <p className="text-sm text-gray-700 mt-1 line-clamp-2">{hasReview.comment}</p>
                                   )}
+                                  {hasReview.created_at && (
+                                    <p className="text-xs text-gray-500 mt-2">
+                                      Reviewed on {new Date(hasReview.created_at).toLocaleDateString()}
+                                    </p>
+                                  )}
                                 </div>
                                 <Link
                                   href="/dashboard/reviews"
-                                  className="text-sm text-green-700 hover:text-green-800 font-medium ml-3"
+                                  className="text-sm text-green-700 hover:text-green-800 font-medium ml-3 flex-shrink-0"
                                 >
                                   View
                                 </Link>

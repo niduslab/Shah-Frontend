@@ -6,13 +6,39 @@ import Image from "next/image";
 import { useState, useEffect, useMemo } from "react";
 import { cn } from "@/lib/utils";
 import { useCategories } from "@/lib/hooks/public/useCategories";
+import { useBrands } from "@/lib/hooks/public/useBrands";
 
-// Generate brand image paths
-const brandImages = Array.from({ length: 24 }, (_, i) => `/images/all-brands/brand-1 (${i + 1}).png`);
+interface Brand {
+  id: number;
+  name: string;
+  slug: string;
+  description: string;
+  logo: string;
+  is_active: boolean;
+  sort_order: number;
+  products_count: number;
+}
 
-export function ShopMainMegaMenu({ className }: { className?: string }) {
+export function ShopMainMegaMenu({ className, onLinkClick }: { className?: string; onLinkClick?: () => void }) {
   const { data: categoriesData, isLoading } = useCategories();
+  const { data: brandsData, isLoading: brandsLoading } = useBrands();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+
+  const brands = brandsData?.data || [];
+
+  // Helper function to get full image URL
+  const getImageUrl = (logoPath: string) => {
+    if (!logoPath) return '';
+    // If already a full URL, return as is
+    if (logoPath.startsWith('http://') || logoPath.startsWith('https://')) {
+      return logoPath;
+    }
+    // Otherwise, prepend the API URL
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+    // Remove leading slash if present to avoid double slashes
+    const cleanPath = logoPath.startsWith('/') ? logoPath.slice(1) : logoPath;
+    return `${apiUrl}/storage/${cleanPath}`;
+  };
 
   // Process categories data
   const categories = useMemo(() => {
@@ -108,20 +134,41 @@ export function ShopMainMegaMenu({ className }: { className?: string }) {
       return (
         <div>
           <h3 className="mb-6 text-base font-bold uppercase tracking-wider text-[#00072D]">Our Brands</h3>
-          <div className="grid grid-cols-6 gap-6">
-            {brandImages.map((src, index) => (
-              <div key={index} className="flex items-center justify-center rounded-lg border border-gray-100 p-4 transition-shadow hover:shadow-md">
-                <div className="relative h-12 w-24">
-                  <Image
-                    src={src}
-                    alt={`Brand ${index + 1}`}
-                    fill
-                    className="object-contain"
-                  />
+          {brandsLoading ? (
+            <div className="grid grid-cols-6 gap-6">
+              {Array.from({ length: 24 }).map((_, index) => (
+                <div key={index} className="flex items-center justify-center rounded-lg border border-gray-100 p-4 animate-pulse">
+                  <div className="h-12 w-24 bg-gray-200 rounded"></div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : brands.length === 0 ? (
+            <div className="text-center py-8">
+              <p className="text-gray-500 text-sm">No brands available at the moment.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-6 gap-6">
+              {brands.map((brand: Brand) => (
+                <Link 
+                  key={brand.id} 
+                  href={`/brand/${brand.slug}`}
+                  className="group flex items-center justify-center rounded-lg border border-gray-100 p-4 transition-all hover:shadow-md hover:border-[#ffb81e]"
+                  title={`View ${brand.name} products`}
+                  onClick={onLinkClick}
+                >
+                  <div className="relative h-12 w-24">
+                    <Image
+                      src={getImageUrl(brand.logo)}
+                      alt={`${brand.name} logo`}
+                      fill
+                      className="object-contain transition-transform duration-300 group-hover:scale-110"
+                      unoptimized={getImageUrl(brand.logo).includes('localhost')}
+                    />
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       );
     }
@@ -140,14 +187,22 @@ export function ShopMainMegaMenu({ className }: { className?: string }) {
                   {group.items.length > 0 ? (
                     group.items.map((item: any) => (
                       <li key={item.slug}>
-                        <Link href={`/shop?category_id=${item.categoryId}`} className="text-sm text-gray-600 transition-all hover:text-black hover:font-bold">
+                        <Link 
+                          href={`/shop?category_id=${item.categoryId}`} 
+                          className="text-sm text-gray-600 transition-all hover:text-black hover:font-bold"
+                          onClick={onLinkClick}
+                        >
                           {item.name}
                         </Link>
                       </li>
                     ))
                   ) : (
                     <li>
-                      <Link href={`/shop?category_id=${group.categoryId}`} className="text-sm text-gray-600 transition-all hover:text-black hover:font-bold">
+                      <Link 
+                        href={`/shop?category_id=${group.categoryId}`} 
+                        className="text-sm text-gray-600 transition-all hover:text-black hover:font-bold"
+                        onClick={onLinkClick}
+                      >
                         View All
                       </Link>
                     </li>
@@ -173,6 +228,7 @@ export function ShopMainMegaMenu({ className }: { className?: string }) {
               <Link 
                 href={`/shop?category_id=${currentCategory.categoryId}`} 
                 className="inline-flex items-center text-sm font-bold text-white transition-colors hover:text-[#ffb81e]"
+                onClick={onLinkClick}
               >
                 Shop Now <ChevronRight className="ml-1 h-4 w-4" />
               </Link>
@@ -202,7 +258,11 @@ export function ShopMainMegaMenu({ className }: { className?: string }) {
               <ul className="flex flex-col gap-4">
                 {leftColumn.map((item: any) => (
                   <li key={item.slug}>
-                    <Link href={`/shop?category_id=${item.categoryId}`} className="text-base font-bold text-[#00072D] transition-all hover:text-[#ffb81e]">
+                    <Link 
+                      href={`/shop?category_id=${item.categoryId}`} 
+                      className="text-base font-bold text-[#00072D] transition-all hover:text-[#ffb81e]"
+                      onClick={onLinkClick}
+                    >
                       {item.name.toUpperCase()}
                     </Link>
                   </li>
@@ -214,7 +274,11 @@ export function ShopMainMegaMenu({ className }: { className?: string }) {
               <ul className="flex flex-col gap-4">
                 {rightColumn.map((item: any) => (
                   <li key={item.slug}>
-                    <Link href={`/shop?category_id=${item.categoryId}`} className="text-base font-bold text-[#00072D] transition-all hover:text-[#ffb81e]">
+                    <Link 
+                      href={`/shop?category_id=${item.categoryId}`} 
+                      className="text-base font-bold text-[#00072D] transition-all hover:text-[#ffb81e]"
+                      onClick={onLinkClick}
+                    >
                       {item.name.toUpperCase()}
                     </Link>
                   </li>
@@ -239,6 +303,7 @@ export function ShopMainMegaMenu({ className }: { className?: string }) {
                 <Link 
                   href={boxingCategory ? `/shop?category_id=${boxingCategory.categoryId}` : `/shop?category_id=${currentCategory.categoryId}`}
                   className="inline-flex items-center text-xs font-bold uppercase tracking-wider text-[#ffb81e] hover:text-white"
+                  onClick={onLinkClick}
                 >
                   Shop Collection <ChevronRight className="ml-1 h-3 w-3" />
                 </Link>
@@ -259,6 +324,7 @@ export function ShopMainMegaMenu({ className }: { className?: string }) {
                 <Link 
                   href={`/shop?category_id=${currentCategory.categoryId}`}
                   className="inline-flex items-center text-xs font-bold uppercase tracking-wider text-[#ffb81e] hover:text-white"
+                  onClick={onLinkClick}
                 >
                   View All <ChevronRight className="ml-1 h-3 w-3" />
                 </Link>

@@ -14,28 +14,28 @@ if (typeof window !== "undefined") {
 
 const CATEGORIES = [
   {
-    id: 10,
-    name: "Bike",
+    id: 9,
+    name: "Cardio",
     image: "/images/landing/explore-categories/image-1.png",
-    href: "/shop?category_id=10",
+    href: "/shop?category_id=9",
   },
   {
-    id: 11,
-    name: "Treadmill",
-    image: "/images/landing/explore-categories/image-2.png",
-    href: "/shop?category_id=11",
-  },
-  {
-    id: 23,
-    name: "Dumbbell",
+    id: 15,
+    name: "Strength",
     image: "/images/landing/explore-categories/image-3.png",
-    href: "/shop?category_id=23",
+    href: "/shop?category_id=15",
   },
   {
-    id: 25,
-    name: "Weight Plate",
+    id: 21,
+    name: "Free Weight",
     image: "/images/landing/explore-categories/image-4.png",
-    href: "/shop?category_id=25",
+    href: "/shop?category_id=21",
+  },
+  {
+    id: 27,
+    name: "Sports",
+    image: "/images/landing/explore-categories/image-2.png",
+    href: "/shop?category_id=27",
   },
 ];
 
@@ -81,7 +81,7 @@ export function ExploreCategories() {
           <h2 className="text-3xl font-bold tracking-tight text-black">
             Explore Our Categories
           </h2>
-          <div className="flex gap-2">
+          {/* <div className="flex gap-2">
             <Link 
               href="/shop"
               className="category-nav-btn flex h-10 w-10 items-center justify-center rounded-xs bg-gray-100 text-black transition-colors hover:bg-gray-200"
@@ -94,7 +94,7 @@ export function ExploreCategories() {
             >
               <ArrowRight className="h-5 w-5" />
             </Link>
-          </div>
+          </div> */}
         </div>
 
         {/* Categories Grid */}

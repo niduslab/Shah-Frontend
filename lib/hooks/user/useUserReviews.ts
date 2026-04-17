@@ -10,11 +10,13 @@ interface ReviewData {
   images?: string[];
 }
 
-export const useMyReviews = (options?: UseQueryOptions) => {
+export const useMyReviews = (page: number = 1, options?: UseQueryOptions) => {
   return useQuery({
-    queryKey: ['my-reviews'],
+    queryKey: ['my-reviews', page],
     queryFn: async () => {
-      const response = await api.get('/api/reviews/my-reviews');
+      const response = await api.get('/api/reviews/my-reviews', {
+        params: { page }
+      });
       return response.data;
     },
     ...options,

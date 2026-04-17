@@ -3,68 +3,139 @@
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { useMemo } from "react";
 import { cn } from "@/lib/utils";
+import { useCategories } from "@/lib/hooks/public/useCategories";
 
-const teamSports = [
-  { name: "Cricket", href: "#", image: "/images/landing/sports-gear/right-1.png" },
-  { name: "Football", href: "#", image: "/images/landing/sports-gear/right-2.png" },
-  { name: "Basketball", href: "#", image: "/images/landing/sports-gear/right-3.png" },
-  { name: "Hockey", href: "#", image: "/images/landing/sports-gear/right-4.png" },
-];
+interface Sport {
+  name: string;
+  href: string;
+  categoryId: number;
+  slug: string;
+  image?: string;
+}
 
-const indoorSports = [
-  { name: "Table Tennis", href: "#" },
-  { name: "Billiard", href: "#" },
-  { name: "Swimming", href: "#" },
-  { name: "Boxing", href: "#" },
-  { name: "Badminton", href: "#" },
-  { name: "Squash", href: "#" },
-];
+export function SportsMegaMenu({ className, onLinkClick }: { className?: string; onLinkClick?: () => void }) {
+  const { data: categoriesData, isLoading } = useCategories();
 
-export function SportsMegaMenu({ className }: { className?: string }) {
+  // Process sports categories
+  const { teamSports, indoorSports, sportsCategory } = useMemo(() => {
+    if (!categoriesData?.data) {
+      return { teamSports: [], indoorSports: [], sportsCategory: null };
+    }
+
+    // Find the Sports parent category
+    const sportsCategory = categoriesData.data.find(
+      (cat: any) => cat.is_active && !cat.parent_id && cat.slug === 'sports'
+    );
+
+    if (!sportsCategory) {
+      return { teamSports: [], indoorSports: [], sportsCategory: null };
+    }
+
+    const children = (sportsCategory.children || []).filter((child: any) => child.is_active);
+
+    // Find Indoor & Individual category
+    const indoorCategory = children.find((cat: any) => cat.slug === 'indoor-individual');
+    const indoorSports = indoorCategory 
+      ? (indoorCategory.children || [])
+          .filter((child: any) => child.is_active)
+          .map((cat: any) => ({
+            name: cat.name,
+            href: `/shop?category_id=${cat.id}`,
+            categoryId: cat.id,
+            slug: cat.slug,
+          }))
+      : [];
+
+    // Team sports are direct children of Sports (excluding Indoor & Individual)
+    const teamSports = children
+      .filter((cat: any) => cat.slug !== 'indoor-individual')
+      .map((cat: any) => ({
+        name: cat.name,
+        href: `/shop?category_id=${cat.id}`,
+        categoryId: cat.id,
+        slug: cat.slug,
+        // Map to existing images if available
+        image: cat.slug === 'cricket' ? '/images/landing/sports-gear/right-1.png'
+          : cat.slug === 'football' ? '/images/landing/sports-gear/right-2.png'
+          : cat.slug === 'basketball' ? '/images/landing/sports-gear/right-3.png'
+          : cat.slug === 'hockey' ? '/images/landing/sports-gear/right-4.png'
+          : '/images/landing/sports-gear/right-1.png',
+      }));
+
+    return { teamSports, indoorSports, sportsCategory };
+  }, [categoriesData]);
+
+  if (isLoading) {
+    return (
+      <div className={cn("absolute left-0 top-full z-50 mt-0 w-full border-t border-gray-100 bg-white shadow-xl before:absolute before:-top-10 before:left-0 before:h-10 before:w-full before:bg-transparent", className)}>
+        <div className="mx-auto max-w-[1400px] px-8 py-8">
+          <div className="text-gray-500">Loading sports categories...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!sportsCategory || (teamSports.length === 0 && indoorSports.length === 0)) {
+    return (
+      <div className={cn("absolute left-0 top-full z-50 mt-0 w-full border-t border-gray-100 bg-white shadow-xl before:absolute before:-top-10 before:left-0 before:h-10 before:w-full before:bg-transparent", className)}>
+        <div className="mx-auto max-w-[1400px] px-8 py-8">
+          <div className="text-gray-500">No sports categories available.</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={cn("absolute left-0 top-full z-50 mt-0 w-full border-t border-gray-100 bg-white shadow-xl before:absolute before:-top-10 before:left-0 before:h-10 before:w-full before:bg-transparent", className)}>
       <div className="mx-auto max-w-[1400px] px-8 py-8">
         <div className="grid grid-cols-4 gap-8">
           {/* Column 1: Team Sports */}
-          <div>
-            <h3 className="mb-6 text-sm font-bold uppercase tracking-wider text-[#00072D] border-b border-gray-100 pb-2">
-              Team Sports
-            </h3>
-            <ul className="flex flex-col gap-3">
-              {teamSports.map((sport) => (
-                <li key={sport.name}>
-                  <Link
-                    href={sport.href}
-                    className="group flex items-center justify-between text-sm font-medium text-gray-600 transition-all hover:text-black hover:font-bold"
-                  >
-                    <span>{sport.name}</span>
-                    <ChevronRight className="h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100 text-[#ffb81e]" />
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {teamSports.length > 0 && (
+            <div>
+              <h3 className="mb-6 text-sm font-bold uppercase tracking-wider text-[#00072D] border-b border-gray-100 pb-2">
+                Team Sports
+              </h3>
+              <ul className="flex flex-col gap-3">
+                {teamSports.map((sport: Sport) => (
+                  <li key={sport.slug}>
+                    <Link
+                      href={sport.href}
+                      className="group flex items-center justify-between text-sm font-medium text-gray-600 transition-all hover:text-black hover:font-bold"
+                      onClick={onLinkClick}
+                    >
+                      <span>{sport.name}</span>
+                      <ChevronRight className="h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100 text-[#ffb81e]" />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           {/* Column 2: Indoor & Individual */}
-          <div>
-            <h3 className="mb-6 text-sm font-bold uppercase tracking-wider text-[#00072D] border-b border-gray-100 pb-2">
-              Indoor & Individual
-            </h3>
-            <ul className="flex flex-col gap-3">
-              {indoorSports.map((sport) => (
-                <li key={sport.name}>
-                  <Link
-                    href={sport.href}
-                    className="group flex items-center justify-between text-sm font-medium text-gray-600 transition-all hover:text-black hover:font-bold"
-                  >
-                    <span>{sport.name}</span>
-                    <ChevronRight className="h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100 text-[#ffb81e]" />
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {indoorSports.length > 0 && (
+            <div>
+              <h3 className="mb-6 text-sm font-bold uppercase tracking-wider text-[#00072D] border-b border-gray-100 pb-2">
+                Indoor & Individual
+              </h3>
+              <ul className="flex flex-col gap-3">
+                {indoorSports.map((sport: Sport) => (
+                  <li key={sport.slug}>
+                    <Link
+                      href={sport.href}
+                      className="group flex items-center justify-between text-sm font-medium text-gray-600 transition-all hover:text-black hover:font-bold"
+                      onClick={onLinkClick}
+                    >
+                      <span>{sport.name}</span>
+                      <ChevronRight className="h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100 text-[#ffb81e]" />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           {/* Column 3: Featured Promo (Large) */}
           <div className="relative h-full min-h-[300px] overflow-hidden rounded-xl bg-gray-100 group">
@@ -84,8 +155,9 @@ export function SportsMegaMenu({ className }: { className?: string }) {
                 Discover our range of professional-grade equipment designed for athletes who demand the best.
               </p>
               <Link 
-                href="#" 
+                href={`/shop?category_id=${sportsCategory.id}`}
                 className="inline-flex items-center text-sm font-bold text-white transition-colors hover:text-[#ffb81e]"
+                onClick={onLinkClick}
               >
                 Explore Collection <ChevronRight className="ml-1 h-4 w-4" />
               </Link>
@@ -98,10 +170,15 @@ export function SportsMegaMenu({ className }: { className?: string }) {
               Trending Now
             </h3>
             <div className="grid grid-cols-2 gap-4 h-full">
-              {teamSports.slice(0, 4).map((sport, index) => (
-                <Link key={index} href={sport.href} className="group relative block h-32 overflow-hidden rounded-lg bg-gray-50">
+              {teamSports.slice(0, 4).map((sport: Sport, index: number) => (
+                <Link 
+                  key={sport.slug} 
+                  href={sport.href} 
+                  className="group relative block h-32 overflow-hidden rounded-lg bg-gray-50"
+                  onClick={onLinkClick}
+                >
                   <Image
-                    src={sport.image}
+                    src={sport.image || '/images/landing/sports-gear/right-1.png'}
                     alt={sport.name}
                     fill
                     className="object-contain p-2 transition-transform duration-500 group-hover:scale-110"

@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Package, Search, Eye, X, Truck, FileText, Calendar, DollarSign, User, MapPin, Filter } from 'lucide-react';
+import { Package, Search, Eye, X, Truck, FileText, Calendar, DollarSign, User, MapPin, Filter, Download } from 'lucide-react';
 import Pagination from '@/components/ui/Pagination';
 import { toast } from 'sonner';
+import api from '@/lib/api/axios';
 import { 
   useAdminOrders,
   useAdminOrder,
@@ -53,6 +54,7 @@ export default function OrdersPage() {
   const [mounted, setMounted] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
   const [statusFilter, setStatusFilter] = useState<OrderStatus | 'all'>('all');
   const [paymentFilter, setPaymentFilter] = useState<PaymentStatus | 'all'>('all');
   const [orderTypeFilter, setOrderTypeFilter] = useState<OrderType | 'all'>('all');
@@ -73,7 +75,7 @@ export default function OrdersPage() {
 
   const filters = {
     page: currentPage,
-    per_page: 15,
+    per_page: perPage,
     ...(statusFilter !== 'all' && { status: statusFilter }),
     ...(paymentFilter !== 'all' && { payment_status: paymentFilter }),
     ...(orderTypeFilter !== 'all' && { order_type: orderTypeFilter }),
@@ -187,6 +189,38 @@ export default function OrdersPage() {
     setSearchQuery('');
   };
 
+  const handleDownloadInvoice = async (orderNumber: string) => {
+    try {
+      toast.info('Downloading invoice...', {
+        description: 'Please wait while we prepare your invoice.'
+      });
+
+      const response = await api.get(`/api/admin/orders/${orderNumber}/invoice`, {
+        responseType: 'blob',
+      });
+
+      // Create a blob URL and trigger download
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `invoice-${orderNumber}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      toast.success('Invoice downloaded', {
+        description: `Invoice for order ${orderNumber} has been downloaded.`
+      });
+    } catch (error: any) {
+      console.error('Failed to download invoice:', error);
+      toast.error('Failed to download invoice', {
+        description: error.response?.data?.message || 'Please try again or contact support if the problem persists.'
+      });
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
@@ -246,58 +280,58 @@ export default function OrdersPage() {
 
             {/* Filters Panel */}
             {showFilters && (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 border-t border-gray-200">
-                {/* Status Filter */}
-                <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1.5">Order Status</label>
-                  <select
-                    value={statusFilter}
-                    onChange={(e) => setStatusFilter(e.target.value as OrderStatus | 'all')}
-                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-[#FF6F00] focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
-                  >
-                    <option value="all">All Statuses</option>
-                    <option value="pending">Pending</option>
-                    <option value="confirmed">Confirmed</option>
-                    <option value="processing">Processing</option>
-                    <option value="shipped">Shipped</option>
-                    <option value="delivered">Delivered</option>
-                    <option value="cancelled">Cancelled</option>
-                  </select>
-                </div>
+              <div className="pt-4 border-t border-gray-200">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                  {/* Status Filter */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1.5">Order Status</label>
+                    <select
+                      value={statusFilter}
+                      onChange={(e) => setStatusFilter(e.target.value as OrderStatus | 'all')}
+                      className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-[#FF6F00] focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
+                    >
+                      <option value="all">All Statuses</option>
+                      <option value="pending">Pending</option>
+                      <option value="confirmed">Confirmed</option>
+                      <option value="processing">Processing</option>
+                      <option value="shipped">Shipped</option>
+                      <option value="delivered">Delivered</option>
+                      <option value="cancelled">Cancelled</option>
+                    </select>
+                  </div>
 
-                {/* Payment Filter */}
-                <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1.5">Payment Status</label>
-                  <select
-                    value={paymentFilter}
-                    onChange={(e) => setPaymentFilter(e.target.value as PaymentStatus | 'all')}
-                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-[#FF6F00] focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
-                  >
-                    <option value="all">All Payments</option>
-                    <option value="pending">Pending</option>
-                    <option value="paid">Paid</option>
-                    <option value="failed">Failed</option>
-                    <option value="refunded">Refunded</option>
-                  </select>
-                </div>
+                  {/* Payment Filter */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1.5">Payment Status</label>
+                    <select
+                      value={paymentFilter}
+                      onChange={(e) => setPaymentFilter(e.target.value as PaymentStatus | 'all')}
+                      className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-[#FF6F00] focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
+                    >
+                      <option value="all">All Payments</option>
+                      <option value="pending">Pending</option>
+                      <option value="paid">Paid</option>
+                      <option value="failed">Failed</option>
+                      <option value="refunded">Refunded</option>
+                    </select>
+                  </div>
 
-                {/* Order Type Filter */}
-                <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1.5">Order Type</label>
-                  <select
-                    value={orderTypeFilter}
-                    onChange={(e) => setOrderTypeFilter(e.target.value as OrderType | 'all')}
-                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-[#FF6F00] focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
-                  >
-                    <option value="all">All Types</option>
-                    <option value="regular">Regular</option>
-                    <option value="preorder">Pre-order</option>
-                  </select>
-                </div>
+                  {/* Order Type Filter */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1.5">Order Type</label>
+                    <select
+                      value={orderTypeFilter}
+                      onChange={(e) => setOrderTypeFilter(e.target.value as OrderType | 'all')}
+                      className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-[#FF6F00] focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
+                    >
+                      <option value="all">All Types</option>
+                      <option value="regular">Regular</option>
+                      <option value="preorder">Pre-order</option>
+                    </select>
+                  </div>
 
-                {/* Date Range */}
-                <div className="flex gap-2">
-                  <div className="flex-1">
+                  {/* Date From */}
+                  <div>
                     <label className="block text-xs font-medium text-gray-700 mb-1.5">From</label>
                     <input
                       type="date"
@@ -306,7 +340,9 @@ export default function OrdersPage() {
                       className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-[#FF6F00] focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
                     />
                   </div>
-                  <div className="flex-1">
+
+                  {/* Date To */}
+                  <div>
                     <label className="block text-xs font-medium text-gray-700 mb-1.5">To</label>
                     <input
                       type="date"
@@ -318,7 +354,7 @@ export default function OrdersPage() {
                 </div>
 
                 {/* Clear Filters */}
-                <div className="md:col-span-2 lg:col-span-4 flex justify-end">
+                <div className="mt-4 flex justify-end">
                   <button
                     onClick={clearFilters}
                     className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 transition-all"
@@ -366,9 +402,9 @@ export default function OrdersPage() {
                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                       Total
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    {/* <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                       Date
-                    </th>
+                    </th> */}
                     <th className="px-6 py-4 text-right text-xs font-semibold text-gray-700 uppercase tracking-wider">
                       Actions
                     </th>
@@ -389,6 +425,10 @@ export default function OrdersPage() {
                               </span>
                             )}
                           </div>
+                        </div>
+                        <div className="flex items-center gap-1.5 text-sm text-gray-500 mt-1">
+                          <Calendar className="h-3 w-3" />
+                          {formatDate(order.created_at)}
                         </div>
                       </td>
                       <td className="px-6 py-4">
@@ -425,12 +465,12 @@ export default function OrdersPage() {
                           {formatCurrency(parseFloat(String(order.total_amount || order.total || '0')))}
                         </span>
                       </td>
-                      <td className="px-6 py-4">
+                      {/* <td className="px-6 py-4">
                         <div className="flex items-center gap-1.5 text-sm text-gray-500">
                           <Calendar className="h-4 w-4" />
                           {formatDate(order.created_at)}
                         </div>
-                      </td>
+                      </td> */}
                       <td className="px-6 py-4">
                         <div className="flex items-center justify-end gap-2">
                           <button
@@ -439,6 +479,13 @@ export default function OrdersPage() {
                             title="View details"
                           >
                             <Eye className="h-5 w-5" />
+                          </button>
+                          <button
+                            onClick={() => handleDownloadInvoice(order.order_number)}
+                            className="rounded-lg p-2 text-green-600 transition-all hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500"
+                            title="Download invoice"
+                          >
+                            <Download className="h-5 w-5" />
                           </button>
                           {order.status !== 'cancelled' && order.status !== 'delivered' && (
                             <>
@@ -483,15 +530,46 @@ export default function OrdersPage() {
 
           {/* Pagination */}
           {paginationData && paginationData.last_page > 1 && (
-            <Pagination
-              currentPage={paginationData.current_page}
-              lastPage={paginationData.last_page}
-              total={paginationData.total}
-              perPage={paginationData.per_page}
-              from={paginationData.from}
-              to={paginationData.to}
-              onPageChange={(page) => setCurrentPage(page)}
-            />
+            <div className="border-t border-gray-200">
+              <Pagination
+                currentPage={paginationData.current_page}
+                lastPage={paginationData.last_page}
+                total={paginationData.total}
+                perPage={paginationData.per_page}
+                from={paginationData.from}
+                to={paginationData.to}
+                onPageChange={(page) => setCurrentPage(page)}
+              />
+            </div>
+          )}
+
+          {/* Per Page Selector */}
+          {orders && orders.length > 0 && (
+            <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <label className="text-sm text-gray-600">Show per page:</label>
+                <select
+                  value={perPage}
+                  onChange={(e) => {
+                    setPerPage(Number(e.target.value));
+                    setCurrentPage(1); // Reset to first page when changing per page
+                  }}
+                  className="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm focus:border-[#FF6F00] focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
+                >
+                  <option value="5">5</option>
+                  <option value="10">10</option>
+                  <option value="15">15</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select>
+              </div>
+              {paginationData && (
+                <div className="text-sm text-gray-600">
+                  Showing {paginationData.from} to {paginationData.to} of {paginationData.total} orders
+                </div>
+              )}
+            </div>
           )}
         </div>
 

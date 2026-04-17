@@ -7,7 +7,7 @@ import { useState, useEffect, useMemo } from "react";
 import { cn } from "@/lib/utils";
 import { useCategories } from "@/lib/hooks/public/useCategories";
 
-export function ShopMegaMenu({ className }: { className?: string }) {
+export function ShopMegaMenu({ className, onLinkClick }: { className?: string; onLinkClick?: () => void }) {
   const { data: categoriesData, isLoading } = useCategories();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
@@ -109,6 +109,7 @@ export function ShopMegaMenu({ className }: { className?: string }) {
                       <Link
                         href={item.href}
                         className="text-sm text-gray-600 transition-all hover:text-black hover:font-bold"
+                        onClick={onLinkClick}
                       >
                         {item.name}
                       </Link>
@@ -119,6 +120,7 @@ export function ShopMegaMenu({ className }: { className?: string }) {
                     <Link
                       href={`/shop?category_id=${currentCategory?.categoryId}`}
                       className="text-sm text-gray-600 transition-all hover:text-black hover:font-bold"
+                      onClick={onLinkClick}
                     >
                       View All {currentCategory?.label}
                     </Link>
@@ -146,6 +148,7 @@ export function ShopMegaMenu({ className }: { className?: string }) {
                       key={category.id}
                       href={`/shop?category_id=${category.categoryId}`}
                       className="group relative cursor-pointer rounded-lg overflow-hidden transition-all hover:shadow-xl"
+                      onClick={onLinkClick}
                     >
                       {/* Full Card Image */}
                       <div className="relative aspect-[4/3] overflow-hidden bg-gray-50">

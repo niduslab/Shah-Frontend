@@ -4,6 +4,7 @@ import { ProductInfo } from "../../_components/product-details/product-info";
 import { ProductFeatures } from "../../_components/product-details/product-features";
 import { ProductPerformance } from "../../_components/product-details/product-performance";
 import { RecommendedProducts } from "../../_components/product-details/recommended-products";
+import { ReviewsModal } from "../../_components/product-details/reviews-modal";
 
 // Fetch product data for metadata and page
 async function getProduct(slug: string) {
@@ -27,6 +28,8 @@ async function getProduct(slug: string) {
 
     const data = await res.json();
     console.log('Product data received:', data.success ? 'Success' : 'Failed');
+    console.log('Product approved_reviews:', data.data?.approved_reviews);
+    console.log('Full product data:', JSON.stringify(data.data, null, 2));
     
     return data.success ? data.data : null;
   } catch (error) {
@@ -161,6 +164,7 @@ export default async function ProductDetailsPage({
       <ProductFeatures product={product} />
       <ProductPerformance product={product} />
       <RecommendedProducts currentProductId={product.id} categoryId={product.category_id} />
+      <ReviewsModal product={product} />
     </div>
   );
 }

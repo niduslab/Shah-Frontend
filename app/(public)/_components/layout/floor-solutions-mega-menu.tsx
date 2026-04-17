@@ -19,7 +19,7 @@ const floorCategories = [
   },
 ];
 
-export function FloorSolutionsMegaMenu({ className }: { className?: string }) {
+export function FloorSolutionsMegaMenu({ className, onLinkClick }: { className?: string; onLinkClick?: () => void }) {
   return (
     <div className={cn("absolute left-1/2 top-full z-50 mt-4 -translate-x-1/2 w-max rounded-2xl border border-gray-100 bg-white shadow-xl before:absolute before:-top-10 before:left-0 before:h-10 before:w-full before:bg-transparent", className)}>
       <div className="p-6">
@@ -29,6 +29,7 @@ export function FloorSolutionsMegaMenu({ className }: { className?: string }) {
               key={category.title}
               href={category.href}
               className="group relative overflow-hidden rounded-lg bg-gray-50 transition-all duration-300 hover:shadow-2xl w-[400px]"
+              onClick={onLinkClick}
             >
               {/* Image Container */}
               <div className="relative aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">

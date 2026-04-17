@@ -23,6 +23,7 @@ export function NavBar() {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileSearchQuery, setMobileSearchQuery] = useState("");
+  const [activeMegaMenu, setActiveMegaMenu] = useState<string | null>(null);
   const pathname = usePathname();
   const { getCartCount } = useCart();
   const { user, logout, loading } = useAuth();
@@ -40,6 +41,7 @@ export function NavBar() {
     setIsMobileMenuOpen(false);
     setOpenSubMenu(null);
     setShowUserMenu(false);
+    setActiveMegaMenu(null);
   }, [pathname]);
 
   // Close user menu when clicking outside
@@ -152,40 +154,100 @@ export function NavBar() {
 
           {/* Desktop Navigation Links */}
           <nav className="hidden items-center gap-6 text-sm font-medium lg:flex">
-            <div className="group">
+            <div 
+              className="group"
+              onMouseEnter={() => setActiveMegaMenu('shop')}
+              onMouseLeave={() => setActiveMegaMenu(null)}
+            >
               <button className="flex items-center gap-1 transition-colors duration-200 hover:text-[#ffb81e] group-hover:text-[#ffb81e] py-4">
                 Shop <ChevronDown className="h-4 w-4 transition-transform duration-200 group-hover:rotate-180" />
               </button>
               
-              <ShopMainMegaMenu className="invisible translate-y-2 opacity-0 transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100" />
+              <ShopMainMegaMenu 
+                className={cn(
+                  "transition-all duration-300",
+                  activeMegaMenu === 'shop' 
+                    ? "visible translate-y-0 opacity-100" 
+                    : "invisible translate-y-2 opacity-0"
+                )}
+                onLinkClick={() => setActiveMegaMenu(null)}
+              />
             </div>
-            <div className="group">
+            <div 
+              className="group"
+              onMouseEnter={() => setActiveMegaMenu('fitness')}
+              onMouseLeave={() => setActiveMegaMenu(null)}
+            >
               <button className="flex items-center gap-1 transition-colors duration-200 hover:text-[#ffb81e] group-hover:text-[#ffb81e] py-4">
                 Fitness <ChevronDown className="h-4 w-4 transition-transform duration-200 group-hover:rotate-180" />
               </button>
               
-              <ShopMegaMenu className="invisible translate-y-2 opacity-0 transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100" />
+              <ShopMegaMenu 
+                className={cn(
+                  "transition-all duration-300",
+                  activeMegaMenu === 'fitness' 
+                    ? "visible translate-y-0 opacity-100" 
+                    : "invisible translate-y-2 opacity-0"
+                )}
+                onLinkClick={() => setActiveMegaMenu(null)}
+              />
             </div>
-            <div className="group">
+            <div 
+              className="group"
+              onMouseEnter={() => setActiveMegaMenu('sports')}
+              onMouseLeave={() => setActiveMegaMenu(null)}
+            >
               <button className="flex items-center gap-1 transition-colors duration-200 hover:text-[#ffb81e] group-hover:text-[#ffb81e] py-4">
                 Sports <ChevronDown className="h-4 w-4 transition-transform duration-200 group-hover:rotate-180" />
               </button>
               
-              <SportsMegaMenu className="invisible translate-y-2 opacity-0 transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100" />
+              <SportsMegaMenu 
+                className={cn(
+                  "transition-all duration-300",
+                  activeMegaMenu === 'sports' 
+                    ? "visible translate-y-0 opacity-100" 
+                    : "invisible translate-y-2 opacity-0"
+                )}
+                onLinkClick={() => setActiveMegaMenu(null)}
+              />
             </div>
-            <div className="group">
+            <div 
+              className="group"
+              onMouseEnter={() => setActiveMegaMenu('brands')}
+              onMouseLeave={() => setActiveMegaMenu(null)}
+            >
               <button className="flex items-center gap-1 transition-colors duration-200 hover:text-[#ffb81e] group-hover:text-[#ffb81e] py-4">
                 Brands <ChevronDown className="h-4 w-4 transition-transform duration-200 group-hover:rotate-180" />
               </button>
               
-              <BrandsMegaMenu className="invisible translate-y-2 opacity-0 transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100" />
+              <BrandsMegaMenu 
+                className={cn(
+                  "transition-all duration-300",
+                  activeMegaMenu === 'brands' 
+                    ? "visible translate-y-0 opacity-100" 
+                    : "invisible translate-y-2 opacity-0"
+                )}
+                onLinkClick={() => setActiveMegaMenu(null)}
+              />
             </div>
-            <div className="group">
+            <div 
+              className="group"
+              onMouseEnter={() => setActiveMegaMenu('flooring')}
+              onMouseLeave={() => setActiveMegaMenu(null)}
+            >
               <button className="flex items-center gap-1 transition-colors duration-200 hover:text-[#ffb81e] group-hover:text-[#ffb81e] py-4">
                 Flooring <ChevronDown className="h-4 w-4 transition-transform duration-200 group-hover:rotate-180" />
               </button>
               
-              <FloorSolutionsMegaMenu className="invisible translate-y-2 opacity-0 transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100" />
+              <FloorSolutionsMegaMenu 
+                className={cn(
+                  "transition-all duration-300",
+                  activeMegaMenu === 'flooring' 
+                    ? "visible translate-y-0 opacity-100" 
+                    : "invisible translate-y-2 opacity-0"
+                )}
+                onLinkClick={() => setActiveMegaMenu(null)}
+              />
             </div>
             
             
