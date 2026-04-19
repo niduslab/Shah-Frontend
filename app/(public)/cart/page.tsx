@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ChevronRight, Minus, Plus, Trash2, Loader2 } from "lucide-react";
+import { ChevronRight, Minus, Plus, Trash2, Loader2, Tag, ChevronDown, ChevronUp } from "lucide-react";
 import { useAuth } from "@/lib/context/AuthContext";
 import { useCart } from "@/lib/context/CartContext";
-import { useCalculateCartSummary, useValidateCoupon } from "@/lib/hooks/public/useCart";
+import { useCalculateCartSummary, useValidateCoupon, useAvailableCoupons } from "@/lib/hooks/public/useCart";
 import { ProductCard } from "../_components/shared/product-card";
 import { toast } from "sonner";
 import { getPlaceholderImage } from "@/lib/utils/image";
+import { useAnalytics } from "@/lib/hooks/useAnalytics";
 
 // Data for "You May Also Like"
 const RELATED_PRODUCTS = [
@@ -56,16 +57,18 @@ const RELATED_PRODUCTS = [
 
 export default function CartPage() {
   const { loading: authLoading } = useAuth();
-  const { items, updateQuantity, removeFromCart, getCartCount } = useCart();
+  const { items, updateQuantity, removeFromCart, getCartCount, appliedCoupon, setAppliedCoupon } = useCart();
+  const analytics = useAnalytics();
   
   const [couponCode, setCouponCode] = useState("");
-  const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
   const [cartSummary, setCartSummary] = useState<any>(null);
   const [isClient, setIsClient] = useState(false);
   const [isCalculating, setIsCalculating] = useState(false);
+  const [showAvailableCoupons, setShowAvailableCoupons] = useState(false);
 
   const calculateSummary = useCalculateCartSummary();
   const validateCoupon = useValidateCoupon();
+  const { data: availableCouponsData, isLoading: loadingCoupons } = useAvailableCoupons();
 
   // Client-side fallback calculation
   const calculateClientSideSummary = () => {
@@ -92,12 +95,36 @@ export default function CartPage() {
     };
   };
 
+  // Load coupon code from applied coupon on mount
+  useEffect(() => {
+    if (appliedCoupon) {
+      setCouponCode(appliedCoupon.code);
+    }
+  }, []);
+
   // No redirect - allow guest users to view cart
 
   // Set client-side flag after mount
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  // Track cart viewed when page loads with items
+  useEffect(() => {
+    if (isClient && items.length > 0 && cartSummary) {
+      analytics.trackCheckout({
+        status: 'cart_viewed',
+        cart_items: items.map(item => ({
+          product_id: item.product_id,
+          name: item.product?.name || '',
+          quantity: item.quantity,
+          price: item.variation ? parseFloat(item.variation.price) : parseFloat(item.product?.price || '0'),
+        })),
+        cart_total: cartSummary.total,
+        items_count: items.length,
+      });
+    }
+  }, [isClient, items.length, cartSummary]);
 
   // Calculate cart summary whenever items change
   useEffect(() => {
@@ -136,8 +163,10 @@ export default function CartPage() {
     }
   }, [items, isClient, appliedCoupon]);
 
-  const handleApplyCoupon = () => {
-    if (!couponCode.trim()) {
+  const handleApplyCoupon = (code?: string) => {
+    const couponToApply = code || couponCode;
+    
+    if (!couponToApply.trim()) {
       toast.error('Please enter a coupon code');
       return;
     }
@@ -147,15 +176,31 @@ export default function CartPage() {
       return;
     }
 
+    // Prepare cart items for coupon validation
+    const cartItems = items.map(item => ({
+      product_id: item.product_id,
+      variation_id: item.variation_id || undefined,
+      quantity: item.quantity,
+    }));
+
     validateCoupon.mutate(
       {
-        code: couponCode,
+        code: couponToApply,
+        items: cartItems,
         subtotal: cartSummary.subtotal,
       },
       {
         onSuccess: (response) => {
-          if (response.success) {
-            setAppliedCoupon(response.data);
+          if (response.success && response.data) {
+            // Store coupon in context with proper structure
+            const couponData = {
+              code: response.data.coupon.code,
+              discount_amount: response.data.discount,
+              coupon: response.data.coupon,
+            };
+            setAppliedCoupon(couponData);
+            setCouponCode(response.data.coupon.code);
+            setShowAvailableCoupons(false);
             toast.success('Coupon applied successfully!');
             // Recalculate summary with coupon
           } else {
@@ -311,7 +356,14 @@ export default function CartPage() {
                             onClick={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
-                              updateQuantity(item.product_id, item.quantity - 1, item.variation_id);
+                              const newQuantity = item.quantity - 1;
+                              updateQuantity(item.product_id, newQuantity, item.variation_id);
+                              
+                              // Track quantity update
+                              const price = item.variation ? parseFloat(item.variation.price) : parseFloat(item.product?.price || '0');
+                              if (newQuantity > 0) {
+                                analytics.trackUpdateCartQuantity(item.product_id, newQuantity, price, item.variation_id || undefined);
+                              }
                             }}
                             className="flex h-10 w-10 items-center justify-center text-gray-500 hover:bg-gray-50"
                             aria-label="Decrease quantity"
@@ -326,7 +378,12 @@ export default function CartPage() {
                             onClick={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
-                              updateQuantity(item.product_id, item.quantity + 1, item.variation_id);
+                              const newQuantity = item.quantity + 1;
+                              updateQuantity(item.product_id, newQuantity, item.variation_id);
+                              
+                              // Track quantity update
+                              const price = item.variation ? parseFloat(item.variation.price) : parseFloat(item.product?.price || '0');
+                              analytics.trackUpdateCartQuantity(item.product_id, newQuantity, price, item.variation_id || undefined);
                             }}
                             className="flex h-10 w-10 items-center justify-center text-gray-500 hover:bg-gray-50"
                             aria-label="Increase quantity"
@@ -340,6 +397,11 @@ export default function CartPage() {
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
+                            
+                            // Track removal
+                            const price = item.variation ? parseFloat(item.variation.price) : parseFloat(item.product?.price || '0');
+                            analytics.trackRemoveFromCart(item.product_id, item.quantity, price);
+                            
                             removeFromCart(item.product_id, item.variation_id);
                           }}
                           className="flex items-center gap-1 text-sm text-gray-500 hover:text-red-500"
@@ -362,38 +424,149 @@ export default function CartPage() {
                 {/* Coupon */}
                 <div className="mb-8">
                   {appliedCoupon ? (
-                    <div className="flex items-center justify-between rounded-sm border border-green-200 bg-green-50 p-3">
-                      <div>
-                        <p className="text-sm font-medium text-green-800">
-                          Coupon Applied: {appliedCoupon.code}
-                        </p>
-                        <p className="text-xs text-green-600">
-                          You saved ${discount.toFixed(2)}
-                        </p>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between rounded-sm border border-green-200 bg-green-50 p-4">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="inline-flex items-center rounded-full bg-green-600 px-2.5 py-0.5 text-xs font-bold text-white">
+                              {appliedCoupon.code}
+                            </span>
+                            <span className="text-sm font-medium text-green-800">
+                              Coupon Applied
+                            </span>
+                          </div>
+                          <p className="text-sm text-green-700">
+                            {appliedCoupon.coupon?.name || 'Discount Applied'}
+                          </p>
+                          <p className="text-xs text-green-600 mt-1">
+                            You saved ${appliedCoupon.discount_amount.toFixed(2)}
+                          </p>
+                        </div>
+                        <button
+                          onClick={handleRemoveCoupon}
+                          className="text-sm font-medium text-red-600 hover:text-red-700 underline"
+                        >
+                          Remove
+                        </button>
                       </div>
-                      <button
-                        onClick={handleRemoveCoupon}
-                        className="text-sm text-red-500 hover:text-red-700"
-                      >
-                        Remove
-                      </button>
                     </div>
                   ) : (
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        placeholder="Enter coupon code"
-                        value={couponCode}
-                        onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-                        className="w-full rounded-sm border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-black"
-                      />
+                    <div className="space-y-3">
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          placeholder="Enter coupon code"
+                          value={couponCode}
+                          onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              handleApplyCoupon();
+                            }
+                          }}
+                          className="w-full rounded-sm border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-black"
+                        />
+                        <button
+                          onClick={() => handleApplyCoupon()}
+                          disabled={validateCoupon.isPending}
+                          className="rounded-sm bg-primary px-4 py-2.5 text-sm font-bold text-black hover:bg-primary/90 disabled:opacity-50 whitespace-nowrap"
+                        >
+                          {validateCoupon.isPending ? 'Applying...' : 'Apply'}
+                        </button>
+                      </div>
+                      
+                      {/* Promotions & Deals Button */}
                       <button
-                        onClick={handleApplyCoupon}
-                        disabled={validateCoupon.isPending}
-                        className="rounded-sm bg-primary px-4 py-2.5 text-sm font-bold text-black hover:bg-primary/90 disabled:opacity-50"
+                        onClick={() => setShowAvailableCoupons(!showAvailableCoupons)}
+                        className="flex w-full items-center justify-between rounded-sm border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
                       >
-                        {validateCoupon.isPending ? 'Applying...' : 'Apply'}
+                        <div className="flex items-center gap-2">
+                          <Tag className="h-4 w-4 text-[#FF6F00]" />
+                          <span>Promotions & Deals</span>
+                        </div>
+                        {showAvailableCoupons ? (
+                          <ChevronUp className="h-4 w-4" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4" />
+                        )}
                       </button>
+
+                      {/* Available Coupons List */}
+                      {showAvailableCoupons && (
+                        <div className="rounded-sm border border-gray-200 bg-white">
+                          {loadingCoupons ? (
+                            <div className="flex items-center justify-center py-8">
+                              <Loader2 className="h-5 w-5 animate-spin text-primary" />
+                            </div>
+                          ) : availableCouponsData?.success && availableCouponsData?.data?.length > 0 ? (
+                            <div className="max-h-[400px] overflow-y-auto">
+                              {availableCouponsData.data.map((coupon: any) => (
+                                <div
+                                  key={coupon.id}
+                                  className="border-b border-gray-100 p-4 last:border-0 hover:bg-gray-50 transition-colors"
+                                >
+                                  <div className="flex items-start justify-between gap-3">
+                                    <div className="flex-1 min-w-0">
+                                      <div className="flex items-center gap-2 mb-1">
+                                        <span className="inline-flex items-center rounded-sm bg-[#FF6F00] px-2 py-0.5 text-xs font-bold text-white">
+                                          {coupon.code}
+                                        </span>
+                                        {coupon.discount_type === 'percentage' && (
+                                          <span className="text-xs font-semibold text-[#FF6F00]">
+                                            {coupon.discount_value}% OFF
+                                          </span>
+                                        )}
+                                        {coupon.discount_type === 'fixed_amount' && (
+                                          <span className="text-xs font-semibold text-[#FF6F00]">
+                                            ${parseFloat(coupon.discount_value).toFixed(2)} OFF
+                                          </span>
+                                        )}
+                                        {coupon.discount_type === 'free_shipping' && (
+                                          <span className="text-xs font-semibold text-[#FF6F00]">
+                                            FREE SHIPPING
+                                          </span>
+                                        )}
+                                      </div>
+                                      <p className="text-sm font-medium text-gray-900 mb-1">
+                                        {coupon.name}
+                                      </p>
+                                      {coupon.description && (
+                                        <p className="text-xs text-gray-600 mb-2">
+                                          {coupon.description}
+                                        </p>
+                                      )}
+                                      <div className="flex flex-wrap gap-2 text-xs text-gray-500">
+                                        {coupon.min_purchase_amount && parseFloat(coupon.min_purchase_amount) > 0 && (
+                                          <span>Min: ${parseFloat(coupon.min_purchase_amount).toFixed(2)}</span>
+                                        )}
+                                        {coupon.max_discount_amount && parseFloat(coupon.max_discount_amount) > 0 && (
+                                          <span>Max: ${parseFloat(coupon.max_discount_amount).toFixed(2)}</span>
+                                        )}
+                                        {coupon.expires_at && (
+                                          <span>
+                                            Expires: {new Date(coupon.expires_at).toLocaleDateString()}
+                                          </span>
+                                        )}
+                                      </div>
+                                    </div>
+                                    <button
+                                      onClick={() => handleApplyCoupon(coupon.code)}
+                                      disabled={validateCoupon.isPending}
+                                      className="flex-shrink-0 rounded-sm bg-primary px-3 py-1.5 text-xs font-bold text-black hover:bg-primary/90 disabled:opacity-50 transition-colors"
+                                    >
+                                      Apply
+                                    </button>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <div className="py-8 text-center">
+                              <Tag className="mx-auto h-8 w-8 text-gray-300 mb-2" />
+                              <p className="text-sm text-gray-500">No coupons available at the moment</p>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -446,7 +619,18 @@ export default function CartPage() {
 
                 {/* Actions */}
                 <div className="space-y-3">
-                  <Link href="/checkout" className="block w-full">
+                  <Link 
+                    href="/checkout" 
+                    className="block w-full"
+                    onClick={() => {
+                      // Track checkout initiated
+                      analytics.trackCheckout({
+                        status: 'checkout_initiated',
+                        cart_total: totalPrice,
+                        items_count: items.length,
+                      });
+                    }}
+                  >
                     <button className="w-full rounded-sm bg-primary py-3.5 text-sm font-bold text-black transition-colors hover:bg-primary/90">
                       Proceed to Checkout
                     </button>

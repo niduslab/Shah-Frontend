@@ -22,8 +22,9 @@ const menuItems = [
   { icon: Zap, label: "Flash Deals", href: "/admin/flash-deals" },
   { icon: Ticket, label: "Coupons", href: "/admin/coupons" },
   { icon: Percent, label: "Promotions", href: "/admin/promotions" },
+  { icon: BarChart3, label: "Analytics", href: "/admin/analytics" },
   { icon: BarChart3, label: "Reports", href: "/admin/reports" },
-  { icon: FileText, label: "Dynamic Pages", href: "/admin/dynamic-pages" },
+  // { icon: FileText, label: "Dynamic Pages", href: "/admin/dynamic-pages" },
   { icon: Percent, label: "Discounts", href: "/admin/discounts" },
 ];
 
@@ -32,7 +33,7 @@ const dynamicContentsMenu = {
   label: "Dynamic Contents",
   subItems: [
     { label: "Landing Page", href: "/admin/dynamic-contents/landing-page" },
-    { label: "Brand Pages", href: "/admin/dynamic-contents/brand-pages" },
+    // { label: "Brand Pages", href: "/admin/dynamic-contents/brand-pages" },
   ],
 };
 
@@ -145,14 +146,14 @@ export function AdminSidebar() {
       </div> */}
 
       {/* Upgrade Banner */}
-      <div className="m-4 rounded-2xl bg-gradient-to-br from-orange-400 to-orange-500 p-6 text-white">
+      {/* <div className="m-4 rounded-2xl bg-gradient-to-br from-orange-400 to-orange-500 p-6 text-white">
         <h3 className="text-lg font-bold">Version 4.5</h3>
         <p className="mt-1 text-sm opacity-90">is Ready</p>
         <p className="mt-2 text-xs opacity-75">Your current version is 4.2.1</p>
         <button className="mt-4 w-full rounded-lg bg-white px-4 py-2 text-sm font-semibold text-orange-500 transition-all hover:bg-gray-50">
           Upgrade Now
         </button>
-      </div>
+      </div> */}
     </div>
   );
 }

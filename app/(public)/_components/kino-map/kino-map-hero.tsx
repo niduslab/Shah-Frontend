@@ -27,7 +27,7 @@ export function KinoMapHero() {
 
         <div className="relative z-10 mx-auto flex h-full max-w-[1400px] items-end px-4 pb-10 md:px-8 lg:items-center lg:pb-0">
           <div className="max-w-[560px]">
-            <h1 className="text-[42px] font-bold leading-[1.04] text-white sm:text-[56px] lg:text-[72px]">
+            <h1 className="text-[42px] font-bold leading-[1.04] text-white sm:text-[56px] lg:text-[56px]">
               Indoor Interactive
               <br />
               Training with
@@ -39,10 +39,11 @@ export function KinoMapHero() {
                   fontWeight: 500,
                 }}
               >
-                Kinomap
+                Kinomap 
               </span>
+              <p className="text-[24px]">Now in Bangladesh</p>
             </h1>
-            <p className="mt-5 max-w-[540px] text-sm leading-relaxed text-white/90 sm:text-base">
+            <p className="mt-3 max-w-[540px] text-sm leading-relaxed text-white/90 sm:text-base">
               Less &apos;at home&apos;, more &apos;out there&apos;. Reimagine indoor training with
               Kinomap&apos;s interactive app — featuring 40,000+ real-life training videos
               from the world&apos;s most stunning routes.

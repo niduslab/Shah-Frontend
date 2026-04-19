@@ -17,7 +17,7 @@ export default function CouponModal({ isOpen, onClose, coupon, onSubmit }: Coupo
   const [formData, setFormData] = useState({
     code: '',
     name: '',
-    discount_type: 'percentage' as 'percentage' | 'fixed' | 'free_shipping',
+    discount_type: 'percentage' as 'percentage' | 'fixed_amount' | 'free_shipping',
     discount_value: '',
     max_discount_amount: '',
     min_purchase_amount: '',
@@ -227,7 +227,7 @@ export default function CouponModal({ isOpen, onClose, coupon, onSubmit }: Coupo
               className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm transition-all focus:border-[#FF6F00] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
             >
               <option value="percentage">Percentage Discount</option>
-              <option value="fixed">Fixed Amount Discount</option>
+              <option value="fixed_amount">Fixed Amount Discount</option>
               <option value="free_shipping">Free Shipping</option>
             </select>
           </div>

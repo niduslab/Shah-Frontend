@@ -22,8 +22,8 @@ export function KinoMapDownloadSection() {
               <div className="flex flex-wrap gap-4">
                 {/* App Store Button */}
                 <a
-                  href="#"
-                  className="flex items-center gap-3 rounded-xl border border-white/20 bg-black/40 px-6 py-3 transition-all hover:bg-black/60 hover:shadow-lg"
+                  href="https://apps.apple.com/us/app/kinomap-bike-run-row/id611177969"
+                  className="flex items-center gap-3 rounded-xl border border-white/20 bg-black/40 px-6 py-3 transition-all hover:bg-black/60 hover:shadow-lg" target="_blank"
                 >
                   <svg
                     viewBox="0 0 24 24"
@@ -44,8 +44,9 @@ export function KinoMapDownloadSection() {
 
                 {/* Google Play Button */}
                 <a
-                  href="#"
+                  href="https://play.google.com/store/apps/details?id=com.kinomap.training&pcampaignid=web_share"
                   className="flex items-center gap-3 rounded-xl border border-white/20 bg-black/40 px-6 py-3 transition-all hover:bg-black/60 hover:shadow-lg"
+                  target="_blank"
                 >
                   <Play className="h-7 w-7 fill-white text-white" />
                   <div className="flex flex-col items-start">

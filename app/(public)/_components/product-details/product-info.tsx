@@ -18,6 +18,7 @@ import { useCart } from "@/lib/context/CartContext";
 import { getPrimaryImageUrl, getAllImageUrls, getPlaceholderImage } from "@/lib/utils/image";
 import { ProductAccordions } from "./product-accordions";
 import { useProductReviews } from "@/lib/hooks/public/useProductReviews";
+import { useProductViewTracking, useAnalytics } from "@/lib/hooks/useAnalytics";
 
 interface ProductInfoProps {
   product: any;
@@ -27,6 +28,10 @@ export function ProductInfo({ product }: ProductInfoProps) {
   const router = useRouter();
   const { user } = useAuth();
   const { addToCart, isInCart } = useCart();
+  const analytics = useAnalytics();
+  
+  // Track product view
+  useProductViewTracking(product.id);
   
   // Fetch reviews - always fetch to get latest reviews
   const { data: reviewsData, isLoading: reviewsLoading } = useProductReviews(product.id, true);
@@ -147,6 +152,14 @@ export function ProductInfo({ product }: ProductInfoProps) {
     };
 
     addToCart(cartItem, window.location.pathname);
+    
+    // Track add to cart event
+    analytics.trackAddToCart(
+      product.id,
+      quantity,
+      currentPrice,
+      selectedVariation?.id
+    );
     
     setTimeout(() => setIsAddingToCart(false), 500);
   };

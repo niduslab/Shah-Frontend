@@ -140,8 +140,39 @@ export function ShopMegaMenu({ className, onLinkClick }: { className?: string; o
                   const images = [
                     '/images/landing/pre-order/63594412e77df42c02a5f16d3a2eceb8d4f91d99.png',
                     '/images/landing/pre-order/a1d135ac0387f5fbbc33cdd695d09e992dc2d274.png',
-                    '/images/landing/pre-order/c7b139cd4aecc159bde32e9387c0dcb372021ab9.png',
+                    '/images/kino-map/navbar_kinomap.png',
                   ];
+                  
+                  // Manual override for third item - Kinomap
+                  if (index === 2) {
+                    return (
+                      <Link 
+                        key="kinomap"
+                        href="/kino-map"
+                        className="group relative cursor-pointer rounded-lg overflow-hidden transition-all hover:shadow-xl"
+                        onClick={onLinkClick}
+                      >
+                        {/* Full Card Image */}
+                        <div className="relative aspect-[4/3] overflow-hidden bg-gray-50">
+                          <Image
+                            src={images[2]}
+                            alt="Kinomap Equipment"
+                            fill
+                            className="object-contain transition-transform duration-500 group-hover:scale-105"
+                          />
+                          {/* Overlay Gradient */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                        </div>
+                        
+                        {/* Category Label */}
+                        <div className="absolute bottom-0 left-0 right-0 p-4 text-center">
+                          <span className="text-lg font-bold text-white group-hover:text-[#ffb81e] transition-colors drop-shadow-lg">
+                            Kinomap
+                          </span>
+                        </div>
+                      </Link>
+                    );
+                  }
                   
                   return (
                     <Link 

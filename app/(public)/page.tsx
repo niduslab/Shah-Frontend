@@ -15,8 +15,14 @@ import { TrustedBrands } from "./_components/landing/trusted-brands";
 import { DiscountedProducts } from "./_components/landing/discounted-products";
 import { OurClients } from "./_components/landing/our-clients";
 import { PerformanceFrameSection } from "./_components/landing/performance-frame-section";
+import { usePageViewTracking } from "@/lib/hooks/useAnalytics";
 
 export default function Home() {
+  // Track home page view
+  usePageViewTracking({
+    page_type: 'home',
+    page_title: 'Home Page',
+  });
   return (
     <div>
       <HeroSection />

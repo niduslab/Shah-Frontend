@@ -12,26 +12,36 @@ export interface CartItem {
   variation?: any; // Variation details
 }
 
+export interface AppliedCoupon {
+  code: string;
+  discount_amount: number;
+  coupon: any; // Full coupon details from API
+}
+
 interface CartContextType {
   items: CartItem[];
+  appliedCoupon: AppliedCoupon | null;
   addToCart: (item: CartItem, redirectUrl?: string) => void;
   removeFromCart: (productId: number, variationId?: number | null) => void;
   updateQuantity: (productId: number, quantity: number, variationId?: number | null) => void;
   clearCart: () => void;
   getCartCount: () => number;
   isInCart: (productId: number, variationId?: number | null) => boolean;
+  setAppliedCoupon: (coupon: AppliedCoupon | null) => void;
 }
 
 const CartContext = createContext<CartContextType | null>(null);
 
 const CART_STORAGE_KEY = 'shopping_cart';
+const COUPON_STORAGE_KEY = 'applied_coupon';
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [appliedCoupon, setAppliedCouponState] = useState<AppliedCoupon | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // Load cart from localStorage on mount (client-side only)
+  // Load cart and coupon from localStorage on mount (client-side only)
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const savedCart = localStorage.getItem(CART_STORAGE_KEY);
@@ -42,6 +52,16 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
           console.error('Failed to parse cart from localStorage:', error);
         }
       }
+      
+      const savedCoupon = localStorage.getItem(COUPON_STORAGE_KEY);
+      if (savedCoupon) {
+        try {
+          setAppliedCouponState(JSON.parse(savedCoupon));
+        } catch (error) {
+          console.error('Failed to parse coupon from localStorage:', error);
+        }
+      }
+      
       setIsInitialized(true);
     }
   }, []);
@@ -52,6 +72,17 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
     }
   }, [items, isInitialized]);
+
+  // Save coupon to localStorage whenever it changes
+  useEffect(() => {
+    if (isInitialized && typeof window !== 'undefined') {
+      if (appliedCoupon) {
+        localStorage.setItem(COUPON_STORAGE_KEY, JSON.stringify(appliedCoupon));
+      } else {
+        localStorage.removeItem(COUPON_STORAGE_KEY);
+      }
+    }
+  }, [appliedCoupon, isInitialized]);
 
   const addToCart = useCallback((item: CartItem, redirectUrl?: string) => {
     // Prevent double-clicking
@@ -113,7 +144,12 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   const clearCart = useCallback(() => {
     setItems([]);
+    setAppliedCouponState(null);
     toast.success('Cart cleared');
+  }, []);
+
+  const setAppliedCoupon = useCallback((coupon: AppliedCoupon | null) => {
+    setAppliedCouponState(coupon);
   }, []);
 
   const getCartCount = useCallback(() => {
@@ -130,12 +166,14 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     <CartContext.Provider
       value={{
         items,
+        appliedCoupon,
         addToCart,
         removeFromCart,
         updateQuantity,
         clearCart,
         getCartCount,
         isInCart,
+        setAppliedCoupon,
       }}
     >
       {children}

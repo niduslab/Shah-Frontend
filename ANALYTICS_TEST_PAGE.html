@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Tracking Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #ff6b35;
+            padding-bottom: 10px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-left: 4px solid #ff6b35;
+        }
+        button {
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #e55a2b;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Analytics Tracking Test Page</h1>
+        
+        <div class="test-section">
+            <h3>Backend Status Check</h3>
+            <p>Test if the backend analytics API is accessible:</p>
+            <button onclick="testBackendStatus()">Test Backend Connection</button>
+            <div id="backend-result" class="result" style="display:none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>1. Test Page View Tracking</h3>
+            <p>Tracks when a page is viewed</p>
+            <button onclick="testPageView()">Track Page View</button>
+            <div id="pageview-result" class="result" style="display:none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>2. Test Product View Tracking</h3>
+            <p>Tracks when a product is viewed</p>
+            <button onclick="testProductView()">Track Product View</button>
+            <div id="productview-result" class="result" style="display:none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>3. Test Cart Event Tracking</h3>
+            <p>Tracks cart actions (add, update, remove)</p>
+            <button onclick="testCartEvent('added')">Track Add to Cart</button>
+            <button onclick="testCartEvent('updated')">Track Update Cart</button>
+            <button onclick="testCartEvent('removed')">Track Remove from Cart</button>
+            <div id="cartevent-result" class="result" style="display:none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>4. Test Checkout Tracking</h3>
+            <p>Tracks checkout funnel stages</p>
+            <button onclick="testCheckout('cart_viewed')">Cart Viewed</button>
+            <button onclick="testCheckout('checkout_initiated')">Checkout Initiated</button>
+            <button onclick="testCheckout('order_completed')">Order Completed</button>
+            <div id="checkout-result" class="result" style="display:none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>5. Test Search Tracking</h3>
+            <p>Tracks search queries</p>
+            <button onclick="testSearch()">Track Search</button>
+            <div id="search-result" class="result" style="display:none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>📋 Instructions</h3>
+            <ol>
+                <li>Make sure your <strong>Laravel backend is running</strong> on <code>http://localhost:8000</code></li>
+                <li>Make sure you've run <code>php artisan migrate</code> to create analytics tables</li>
+                <li>Click the buttons above to test each tracking endpoint</li>
+                <li>Check the results below each button</li>
+                <li>Open browser DevTools (F12) → Network tab to see requests</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8000';
+
+        function showResult(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.style.display = 'block';
+            element.className = `result ${type}`;
+            element.innerHTML = message;
+        }
+
+        async function testBackendStatus() {
+            try {
+                const response = await fetch(`${API_URL}/api/health`, {
+                    method: 'GET',
+                });
+                
+                if (response.ok) {
+                    showResult('backend-result', '✅ Backend is accessible!', 'success');
+                } else {
+                    showResult('backend-result', `⚠️ Backend responded with status: ${response.status}`, 'info');
+                }
+            } catch (error) {
+                showResult('backend-result', `❌ Cannot connect to backend: ${error.message}<br><br>Make sure Laravel is running on ${API_URL}`, 'error');
+            }
+        }
+
+        async function testPageView() {
+            try {
+                const response = await fetch(`${API_URL}/api/analytics/track/page-view`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        page_type: 'home',
+                        page_title: 'Test Home Page'
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    showResult('pageview-result', `✅ Success: ${data.message}<br><br>Request: <code>${JSON.stringify({page_type: 'home', page_title: 'Test Home Page'})}</code><br>Response: <code>${JSON.stringify(data)}</code>`, 'success');
+                } else {
+                    showResult('pageview-result', `⚠️ Response: ${JSON.stringify(data)}`, 'info');
+                }
+            } catch (error) {
+                showResult('pageview-result', `❌ Error: ${error.message}<br><br>Endpoint: <code>${API_URL}/api/analytics/track/page-view</code><br><br>This usually means the backend endpoint doesn't exist. Check SETUP_COMPLETE.md for setup instructions.`, 'error');
+            }
+        }
+
+        async function testProductView() {
+            try {
+                const response = await fetch(`${API_URL}/api/analytics/track/product-view`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        product_id: 123
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    showResult('productview-result', `✅ Success: ${data.message}<br><br>Request: <code>${JSON.stringify({product_id: 123})}</code><br>Response: <code>${JSON.stringify(data)}</code>`, 'success');
+                } else {
+                    showResult('productview-result', `⚠️ Response: ${JSON.stringify(data)}`, 'info');
+                }
+            } catch (error) {
+                showResult('productview-result', `❌ Error: ${error.message}<br><br>Endpoint: <code>${API_URL}/api/analytics/track/product-view</code>`, 'error');
+            }
+        }
+
+        async function testCartEvent(eventType) {
+            try {
+                const response = await fetch(`${API_URL}/api/analytics/track/cart-event`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        event_type: eventType,
+                        product_id: 123,
+                        quantity: 2,
+                        price: 99.99
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    showResult('cartevent-result', `✅ Success: ${data.message}<br><br>Event Type: <code>${eventType}</code><br>Response: <code>${JSON.stringify(data)}</code>`, 'success');
+                } else {
+                    showResult('cartevent-result', `⚠️ Response: ${JSON.stringify(data)}`, 'info');
+                }
+            } catch (error) {
+                showResult('cartevent-result', `❌ Error: ${error.message}<br><br>Endpoint: <code>${API_URL}/api/analytics/track/cart-event</code>`, 'error');
+            }
+        }
+
+        async function testCheckout(status) {
+            try {
+                const payload = {
+                    status: status
+                };
+
+                if (status === 'order_completed') {
+                    payload.order_id = 789;
+                    payload.product_ids = [123, 456];
+                }
+
+                const response = await fetch(`${API_URL}/api/analytics/track/checkout`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    showResult('checkout-result', `✅ Success: ${data.message}<br><br>Status: <code>${status}</code><br>Response: <code>${JSON.stringify(data)}</code>`, 'success');
+                } else {
+                    showResult('checkout-result', `⚠️ Response: ${JSON.stringify(data)}`, 'info');
+                }
+            } catch (error) {
+                showResult('checkout-result', `❌ Error: ${error.message}<br><br>Endpoint: <code>${API_URL}/api/analytics/track/checkout</code>`, 'error');
+            }
+        }
+
+        async function testSearch() {
+            try {
+                const response = await fetch(`${API_URL}/api/analytics/track/search`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        query: 'laptop',
+                        results_count: 25
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    showResult('search-result', `✅ Success: ${data.message}<br><br>Request: <code>${JSON.stringify({query: 'laptop', results_count: 25})}</code><br>Response: <code>${JSON.stringify(data)}</code>`, 'success');
+                } else {
+                    showResult('search-result', `⚠️ Response: ${JSON.stringify(data)}`, 'info');
+                }
+            } catch (error) {
+                showResult('search-result', `❌ Error: ${error.message}<br><br>Endpoint: <code>${API_URL}/api/analytics/track/search</code>`, 'error');
+            }
+        }
+
+        // Auto-test backend on page load
+        window.addEventListener('load', () => {
+            setTimeout(testBackendStatus, 500);
+        });
+    </script>
+</body>
+</html>

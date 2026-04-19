@@ -8,6 +8,7 @@ import { ShopSidebar } from "../_components/shop/shop-sidebar";
 import { ProductCard } from "../_components/shared/product-card";
 import { useShopProducts } from "@/lib/hooks/public";
 import { getPrimaryImageUrl } from "@/lib/utils/image";
+import { useAnalytics } from "@/lib/hooks/useAnalytics";
 
 const SORT_OPTIONS = [
   { label: "Best Match", value: "created_at", order: "desc" },
@@ -21,6 +22,7 @@ const SORT_OPTIONS = [
 
 export default function ShopPage() {
   const searchParams = useSearchParams();
+  const analytics = useAnalytics();
   const urlSearch = searchParams.get("search") || "";
   const urlPreorder = searchParams.get("is_preorder") === "true";
   const urlCategoryId = searchParams.get("category_id");
@@ -123,6 +125,16 @@ export default function ShopPage() {
   const totalProducts = data?.data?.total || 0;
   const lastPage = data?.data?.last_page || 1;
   const currentPageData = data?.data?.current_page || 1;
+
+  // Track search when query changes and results are loaded
+  useEffect(() => {
+    if (searchQuery && !isLoading && data?.data?.data) {
+      analytics.trackSearch({
+        query: searchQuery,
+        results_count: data.data.total || 0,
+      });
+    }
+  }, [searchQuery, isLoading, data, analytics]);
 
   const handleSortChange = (value: string, order: string) => {
     setSortBy(value as "price" | "name" | "created_at");

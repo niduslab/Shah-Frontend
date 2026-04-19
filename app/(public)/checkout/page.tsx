@@ -10,6 +10,7 @@ import { otpAuthService } from "@/lib/services/otpAuthService";
 import { toast } from "sonner";
 import { getPlaceholderImage } from "@/lib/utils/image";
 import OtpInput from "@/lib/components/OtpInput";
+import { useAnalytics } from "@/lib/hooks/useAnalytics";
 import { 
   ChevronDown, 
   DollarSign, 
@@ -75,12 +76,13 @@ const addressTypeConfig = {
 
 export default function CheckoutPage() {
   const { user, loading: authLoading } = useAuth();
-  const { items, getCartCount, clearCart } = useCart();
+  const { items, getCartCount, clearCart, appliedCoupon, setAppliedCoupon } = useCart();
   const { data: addressesData } = useAddresses();
   const createAddressMutation = useCreateAddress();
   const processCheckout = useProcessCheckout();
   const getShippingMethods = useGetShippingMethods();
   const sendRegistrationOtp = useSendRegistrationOtp();
+  const analytics = useAnalytics();
   
   const [paymentMethod, setPaymentMethod] = useState<"cod" | "ssl">("cod");
   const [isProcessing, setIsProcessing] = useState(false);
@@ -135,7 +137,8 @@ export default function CheckoutPage() {
   const totalItems = getCartCount();
   const selectedShippingMethod = shippingMethods.find(m => m.code === selectedShipping);
   const shipping = selectedShippingMethod?.cost || 0;
-  const totalPrice = subTotal + shipping;
+  const discount = appliedCoupon?.discount_amount || 0;
+  const totalPrice = subTotal - discount + shipping;
   // Set client-side flag
   useEffect(() => {
     setIsClient(true);
@@ -434,6 +437,16 @@ export default function CheckoutPage() {
         return;
       }
 
+      // Track shipping info entered
+      analytics.trackCheckout({
+        status: 'shipping_info_entered',
+      });
+
+      // Track payment info entered
+      analytics.trackCheckout({
+        status: 'payment_info_entered',
+      });
+
       const checkoutData: any = {
         items: items.map(item => ({
           product_id: item.product_id,
@@ -446,6 +459,11 @@ export default function CheckoutPage() {
         shipping_method: selectedShipping,
         payment_method: paymentMethod === 'ssl' ? 'ssl_commerz' : 'cash_on_delivery',
       };
+
+      // Add coupon if applied
+      if (appliedCoupon) {
+        checkoutData.coupon_code = appliedCoupon.code;
+      }
 
       if (user) {
         // Authenticated user checkout
@@ -476,6 +494,17 @@ export default function CheckoutPage() {
       console.log('Checkout response:', response);
 
       if (response.success) {
+        // Track order completed
+        const orderNumber = response.data?.order_number || response.data?.order?.order_number;
+        const orderId = response.data?.id || response.data?.order?.id;
+        const productIds = items.map(item => item.product_id);
+        
+        analytics.trackCheckout({
+          status: 'order_completed',
+          order_id: orderId,
+          product_ids: productIds,
+        });
+
         // Show success message
         if (!user && guestData.createAccount) {
           toast.success('Order placed! Account created successfully.');
@@ -506,9 +535,9 @@ export default function CheckoutPage() {
             return;
           }
         } else {
-          // For COD, clear cart and redirect to invoice page
+          // For COD, clear cart and coupon, then redirect to invoice page
           clearCart();
-          const orderNumber = response.data?.order_number || response.data?.order?.order_number;
+          setAppliedCoupon(null);
           if (orderNumber) {
             setTimeout(() => {
               window.location.href = `/invoice/${orderNumber}`;
@@ -1332,6 +1361,18 @@ export default function CheckoutPage() {
                     <span className="text-gray-600">Subtotal ({totalItems} items)</span>
                     <span className="font-medium text-black">${subTotal.toFixed(2)}</span>
                   </div>
+                  
+                  {appliedCoupon && discount > 0 && (
+                    <div className="flex justify-between text-sm">
+                      <div className="flex items-center gap-2">
+                        <span className="text-gray-600">Discount</span>
+                        <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
+                          {appliedCoupon.code}
+                        </span>
+                      </div>
+                      <span className="font-medium text-green-600">-${discount.toFixed(2)}</span>
+                    </div>
+                  )}
                   
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Shipping</span>

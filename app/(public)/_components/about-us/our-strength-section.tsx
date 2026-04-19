@@ -62,11 +62,10 @@ export function OurStrengthSection() {
     <section className="bg-white py-20">
       <div className="container mx-auto px-4 md:px-0 max-w-[1400px]">
         {/* Header */}
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 uppercase tracking-wide">
+        {/* <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 uppercase tracking-wide">
           Our Strength, Our Partners
         </h2>
 
-        {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
           {stats.slice(0, 3).map((stat, index) => (
             <div key={index} className="bg-gray-50 p-8 rounded-sm">
@@ -92,7 +91,7 @@ export function OurStrengthSection() {
               </p>
             </div>
           ))}
-        </div>
+        </div> */}
 
         {/* Service Promise Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
