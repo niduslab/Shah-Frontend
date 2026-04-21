@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Plus, Edit2, Trash2, Search, Package, Image as ImageIcon } from 'lucide-react';
+import { Plus, Edit2, Trash2, Search, Package, Image as ImageIcon, Upload } from 'lucide-react';
+import Link from 'next/link';
 import Pagination from '@/components/ui/Pagination';
 import { toast } from 'sonner';
 import { 
@@ -170,6 +171,14 @@ export default function ProductsPage() {
                 <option value="inactive">Inactive</option>
                 <option value="draft">Draft</option>
               </select>
+
+              {/* Bulk Import Button */}
+              <Link href="/admin/products/bulk-import">
+                <button className="flex items-center gap-2 rounded-xl border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition-all hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-400">
+                  <Upload className="h-5 w-5" />
+                  Bulk Import
+                </button>
+              </Link>
 
               {/* Create Button */}
               <button
