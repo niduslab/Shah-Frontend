@@ -179,6 +179,9 @@ export default function CategoriesPage() {
             <div className="flex-1">
               <div className="flex items-center gap-2.5">
                 <h3 className="font-semibold text-gray-900">{category.name}</h3>
+                <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600 ring-1 ring-gray-600/20">
+                  ID: {category.id}
+                </span>
                 <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
                   category.is_active 
                     ? 'bg-emerald-100 text-emerald-700 ring-1 ring-emerald-600/20' 

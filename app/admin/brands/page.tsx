@@ -185,7 +185,12 @@ export default function BrandsPage() {
                   <div className="p-5">
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
-                        <h3 className="font-semibold text-gray-900 text-lg mb-1">{brand.name}</h3>
+                        <div className="flex items-center gap-2 mb-1">
+                          <h3 className="font-semibold text-gray-900 text-lg">{brand.name}</h3>
+                          <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600 ring-1 ring-gray-600/20">
+                            ID: {brand.id}
+                          </span>
+                        </div>
                         <p className="text-xs text-gray-500 font-mono bg-gray-100 px-2 py-1 rounded inline-block">
                           {brand.slug}
                         </p>

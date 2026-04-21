@@ -130,8 +130,10 @@ export default function CheckoutFunnelPage() {
     );
   };
 
-  const formatCurrency = (amount: string | number) => {
+  const formatCurrency = (amount: string | number | null | undefined) => {
+    if (amount === null || amount === undefined) return "KES 0";
     const num = typeof amount === "string" ? parseFloat(amount) : amount;
+    if (isNaN(num)) return "KES 0";
     return `KES ${num.toLocaleString()}`;
   };
 

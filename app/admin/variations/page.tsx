@@ -150,7 +150,12 @@ export default function VariationsPage() {
               >
                 <div className="mb-4 flex items-start justify-between">
                   <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-gray-900">{variation.name}</h3>
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="text-lg font-semibold text-gray-900">{variation.name}</h3>
+                      <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600 ring-1 ring-gray-600/20">
+                        ID: {variation.id}
+                      </span>
+                    </div>
                     {variation.description && (
                       <p className="mt-1 text-sm text-gray-500">{variation.description}</p>
                     )}
