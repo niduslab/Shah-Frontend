@@ -61,6 +61,55 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* ─── Scroll Reveal ────────────────────────────────────────────────────────
+   Elements with [data-reveal] start visible by default (no JS flash).
+   When IntersectionObserver adds .scroll-revealed the animation plays once.
+   Works across Next.js client-side navigations. */
+
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+[data-reveal="left"] {
+  transform: translateX(-32px);
+}
+
+[data-reveal="right"] {
+  transform: translateX(32px);
+}
+
+[data-reveal="scale"] {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+[data-reveal="none"] {
+  opacity: 0;
+  transform: none;
+  transition: opacity 0.7s ease;
+}
+
+[data-reveal].scroll-revealed,
+[data-reveal="left"].scroll-revealed,
+[data-reveal="right"].scroll-revealed,
+[data-reveal="scale"].scroll-revealed,
+[data-reveal="none"].scroll-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* Staggered children: each sibling delays by 80 ms */
+[data-reveal-stagger] > *             { transition-delay: calc(var(--stagger-index, 0) * 80ms); }
+[data-reveal-stagger] > *:nth-child(1)  { --stagger-index: 0; }
+[data-reveal-stagger] > *:nth-child(2)  { --stagger-index: 1; }
+[data-reveal-stagger] > *:nth-child(3)  { --stagger-index: 2; }
+[data-reveal-stagger] > *:nth-child(4)  { --stagger-index: 3; }
+[data-reveal-stagger] > *:nth-child(5)  { --stagger-index: 4; }
+[data-reveal-stagger] > *:nth-child(6)  { --stagger-index: 5; }
+
 /* Modal animations */
 @keyframes fade-in {
   from {

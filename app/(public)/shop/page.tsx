@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState, useEffect, useCallback } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { ChevronDown, ChevronLeft, ChevronRight, Loader2, Search } from "lucide-react";
 import { ShopSidebar } from "../_components/shop/shop-sidebar";
 import { ProductCard } from "../_components/shared/product-card";
+import { FlashDealBanner } from "../_components/shop/flash-deal-banner";
 import { useShopProducts } from "@/lib/hooks/public";
 import { getPrimaryImageUrl } from "@/lib/utils/image";
 import { useAnalytics } from "@/lib/hooks/useAnalytics";
@@ -22,10 +23,12 @@ const SORT_OPTIONS = [
 
 export default function ShopPage() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const analytics = useAnalytics();
   const urlSearch = searchParams.get("search") || "";
   const urlPreorder = searchParams.get("is_preorder") === "true";
-  const urlCategoryId = searchParams.get("category_id");
+  const urlCategorySlug = searchParams.get("category");
+  const urlBrandSlug = searchParams.get("brand");
   const urlFlashDealId = searchParams.get("flash_deal_id");
   const urlHasFlashDeal = searchParams.get("has_flash_deal") === "true";
   const urlHasDiscount = searchParams.get("has_discount") === "true";
@@ -42,9 +45,9 @@ export default function ShopPage() {
   const [minPrice, setMinPrice] = useState<number | undefined>();
   const [maxPrice, setMaxPrice] = useState<number | undefined>();
   const [inStock, setInStock] = useState<boolean | undefined>();
-  const [brandId, setBrandId] = useState<number | undefined>();
-  const [categoryId, setCategoryId] = useState<number | undefined>(
-    urlCategoryId ? parseInt(urlCategoryId) : undefined
+  const [brandSlug, setBrandSlug] = useState<string | undefined>(urlBrandSlug || undefined);
+  const [categorySlug, setCategorySlug] = useState<string | undefined>(
+    urlCategorySlug || undefined
   );
   const [isPreorder, setIsPreorder] = useState(urlPreorder);
   const [flashDealId, setFlashDealId] = useState<number | undefined>(
@@ -68,8 +71,8 @@ export default function ShopPage() {
     if (urlPreorder) {
       setIsPreorder(true);
     }
-    if (urlCategoryId) {
-      setCategoryId(parseInt(urlCategoryId));
+    if (urlCategorySlug) {
+      setCategorySlug(urlCategorySlug);
     }
     if (urlFlashDealId) {
       setFlashDealId(parseInt(urlFlashDealId));
@@ -89,7 +92,7 @@ export default function ShopPage() {
     if (urlHasCoupon) {
       setHasCoupon(true);
     }
-  }, [urlSearch, urlPreorder, urlCategoryId, urlFlashDealId, urlHasFlashDeal, urlHasDiscount, urlHasPromotion, urlPromotionId, urlHasCoupon]);
+  }, [urlSearch, urlPreorder, urlCategorySlug, urlFlashDealId, urlHasFlashDeal, urlHasDiscount, urlHasPromotion, urlPromotionId, urlHasCoupon]);
 
   // Debounced search - auto-search as user types
   useEffect(() => {
@@ -110,8 +113,8 @@ export default function ShopPage() {
     min_price: minPrice,
     max_price: maxPrice,
     in_stock: inStock,
-    brand_id: brandId,
-    category_id: categoryId,
+    brand_slug: brandSlug,
+    category_slug: categorySlug,
     is_preorder: isPreorder || undefined,
     flash_deal_id: flashDealId,
     has_flash_deal: hasFlashDeal || undefined,
@@ -136,6 +139,18 @@ export default function ShopPage() {
     }
   }, [searchQuery, isLoading, data, analytics]);
 
+  const updateUrlParams = useCallback((updates: Record<string, string | undefined>) => {
+    const params = new URLSearchParams(searchParams.toString());
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value) {
+        params.set(key, value);
+      } else {
+        params.delete(key);
+      }
+    });
+    router.replace(`/shop?${params.toString()}`, { scroll: false });
+  }, [searchParams, router]);
+
   const handleSortChange = (value: string, order: string) => {
     setSortBy(value as "price" | "name" | "created_at");
     setSortOrder(order as "asc" | "desc");
@@ -159,14 +174,16 @@ export default function ShopPage() {
     setCurrentPage(1);
   };
 
-  const handleBrandChange = (brand: number | undefined) => {
-    setBrandId(brand);
+  const handleBrandChange = (brand: string | undefined) => {
+    setBrandSlug(brand);
     setCurrentPage(1);
+    updateUrlParams({ brand });
   };
 
-  const handleCategoryChange = (category: number | undefined) => {
-    setCategoryId(category);
+  const handleCategoryChange = (category: string | undefined) => {
+    setCategorySlug(category);
     setCurrentPage(1);
+    updateUrlParams({ category });
   };
 
   const handlePreorderChange = (preorder: boolean | undefined) => {
@@ -180,34 +197,50 @@ export default function ShopPage() {
 
   // Transform API products to match ProductCard interface
   const transformedProducts = products.map((product: any) => {
-    // Check if preorder date is still active
-    const isPreorderActive = product.is_preorder && 
-      product.preorder_release_date && 
+    const isPreorderActive = product.is_preorder &&
+      product.preorder_release_date &&
       new Date(product.preorder_release_date) > new Date();
-    
+
+    // Resolve the active flash deal for this product (pivot data)
+    const activeFlashDeal = product.flash_deals?.[0];
+    const flashPrice = activeFlashDeal?.pivot?.flash_price
+      ? parseFloat(activeFlashDeal.pivot.flash_price)
+      : undefined;
+
+    let flashDiscountLabel: string | undefined;
+    if (flashPrice && product.price) {
+      const regularPrice = parseFloat(product.price);
+      const savings = regularPrice - flashPrice;
+      if (savings > 0) {
+        const pct = Math.round((savings / regularPrice) * 100);
+        flashDiscountLabel = `Save ${pct}% (–$${savings.toFixed(2)})`;
+      }
+    }
+
     return {
       id: product.id,
       name: product.name,
       slug: product.slug,
       image: getPrimaryImageUrl(product.images),
       price: parseFloat(product.price),
-      // Hide original price if preorder is active
       originalPrice: isPreorderActive ? undefined : (product.compare_price ? parseFloat(product.compare_price) : undefined),
       rating: product.average_rating || 5,
       reviews: product.review_count || 0,
       is_preorder: product.is_preorder,
       preorder_release_date: product.preorder_release_date,
       kinomap: product.kinomap,
-      badge: isPreorderActive
+      flash_price: flashPrice,
+      flash_discount_label: flashDiscountLabel,
+      badge: !flashPrice && isPreorderActive
         ? { text: "Pre-Order", className: "bg-blue-600" }
-        : product.compare_price
+        : !flashPrice && product.compare_price
         ? {
             text: `-${Math.round(((parseFloat(product.compare_price) - parseFloat(product.price)) / parseFloat(product.compare_price)) * 100)}% off`,
             className: "bg-red-500",
           }
-        : product.is_featured
+        : !flashPrice && product.is_featured
         ? { text: "Featured", className: "bg-[#3E4C24]" }
-        : product.is_trending
+        : !flashPrice && product.is_trending
         ? { text: "Trending", className: "bg-blue-500" }
         : undefined,
     };
@@ -226,23 +259,30 @@ export default function ShopPage() {
         </div>
 
         {/* Header */}
-        <div className="mb-12">
+        <div className="mb-8">
           <h1 className="mb-4 text-3xl font-bold text-black md:text-4xl">
-            Shop From All Our Products
+            {hasFlashDeal ? "Flash Deal Products" : "Shop From All Our Products"}
           </h1>
           <p className="max-w-3xl text-gray-500">
-            Most-loved designs that consistently stand out for their quality, style, and everyday wearability.
+            {hasFlashDeal
+              ? "Limited-time prices on selected products. Grab them before the deal ends!"
+              : "Most-loved designs that consistently stand out for their quality, style, and everyday wearability."}
           </p>
         </div>
 
+        {/* Flash Deal Banner */}
+        {hasFlashDeal && <FlashDealBanner />}
+
         <div className="flex flex-col gap-12 lg:flex-row">
           {/* Sidebar */}
-          <ShopSidebar 
+          <ShopSidebar
             onPriceRangeChange={handlePriceRangeChange}
             onAvailabilityChange={handleAvailabilityChange}
             onBrandChange={handleBrandChange}
             onCategoryChange={handleCategoryChange}
             onPreorderChange={handlePreorderChange}
+            initialBrandSlug={urlBrandSlug || undefined}
+            initialCategorySlug={urlCategorySlug || undefined}
           />
 
           {/* Main Content */}
@@ -340,7 +380,7 @@ export default function ShopPage() {
             {/* Products Grid */}
             {!isLoading && !error && products.length > 0 && (
               <>
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <div id="flash-deal-products" className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {transformedProducts.map((product) => (
                     <ProductCard key={product.id} product={product} />
                   ))}

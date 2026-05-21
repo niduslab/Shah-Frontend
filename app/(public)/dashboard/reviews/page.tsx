@@ -4,8 +4,7 @@ import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useMyReviews, useReviewableItems, useSubmitReview } from '@/lib/hooks/user/useUserReviews';
 import Link from 'next/link';
-import Image from 'next/image';
-import { 
+import {
   Star, 
   MessageSquare, 
   Calendar,
@@ -246,12 +245,11 @@ export default function ReviewsPage() {
                       className="flex-shrink-0"
                     >
                       <div className="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden hover:opacity-80 transition-opacity">
-                        <Image
+                        <img
                           src={productImage}
                           alt={item.product_name || 'Product'}
-                          width={80}
-                          height={80}
                           className="w-full h-full object-cover"
+                          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                         />
                       </div>
                     </Link>
@@ -303,12 +301,11 @@ export default function ReviewsPage() {
                       className="flex-shrink-0"
                     >
                       <div className="w-24 h-24 bg-gray-100 rounded-lg overflow-hidden hover:opacity-80 transition-opacity">
-                        <Image
+                        <img
                           src={productImage}
                           alt={review.product?.name || 'Product'}
-                          width={96}
-                          height={96}
                           className="w-full h-full object-cover"
+                          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                         />
                       </div>
                     </Link>
@@ -350,12 +347,11 @@ export default function ReviewsPage() {
                       <div className="flex gap-2 mb-3">
                         {review.images.map((img: any, index: number) => (
                           <div key={index} className="w-16 h-16 bg-gray-100 rounded overflow-hidden">
-                            <Image
+                            <img
                               src={typeof img === 'string' ? img : img.url}
                               alt={`Review image ${index + 1}`}
-                              width={64}
-                              height={64}
                               className="w-full h-full object-cover"
+                              onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                             />
                           </div>
                         ))}
@@ -511,12 +507,11 @@ export default function ReviewsPage() {
                   {/* Product Info */}
                   <div className="flex gap-3 mb-6 p-3 bg-gray-50 rounded-lg">
                     <div className="w-16 h-16 bg-gray-100 rounded overflow-hidden flex-shrink-0">
-                      <Image
+                      <img
                         src={selectedItem.product?.images ? getPrimaryImageUrl(selectedItem.product.images) : '/placeholder-product.png'}
                         alt={selectedItem.product_name}
-                        width={64}
-                        height={64}
                         className="w-full h-full object-cover"
+                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                       />
                     </div>
                     <div className="flex-1 min-w-0">

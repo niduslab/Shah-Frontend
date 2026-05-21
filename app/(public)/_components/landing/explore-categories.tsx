@@ -2,107 +2,54 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight } from "lucide-react";
-import { useRef } from "react";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
+import { ArrowRight } from "lucide-react";
+import { useScrollReveal } from "@/lib/hooks/useScrollReveal";
 
 const CATEGORIES = [
   {
-    id: 9,
+    slug: "fitness-cardio",
     name: "Cardio",
     image: "/images/landing/explore-categories/image-1.png",
-    href: "/shop?category_id=9",
+    href: "/shop?category=fitness-cardio",
   },
   {
-    id: 15,
+    slug: "strength",
     name: "Strength",
     image: "/images/landing/explore-categories/image-3.png",
-    href: "/shop?category_id=15",
+    href: "/shop?category=strength",
   },
   {
-    id: 21,
+    slug: "free-weight",
     name: "Free Weight",
     image: "/images/landing/explore-categories/image-4.png",
-    href: "/shop?category_id=21",
+    href: "/shop?category=free-weight",
   },
   {
-    id: 27,
+    slug: "sports",
     name: "Sports",
     image: "/images/landing/explore-categories/image-2.png",
-    href: "/shop?category_id=27",
+    href: "/shop?category=sports",
   },
 ];
 
 export function ExploreCategories() {
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useGSAP(() => {
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: "top 80%",
-        toggleActions: "play none none reverse",
-      },
-    });
-
-    tl.from("h2", {
-      opacity: 0,
-      x: -30,
-      duration: 0.8,
-      ease: "power3.out",
-    })
-    .from(".category-nav-btn", {
-      opacity: 0,
-      x: 30,
-      stagger: 0.1,
-      duration: 0.8,
-      ease: "power3.out",
-    }, "<")
-    .from(".category-card", {
-      opacity: 0,
-      y: 50,
-      stagger: 0.1,
-      duration: 0.8,
-      ease: "power3.out",
-    }, "-=0.4");
-
-  }, { scope: containerRef });
+  const sectionRef = useScrollReveal();
 
   return (
-    <section ref={containerRef} className="w-full bg-white py-12">
+    <section ref={sectionRef as React.RefObject<HTMLElement>} className="w-full bg-white py-12">
       <div className="mx-auto w-full max-w-[1400px] px-4 md:px-6">
         <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-          <h2 className="text-3xl font-bold tracking-tight text-black">
+          <h2 data-reveal className="text-3xl font-bold tracking-tight text-black">
             Explore Our Categories
           </h2>
-          {/* <div className="flex gap-2">
-            <Link 
-              href="/shop"
-              className="category-nav-btn flex h-10 w-10 items-center justify-center rounded-xs bg-gray-100 text-black transition-colors hover:bg-gray-200"
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </Link>
-            <Link 
-              href="/shop"
-              className="category-nav-btn flex h-10 w-10 items-center justify-center rounded-xs bg-primary text-black transition-colors hover:bg-primary/90"
-            >
-              <ArrowRight className="h-5 w-5" />
-            </Link>
-          </div> */}
         </div>
 
-        {/* Categories Grid */}
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div data-reveal-stagger className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {CATEGORIES.map((category) => (
             <Link
-              key={category.id}
+              key={category.slug}
               href={category.href}
+              data-reveal
               className="category-card group relative block aspect-[4/5] overflow-hidden rounded-xs-lg bg-gray-100"
             >
               <Image

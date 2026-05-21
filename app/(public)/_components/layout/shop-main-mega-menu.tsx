@@ -188,7 +188,7 @@ export function ShopMainMegaMenu({ className, onLinkClick }: { className?: strin
                     group.items.map((item: any) => (
                       <li key={item.slug}>
                         <Link 
-                          href={`/shop?category_id=${item.categoryId}`} 
+                          href={`/shop?category=${item.slug}`} 
                           className="text-sm text-gray-600 transition-all hover:text-black hover:font-bold"
                           onClick={onLinkClick}
                         >
@@ -199,7 +199,7 @@ export function ShopMainMegaMenu({ className, onLinkClick }: { className?: strin
                   ) : (
                     <li>
                       <Link 
-                        href={`/shop?category_id=${group.categoryId}`} 
+                        href={`/shop?category=${group.slug}`} 
                         className="text-sm text-gray-600 transition-all hover:text-black hover:font-bold"
                         onClick={onLinkClick}
                       >
@@ -225,8 +225,8 @@ export function ShopMainMegaMenu({ className, onLinkClick }: { className?: strin
                 NEW ARRIVAL
               </span>
               <h4 className="mb-2 text-2xl font-bold leading-tight">Pro Runner 5000</h4>
-              <Link 
-                href={`/shop?category_id=${currentCategory.categoryId}`} 
+              <Link
+                href={`/shop?category=${currentCategory.slug}`}
                 className="inline-flex items-center text-sm font-bold text-white transition-colors hover:text-[#ffb81e]"
                 onClick={onLinkClick}
               >
@@ -259,7 +259,7 @@ export function ShopMainMegaMenu({ className, onLinkClick }: { className?: strin
                 {leftColumn.map((item: any) => (
                   <li key={item.slug}>
                     <Link 
-                      href={`/shop?category_id=${item.categoryId}`} 
+                      href={`/shop?category=${item.slug}`} 
                       className="text-base font-bold text-[#00072D] transition-all hover:text-[#ffb81e]"
                       onClick={onLinkClick}
                     >
@@ -275,7 +275,7 @@ export function ShopMainMegaMenu({ className, onLinkClick }: { className?: strin
                 {rightColumn.map((item: any) => (
                   <li key={item.slug}>
                     <Link 
-                      href={`/shop?category_id=${item.categoryId}`} 
+                      href={`/shop?category=${item.slug}`} 
                       className="text-base font-bold text-[#00072D] transition-all hover:text-[#ffb81e]"
                       onClick={onLinkClick}
                     >
@@ -300,8 +300,8 @@ export function ShopMainMegaMenu({ className, onLinkClick }: { className?: strin
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
               <div className="absolute bottom-5 left-5 text-white">
                 <h4 className="mb-1 text-lg font-bold">Pro Boxing Gear</h4>
-                <Link 
-                  href={boxingCategory ? `/shop?category_id=${boxingCategory.categoryId}` : `/shop?category_id=${currentCategory.categoryId}`}
+                <Link
+                  href={boxingCategory ? `/shop?category=${boxingCategory.slug}` : `/shop?category=${currentCategory.slug}`}
                   className="inline-flex items-center text-xs font-bold uppercase tracking-wider text-[#ffb81e] hover:text-white"
                   onClick={onLinkClick}
                 >
@@ -321,8 +321,8 @@ export function ShopMainMegaMenu({ className, onLinkClick }: { className?: strin
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
               <div className="absolute bottom-5 left-5 text-white">
                 <h4 className="mb-1 text-lg font-bold">Team Apparel</h4>
-                <Link 
-                  href={`/shop?category_id=${currentCategory.categoryId}`}
+                <Link
+                  href={`/shop?category=${currentCategory.slug}`}
                   className="inline-flex items-center text-xs font-bold uppercase tracking-wider text-[#ffb81e] hover:text-white"
                   onClick={onLinkClick}
                 >

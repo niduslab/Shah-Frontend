@@ -1,0 +1,105 @@
+{
+  "brandId": "7",
+  "content": {
+    "hero": {
+      "enabled": true,
+      "backgroundImage": "/images/brand-page/hero/1779351885295-Screenshot 2026-05-21 142254.png",
+      "title": "ProForm",
+      "highlightedText": "Fitness Space",
+      "description": "",
+      "buttonText": "Shop Now",
+      "buttonUrl": "/shop?brand=proform"
+    },
+    "categories": {
+      "enabled": true,
+      "sectionTitle": "Explore Categories",
+      "items": [
+        {
+          "id": "cat-1779351827953",
+          "name": "Cardio",
+          "image": "/images/brand-page/categories/1779351850766-Screenshot 2026-05-21 142246.png",
+          "href": "/shop?category=commercial-cardio&brand=proform"
+        },
+        {
+          "id": "cat-1779351828143",
+          "name": "Strength",
+          "image": "/images/brand-page/categories/1779351856252-Screenshot 2026-05-21 142228.png",
+          "href": "/shop?category=strength&brand=proform"
+        },
+        {
+          "id": "cat-1779351828327",
+          "name": "Free Weight",
+          "image": "/images/brand-page/categories/1779351859303-Screenshot 2026-05-21 142232.png",
+          "href": "/shop?category=free-weight&brand=proform"
+        },
+        {
+          "id": "cat-1779351828518",
+          "name": "Sports",
+          "image": "/images/brand-page/categories/1779351863262-Screenshot 2026-05-21 142236.png",
+          "href": "/shop?category=sports&brand=proform"
+        }
+      ]
+    },
+    "behindTheWork": {
+      "enabled": true,
+      "title": "Thinking Behind the Work",
+      "description": "",
+      "stats": [
+        {
+          "value": "51+",
+          "label": "Years of Experience"
+        },
+        {
+          "value": "1M+",
+          "label": "Happy Customers"
+        },
+        {
+          "value": "50+",
+          "label": "Available In Countries"
+        }
+      ],
+      "images": {
+        "left": "/images/brand-page/behind-work/1779351870670-Screenshot 2026-05-21 142236.png",
+        "center": "/images/brand-page/behind-work/1779351875867-Screenshot 2026-05-21 142228.png",
+        "right": "/images/brand-page/behind-work/1779351880467-Screenshot 2026-05-21 142232.png"
+      }
+    },
+    "shopBy": {
+      "enabled": true,
+      "cards": []
+    },
+    "promoBanner": {
+      "enabled": true,
+      "badge": "LIMITED-TIME EVENT",
+      "title": "Fitness",
+      "highlightedText": "30% off",
+      "subtitle": "Essentials",
+      "description": "Save on select NordicTrack equipment during the Winter Sale Event",
+      "buttonText": "Shop Now",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#3D2817",
+      "textColor": "#FFFFFF"
+    },
+    "featureSection1": {
+      "enabled": false,
+      "layout": "image-left",
+      "image": "",
+      "title": "Smart Rowing. Full-Body Results. Real Progress.",
+      "description": "Experience a powerful, low-impact workout that engages your entire body. Smart rowing machines automatically adjust resistance to match your trainer's intensity, helping you build strength, endurance, and consistency— every session, every stroke.",
+      "buttonText": "Shop Rowers",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#E8DED3"
+    },
+    "featureSection2": {
+      "enabled": false,
+      "layout": "image-right",
+      "image": "",
+      "title": "Where Refined Design meets uncompromising power.",
+      "description": "Experience a powerful, low-impact workout that engages your entire body. Smart rowing machines automatically adjust resistance to match your trainer's intensity, helping you build strength, endurance, and consistency— every session, every stroke.",
+      "buttonText": "Shop Rowers",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#E8DED3"
+    }
+  },
+  "updatedAt": "2026-05-21T08:24:46.626Z"
+}

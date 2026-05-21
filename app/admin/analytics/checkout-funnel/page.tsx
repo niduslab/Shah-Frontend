@@ -291,7 +291,7 @@ export default function CheckoutFunnelPage() {
                         <div className="text-xs text-gray-500">
                           {record.items_count} item{record.items_count !== 1 ? "s" : ""}
                         </div>
-                        {record.cart_items.length > 0 && (
+                        {record.cart_items && record.cart_items.length > 0 && (
                           <div className="mt-1 text-xs text-gray-400">
                             {record.cart_items[0].name}
                             {record.cart_items.length > 1 && ` +${record.cart_items.length - 1} more`}

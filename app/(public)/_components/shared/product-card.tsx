@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Heart, ShoppingBag, Star } from "lucide-react";
+import { Heart, ShoppingBag, Star, Zap } from "lucide-react";
 import { useAuth } from "@/lib/context/AuthContext";
 import { useCart } from "@/lib/context/CartContext";
 import { useCheckWishlist, useAddToWishlist, useRemoveFromWishlistByProduct } from "@/lib/hooks/user/useWishlist";
@@ -26,6 +26,8 @@ export interface Product {
   is_preorder?: boolean;
   preorder_release_date?: string;
   kinomap?: boolean;
+  flash_price?: number;
+  flash_discount_label?: string;
 }
 
 interface ProductCardProps {
@@ -129,13 +131,18 @@ export function ProductCard({ product, imageHeight = "h-[372px]" }: ProductCardP
       {/* Image Container */}
       <div className={`relative ${imageHeight} w-full overflow-hidden rounded-xs bg-gray-50`}>
         {/* Badge */}
-        {product.badge && (
+        {product.flash_price ? (
+          <div className="absolute left-4 top-4 z-20 flex items-center gap-1 rounded-md bg-gradient-to-r from-red-500 to-orange-500 px-2 py-1 shadow-sm">
+            <Zap className="h-3 w-3 fill-yellow-300 text-yellow-300" />
+            <span className="text-xs font-bold text-white">Flash Deal</span>
+          </div>
+        ) : product.badge ? (
           <div
             className={`absolute left-4 top-4 z-20 rounded px-2 py-1 text-xs font-bold text-white ${product.badge.className}`}
           >
             {product.badge.text}
           </div>
-        )}
+        ) : null}
         
         <button 
           onClick={handleToggleWishlist}
@@ -225,17 +232,34 @@ export function ProductCard({ product, imageHeight = "h-[372px]" }: ProductCardP
         </div>
 
         {/* Price */}
-        <div className="flex items-baseline gap-3">
-          <span className="text-xl font-bold text-black">
-            ${product.price.toFixed(2)}
-          </span>
-          {/* Hide original price if preorder is active */}
-          {!isPreorderActive && product.originalPrice && (
-            <span className="text-sm text-gray-400 line-through">
-              ${product.originalPrice.toFixed(2)}
+        {product.flash_price ? (
+          <div className="flex flex-col gap-0.5">
+            <div className="flex items-baseline gap-2">
+              <span className="text-xl font-bold text-red-600">
+                ${product.flash_price.toFixed(2)}
+              </span>
+              <span className="text-sm text-gray-400 line-through">
+                ${product.price.toFixed(2)}
+              </span>
+            </div>
+            {product.flash_discount_label && (
+              <span className="w-fit rounded-sm bg-red-50 px-1.5 py-0.5 text-xs font-semibold text-red-600">
+                {product.flash_discount_label}
+              </span>
+            )}
+          </div>
+        ) : (
+          <div className="flex items-baseline gap-3">
+            <span className="text-xl font-bold text-black">
+              ${product.price.toFixed(2)}
             </span>
-          )}
-        </div>
+            {!isPreorderActive && product.originalPrice && (
+              <span className="text-sm text-gray-400 line-through">
+                ${product.originalPrice.toFixed(2)}
+              </span>
+            )}
+          </div>
+        )}
         
         {/* Explicit View Details Link */}
         <Link 

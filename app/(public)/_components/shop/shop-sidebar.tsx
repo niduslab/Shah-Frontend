@@ -15,9 +15,11 @@ const FILTERS = {
 interface ShopSidebarProps {
   onPriceRangeChange?: (min: number | undefined, max: number | undefined) => void;
   onAvailabilityChange?: (inStock: boolean | undefined) => void;
-  onBrandChange?: (brandId: number | undefined) => void;
-  onCategoryChange?: (categoryId: number | undefined) => void;
+  onBrandChange?: (brandSlug: string | undefined) => void;
+  onCategoryChange?: (categorySlug: string | undefined) => void;
   onPreorderChange?: (isPreorder: boolean | undefined) => void;
+  initialBrandSlug?: string;
+  initialCategorySlug?: string;
 }
 
 function FilterSection({ title, children, defaultOpen = true }: { title: string; children: React.ReactNode; defaultOpen?: boolean }) {
@@ -74,12 +76,12 @@ function CheckboxItem({ label, count, checked, onChange }: { label: string; coun
   );
 }
 
-export function ShopSidebar({ onPriceRangeChange, onAvailabilityChange, onBrandChange, onCategoryChange, onPreorderChange }: ShopSidebarProps) {
+export function ShopSidebar({ onPriceRangeChange, onAvailabilityChange, onBrandChange, onCategoryChange, onPreorderChange, initialBrandSlug, initialCategorySlug }: ShopSidebarProps) {
   const [minPriceInput, setMinPriceInput] = useState("");
   const [maxPriceInput, setMaxPriceInput] = useState("");
   const [selectedAvailability, setSelectedAvailability] = useState<boolean | undefined>();
-  const [selectedBrand, setSelectedBrand] = useState<number | undefined>();
-  const [selectedCategory, setSelectedCategory] = useState<number | undefined>();
+  const [selectedBrand, setSelectedBrand] = useState<string | undefined>(initialBrandSlug);
+  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(initialCategorySlug);
   const [selectedPreorder, setSelectedPreorder] = useState<boolean | undefined>();
   const [showAllBrands, setShowAllBrands] = useState(false);
 
@@ -106,23 +108,23 @@ export function ShopSidebar({ onPriceRangeChange, onAvailabilityChange, onBrandC
     }
   };
 
-  const handleBrandClick = (brandId: number) => {
-    if (selectedBrand === brandId) {
+  const handleBrandClick = (brandSlug: string) => {
+    if (selectedBrand === brandSlug) {
       setSelectedBrand(undefined);
       onBrandChange?.(undefined);
     } else {
-      setSelectedBrand(brandId);
-      onBrandChange?.(brandId);
+      setSelectedBrand(brandSlug);
+      onBrandChange?.(brandSlug);
     }
   };
 
-  const handleCategoryClick = (categoryId: number) => {
-    if (selectedCategory === categoryId) {
+  const handleCategoryClick = (categorySlug: string) => {
+    if (selectedCategory === categorySlug) {
       setSelectedCategory(undefined);
       onCategoryChange?.(undefined);
     } else {
-      setSelectedCategory(categoryId);
-      onCategoryChange?.(categoryId);
+      setSelectedCategory(categorySlug);
+      onCategoryChange?.(categorySlug);
     }
   };
 
@@ -213,12 +215,12 @@ export function ShopSidebar({ onPriceRangeChange, onAvailabilityChange, onBrandC
         {brands.length > 0 ? (
           <>
             {(showAllBrands ? brands : brands.slice(0, 8)).map((brand: any) => (
-              <CheckboxItem 
-                key={brand.id} 
-                label={brand.name} 
+              <CheckboxItem
+                key={brand.id}
+                label={brand.name}
                 count={brand.products_count}
-                checked={selectedBrand === brand.id}
-                onChange={() => handleBrandClick(brand.id)}
+                checked={selectedBrand === brand.slug}
+                onChange={() => handleBrandClick(brand.slug)}
               />
             ))}
             {brands.length > 8 && (
@@ -239,23 +241,23 @@ export function ShopSidebar({ onPriceRangeChange, onAvailabilityChange, onBrandC
       {categories.length > 0 && categories.map((category: any) => (
         <FilterSection key={category.id} title={category.name}>
           {/* Parent Category */}
-          <CheckboxItem 
+          <CheckboxItem
             label={`All ${category.name}`}
             count={category.products_count}
-            checked={selectedCategory === category.id}
-            onChange={() => handleCategoryClick(category.id)}
+            checked={selectedCategory === category.slug}
+            onChange={() => handleCategoryClick(category.slug)}
           />
-          
+
           {/* Child Categories */}
           {category.children && category.children.length > 0 && (
             <div className="ml-4 mt-2 space-y-2 border-l-2 border-gray-100 pl-3">
               {category.children.map((child: any) => (
-                <CheckboxItem 
+                <CheckboxItem
                   key={child.id}
                   label={child.name}
                   count={child.products_count}
-                  checked={selectedCategory === child.id}
-                  onChange={() => handleCategoryClick(child.id)}
+                  checked={selectedCategory === child.slug}
+                  onChange={() => handleCategoryClick(child.slug)}
                 />
               ))}
             </div>

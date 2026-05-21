@@ -1,0 +1,105 @@
+{
+  "brandId": "9",
+  "content": {
+    "hero": {
+      "enabled": true,
+      "backgroundImage": "/images/brand-page/hero/1779352153335-Screenshot 2026-05-21 142901.png",
+      "title": "Turn Your Home\nInto A Complete",
+      "highlightedText": "Fitness Space",
+      "description": "",
+      "buttonText": "Shop Now",
+      "buttonUrl": "/shop?brand=spirit"
+    },
+    "categories": {
+      "enabled": true,
+      "sectionTitle": "Explore Categories",
+      "items": [
+        {
+          "id": "cat-1779352179343",
+          "name": "Cardio",
+          "image": "/images/brand-page/categories/1779352197902-Screenshot 2026-05-21 142823.png",
+          "href": "/shop?category=commercial-cardio&brand=spirit"
+        },
+        {
+          "id": "cat-1779352179519",
+          "name": "Free Weight",
+          "image": "/images/brand-page/categories/1779352201124-Screenshot 2026-05-21 142827.png",
+          "href": "/shop?category=free-weight&brand=spirit"
+        },
+        {
+          "id": "cat-1779352179679",
+          "name": "Strength",
+          "image": "/images/brand-page/categories/1779352204075-Screenshot 2026-05-21 142832.png",
+          "href": "/shop?category=strength&brand=spirit"
+        },
+        {
+          "id": "cat-1779352179862",
+          "name": "Sports",
+          "image": "/images/brand-page/categories/1779352207150-Screenshot 2026-05-21 142835.png",
+          "href": "/shop?category=sports&brand=spirit"
+        }
+      ]
+    },
+    "behindTheWork": {
+      "enabled": true,
+      "title": "Thinking Behind the Work",
+      "description": "",
+      "stats": [
+        {
+          "value": "51+",
+          "label": "Years of Experience"
+        },
+        {
+          "value": "1M+",
+          "label": "Happy Customers"
+        },
+        {
+          "value": "50+",
+          "label": "Available In Countries"
+        }
+      ],
+      "images": {
+        "left": "/images/brand-page/behind-work/1779352211053-Screenshot 2026-05-21 142835.png",
+        "center": "/images/brand-page/behind-work/1779352213733-Screenshot 2026-05-21 142832.png",
+        "right": "/images/brand-page/behind-work/1779352216570-Screenshot 2026-05-21 142827.png"
+      }
+    },
+    "shopBy": {
+      "enabled": true,
+      "cards": []
+    },
+    "promoBanner": {
+      "enabled": true,
+      "badge": "LIMITED-TIME EVENT",
+      "title": "Fitness",
+      "highlightedText": "30% off",
+      "subtitle": "Essentials",
+      "description": "Save on select NordicTrack equipment during the Winter Sale Event",
+      "buttonText": "Shop Now",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#3D2817",
+      "textColor": "#FFFFFF"
+    },
+    "featureSection1": {
+      "enabled": true,
+      "layout": "image-left",
+      "image": "",
+      "title": "Smart Rowing. Full-Body Results. Real Progress.",
+      "description": "Experience a powerful, low-impact workout that engages your entire body. Smart rowing machines automatically adjust resistance to match your trainer's intensity, helping you build strength, endurance, and consistency— every session, every stroke.",
+      "buttonText": "Shop Rowers",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#E8DED3"
+    },
+    "featureSection2": {
+      "enabled": true,
+      "layout": "image-right",
+      "image": "",
+      "title": "Where Refined Design meets uncompromising power.",
+      "description": "Experience a powerful, low-impact workout that engages your entire body. Smart rowing machines automatically adjust resistance to match your trainer's intensity, helping you build strength, endurance, and consistency— every session, every stroke.",
+      "buttonText": "Shop Rowers",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#E8DED3"
+    }
+  },
+  "updatedAt": "2026-05-21T08:30:19.174Z"
+}

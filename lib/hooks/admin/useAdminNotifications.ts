@@ -8,8 +8,13 @@ interface NotificationFilters {
 }
 
 export const useAdminNotifications = (filters?: NotificationFilters, options?: UseQueryOptions) => {
+  // Serialize filters to primitives so the queryKey is stable across renders
+  const page = filters?.page ?? 1;
+  const perPage = filters?.per_page ?? 10;
+  const read = filters?.read;
+
   return useQuery({
-    queryKey: ['admin-notifications', filters],
+    queryKey: ['admin-notifications', 'list', page, perPage, read],
     queryFn: async () => {
       const response = await api.get('/api/admin/notifications', { params: filters });
       return response.data;
@@ -25,7 +30,7 @@ export const useAdminUnreadCount = (options?: UseQueryOptions) => {
       const response = await api.get('/api/admin/notifications/unread-count');
       return response.data;
     },
-    refetchInterval: 30000, // Refetch every 30 seconds
+    staleTime: 60 * 1000, // treat as fresh for 1 minute — no polling
     ...options,
   });
 };

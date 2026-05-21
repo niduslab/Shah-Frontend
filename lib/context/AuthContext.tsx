@@ -1,8 +1,7 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, ReactNode, useCallback, useMemo } from 'react';
+import { createContext, useContext, useState, useEffect, useRef, ReactNode, useCallback, useMemo } from 'react';
 import authService, { User, RegisterData } from '../services/authService';
-import { useRouter, usePathname } from 'next/navigation';
 
 interface AuthContextType {
   user: User | null;
@@ -18,9 +17,8 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isInitialized, setIsInitialized] = useState(false);
-  const router = useRouter();
-  const pathname = usePathname();
+  const isInitialized = useRef(false);
+  const userRef = useRef<User | null>(null);
 
   const logout = useCallback(async () => {
     try {
@@ -28,8 +26,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       console.error('Logout API call failed:', error);
     } finally {
-      // Clear local state - cookies are handled by the server
       setUser(null);
+      userRef.current = null;
     }
   }, []);
 
@@ -38,40 +36,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const response = await authService.getUser();
       setUser(response.data);
-    } catch (error: any) {
-      // Handle 401 errors - session expired or invalid token
-      if (error?.response?.status === 401) {
-        console.log('Session expired or not authenticated');
-        setUser(null);
-        // Removed admin redirect - allow direct access to admin pages
-      } else {
-        setUser(null);
-      }
+      userRef.current = response.data;
+    } catch {
+      setUser(null);
+      userRef.current = null;
     } finally {
       setLoading(false);
     }
-  }, [pathname, router]);
+  }, []);
 
-  // Periodic session check (every 5 minutes)
+  // Periodic session check (every 5 minutes) — uses ref so interval never restarts
   useEffect(() => {
-    if (!isInitialized) return;
-
     const intervalId = setInterval(() => {
-      if (user) {
+      if (userRef.current) {
         checkAuth();
       }
-    }, 5 * 60 * 1000); // 5 minutes
+    }, 5 * 60 * 1000);
 
     return () => clearInterval(intervalId);
-  }, [checkAuth, isInitialized, user]);
+  }, [checkAuth]);
 
   useEffect(() => {
-    // Check auth on mount and after page reload
-    if (!isInitialized) {
+    if (!isInitialized.current) {
+      isInitialized.current = true;
       checkAuth();
-      setIsInitialized(true);
     }
-  }, [checkAuth, isInitialized]);
+  }, [checkAuth]);
 
   const login = useCallback(async (email: string, password: string) => {
     const response = await authService.login(email, password);

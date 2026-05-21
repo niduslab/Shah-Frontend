@@ -1,0 +1,105 @@
+{
+  "brandId": "17",
+  "content": {
+    "hero": {
+      "enabled": true,
+      "backgroundImage": "/images/brand-page/hero/1779353901984-Unisex_lounge_web_assets (1).webp",
+      "title": "Turn Your Home\nInto A Complete",
+      "highlightedText": "Fitness Space",
+      "description": "",
+      "buttonText": "Shop Now",
+      "buttonUrl": "/shop?brand=rider"
+    },
+    "categories": {
+      "enabled": true,
+      "sectionTitle": "Explore Categories",
+      "items": [
+        {
+          "id": "cat-1779353830600",
+          "name": "Cardio",
+          "image": "/images/brand-page/categories/1779353849571-6b311ac3d8dece9c1e14fcdd74c80399-removebg-preview-430x573.png",
+          "href": "/shop?category=commercial-cardio&brand=rider"
+        },
+        {
+          "id": "cat-1779353830774",
+          "name": "Strength",
+          "image": "/images/brand-page/categories/1779353852124-RX-1500-400x231.jpeg",
+          "href": "/shop?category=strength&brand=rider"
+        },
+        {
+          "id": "cat-1779353830950",
+          "name": "Free Weight",
+          "image": "/images/brand-page/categories/1779353854922-RX-1800-400x231.jpeg",
+          "href": "/shop?category=free-weight&brand=rider"
+        },
+        {
+          "id": "cat-1779353831159",
+          "name": "Sports",
+          "image": "/images/brand-page/categories/1779353857765-RX-2500-400x231.jpeg",
+          "href": "/shop?category=sports&brand=rider"
+        }
+      ]
+    },
+    "behindTheWork": {
+      "enabled": true,
+      "title": "Thinking Behind the Work",
+      "description": "",
+      "stats": [
+        {
+          "value": "51+",
+          "label": "Years of Experience"
+        },
+        {
+          "value": "1M+",
+          "label": "Happy Customers"
+        },
+        {
+          "value": "50+",
+          "label": "Available In Countries"
+        }
+      ],
+      "images": {
+        "left": "/images/brand-page/behind-work/1779353862832-RX-1500-400x231.jpeg",
+        "center": "/images/brand-page/behind-work/1779353865054-RX-1800-400x231.jpeg",
+        "right": "/images/brand-page/behind-work/1779353867127-RX-2500-400x231.jpeg"
+      }
+    },
+    "shopBy": {
+      "enabled": false,
+      "cards": []
+    },
+    "promoBanner": {
+      "enabled": true,
+      "badge": "LIMITED-TIME EVENT",
+      "title": "Fitness",
+      "highlightedText": "30% off",
+      "subtitle": "Essentials",
+      "description": "Save on select NordicTrack equipment during the Winter Sale Event",
+      "buttonText": "Shop Now",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#3D2817",
+      "textColor": "#FFFFFF"
+    },
+    "featureSection1": {
+      "enabled": false,
+      "layout": "image-left",
+      "image": "",
+      "title": "Smart Rowing. Full-Body Results. Real Progress.",
+      "description": "Experience a powerful, low-impact workout that engages your entire body. Smart rowing machines automatically adjust resistance to match your trainer's intensity, helping you build strength, endurance, and consistency— every session, every stroke.",
+      "buttonText": "Shop Rowers",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#E8DED3"
+    },
+    "featureSection2": {
+      "enabled": false,
+      "layout": "image-right",
+      "image": "",
+      "title": "Where Refined Design meets uncompromising power.",
+      "description": "Experience a powerful, low-impact workout that engages your entire body. Smart rowing machines automatically adjust resistance to match your trainer's intensity, helping you build strength, endurance, and consistency— every session, every stroke.",
+      "buttonText": "Shop Rowers",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#E8DED3"
+    }
+  },
+  "updatedAt": "2026-05-21T08:58:24.256Z"
+}

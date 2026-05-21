@@ -2,15 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Phone } from "lucide-react";
-import { useRef } from "react";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
+import { ArrowRight } from "lucide-react";
+import { useScrollReveal } from "@/lib/hooks/useScrollReveal";
 
 const SERVICES = [
   { title: "New Motor", price: "৳12,000 - ৳25,000" },
@@ -24,8 +17,7 @@ const SERVICES = [
 ];
 
 export function OurServicesSection() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const imageRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useScrollReveal();
 
   const handleWhatsAppClick = () => {
     window.open(
@@ -34,52 +26,12 @@ export function OurServicesSection() {
     );
   };
 
-  useGSAP(() => {
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: "top 75%",
-        toggleActions: "play none none reverse",
-      },
-    });
-
-    // Image Animation
-    tl.from(imageRef.current, {
-      opacity: 0,
-      x: -50,
-      duration: 1,
-      ease: "power3.out",
-    });
-
-    // Content Animation
-    tl.from(".service-content > *", {
-      opacity: 0,
-      x: 30,
-      stagger: 0.1,
-      duration: 0.8,
-      ease: "power3.out",
-    }, "-=0.6");
-
-    // Services Grid Animation
-    const serviceItems = containerRef.current?.querySelectorAll(".service-item");
-    if (serviceItems) {
-      tl.from(serviceItems, {
-        opacity: 0,
-        y: 20,
-        stagger: 0.05,
-        duration: 0.6,
-        ease: "power2.out",
-      }, "-=0.4");
-    }
-
-  }, { scope: containerRef });
-
   return (
-    <section ref={containerRef} className="w-full bg-white py-12">
+    <section ref={sectionRef as React.RefObject<HTMLElement>} className="w-full bg-white py-12">
       <div className="mx-auto w-full max-w-[1400px] px-4 md:px-6">
         <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-12">
           {/* Left Image */}
-          <div ref={imageRef} className="relative h-[400px] w-full overflow-hidden rounded-[2px] lg:h-[600px] lg:flex-1">
+          <div data-reveal="left" className="relative h-[400px] w-full overflow-hidden rounded-[2px] lg:h-[600px] lg:flex-1">
             <Image
               src="/images/landing/our-service/3b9f1d99c30ba0e2b151f726eddf7c074a5f10fa.jpg"
               alt="Technician repairing a treadmill"
@@ -89,7 +41,7 @@ export function OurServicesSection() {
           </div>
 
           {/* Right Content */}
-          <div className="service-content flex w-full flex-col lg:flex-1">
+          <div data-reveal="right" className="flex w-full flex-col lg:flex-1">
             <h2 className="mb-4 text-3xl font-bold uppercase tracking-tight text-black md:text-4xl">
               OUR SERVICES
             </h2>
@@ -99,7 +51,6 @@ export function OurServicesSection() {
               satisfaction.
             </p>
 
-            {/* Services Grid */}
             <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
               {SERVICES.map((service, index) => (
                 <div
@@ -114,7 +65,6 @@ export function OurServicesSection() {
               ))}
             </div>
 
-            {/* Buttons */}
             <div className="flex flex-col gap-4 sm:flex-row">
               <button
                 onClick={handleWhatsAppClick}

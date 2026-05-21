@@ -1,0 +1,105 @@
+{
+  "brandId": "22",
+  "content": {
+    "hero": {
+      "enabled": true,
+      "backgroundImage": "/images/brand-page/hero/1779354817912-Hebd95691126b467dbee2a1093c6cae12Y-600x600-1.webp",
+      "title": "Turn Your Home\nInto A Complete",
+      "highlightedText": "Fitness Space",
+      "description": "",
+      "buttonText": "Shop Now",
+      "buttonUrl": "/shop?brand=xpd"
+    },
+    "categories": {
+      "enabled": true,
+      "sectionTitle": "Explore Categories",
+      "items": [
+        {
+          "id": "cat-1779354756726",
+          "name": "Cardio",
+          "image": "/images/brand-page/categories/1779354774170-Terminatior.jpg",
+          "href": "/shop?category=commercial-cardio&brand=xpd"
+        },
+        {
+          "id": "cat-1779354756919",
+          "name": "Strength",
+          "image": "/images/brand-page/categories/1779354776170-717-zh9jR-L._AC_SY625_.jpg",
+          "href": "/shop?category=strength&brand=xpd"
+        },
+        {
+          "id": "cat-1779354757071",
+          "name": "Free Weight",
+          "image": "/images/brand-page/categories/1779354778459-Hebd95691126b467dbee2a1093c6cae12Y-600x600-1.webp",
+          "href": "/shop?category=free-weight&brand=xpd"
+        },
+        {
+          "id": "cat-1779354757254",
+          "name": "Sports",
+          "image": "/images/brand-page/categories/1779354780954-详情页_20.jpg",
+          "href": "/shop?category=sports&brand=xpd"
+        }
+      ]
+    },
+    "behindTheWork": {
+      "enabled": true,
+      "title": "Thinking Behind the Work",
+      "description": "",
+      "stats": [
+        {
+          "value": "51+",
+          "label": "Years of Experience"
+        },
+        {
+          "value": "1M+",
+          "label": "Happy Customers"
+        },
+        {
+          "value": "50+",
+          "label": "Available In Countries"
+        }
+      ],
+      "images": {
+        "left": "/images/brand-page/behind-work/1779354785969-6197jgFuiL._AC_SY575_.jpg",
+        "center": "/images/brand-page/behind-work/1779354788377-详情_19.jpg",
+        "right": "/images/brand-page/behind-work/1779354791037-详情页_20.jpg"
+      }
+    },
+    "shopBy": {
+      "enabled": false,
+      "cards": []
+    },
+    "promoBanner": {
+      "enabled": true,
+      "badge": "LIMITED-TIME EVENT",
+      "title": "Fitness",
+      "highlightedText": "30% off",
+      "subtitle": "Essentials",
+      "description": "Save on select NordicTrack equipment during the Winter Sale Event",
+      "buttonText": "Shop Now",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#3D2817",
+      "textColor": "#FFFFFF"
+    },
+    "featureSection1": {
+      "enabled": false,
+      "layout": "image-left",
+      "image": "",
+      "title": "Smart Rowing. Full-Body Results. Real Progress.",
+      "description": "Experience a powerful, low-impact workout that engages your entire body. Smart rowing machines automatically adjust resistance to match your trainer's intensity, helping you build strength, endurance, and consistency— every session, every stroke.",
+      "buttonText": "Shop Rowers",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#E8DED3"
+    },
+    "featureSection2": {
+      "enabled": false,
+      "layout": "image-right",
+      "image": "",
+      "title": "Where Refined Design meets uncompromising power.",
+      "description": "Experience a powerful, low-impact workout that engages your entire body. Smart rowing machines automatically adjust resistance to match your trainer's intensity, helping you build strength, endurance, and consistency— every session, every stroke.",
+      "buttonText": "Shop Rowers",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#E8DED3"
+    }
+  },
+  "updatedAt": "2026-05-21T09:13:42.557Z"
+}

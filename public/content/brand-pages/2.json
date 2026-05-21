@@ -3,40 +3,40 @@
   "content": {
     "hero": {
       "enabled": true,
-      "backgroundImage": "/images/brand-page/hero/1776413319602-18afe27e021b3b5b293d07807a171ee3c5770c31.jpg",
-      "title": "Turn Your Home\nInto A Complete asdfads asdf dsaf adsf asdf asfd",
-      "highlightedText": "Fitness Space asfsadf",
-      "description": "Great product",
+      "backgroundImage": "/images/brand-page/hero/1779339149342-3066245b-5153-451f-9ab4-914e883881f0_1.a79e5c2e70eb0e754f261c0190553b7b (1).jpeg",
+      "title": "REEBOK ",
+      "highlightedText": "",
+      "description": "",
       "buttonText": "Shop Now",
-      "buttonUrl": "/shop"
+      "buttonUrl": "/shop?brand=reebok"
     },
     "categories": {
       "enabled": true,
       "sectionTitle": "Explore Categories",
       "items": [
         {
-          "id": "cat-1776403214358",
-          "name": "New Category",
-          "image": "/images/brand-page/categories/1776403222247-536c8bf6ec7eb35b36b1b8ec1953f4c098029a49.png",
-          "href": "/shop"
+          "id": "cat-1779350749208",
+          "name": "Cardio",
+          "image": "/images/brand-page/categories/1779350805703-3066245b-5153-451f-9ab4-914e883881f0_1.a79e5c2e70eb0e754f261c0190553b7b (3).jpeg",
+          "href": "/shop?category=fitness-cardio&brand=reebok"
         },
         {
-          "id": "cat-1776403214541",
-          "name": "New Category",
-          "image": "/images/brand-page/categories/1776403225967-c720ec2c5e57a0bc8d6ddfb287ceee26a9140229.png",
-          "href": "/shop"
+          "id": "cat-1779350749639",
+          "name": "Strength",
+          "image": "/images/brand-page/categories/1779350808351-GT40sTFT.png",
+          "href": "/shop?category=strength&brand=reebok"
         },
         {
-          "id": "cat-1776403214719",
-          "name": "New Category",
-          "image": "/images/brand-page/categories/1776403229766-cfa8138ad5135723dcedad5236627bc4d080c002.png",
-          "href": "/shop"
+          "id": "cat-1779350749967",
+          "name": "Free Weight",
+          "image": "/images/brand-page/categories/1779350810594-reebok-exercise-bike-jet-430.jpg",
+          "href": "/shop?category=free-weight&brand=reebok"
         },
         {
-          "id": "cat-1776403214905",
-          "name": "New Category",
-          "image": "/images/brand-page/categories/1776403234093-merelvanvlerken_A_happy_young_man_is_carrying_an_enormous_cardb_36051df2-a370-4457-a120-418b20b09a7a.webp",
-          "href": "/shop"
+          "id": "cat-1779350750166",
+          "name": "Sports",
+          "image": "/images/brand-page/categories/1779350812925-RBKTMSL8DCBT_media-01.webp",
+          "href": "/shop?category=sports&brand=reebok"
         }
       ]
     },
@@ -59,13 +59,13 @@
         }
       ],
       "images": {
-        "left": "/images/brand-page/behind-work/1776403238888-91409c62d10476f009ceb549f50a2ad82eecdbf1.png",
-        "center": "/images/brand-page/behind-work/1776403242215-91409c62d10476f009ceb549f50a2ad82eecdbf1.png",
-        "right": "/images/brand-page/behind-work/1776403246584-ec666fa61d6b3d15f3de8eb76251e0feb4e1c1df.png"
+        "left": "/images/brand-page/behind-work/1779339603668-Screenshot 2026-05-21 105932.png",
+        "center": "/images/brand-page/behind-work/1779339606804-Screenshot 2026-05-21 105912.png",
+        "right": "/images/brand-page/behind-work/1779339609747-Screenshot 2026-05-21 105857.png"
       }
     },
     "shopBy": {
-      "enabled": true,
+      "enabled": false,
       "cards": [
         {
           "id": "card-1776403248351",
@@ -82,7 +82,39 @@
           "buttonUrl": "/shop"
         }
       ]
+    },
+    "promoBanner": {
+      "enabled": true,
+      "badge": "LIMITED-TIME EVENT",
+      "title": "Fitness",
+      "highlightedText": "30% off",
+      "subtitle": "Essentials",
+      "description": "Save on select NordicTrack equipment during the Winter Sale Event",
+      "buttonText": "Shop Now",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#3D2817",
+      "textColor": "#FFFFFF"
+    },
+    "featureSection1": {
+      "enabled": false,
+      "layout": "image-left",
+      "image": "",
+      "title": "Smart Rowing. Full-Body Results. Real Progress.",
+      "description": "Experience a powerful, low-impact workout that engages your entire body. Smart rowing machines automatically adjust resistance to match your trainer's intensity, helping you build strength, endurance, and consistency— every session, every stroke.",
+      "buttonText": "Shop Rowers",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#E8DED3"
+    },
+    "featureSection2": {
+      "enabled": false,
+      "layout": "image-right",
+      "image": "",
+      "title": "Where Refined Design meets uncompromising power.",
+      "description": "Experience a powerful, low-impact workout that engages your entire body. Smart rowing machines automatically adjust resistance to match your trainer's intensity, helping you build strength, endurance, and consistency— every session, every stroke.",
+      "buttonText": "Shop Rowers",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#E8DED3"
     }
   },
-  "updatedAt": "2026-04-17T08:08:51.062Z"
+  "updatedAt": "2026-05-21T08:06:58.437Z"
 }

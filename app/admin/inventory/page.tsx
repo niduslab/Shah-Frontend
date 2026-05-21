@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Package, Search, AlertTriangle, TrendingDown, TrendingUp, Filter, History, Edit2 } from 'lucide-react';
+import { Package, Search, AlertTriangle, TrendingDown, TrendingUp, Filter, History, Edit2, ChevronDown, ChevronRight } from 'lucide-react';
 import Pagination from '@/components/ui/Pagination';
 import { toast } from 'sonner';
 import { 
@@ -17,6 +17,13 @@ import BulkAdjustmentModal from './_components/BulkAdjustmentModal';
 import InventoryLogsModal from './_components/InventoryLogsModal';
 import LowStockAlert from './_components/LowStockAlert';
 
+interface InventoryVariation {
+  id: number;
+  sku: string;
+  quantity: number;
+  attributes: Record<string, string>;
+}
+
 interface InventoryItem {
   id: number;
   name: string;
@@ -29,15 +36,11 @@ interface InventoryItem {
     name: string;
   };
   images?: Array<{
-    path: string;
+    image_path: string;
+    full_url: string;
     is_primary: boolean;
   }>;
-  variations?: Array<{
-    id: number;
-    sku: string;
-    quantity: number;
-    attributes: Record<string, string>;
-  }>;
+  variations?: InventoryVariation[];
 }
 
 export default function InventoryPage() {
@@ -51,6 +54,15 @@ export default function InventoryPage() {
   const [isLogsModalOpen, setIsLogsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<InventoryItem | null>(null);
   const [showLowStockAlert, setShowLowStockAlert] = useState(true);
+  const [expandedProducts, setExpandedProducts] = useState<Set<number>>(new Set());
+
+  const toggleExpand = (productId: number) => {
+    setExpandedProducts(prev => {
+      const next = new Set(prev);
+      next.has(productId) ? next.delete(productId) : next.add(productId);
+      return next;
+    });
+  };
 
   const filters = {
     search: searchQuery || undefined,
@@ -106,10 +118,35 @@ export default function InventoryPage() {
     );
   };
 
+  const getVariationStockBadge = (variation: InventoryVariation, threshold: number) => {
+    if (variation.quantity === 0) {
+      return (
+        <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium bg-red-100 text-red-700 ring-1 ring-red-600/20">
+          <AlertTriangle className="h-3 w-3" />
+          Out of Stock
+        </span>
+      );
+    }
+    if (variation.quantity <= threshold) {
+      return (
+        <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-700 ring-1 ring-yellow-600/20">
+          <TrendingDown className="h-3 w-3" />
+          Low Stock
+        </span>
+      );
+    }
+    return (
+      <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium bg-emerald-100 text-emerald-700 ring-1 ring-emerald-600/20">
+        <TrendingUp className="h-3 w-3" />
+        In Stock
+      </span>
+    );
+  };
+
   const getPrimaryImage = (item: InventoryItem) => {
     if (!item.images || item.images.length === 0) return null;
-    const primary = item.images.find(img => img.is_primary);
-    return primary ? primary.path : item.images[0].path;
+    const primary = item.images.find(img => img.is_primary) ?? item.images[0];
+    return primary.full_url || primary.image_path;
   };
 
   if (isLoading) {
@@ -240,69 +277,149 @@ export default function InventoryPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {inventory.map((item: InventoryItem) => (
-                    <tr key={item.id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="h-12 w-12 rounded-lg bg-gray-100 overflow-hidden flex-shrink-0">
-                            {getPrimaryImage(item) ? (
-                              <img
-                                src={getImageUrl(getPrimaryImage(item)!)}
-                                alt={item.name}
-                                className="h-full w-full object-cover"
-                                onError={(e) => {
-                                  (e.target as HTMLImageElement).src = getPlaceholderImage();
-                                }}
-                              />
+                  {inventory.map((item: InventoryItem) => {
+                    const hasVariations = item.variations && item.variations.length > 0;
+                    const isExpanded = expandedProducts.has(item.id);
+
+                    return (
+                      <>
+                        {/* Main product row */}
+                        <tr key={item.id} className={`hover:bg-gray-50 transition-colors ${isExpanded ? 'bg-orange-50/30' : ''}`}>
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-3">
+                              {/* Expand toggle */}
+                              {hasVariations ? (
+                                <button
+                                  onClick={() => toggleExpand(item.id)}
+                                  className="rounded p-0.5 text-gray-400 hover:text-[#FF6F00] transition-colors flex-shrink-0"
+                                  title={isExpanded ? 'Collapse variants' : 'Expand variants'}
+                                >
+                                  {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                                </button>
+                              ) : (
+                                <div className="w-5 flex-shrink-0" />
+                              )}
+                              <div className="h-12 w-12 rounded-lg bg-gray-100 overflow-hidden flex-shrink-0">
+                                {getPrimaryImage(item) ? (
+                                  <img
+                                    src={getImageUrl(getPrimaryImage(item)!)}
+                                    alt={item.name}
+                                    className="h-full w-full object-cover"
+                                    onError={(e) => { (e.target as HTMLImageElement).src = getPlaceholderImage(); }}
+                                  />
+                                ) : (
+                                  <div className="h-full w-full flex items-center justify-center">
+                                    <Package className="h-6 w-6 text-gray-400" />
+                                  </div>
+                                )}
+                              </div>
+                              <div>
+                                <p className="font-medium text-gray-900">{item.name}</p>
+                                {hasVariations && (
+                                  <button
+                                    onClick={() => toggleExpand(item.id)}
+                                    className="text-xs text-[#FF6F00] hover:underline"
+                                  >
+                                    {item.variations!.length} variant{item.variations!.length !== 1 ? 's' : ''} — click to {isExpanded ? 'collapse' : 'expand'}
+                                  </button>
+                                )}
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className="font-mono text-sm text-gray-600">{item.sku}</span>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className="text-sm text-gray-600">{item.category?.name || '-'}</span>
+                          </td>
+                          <td className="px-6 py-4 text-center">
+                            {hasVariations ? (
+                              <div className="flex flex-col items-center">
+                                <span className="text-lg font-semibold text-gray-900">
+                                  {item.variations!.reduce((sum, v) => sum + v.quantity, 0)}
+                                </span>
+                                <span className="text-xs text-gray-400">total across variants</span>
+                              </div>
                             ) : (
-                              <div className="h-full w-full flex items-center justify-center">
-                                <Package className="h-6 w-6 text-gray-400" />
+                              <div className="flex flex-col items-center">
+                                <span className="text-lg font-semibold text-gray-900">{item.quantity}</span>
+                                <span className="text-xs text-gray-500">Threshold: {item.low_stock_threshold}</span>
                               </div>
                             )}
-                          </div>
-                          <div>
-                            <p className="font-medium text-gray-900">{item.name}</p>
-                            {item.variations && item.variations.length > 0 && (
-                              <p className="text-xs text-gray-500">{item.variations.length} variations</p>
+                          </td>
+                          <td className="px-6 py-4 text-center">
+                            {hasVariations ? (
+                              <span className="text-xs text-gray-400 italic">see variants</span>
+                            ) : (
+                              getStockStatusBadge(item)
                             )}
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="font-mono text-sm text-gray-600">{item.sku}</span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="text-sm text-gray-600">{item.category?.name || '-'}</span>
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <div className="flex flex-col items-center">
-                          <span className="text-lg font-semibold text-gray-900">{item.quantity}</span>
-                          <span className="text-xs text-gray-500">Threshold: {item.low_stock_threshold}</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        {getStockStatusBadge(item)}
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center justify-end gap-2">
-                          <button
-                            onClick={() => handleAdjustStock(item)}
-                            className="rounded-lg p-2 text-[#FF6F00] transition-all hover:bg-orange-50 focus:outline-none focus:ring-2 focus:ring-[#FF6F00]"
-                            title="Adjust stock"
-                          >
-                            <Edit2 className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={() => handleViewLogs(item)}
-                            className="rounded-lg p-2 text-blue-600 transition-all hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            title="View logs"
-                          >
-                            <History className="h-4 w-4" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="flex items-center justify-end gap-2">
+                              <button
+                                onClick={() => handleAdjustStock(item)}
+                                className="rounded-lg p-2 text-[#FF6F00] transition-all hover:bg-orange-50 focus:outline-none focus:ring-2 focus:ring-[#FF6F00]"
+                                title="Adjust stock"
+                              >
+                                <Edit2 className="h-4 w-4" />
+                              </button>
+                              <button
+                                onClick={() => handleViewLogs(item)}
+                                className="rounded-lg p-2 text-blue-600 transition-all hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                title="View logs"
+                              >
+                                <History className="h-4 w-4" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+
+                        {/* Variant sub-rows */}
+                        {hasVariations && isExpanded && item.variations!.map((variation) => (
+                          <tr key={`var-${variation.id}`} className="bg-gray-50/60 border-l-4 border-l-[#FF6F00]/30">
+                            <td className="pl-16 pr-6 py-3">
+                              <div className="flex items-center gap-2">
+                                <div className="h-1.5 w-1.5 rounded-full bg-[#FF6F00]/50 flex-shrink-0" />
+                                <div>
+                                  <p className="text-sm font-medium text-gray-700">
+                                    {Object.entries(variation.attributes).map(([k, v]) => `${k}: ${v}`).join(' / ')}
+                                  </p>
+                                  <p className="text-xs text-gray-400 font-mono">{variation.sku}</p>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="px-6 py-3">
+                              <span className="font-mono text-xs text-gray-400">{variation.sku}</span>
+                            </td>
+                            <td className="px-6 py-3" />
+                            <td className="px-6 py-3 text-center">
+                              <div className="flex flex-col items-center">
+                                <span className="text-base font-semibold text-gray-900">{variation.quantity}</span>
+                                <span className="text-xs text-gray-500">Threshold: {item.low_stock_threshold}</span>
+                              </div>
+                            </td>
+                            <td className="px-6 py-3 text-center">
+                              {getVariationStockBadge(variation, item.low_stock_threshold)}
+                            </td>
+                            <td className="px-6 py-3">
+                              <div className="flex items-center justify-end gap-2">
+                                <button
+                                  onClick={() => {
+                                    setSelectedProduct({ ...item, _selectedVariationId: variation.id } as any);
+                                    setIsAdjustModalOpen(true);
+                                  }}
+                                  className="rounded-lg p-2 text-[#FF6F00] transition-all hover:bg-orange-50 focus:outline-none focus:ring-2 focus:ring-[#FF6F00]"
+                                  title={`Adjust stock for this variant`}
+                                >
+                                  <Edit2 className="h-4 w-4" />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

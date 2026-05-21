@@ -8,7 +8,7 @@ import { useAddresses, useCreateAddress } from "@/lib/hooks/user";
 import { useProcessCheckout, useGetShippingMethods, useSendRegistrationOtp } from "@/lib/hooks/user/useCheckout";
 import { otpAuthService } from "@/lib/services/otpAuthService";
 import { toast } from "sonner";
-import { getPlaceholderImage } from "@/lib/utils/image";
+import { getPlaceholderImage, getPrimaryImageUrl, getImageUrl } from "@/lib/utils/image";
 import OtpInput from "@/lib/components/OtpInput";
 import { useAnalytics } from "@/lib/hooks/useAnalytics";
 import { 
@@ -25,7 +25,9 @@ import {
   Building,
   CreditCard,
   Mail,
-  ShieldCheck
+  ShieldCheck,
+  Eye,
+  EyeOff
 } from "lucide-react";
 
 // Types
@@ -126,6 +128,9 @@ export default function CheckoutPage() {
     zipCode: "",
     createAccount: true,
   });
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const addresses = (addressesData as any)?.data || [];
   
@@ -288,6 +293,7 @@ export default function CheckoutPage() {
         toast.success('Email verified successfully!');
         setEmailVerified(true);
         setOtpTimer(0);
+        setErrors(prev => ({ ...prev, email: '' }));
       } else {
         toast.error(data.message || 'Invalid or expired verification code');
         // Don't clear OTP on error, let user try again
@@ -378,10 +384,8 @@ export default function CheckoutPage() {
       if (guestData.createAccount) {
         if (!guestData.password) {
           newErrors.password = 'Password is required';
-        } else if (guestData.password.length < 8) {
-          newErrors.password = 'Password must be at least 8 characters';
-        } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(guestData.password)) {
-          newErrors.password = 'Password must contain uppercase, lowercase, and number';
+        } else if (guestData.password.length > 8) {
+          newErrors.password = 'Password must be 1-8 characters';
         }
 
         if (!guestData.confirmPassword) {
@@ -1012,14 +1016,23 @@ export default function CheckoutPage() {
                             <label className="text-sm font-medium text-gray-700">
                               Password <span className="text-red-500">*</span>
                             </label>
-                            <input 
-                              type="password"
-                              name="password"
-                              placeholder="Min 8 characters (uppercase, lowercase, number)" 
-                              value={guestData.password}
-                              onChange={(e) => handleInputChange('password', e.target.value)}
-                              className={`w-full rounded-sm border ${errors.password ? 'border-red-500' : 'border-gray-200'} bg-white px-4 py-2.5 outline-none focus:border-black transition-colors`}
-                            />
+                            <div className="relative">
+                              <input
+                                type={showPassword ? "text" : "password"}
+                                name="password"
+                                placeholder="Enter password (max 8 characters)"
+                                value={guestData.password}
+                                onChange={(e) => handleInputChange('password', e.target.value)}
+                                className={`w-full rounded-sm border ${errors.password ? 'border-red-500' : 'border-gray-200'} bg-white px-4 py-2.5 pr-10 outline-none focus:border-black transition-colors`}
+                              />
+                              <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                              >
+                                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                              </button>
+                            </div>
                             {errors.password && <p className="text-xs text-red-500">{errors.password}</p>}
                           </div>
 
@@ -1027,14 +1040,23 @@ export default function CheckoutPage() {
                             <label className="text-sm font-medium text-gray-700">
                               Confirm Password <span className="text-red-500">*</span>
                             </label>
-                            <input 
-                              type="password"
-                              name="confirmPassword"
-                              placeholder="Re-enter your password" 
-                              value={guestData.confirmPassword}
-                              onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                              className={`w-full rounded-sm border ${errors.confirmPassword ? 'border-red-500' : 'border-gray-200'} bg-white px-4 py-2.5 outline-none focus:border-black transition-colors`}
-                            />
+                            <div className="relative">
+                              <input
+                                type={showConfirmPassword ? "text" : "password"}
+                                name="confirmPassword"
+                                placeholder="Re-enter your password"
+                                value={guestData.confirmPassword}
+                                onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+                                className={`w-full rounded-sm border ${errors.confirmPassword ? 'border-red-500' : 'border-gray-200'} bg-white px-4 py-2.5 pr-10 outline-none focus:border-black transition-colors`}
+                              />
+                              <button
+                                type="button"
+                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                              >
+                                {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                              </button>
+                            </div>
                             {errors.confirmPassword && <p className="text-xs text-red-500">{errors.confirmPassword}</p>}
                           </div>
                         </div>
@@ -1297,22 +1319,12 @@ export default function CheckoutPage() {
                     const price = item.variation ? parseFloat(item.variation.price) : parseFloat(item.product?.price || '0');
                     const itemTotal = price * item.quantity;
                     
-                    // Get image URL - handle both API format and direct URLs
+                    // Get image URL - handle both API format (images array) and product card format (image string)
                     let imageUrl = getPlaceholderImage(item.product?.name || 'Product');
                     if (item.product?.images && item.product.images.length > 0) {
-                      const firstImage = item.product.images[0];
-                      if (typeof firstImage === 'string') {
-                        // Direct URL from product card
-                        imageUrl = firstImage;
-                      } else if (firstImage?.image_path) {
-                        // API format with image_path
-                        imageUrl = firstImage.image_path.startsWith('http') 
-                          ? firstImage.image_path 
-                          : `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}/${firstImage.image_path}`;
-                      }
+                      imageUrl = getPrimaryImageUrl(item.product.images) || imageUrl;
                     } else if (item.product?.image) {
-                      // Fallback to product.image if available
-                      imageUrl = item.product.image;
+                      imageUrl = getImageUrl(item.product.image) || item.product.image;
                     }
 
                     return (
@@ -1326,9 +1338,6 @@ export default function CheckoutPage() {
                               e.currentTarget.src = getPlaceholderImage(item.product?.name || 'Product');
                             }}
                           />
-                          <div className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-black text-xs font-bold text-white">
-                            {item.quantity}
-                          </div>
                         </div>
                         <div className="flex-1 min-w-0">
                           <h3 className="text-sm font-medium text-black line-clamp-2">

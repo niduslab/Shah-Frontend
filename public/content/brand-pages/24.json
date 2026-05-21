@@ -1,0 +1,105 @@
+{
+  "brandId": "24",
+  "content": {
+    "hero": {
+      "enabled": true,
+      "backgroundImage": "/images/brand-page/hero/1779355063235-very-7.png",
+      "title": "Turn Your Home\nInto A Complete",
+      "highlightedText": "Fitness Space",
+      "description": "",
+      "buttonText": "Shop Now",
+      "buttonUrl": "/shop?brand=729"
+    },
+    "categories": {
+      "enabled": true,
+      "sectionTitle": "Explore Categories",
+      "items": [
+        {
+          "id": "cat-1779355065768",
+          "name": "Cardio",
+          "image": "/images/brand-page/categories/1779355085016-very-5.png",
+          "href": "/shop?category=commercial-cardio&brand=729"
+        },
+        {
+          "id": "cat-1779355065941",
+          "name": "Strength",
+          "image": "/images/brand-page/categories/1779355087346-very-7.png",
+          "href": "/shop?category=strength&brand=729"
+        },
+        {
+          "id": "cat-1779355066110",
+          "name": "Free Weight",
+          "image": "/images/brand-page/categories/1779355089236-Untitled.-4.png",
+          "href": "/shop?category=free-weight&brand=729"
+        },
+        {
+          "id": "cat-1779355066270",
+          "name": "Sports",
+          "image": "/images/brand-page/categories/1779355091529-very-8.png",
+          "href": "/shop?category=sports&brand=729"
+        }
+      ]
+    },
+    "behindTheWork": {
+      "enabled": true,
+      "title": "Thinking Behind the Work",
+      "description": "",
+      "stats": [
+        {
+          "value": "51+",
+          "label": "Years of Experience"
+        },
+        {
+          "value": "1M+",
+          "label": "Happy Customers"
+        },
+        {
+          "value": "50+",
+          "label": "Available In Countries"
+        }
+      ],
+      "images": {
+        "left": "/images/brand-page/behind-work/1779355098322-Untitled.-4.png",
+        "center": "/images/brand-page/behind-work/1779355100480-very-7.png",
+        "right": "/images/brand-page/behind-work/1779355102544-very-5.png"
+      }
+    },
+    "shopBy": {
+      "enabled": false,
+      "cards": []
+    },
+    "promoBanner": {
+      "enabled": true,
+      "badge": "LIMITED-TIME EVENT",
+      "title": "Fitness",
+      "highlightedText": "30% off",
+      "subtitle": "Essentials",
+      "description": "Save on select NordicTrack equipment during the Winter Sale Event",
+      "buttonText": "Shop Now",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#3D2817",
+      "textColor": "#FFFFFF"
+    },
+    "featureSection1": {
+      "enabled": false,
+      "layout": "image-left",
+      "image": "",
+      "title": "Smart Rowing. Full-Body Results. Real Progress.",
+      "description": "Experience a powerful, low-impact workout that engages your entire body. Smart rowing machines automatically adjust resistance to match your trainer's intensity, helping you build strength, endurance, and consistency— every session, every stroke.",
+      "buttonText": "Shop Rowers",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#E8DED3"
+    },
+    "featureSection2": {
+      "enabled": false,
+      "layout": "image-right",
+      "image": "",
+      "title": "Where Refined Design meets uncompromising power.",
+      "description": "Experience a powerful, low-impact workout that engages your entire body. Smart rowing machines automatically adjust resistance to match your trainer's intensity, helping you build strength, endurance, and consistency— every session, every stroke.",
+      "buttonText": "Shop Rowers",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#E8DED3"
+    }
+  },
+  "updatedAt": "2026-05-21T09:18:29.274Z"
+}

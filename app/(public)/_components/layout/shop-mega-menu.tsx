@@ -40,7 +40,7 @@ export function ShopMegaMenu({ className, onLinkClick }: { className?: string; o
             name: level3.name,
             slug: level3.slug,
             categoryId: level3.id,
-            href: `/shop?category_id=${level3.id}`,
+            href: `/shop?category=${level3.slug}`,
           })),
         };
       });
@@ -118,7 +118,7 @@ export function ShopMegaMenu({ className, onLinkClick }: { className?: string; o
                 ) : (
                   <li>
                     <Link
-                      href={`/shop?category_id=${currentCategory?.categoryId}`}
+                      href={`/shop?category=${currentCategory?.slug}`}
                       className="text-sm text-gray-600 transition-all hover:text-black hover:font-bold"
                       onClick={onLinkClick}
                     >
@@ -177,7 +177,7 @@ export function ShopMegaMenu({ className, onLinkClick }: { className?: string; o
                   return (
                     <Link 
                       key={category.id}
-                      href={`/shop?category_id=${category.categoryId}`}
+                      href={`/shop?category=${category.slug}`}
                       className="group relative cursor-pointer rounded-lg overflow-hidden transition-all hover:shadow-xl"
                       onClick={onLinkClick}
                     >

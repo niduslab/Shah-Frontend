@@ -8,7 +8,7 @@ import { useCart } from "@/lib/context/CartContext";
 import { useCalculateCartSummary, useValidateCoupon, useAvailableCoupons } from "@/lib/hooks/public/useCart";
 import { ProductCard } from "../_components/shared/product-card";
 import { toast } from "sonner";
-import { getPlaceholderImage } from "@/lib/utils/image";
+import { getPlaceholderImage, getPrimaryImageUrl, getImageUrl } from "@/lib/utils/image";
 import { useAnalytics } from "@/lib/hooks/useAnalytics";
 
 // Data for "You May Also Like"
@@ -239,7 +239,7 @@ export default function CartPage() {
   const discount = appliedCoupon?.discount_amount || summary?.discount || 0;
   const tax = summary?.tax || 0;
   const shipping = summary?.shipping || 0;
-  const totalPrice = summary?.total || 0;
+  const totalPrice = subTotal - discount + tax + shipping;
 
   return (
     <div className="w-full bg-white pb-20 pt-8">
@@ -285,22 +285,12 @@ export default function CartPage() {
                   ? Math.round(((comparePrice - price) / comparePrice) * 100) 
                   : 0;
                 
-                // Get image URL - handle both API format and direct URLs
+                // Get image URL - handle both API format (images array) and product card format (image string)
                 let imageUrl = getPlaceholderImage(product?.name || 'Product');
                 if (product?.images && product.images.length > 0) {
-                  const firstImage = product.images[0];
-                  if (typeof firstImage === 'string') {
-                    // Direct URL from product card
-                    imageUrl = firstImage;
-                  } else if (firstImage?.image_path) {
-                    // API format with image_path
-                    imageUrl = firstImage.image_path.startsWith('http') 
-                      ? firstImage.image_path 
-                      : `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}/${firstImage.image_path}`;
-                  }
+                  imageUrl = getPrimaryImageUrl(product.images) || imageUrl;
                 } else if (product?.image) {
-                  // Fallback to product.image if available
-                  imageUrl = product.image;
+                  imageUrl = getImageUrl(product.image) || product.image;
                 }
 
                 return (

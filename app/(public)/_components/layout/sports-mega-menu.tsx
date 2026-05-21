@@ -42,7 +42,7 @@ export function SportsMegaMenu({ className, onLinkClick }: { className?: string;
           .filter((child: any) => child.is_active)
           .map((cat: any) => ({
             name: cat.name,
-            href: `/shop?category_id=${cat.id}`,
+            href: `/shop?category=${cat.slug}`,
             categoryId: cat.id,
             slug: cat.slug,
           }))
@@ -53,7 +53,7 @@ export function SportsMegaMenu({ className, onLinkClick }: { className?: string;
       .filter((cat: any) => cat.slug !== 'indoor-individual')
       .map((cat: any) => ({
         name: cat.name,
-        href: `/shop?category_id=${cat.id}`,
+        href: `/shop?category=${cat.slug}`,
         categoryId: cat.id,
         slug: cat.slug,
         // Map to existing images if available
@@ -155,7 +155,7 @@ export function SportsMegaMenu({ className, onLinkClick }: { className?: string;
                 Discover our range of professional-grade equipment designed for athletes who demand the best.
               </p>
               <Link 
-                href={`/shop?category_id=${sportsCategory.id}`}
+                href={`/shop?category=${sportsCategory.slug}`}
                 className="inline-flex items-center text-sm font-bold text-white transition-colors hover:text-[#ffb81e]"
                 onClick={onLinkClick}
               >

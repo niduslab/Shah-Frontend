@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X, Package, Plus, Minus } from 'lucide-react';
 
 interface StockAdjustmentModalProps {
@@ -11,6 +11,11 @@ interface StockAdjustmentModalProps {
 }
 
 export default function StockAdjustmentModal({ isOpen, onClose, product, onSubmit }: StockAdjustmentModalProps) {
+  const hasVariations = product?.variations && product.variations.length > 0;
+
+  // If opened from a variant row, _selectedVariationId is pre-set
+  const preselectedVariationId: number | null = product?._selectedVariationId ?? null;
+
   const [formData, setFormData] = useState({
     variation_id: null as number | null,
     quantity: '',
@@ -20,10 +25,45 @@ export default function StockAdjustmentModal({ isOpen, onClose, product, onSubmi
   const [adjustmentType, setAdjustmentType] = useState<'add' | 'subtract'>('add');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Sync variation selection when product/modal changes
+  useEffect(() => {
+    if (isOpen) {
+      setFormData({
+        variation_id: preselectedVariationId,
+        quantity: '',
+        reason: 'adjustment',
+        notes: '',
+      });
+      setAdjustmentType('add');
+    }
+  }, [isOpen, product?.id, preselectedVariationId]);
+
+  if (!isOpen || !product) return null;
+
+  const selectedVariation = formData.variation_id
+    ? product.variations?.find((v: any) => v.id === formData.variation_id)
+    : null;
+
+  const currentStock = selectedVariation
+    ? selectedVariation.quantity
+    : hasVariations
+    ? null  // no variation selected yet — force selection
+    : product.quantity;
+
+  const quantityValue = parseInt(formData.quantity) || 0;
+  const newStock = currentStock !== null
+    ? (adjustmentType === 'add' ? currentStock + quantityValue : currentStock - quantityValue)
+    : null;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
 
+    // If product has variations, a variation must be selected
+    if (hasVariations && !formData.variation_id) {
+      return;
+    }
+
+    setIsSubmitting(true);
     try {
       const quantity = parseInt(formData.quantity);
       const finalQuantity = adjustmentType === 'subtract' ? -quantity : quantity;
@@ -34,31 +74,10 @@ export default function StockAdjustmentModal({ isOpen, onClose, product, onSubmi
         reason: formData.reason,
         notes: formData.notes || undefined,
       });
-
-      // Reset form
-      setFormData({
-        variation_id: null,
-        quantity: '',
-        reason: 'adjustment',
-        notes: '',
-      });
-      setAdjustmentType('add');
     } finally {
       setIsSubmitting(false);
     }
   };
-
-  if (!isOpen) return null;
-
-  const hasVariations = product.variations && product.variations.length > 0;
-  const currentStock = formData.variation_id
-    ? product.variations.find((v: any) => v.id === formData.variation_id)?.quantity || 0
-    : product.quantity;
-
-  const quantityValue = parseInt(formData.quantity) || 0;
-  const newStock = adjustmentType === 'add' 
-    ? currentStock + quantityValue 
-    : currentStock - quantityValue;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
@@ -82,76 +101,89 @@ export default function StockAdjustmentModal({ isOpen, onClose, product, onSubmi
           </button>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
-          {/* Current Stock Info */}
-          <div className="rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 p-4 border border-blue-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-blue-600">Current Stock</p>
-                <p className="text-3xl font-bold text-blue-900">{currentStock}</p>
-              </div>
-              <div className="text-right">
-                <p className="text-sm font-medium text-blue-600">New Stock</p>
-                <p className={`text-3xl font-bold ${newStock < 0 ? 'text-red-600' : 'text-emerald-600'}`}>
-                  {newStock}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Variation Selection */}
+          {/* Variation selection — required when product has variants */}
           {hasVariations && (
             <div>
               <label className="mb-2 block text-sm font-medium text-gray-700">
-                Select Variation (Optional)
+                Select Variant <span className="text-red-500">*</span>
               </label>
-              <select
-                value={formData.variation_id || ''}
-                onChange={(e) => setFormData({ ...formData, variation_id: e.target.value ? parseInt(e.target.value) : null })}
-                className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm transition-all focus:border-[#FF6F00] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
-              >
-                <option value="">Main Product (Stock: {product.quantity})</option>
-                {product.variations.map((variation: any) => (
-                  <option key={variation.id} value={variation.id}>
-                    {Object.entries(variation.attributes).map(([key, value]) => `${key}: ${value}`).join(', ')} 
-                    {' '}(Stock: {variation.quantity})
-                  </option>
-                ))}
-              </select>
+              <div className="grid gap-2">
+                {product.variations.map((variation: any) => {
+                  const label = Object.entries(variation.attributes as Record<string, string>)
+                    .map(([k, v]) => `${k}: ${v}`)
+                    .join(' / ');
+                  const isSelected = formData.variation_id === variation.id;
+                  return (
+                    <button
+                      key={variation.id}
+                      type="button"
+                      onClick={() => setFormData(f => ({ ...f, variation_id: variation.id }))}
+                      className={`flex items-center justify-between rounded-xl border px-4 py-3 text-left text-sm transition-all ${
+                        isSelected
+                          ? 'border-[#FF6F00] bg-orange-50 ring-2 ring-[#FF6F00]/20'
+                          : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                      }`}
+                    >
+                      <div>
+                        <span className="font-medium text-gray-900">{label || `Variant #${variation.id}`}</span>
+                        <span className="ml-2 font-mono text-xs text-gray-400">{variation.sku}</span>
+                      </div>
+                      <div className="text-right">
+                        <span className={`font-semibold ${variation.quantity === 0 ? 'text-red-600' : 'text-gray-900'}`}>
+                          {variation.quantity}
+                        </span>
+                        <span className="ml-1 text-xs text-gray-400">in stock</span>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+              {!formData.variation_id && (
+                <p className="mt-1.5 text-xs text-red-500">Please select a variant to adjust.</p>
+              )}
             </div>
           )}
 
-          {/* Adjustment Type */}
+          {/* Current / New stock preview — only show once a target is known */}
+          {currentStock !== null && (
+            <div className="rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 p-4 border border-blue-200">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-blue-600">Current Stock</p>
+                  <p className="text-3xl font-bold text-blue-900">{currentStock}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm font-medium text-blue-600">New Stock</p>
+                  <p className={`text-3xl font-bold ${newStock !== null && newStock < 0 ? 'text-red-600' : 'text-emerald-600'}`}>
+                    {newStock !== null ? newStock : '—'}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Adjustment type */}
           <div>
             <label className="mb-2 block text-sm font-medium text-gray-700">
               Adjustment Type <span className="text-red-500">*</span>
             </label>
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                type="button"
-                onClick={() => setAdjustmentType('add')}
-                className={`flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-medium transition-all ${
-                  adjustmentType === 'add'
-                    ? 'bg-emerald-500 text-white shadow-lg'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-              >
-                <Plus className="h-5 w-5" />
-                Add Stock
-              </button>
-              <button
-                type="button"
-                onClick={() => setAdjustmentType('subtract')}
-                className={`flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-medium transition-all ${
-                  adjustmentType === 'subtract'
-                    ? 'bg-red-500 text-white shadow-lg'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-              >
-                <Minus className="h-5 w-5" />
-                Subtract Stock
-              </button>
+            <div className="grid grid-cols-3 gap-3">
+              {(['add', 'subtract'] as const).map((type) => (
+                <button
+                  key={type}
+                  type="button"
+                  onClick={() => setAdjustmentType(type)}
+                  className={`flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-medium transition-all ${
+                    adjustmentType === type
+                      ? type === 'add' ? 'bg-emerald-500 text-white shadow-lg' : 'bg-red-500 text-white shadow-lg'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  {type === 'add' ? <Plus className="h-5 w-5" /> : <Minus className="h-5 w-5" />}
+                  {type === 'add' ? 'Add Stock' : 'Subtract Stock'}
+                </button>
+              ))}
             </div>
           </div>
 
@@ -192,9 +224,7 @@ export default function StockAdjustmentModal({ isOpen, onClose, product, onSubmi
 
           {/* Notes */}
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-700">
-              Notes
-            </label>
+            <label className="mb-2 block text-sm font-medium text-gray-700">Notes</label>
             <textarea
               value={formData.notes}
               onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
@@ -204,11 +234,11 @@ export default function StockAdjustmentModal({ isOpen, onClose, product, onSubmi
             />
           </div>
 
-          {/* Warning for negative stock */}
-          {newStock < 0 && (
+          {/* Negative stock warning */}
+          {newStock !== null && newStock < 0 && (
             <div className="rounded-xl bg-red-50 border border-red-200 p-4">
               <p className="text-sm text-red-800 font-medium">
-                ⚠️ Warning: This adjustment will result in negative stock ({newStock})
+                ⚠️ Warning: This adjustment will result in negative stock ({newStock}). The system will floor it at 0.
               </p>
             </div>
           )}
@@ -224,7 +254,7 @@ export default function StockAdjustmentModal({ isOpen, onClose, product, onSubmi
             </button>
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || (hasVariations && !formData.variation_id)}
               className="rounded-xl bg-gradient-to-r from-[#FF6F00] to-[#E65100] px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-orange-500/30 transition-all hover:shadow-xl hover:shadow-orange-500/40 focus:outline-none focus:ring-2 focus:ring-[#FF6F00] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? 'Adjusting...' : 'Adjust Stock'}

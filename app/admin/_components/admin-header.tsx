@@ -1,18 +1,13 @@
 "use client";
 
-import { Bell, MessageSquare, Search, ChevronDown, LogOut, User, Settings } from "lucide-react";
+import { MessageSquare, Search, ChevronDown, LogOut, User, Settings } from "lucide-react";
 import { useAuth } from "@/lib/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { NotificationBell } from "@/lib/components/NotificationBell";
 import { useAdminNotifications, useAdminUnreadCount, useAdminMarkAsRead, useAdminMarkAllAsRead, useAdminDeleteNotification } from "@/lib/hooks/admin";
 
-// Temporary debug import - remove after testing
-if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
-  import('@/lib/utils/csrf-debug').then(({ debugCSRFToken }) => {
-    (window as any).debugCSRF = debugCSRFToken;
-  });
-}
+const NOTIFICATION_FILTERS = { page: 1, per_page: 20 };
 
 export function AdminHeader() {
   const { user, logout } = useAuth();
@@ -20,29 +15,17 @@ export function AdminHeader() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Notification hooks - fetch more notifications to get accurate unread count
-  const { data: notificationsData, isLoading: notificationsLoading } = useAdminNotifications({ page: 1, per_page: 20 });
+  // Notification hooks - stable filter object prevents queryKey churn
+  const { data: notificationsData, isLoading: notificationsLoading } = useAdminNotifications(NOTIFICATION_FILTERS);
   const { data: unreadData } = useAdminUnreadCount();
   const markAsReadMutation = useAdminMarkAsRead();
   const markAllAsReadMutation = useAdminMarkAllAsRead();
   const deleteNotificationMutation = useAdminDeleteNotification();
 
   const allNotifications = (notificationsData as any)?.data?.data || [];
-  const notifications = allNotifications.slice(0, 5); // Show only 5 in dropdown
-  
-  // Calculate unread count from all fetched notifications
-  const unreadCount = (unreadData as any)?.count || (unreadData as any)?.unread_count || 
+  const notifications = allNotifications.slice(0, 5);
+  const unreadCount = (unreadData as any)?.count || (unreadData as any)?.unread_count ||
     allNotifications.filter((n: any) => !n.read_at).length;
-
-  // Debug logging
-  useEffect(() => {
-    console.log('Admin Notifications:', {
-      total: allNotifications.length,
-      unreadCount,
-      unreadData,
-      notifications: allNotifications
-    });
-  }, [allNotifications, unreadCount, unreadData]);
 
   // Close dropdown when clicking outside
   useEffect(() => {

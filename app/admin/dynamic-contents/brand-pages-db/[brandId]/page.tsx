@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Save, ArrowLeft, Plus, Trash2 } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Save, ArrowLeft, Plus, Trash2, Search, ChevronDown } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useBrands } from "@/lib/hooks/public/useBrands";
+import { useCategories } from "@/lib/hooks/public/useCategories";
 import { toast } from "sonner";
 import Image from "next/image";
 
@@ -90,6 +91,87 @@ interface BrandPageContent {
   };
 }
 
+function CategorySearchSelect({
+  flatCategories,
+  value,
+  onChange,
+}: {
+  flatCategories: { id: number; name: string; slug: string; label: string }[];
+  value: string;
+  onChange: (cat: { id: number; name: string; slug: string; label: string }) => void;
+}) {
+  const [query, setQuery] = useState("");
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const selected = flatCategories.find((c) => c.slug === value);
+  const filtered = query.trim()
+    ? flatCategories.filter((c) => c.name.toLowerCase().includes(query.toLowerCase()))
+    : flatCategories;
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+        setQuery("");
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  return (
+    <div ref={containerRef} className="relative">
+      <label className="mb-1 block text-xs font-medium text-gray-500">Select Category</label>
+      <button
+        type="button"
+        onClick={() => { setOpen((o) => !o); setQuery(""); }}
+        className="flex w-full items-center justify-between rounded border border-gray-300 bg-white px-3 py-2 text-left text-sm hover:border-gray-400"
+      >
+        <span className={selected ? "text-gray-900" : "text-gray-400"}>
+          {selected ? selected.name : "— pick a category —"}
+        </span>
+        <ChevronDown className="h-4 w-4 shrink-0 text-gray-400" />
+      </button>
+
+      {open && (
+        <div className="absolute left-0 top-full z-50 mt-1 w-full rounded-lg border border-gray-200 bg-white shadow-lg">
+          <div className="relative border-b border-gray-100 px-3 py-2">
+            <Search className="absolute left-5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400" />
+            <input
+              autoFocus
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search categories..."
+              className="w-full rounded border border-gray-200 py-1.5 pl-7 pr-3 text-sm focus:border-orange-400 focus:outline-none"
+            />
+          </div>
+          <ul className="max-h-52 overflow-y-auto py-1">
+            {filtered.length === 0 ? (
+              <li className="px-4 py-2 text-sm text-gray-400">No categories found</li>
+            ) : (
+              filtered.map((cat) => (
+                <li key={cat.id}>
+                  <button
+                    type="button"
+                    onClick={() => { onChange(cat); setOpen(false); setQuery(""); }}
+                    className={`w-full px-4 py-2 text-left text-sm hover:bg-orange-50 hover:text-orange-700 ${
+                      cat.slug === value ? "bg-orange-50 font-medium text-orange-700" : "text-gray-700"
+                    }`}
+                  >
+                    {cat.label}
+                  </button>
+                </li>
+              ))
+            )}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function BrandPageEditor() {
   const params = useParams();
   const router = useRouter();
@@ -99,6 +181,26 @@ export default function BrandPageEditor() {
   const brands = brandsData?.data || [];
   const brand = brands.find((b: any) => b.id === parseInt(brandId));
 
+  const { data: categoriesData } = useCategories();
+
+  // Flatten nested category tree into a single list for the selector
+  const flatCategories = (() => {
+    const result: { id: number; name: string; slug: string; label: string }[] = [];
+    const walk = (cats: any[], depth: number) => {
+      for (const cat of cats) {
+        result.push({
+          id: cat.id,
+          name: cat.name,
+          slug: cat.slug,
+          label: "—".repeat(depth) + (depth > 0 ? " " : "") + cat.name,
+        });
+        if (cat.children?.length) walk(cat.children, depth + 1);
+      }
+    };
+    walk((categoriesData as any)?.data || [], 0);
+    return result;
+  })();
+
   const [content, setContent] = useState<BrandPageContent>({
     hero: {
       enabled: true,
@@ -107,7 +209,7 @@ export default function BrandPageEditor() {
       highlightedText: "Fitness Space",
       description: "",
       buttonText: "Shop Now",
-      buttonUrl: "/shop",
+      buttonUrl: "",
     },
     categories: {
       enabled: true,
@@ -172,6 +274,13 @@ export default function BrandPageEditor() {
 
   useEffect(() => {
     if (brand) {
+      setContent((prev) => ({
+        ...prev,
+        hero: {
+          ...prev.hero,
+          buttonUrl: `/shop?brand=${brand.slug}`,
+        },
+      }));
       fetchBrandContent();
     }
   }, [brand]);
@@ -192,13 +301,18 @@ export default function BrandPageEditor() {
         
         if (data.content) {
           // Merge loaded content with defaults to ensure new fields exist
-          setContent({
-            ...content,
+          setContent((prev) => ({
+            ...prev,
             ...data.content,
-            promoBanner: data.content.promoBanner || content.promoBanner,
-            featureSection1: data.content.featureSection1 || content.featureSection1,
-            featureSection2: data.content.featureSection2 || content.featureSection2,
-          });
+            hero: {
+              ...prev.hero,
+              ...data.content.hero,
+              buttonUrl: prev.hero.buttonUrl,
+            },
+            promoBanner: data.content.promoBanner || prev.promoBanner,
+            featureSection1: data.content.featureSection1 || prev.featureSection1,
+            featureSection2: data.content.featureSection2 || prev.featureSection2,
+          }));
           console.log('[Brand Page Editor] Content set successfully');
         } else {
           console.log('[Brand Page Editor] No content found, using defaults');
@@ -548,12 +662,10 @@ export default function BrandPageEditor() {
                   <input
                     type="text"
                     value={content.hero.buttonUrl}
-                    onChange={(e) => setContent({
-                      ...content,
-                      hero: { ...content.hero, buttonUrl: e.target.value }
-                    })}
-                    className="w-full rounded-lg border border-gray-300 px-4 py-2"
+                    readOnly
+                    className="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 text-gray-500 cursor-not-allowed"
                   />
+                  <p className="mt-1 text-xs text-gray-400">Auto-set to the brand shop URL</p>
                 </div>
               </div>
             </div>
@@ -577,7 +689,7 @@ export default function BrandPageEditor() {
                           id: `cat-${Date.now()}`,
                           name: "New Category",
                           image: "",
-                          href: "/shop",
+                          href: brand ? `/shop?brand=${brand.slug}` : "/shop",
                         },
                       ],
                     },
@@ -640,6 +752,25 @@ export default function BrandPageEditor() {
                     </div>
 
                     <div className="space-y-3">
+                      {/* Searchable category selector — auto-fills name + href */}
+                      <CategorySearchSelect
+                        flatCategories={flatCategories}
+                        value={new URLSearchParams(item.href.split("?")[1] ?? "").get("category") ?? ""}
+                        onChange={(cat) => {
+                          const newItems = [...content.categories.items];
+                          const brandParam = brand ? `&brand=${brand.slug}` : "";
+                          newItems[index] = {
+                            ...newItems[index],
+                            name: cat.name,
+                            href: `/shop?category=${cat.slug}${brandParam}`,
+                          };
+                          setContent({
+                            ...content,
+                            categories: { ...content.categories, items: newItems },
+                          });
+                        }}
+                      />
+
                       <div className="relative h-32 overflow-hidden rounded-lg border border-gray-300">
                         {item.image && (
                           <Image src={item.image} alt={item.name} fill className="object-cover" />
@@ -683,16 +814,9 @@ export default function BrandPageEditor() {
                       <input
                         type="text"
                         value={item.href}
-                        onChange={(e) => {
-                          const newItems = [...content.categories.items];
-                          newItems[index].href = e.target.value;
-                          setContent({
-                            ...content,
-                            categories: { ...content.categories, items: newItems },
-                          });
-                        }}
-                        placeholder="Link URL"
-                        className="w-full rounded border border-gray-300 px-3 py-2 text-sm"
+                        readOnly
+                        placeholder="Select a category above"
+                        className="w-full rounded border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-500 cursor-not-allowed"
                       />
                     </div>
                   </div>

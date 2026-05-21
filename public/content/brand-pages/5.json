@@ -1,0 +1,105 @@
+{
+  "brandId": "5",
+  "content": {
+    "hero": {
+      "enabled": true,
+      "backgroundImage": "/images/brand-page/hero/1779351618732-D_1920x800_CardioSale_May4-May22.webp",
+      "title": "Turn Your Home\nInto A Complete",
+      "highlightedText": "Fitness Space",
+      "description": "",
+      "buttonText": "Shop Now",
+      "buttonUrl": "/shop?brand=marcy"
+    },
+    "categories": {
+      "enabled": true,
+      "sectionTitle": "Explore Categories",
+      "items": [
+        {
+          "id": "cat-1779351625006",
+          "name": "Cardio",
+          "image": "/images/brand-page/categories/1779351644093-HOME_GYM_-_CATEGORY-min.webp",
+          "href": "/shop?category=commercial-cardio&brand=marcy"
+        },
+        {
+          "id": "cat-1779351625182",
+          "name": "Free Weight",
+          "image": "/images/brand-page/categories/1779351646494-CARDIO_-_CATEGORY-min.webp",
+          "href": "/shop?category=free-weight&brand=marcy"
+        },
+        {
+          "id": "cat-1779351625350",
+          "name": "Strength",
+          "image": "/images/brand-page/categories/1779351648665-B_BenchesAndTrainers_1080x1080_f3cf1fcd-b709-4058-90ea-4ee0af58d3e5.webp",
+          "href": "/shop?category=strength&brand=marcy"
+        },
+        {
+          "id": "cat-1779351625535",
+          "name": "Sports",
+          "image": "/images/brand-page/categories/1779351651079-B_WeightsAndBars_1080x1080_58e5adb5-e038-4ce1-b32b-c8d34be844a9.webp",
+          "href": "/shop?category=sports&brand=marcy"
+        }
+      ]
+    },
+    "behindTheWork": {
+      "enabled": true,
+      "title": "Thinking Behind the Work",
+      "description": "",
+      "stats": [
+        {
+          "value": "51+",
+          "label": "Years of Experience"
+        },
+        {
+          "value": "1M+",
+          "label": "Happy Customers"
+        },
+        {
+          "value": "50+",
+          "label": "Available In Countries"
+        }
+      ],
+      "images": {
+        "left": "/images/brand-page/behind-work/1779351660360-Screenshot 2026-05-21 142007.png",
+        "center": "/images/brand-page/behind-work/1779351680369-Screenshot 2026-05-21 142002.png",
+        "right": "/images/brand-page/behind-work/1779351666594-Screenshot 2026-05-21 142012.png"
+      }
+    },
+    "shopBy": {
+      "enabled": false,
+      "cards": []
+    },
+    "promoBanner": {
+      "enabled": true,
+      "badge": "LIMITED-TIME EVENT",
+      "title": "Fitness",
+      "highlightedText": "30% off",
+      "subtitle": "Essentials",
+      "description": "Save on select NordicTrack equipment during the Winter Sale Event",
+      "buttonText": "Shop Now",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#3D2817",
+      "textColor": "#FFFFFF"
+    },
+    "featureSection1": {
+      "enabled": false,
+      "layout": "image-left",
+      "image": "",
+      "title": "Smart Rowing. Full-Body Results. Real Progress.",
+      "description": "Experience a powerful, low-impact workout that engages your entire body. Smart rowing machines automatically adjust resistance to match your trainer's intensity, helping you build strength, endurance, and consistency— every session, every stroke.",
+      "buttonText": "Shop Rowers",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#E8DED3"
+    },
+    "featureSection2": {
+      "enabled": false,
+      "layout": "image-right",
+      "image": "",
+      "title": "Where Refined Design meets uncompromising power.",
+      "description": "Experience a powerful, low-impact workout that engages your entire body. Smart rowing machines automatically adjust resistance to match your trainer's intensity, helping you build strength, endurance, and consistency— every session, every stroke.",
+      "buttonText": "Shop Rowers",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#E8DED3"
+    }
+  },
+  "updatedAt": "2026-05-21T08:21:49.196Z"
+}

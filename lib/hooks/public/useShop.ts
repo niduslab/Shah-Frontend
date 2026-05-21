@@ -3,8 +3,9 @@ import api from '@/lib/api/axios';
 
 export interface ShopFilters {
   search?: string;
+  category_slug?: string;
   category_id?: number;
-  brand_id?: number;
+  brand_slug?: string;
   min_price?: number;
   max_price?: number;
   in_stock?: boolean;

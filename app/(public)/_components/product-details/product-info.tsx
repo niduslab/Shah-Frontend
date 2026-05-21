@@ -205,7 +205,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
           <span>/</span>
           {product.category && (
             <>
-              <Link href={`/shop?category_id=${product.category.id}`} className="hover:text-primary cursor-pointer">
+              <Link href={`/shop?category=${product.category.slug}`} className="hover:text-primary cursor-pointer">
                 {product.category.name}
               </Link>
               <span>/</span>

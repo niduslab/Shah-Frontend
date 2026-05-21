@@ -3,14 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { useRef } from "react";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
+import { useScrollReveal } from "@/lib/hooks/useScrollReveal";
 
 const IMAGES = {
   floorMat: "/images/landing/floor-solution/57e9ba3f08e9becbf9b3d9c11be4bb6c027f1918.jpg",
@@ -19,34 +12,13 @@ const IMAGES = {
 };
 
 export function FloorSolution() {
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useGSAP(() => {
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: "top 75%",
-        toggleActions: "play none none reverse",
-      },
-    });
-
-    const items = containerRef.current?.querySelectorAll(".floor-item");
-    if (items) {
-      tl.from(items, {
-        opacity: 0,
-        y: 60,
-        stagger: 0.2,
-        duration: 1,
-        ease: "power3.out",
-      });
-    }
-  }, { scope: containerRef });
+  const sectionRef = useScrollReveal();
 
   return (
-    <div ref={containerRef} className="w-full bg-white px-4 py-4 md:px-6 md:py-6">
-      <div className="mx-auto grid w-full max-w-[1400px] grid-cols-1 gap-4 md:grid-cols-2">
+    <div ref={sectionRef as React.RefObject<HTMLElement>} className="w-full bg-white px-4 py-4 md:px-6 md:py-6">
+      <div data-reveal-stagger className="mx-auto grid w-full max-w-[1400px] grid-cols-1 gap-4 md:grid-cols-2">
         {/* Floor Mat */}
-        <div className="floor-item group relative h-[300px] overflow-hidden rounded-xs md:h-[620px]">
+        <div data-reveal className="group relative h-[300px] overflow-hidden rounded-xs md:h-[620px]">
           <Image
             src={IMAGES.floorMat}
             alt="Floor Mat"
@@ -68,7 +40,7 @@ export function FloorSolution() {
         </div>
 
         {/* Flooring Solution */}
-        <div className="floor-item group relative h-[300px] overflow-hidden rounded-xs md:h-[620px]">
+        <div data-reveal className="group relative h-[300px] overflow-hidden rounded-xs md:h-[620px]">
           <Image
             src={IMAGES.flooringSolution}
             alt="Flooring Solution"
@@ -90,7 +62,7 @@ export function FloorSolution() {
         </div>
 
         {/* Sports Equipments */}
-        <div className="floor-item group relative col-span-1 h-[300px] overflow-hidden rounded-xs md:col-span-2 md:h-[620px]">
+        <div data-reveal className="col-span-1 group relative h-[300px] overflow-hidden rounded-xs md:col-span-2 md:h-[620px]">
           <Image
             src={IMAGES.sportsEquipments}
             alt="Sports Equipments"
