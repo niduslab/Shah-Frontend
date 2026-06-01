@@ -314,15 +314,20 @@ export default function CartPage() {
                     <div className="flex flex-1 flex-col justify-between gap-4 sm:flex-row sm:items-center">
                       <div className="flex-1">
                         <h3 className="mb-2 font-medium text-black">{product?.name || 'Product'}</h3>
-                        {variation && variation.attributes && (
-                          <p className="mb-2 text-sm text-gray-500">
-                            {Object.entries(variation.attributes).map(([key, value]) => (
+                        <p className="mb-2 text-sm text-gray-500">
+                          {variation && variation.attributes && (
+                            Object.entries(variation.attributes).map(([key, value]) => (
                               <span key={key} className="mr-2">
                                 {key}: {value as string}
                               </span>
-                            ))}
-                          </p>
-                        )}
+                            ))
+                          )}
+                          {product?.country_of_origin && (
+                            <span className="mr-2 text-black font-bold">
+                              Origin: {product.country_of_origin}
+                            </span>
+                          )}
+                        </p>
                         <div className="flex items-center gap-3">
                           <span className="text-lg font-bold text-black">${price.toFixed(2)}</span>
                           {comparePrice && comparePrice > price && (

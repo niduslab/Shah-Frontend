@@ -1,6 +1,6 @@
 'use client';
 
-import { X, User, Mail, Phone, Calendar, ShoppingBag, DollarSign, Shield, CheckCircle, XCircle } from 'lucide-react';
+import { X, User, Mail, Phone, Calendar, ShoppingBag, Shield, CheckCircle, XCircle, Heart, ShoppingCart } from 'lucide-react';
 import { useAdminUser } from '@/lib/hooks/admin/useAdminUsers';
 
 interface UserDetailsModalProps {
@@ -9,8 +9,16 @@ interface UserDetailsModalProps {
   userId: number;
 }
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? '';
+
+function resolveImageUrl(fullUrl?: string): string | undefined {
+  if (!fullUrl) return undefined;
+  if (fullUrl.startsWith('http')) return fullUrl;
+  return `${apiUrl}${fullUrl}`;
+}
+
 export default function UserDetailsModal({ isOpen, onClose, userId }: UserDetailsModalProps) {
-  const { data: userData, isLoading } = useAdminUser(userId);
+  const { data: userData, isLoading } = useAdminUser(userId, {});
   
   if (!isOpen) return null;
 
@@ -165,6 +173,92 @@ export default function UserDetailsModal({ isOpen, onClose, userId }: UserDetail
                       <p className="font-medium text-gray-900">${user.total_spent.toFixed(2)}</p>
                     </div>
                   )}
+                </div>
+              </div>
+            )}
+
+            {/* Wishlist Items */}
+            {user.wishlist?.data && user.wishlist.data.length > 0 && (
+              <div className="rounded-xl bg-gray-50 p-4 space-y-3">
+                <h4 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
+                  <Heart className="h-4 w-4 text-rose-500" />
+                  Wishlist
+                  <span className="ml-auto text-xs font-medium text-gray-500">{user.wishlist.total} item{user.wishlist.total !== 1 ? 's' : ''}</span>
+                </h4>
+                <div className="space-y-2">
+                  {user.wishlist.data.map((item: any) => {
+                    const product = item.product;
+                    const image = product?.images?.find((img: any) => img.is_primary) ?? product?.images?.[0];
+                    const imgSrc = resolveImageUrl(image?.full_url);
+                    return (
+                      <div key={item.id} className="flex items-center gap-3 rounded-lg bg-white p-2 ring-1 ring-gray-200">
+                        {imgSrc ? (
+                          <img
+                            src={imgSrc}
+                            alt={product?.name}
+                            className="h-12 w-12 rounded-lg object-cover flex-shrink-0"
+                            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                          />
+                        ) : (
+                          <div className="h-12 w-12 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
+                            <ShoppingBag className="h-5 w-5 text-gray-400" />
+                          </div>
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-gray-900 truncate">{product?.name ?? '—'}</p>
+                          <p className="text-xs text-gray-500">{product?.sku ?? ''}</p>
+                        </div>
+                        <div className="text-right flex-shrink-0">
+                          <p className="text-sm font-semibold text-gray-900">${parseFloat(product?.price ?? 0).toFixed(2)}</p>
+                          <span className={`text-xs font-medium ${product?.status === 'active' ? 'text-emerald-600' : 'text-gray-400'}`}>
+                            {product?.status ?? '—'}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Abandoned Cart Items */}
+            {user.abandoned_cart?.data && user.abandoned_cart.data.length > 0 && (
+              <div className="rounded-xl bg-gray-50 p-4 space-y-3">
+                <h4 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
+                  <ShoppingCart className="h-4 w-4 text-amber-500" />
+                  Abandoned Cart
+                  <span className="ml-auto text-xs font-medium text-gray-500">{user.abandoned_cart.total} item{user.abandoned_cart.total !== 1 ? 's' : ''}</span>
+                </h4>
+                <div className="space-y-2">
+                  {user.abandoned_cart.data.map((item: any) => {
+                    const product = item.product;
+                    const image = product?.images?.find((img: any) => img.is_primary) ?? product?.images?.[0];
+                    const imgSrc = resolveImageUrl(image?.full_url);
+                    return (
+                      <div key={item.id} className="flex items-center gap-3 rounded-lg bg-white p-2 ring-1 ring-gray-200">
+                        {imgSrc ? (
+                          <img
+                            src={imgSrc}
+                            alt={product?.name}
+                            className="h-12 w-12 rounded-lg object-cover flex-shrink-0"
+                            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                          />
+                        ) : (
+                          <div className="h-12 w-12 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
+                            <ShoppingCart className="h-5 w-5 text-gray-400" />
+                          </div>
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-gray-900 truncate">{product?.name ?? '—'}</p>
+                          <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
+                        </div>
+                        <div className="text-right flex-shrink-0">
+                          <p className="text-sm font-semibold text-gray-900">${parseFloat(item.price ?? 0).toFixed(2)}</p>
+                          <p className="text-xs text-gray-400">{item.event_at ? new Date(item.event_at).toLocaleDateString() : ''}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             )}

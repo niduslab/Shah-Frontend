@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Plus, Edit2, Trash2, ChevronRight, ChevronDown, Search, Filter } from 'lucide-react';
 import Pagination from '@/components/ui/Pagination';
 import { toast } from 'sonner';
@@ -30,6 +30,12 @@ interface Category {
 export default function CategoriesPage() {
   const [view, setView] = useState<'list' | 'tree'>('tree');
   const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchQuery), 400);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -73,14 +79,77 @@ export default function CategoriesPage() {
     return rootCategories;
   };
 
-  // Response format: { success: true, data: { current_page: 1, data: [...], ... } }
-  const allCategories = view === 'tree' 
+  const rawFlat: Category[] = view === 'tree'
     ? (treeData?.data?.data || [])
     : (categoriesData?.data?.data || []);
-  
+
+  // Recursively filter tree: keep node if it or any descendant matches query.
+  // Returns filtered node with only matching subtree, or null if no match.
+  const filterTree = (node: Category, q: string): Category | null => {
+    const selfMatch =
+      node.name.toLowerCase().includes(q) ||
+      (node.description?.toLowerCase().includes(q) ?? false);
+
+    const filteredChildren = (node.children ?? [])
+      .map((child) => filterTree(child, q))
+      .filter((c): c is Category => c !== null);
+
+    if (selfMatch || filteredChildren.length > 0) {
+      return { ...node, children: filteredChildren };
+    }
+    return null;
+  };
+
+  const { allCategories, autoExpanded } = useMemo(() => {
+    if (!debouncedSearch.trim()) {
+      return { allCategories: rawFlat, autoExpanded: new Set<number>() };
+    }
+
+    const q = debouncedSearch.toLowerCase();
+
+    if (view === 'list') {
+      // Flat list: simple name/description match
+      return {
+        allCategories: rawFlat.filter((c: Category) =>
+          c.name.toLowerCase().includes(q) ||
+          (c.description?.toLowerCase().includes(q) ?? false)
+        ),
+        autoExpanded: new Set<number>(),
+      };
+    }
+
+    // Tree view: build tree first, then filter recursively
+    const tree = buildCategoryTree(rawFlat);
+    const matched: Category[] = [];
+    const expanded = new Set<number>();
+
+    tree.forEach((root) => {
+      const result = filterTree(root, q);
+      if (result) {
+        matched.push(result);
+        // Auto-expand every node that has matched children
+        const collectExpanded = (node: Category) => {
+          if (node.children && node.children.length > 0) {
+            expanded.add(node.id);
+            node.children.forEach(collectExpanded);
+          }
+        };
+        collectExpanded(result);
+      }
+    });
+
+    return { allCategories: matched, autoExpanded: expanded };
+  }, [view, rawFlat, debouncedSearch]);
+
+  // Merge auto-expanded IDs (from search) with manually toggled ones
+  const effectiveExpanded = useMemo(() => {
+    if (!debouncedSearch.trim()) return expandedCategories;
+    return new Set([...expandedCategories, ...autoExpanded]);
+  }, [expandedCategories, autoExpanded, debouncedSearch]);
+
   // Build proper tree structure for tree view
   const parentCategories = view === 'tree'
-    ? buildCategoryTree(allCategories)
+    ? (debouncedSearch.trim() ? allCategories : buildCategoryTree(rawFlat))
     : allCategories;
   
   // Client-side pagination for tree view (10 parents per page)
@@ -150,9 +219,23 @@ export default function CategoriesPage() {
     }
   };
 
+  const highlight = (text: string) => {
+    if (!debouncedSearch.trim()) return text;
+    const q = debouncedSearch.trim();
+    const idx = text.toLowerCase().indexOf(q.toLowerCase());
+    if (idx === -1) return text;
+    return (
+      <>
+        {text.slice(0, idx)}
+        <mark className="bg-yellow-200 text-gray-900 rounded px-0.5">{text.slice(idx, idx + q.length)}</mark>
+        {text.slice(idx + q.length)}
+      </>
+    );
+  };
+
   const renderTreeItem = (category: Category, level: number = 0) => {
     const hasChildren = category.children && category.children.length > 0;
-    const isExpanded = expandedCategories.has(category.id);
+    const isExpanded = effectiveExpanded.has(category.id);
 
     return (
       <div key={category.id}>
@@ -178,7 +261,7 @@ export default function CategoriesPage() {
             
             <div className="flex-1">
               <div className="flex items-center gap-2.5">
-                <h3 className="font-semibold text-gray-900">{category.name}</h3>
+                <h3 className="font-semibold text-gray-900">{highlight(category.name)}</h3>
                 <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600 ring-1 ring-gray-600/20">
                   ID: {category.id}
                 </span>
@@ -228,7 +311,7 @@ export default function CategoriesPage() {
     );
   };
 
-  if (loading) {
+  if (loading && !categoriesData && !treeData) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
         <div className="text-center">
@@ -267,9 +350,14 @@ export default function CategoriesPage() {
                 type="text"
                 placeholder="Search categories..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-xl border border-gray-300 bg-gray-50 py-2.5 pl-11 pr-4 text-sm transition-all focus:border-[#FF6F00] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
+                onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+                className="w-full rounded-xl border border-gray-300 bg-gray-50 py-2.5 pl-11 pr-10 text-sm transition-all focus:border-[#FF6F00] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
               />
+              {searchQuery !== debouncedSearch && (
+                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-200 border-t-[#FF6F00]" />
+                </div>
+              )}
             </div>
 
             <div className="flex items-center gap-3">

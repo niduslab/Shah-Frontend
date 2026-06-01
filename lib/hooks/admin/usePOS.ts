@@ -82,3 +82,33 @@ export const useCreatePOSOrder = (options?: Omit<UseMutationOptions<ApiResponse,
     ...options,
   });
 };
+
+interface QuotationData {
+  customer_name: string;
+  customer_email?: string;
+  customer_phone?: string;
+  items: CartItem[];
+  discount?: number;
+  notes?: string;
+}
+
+export const useGenerateQuotation = (options?: Omit<UseMutationOptions<void, any, QuotationData>, 'mutationFn'>) => {
+  return useMutation<void, any, QuotationData>({
+    mutationFn: async (data: QuotationData) => {
+      const response = await api.post('/api/admin/pos/quotation', data, {
+        responseType: 'blob',
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+      const link = document.createElement('a');
+      link.href = url;
+      const disposition = response.headers['content-disposition'];
+      const match = disposition?.match(/filename="?([^"]+)"?/);
+      link.download = match ? match[1] : 'quotation.pdf';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    },
+    ...options,
+  });
+};

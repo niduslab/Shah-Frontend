@@ -27,6 +27,8 @@ interface ProfileFormData {
   phone: string;
   date_of_birth: string;
   gender: string;
+  weight: string;
+  height: string;
 }
 
 interface PasswordFormData {
@@ -50,6 +52,8 @@ export default function ProfilePage() {
     phone: '',
     date_of_birth: '',
     gender: '',
+    weight: '',
+    height: '',
   });
   const [passwordData, setPasswordData] = useState<PasswordFormData>({
     current_password: '',
@@ -74,6 +78,8 @@ export default function ProfilePage() {
         phone: profile.phone || '',
         date_of_birth: profile.date_of_birth || '',
         gender: profile.gender || '',
+        weight: profile.weight != null ? String(profile.weight) : '',
+        height: profile.height != null ? String(profile.height) : '',
       });
     }
   }, [profile]);
@@ -93,6 +99,8 @@ export default function ProfilePage() {
         phone: profile.phone || '',
         date_of_birth: profile.date_of_birth || '',
         gender: profile.gender || '',
+        weight: profile.weight != null ? String(profile.weight) : '',
+        height: profile.height != null ? String(profile.height) : '',
       });
     }
   };
@@ -358,6 +366,56 @@ export default function ProfilePage() {
                     <User className="w-4 h-4 text-gray-400 mr-2" />
                     <span className="text-gray-900 capitalize">
                       {profile?.gender?.replace('_', ' ') || 'Not provided'}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Weight */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Weight (kg)
+                </label>
+                {isEditing ? (
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    max="999.99"
+                    value={formData.weight}
+                    onChange={(e) => setFormData({ ...formData, weight: e.target.value })}
+                    placeholder="e.g. 70.5"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#00072D] focus:border-transparent"
+                  />
+                ) : (
+                  <div className="flex items-center px-3 py-2 bg-gray-50 border border-gray-200 rounded-md">
+                    <span className="text-gray-900">
+                      {profile?.weight != null ? `${profile.weight} kg` : 'Not provided'}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Height */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Height (cm)
+                </label>
+                {isEditing ? (
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    max="999.99"
+                    value={formData.height}
+                    onChange={(e) => setFormData({ ...formData, height: e.target.value })}
+                    placeholder="e.g. 175"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#00072D] focus:border-transparent"
+                  />
+                ) : (
+                  <div className="flex items-center px-3 py-2 bg-gray-50 border border-gray-200 rounded-md">
+                    <span className="text-gray-900">
+                      {profile?.height != null ? `${profile.height} cm` : 'Not provided'}
                     </span>
                   </div>
                 )}

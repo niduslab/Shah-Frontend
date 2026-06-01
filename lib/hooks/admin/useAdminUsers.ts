@@ -30,11 +30,18 @@ export const useAdminUsers = (filters?: UserFilters, options?: UseQueryOptions) 
   });
 };
 
-export const useAdminUser = (id: number, options?: UseQueryOptions) => {
+interface UserDetailParams {
+  per_page?: number;
+  orders_page?: number;
+  wishlist_page?: number;
+  cart_page?: number;
+}
+
+export const useAdminUser = (id: number, params?: UserDetailParams, options?: UseQueryOptions) => {
   return useQuery({
-    queryKey: ['admin', 'user', id],
+    queryKey: ['admin', 'user', id, params],
     queryFn: async () => {
-      const response = await api.get(`/api/admin/users/${id}`);
+      const response = await api.get(`/api/admin/users/${id}`, { params });
       return response.data;
     },
     enabled: !!id,

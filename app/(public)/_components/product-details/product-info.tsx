@@ -338,6 +338,13 @@ export function ProductInfo({ product }: ProductInfoProps) {
               </p>
             )}
 
+            {/* Country of Origin */}
+            {product.country_of_origin && (
+              <p className="mb-4 text-sm text-gray-500">
+                Country of Origin: <span className="font-medium text-gray-700">{product.country_of_origin}</span>
+              </p>
+            )}
+
             {/* Price */}
             <div className="mb-6 flex items-center gap-3">
               <span className="text-3xl font-bold text-black">${currentPrice.toFixed(2)}</span>

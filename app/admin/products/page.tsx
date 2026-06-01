@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { Plus, Edit2, Trash2, Search, Package, Image as ImageIcon, Upload } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Plus, Edit2, Trash2, Search, Package, Image as ImageIcon, Upload, X } from 'lucide-react';
 import Link from 'next/link';
 import Pagination from '@/components/ui/Pagination';
 import { toast } from 'sonner';
@@ -41,7 +41,16 @@ interface Product {
 
 export default function ProductsPage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+      setCurrentPage(1);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive' | 'draft'>('all');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -51,11 +60,11 @@ export default function ProductsPage() {
   const filters = {
     page: currentPage,
     per_page: 15,
-    search: searchQuery || undefined,
+    search: debouncedSearch || undefined,
     status: statusFilter !== 'all' ? statusFilter : undefined,
   };
 
-  const { data: productsData, isLoading } = useAdminProducts(filters);
+  const { data: productsData, isLoading, isFetching } = useAdminProducts(filters);
   const { data: productDetailData, isLoading: isLoadingDetail } = useAdminProduct(
     editingProductId!,
     { enabled: !!editingProductId } as any
@@ -109,7 +118,7 @@ export default function ProductsPage() {
     return styles[status as keyof typeof styles] || styles.draft;
   };
 
-  if (isLoading) {
+  if (isLoading && !productsData) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
         <div className="text-center">
@@ -146,14 +155,19 @@ export default function ProductsPage() {
               <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search products..."
+                placeholder="Search by name, SKU, category..."
                 value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  setCurrentPage(1);
-                }}
-                className="w-full rounded-xl border border-gray-300 bg-gray-50 py-2.5 pl-11 pr-4 text-sm transition-all focus:border-[#FF6F00] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full rounded-xl border border-gray-300 bg-gray-50 py-2.5 pl-11 pr-10 text-sm transition-all focus:border-[#FF6F00] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
               />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-0.5 text-gray-400 hover:bg-gray-200 hover:text-gray-600 transition-all"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
             </div>
 
             <div className="flex items-center gap-3">
@@ -192,58 +206,100 @@ export default function ProductsPage() {
           </div>
         </div>
 
-        {/* Products Grid */}
+        {/* Products Table */}
         <div className="rounded-2xl bg-white shadow-lg ring-1 ring-gray-200">
-          {!products || products.length === 0 ? (
+          {/* Result count + active search indicator */}
+          {debouncedSearch && !isFetching && (
+            <div className="flex items-center justify-between border-b border-gray-100 px-6 py-3">
+              <p className="text-sm text-gray-500">
+                {products.length === 0
+                  ? <>No results for <span className="font-medium text-gray-900">"{debouncedSearch}"</span></>
+                  : <>{paginationData?.total ?? products.length} result{(paginationData?.total ?? products.length) !== 1 ? 's' : ''} for <span className="font-medium text-gray-900">"{debouncedSearch}"</span></>
+                }
+              </p>
+              <button
+                onClick={() => setSearchQuery('')}
+                className="text-xs font-medium text-[#FF6F00] hover:underline"
+              >
+                Clear search
+              </button>
+            </div>
+          )}
+
+          {/* Skeleton rows while fetching */}
+          {isFetching ? (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="border-b border-gray-200 bg-gray-50">
+                  <tr>
+                    {['Product', 'SKU', 'Category', 'Brand', 'Price', 'Stock', 'Status', 'Actions'].map((h) => (
+                      <th key={h} className={`px-6 py-4 text-xs font-semibold uppercase tracking-wider text-gray-600 ${h === 'Actions' ? 'text-right' : 'text-left'}`}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {Array.from({ length: 8 }).map((_, i) => (
+                    <tr key={i} className="animate-pulse">
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="h-12 w-12 flex-shrink-0 rounded-lg bg-gray-200" />
+                          <div className="space-y-2">
+                            <div className="h-3.5 w-36 rounded bg-gray-200" />
+                            <div className="h-2.5 w-24 rounded bg-gray-100" />
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4"><div className="h-3 w-20 rounded bg-gray-200" /></td>
+                      <td className="px-6 py-4"><div className="h-3 w-24 rounded bg-gray-200" /></td>
+                      <td className="px-6 py-4"><div className="h-3 w-20 rounded bg-gray-200" /></td>
+                      <td className="px-6 py-4"><div className="h-3 w-16 rounded bg-gray-200" /></td>
+                      <td className="px-6 py-4"><div className="h-3 w-8 rounded bg-gray-200" /></td>
+                      <td className="px-6 py-4"><div className="h-5 w-16 rounded-full bg-gray-200" /></td>
+                      <td className="px-6 py-4"><div className="flex justify-end gap-2"><div className="h-8 w-8 rounded-lg bg-gray-200" /><div className="h-8 w-8 rounded-lg bg-gray-200" /></div></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : !products || products.length === 0 ? (
             <div className="py-16 text-center">
               <div className="mb-5 inline-flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-gray-100 to-gray-200">
                 <Package className="h-10 w-10 text-gray-400" />
               </div>
-              <h3 className="mb-2 text-xl font-semibold text-gray-900">No products found</h3>
-              <p className="mb-8 text-gray-500">Get started by creating your first product</p>
-              <button
-                onClick={handleCreate}
-                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#FF6F00] to-[#E65100] px-6 py-3 text-sm font-medium text-white shadow-lg shadow-orange-500/30 transition-all hover:shadow-xl hover:shadow-orange-500/40"
-              >
-                <Plus className="h-5 w-5" />
-                Add Product
-              </button>
+              <h3 className="mb-2 text-xl font-semibold text-gray-900">
+                {debouncedSearch ? 'No products found' : 'No products yet'}
+              </h3>
+              <p className="mb-8 text-gray-500">
+                {debouncedSearch ? `No results match "${debouncedSearch}"` : 'Get started by creating your first product'}
+              </p>
+              {!debouncedSearch && (
+                <button
+                  onClick={handleCreate}
+                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#FF6F00] to-[#E65100] px-6 py-3 text-sm font-medium text-white shadow-lg shadow-orange-500/30 transition-all hover:shadow-xl hover:shadow-orange-500/40"
+                >
+                  <Plus className="h-5 w-5" />
+                  Add Product
+                </button>
+              )}
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="border-b border-gray-200 bg-gray-50">
                   <tr>
-                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
-                      Product
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
-                      SKU
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
-                      Category
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
-                      Brand
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
-                      Price
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
-                      Stock
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
-                      Status
-                    </th>
-                    <th className="px-6 py-4 text-right text-xs font-semibold uppercase tracking-wider text-gray-600">
-                      Actions
-                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">Product</th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">SKU</th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">Category</th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">Brand</th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">Price</th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">Stock</th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">Status</th>
+                    <th className="px-6 py-4 text-right text-xs font-semibold uppercase tracking-wider text-gray-600">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {products.map((product: Product) => {
                     const imageUrl = getPrimaryImageUrl(product.images);
-
                     return (
                       <tr key={product.id} className="group transition-all hover:bg-gradient-to-r hover:from-gray-50 hover:to-transparent">
                         <td className="px-6 py-4">
@@ -253,9 +309,7 @@ export default function ProductsPage() {
                                 src={imageUrl}
                                 alt={product.name}
                                 className="h-full w-full object-cover"
-                                onError={(e) => {
-                                  e.currentTarget.src = getPlaceholderImage(product.name);
-                                }}
+                                onError={(e) => { e.currentTarget.src = getPlaceholderImage(product.name); }}
                               />
                               {product.images && product.images.length > 1 && (
                                 <div className="absolute bottom-0 right-0 rounded-tl bg-black/60 px-1.5 py-0.5 text-xs text-white">
@@ -289,11 +343,7 @@ export default function ProductsPage() {
                           </div>
                         </td>
                         <td className="px-6 py-4">
-                          <span className={`text-sm font-medium ${
-                            product.quantity <= (product.low_stock_threshold || 10)
-                              ? 'text-red-600'
-                              : 'text-gray-900'
-                          }`}>
+                          <span className={`text-sm font-medium ${product.quantity <= (product.low_stock_threshold || 10) ? 'text-red-600' : 'text-gray-900'}`}>
                             {product.quantity}
                           </span>
                         </td>

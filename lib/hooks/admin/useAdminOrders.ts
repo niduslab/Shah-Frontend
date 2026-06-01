@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient, UseQueryOptions, UseMutationOptions, keepPreviousData } from '@tanstack/react-query';
 import api from '@/lib/api/axios';
 
 interface OrderFilters {
@@ -21,6 +21,7 @@ export const useAdminOrders = (filters?: OrderFilters, options?: UseQueryOptions
       const response = await api.get('/api/admin/orders', { params: filters });
       return response.data;
     },
+    placeholderData: keepPreviousData,
     ...options,
   });
 };

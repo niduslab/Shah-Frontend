@@ -62,6 +62,7 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
     preorder_limit: '',
     preorder_deposit_amount: '',
     preorder_deposit_type: 'percentage',
+    country_of_origin: '',
   });
   const [images, setImages] = useState<ProductImage[]>([]);
   const [variations, setVariations] = useState<Variation[]>([]);
@@ -104,6 +105,7 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
         preorder_limit: product.preorder_limit?.toString() || '',
         preorder_deposit_amount: product.preorder_deposit_amount?.toString() || '',
         preorder_deposit_type: product.preorder_deposit_type || 'percentage',
+        country_of_origin: product.country_of_origin || '',
       });
 
       // Load existing images
@@ -162,6 +164,7 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
         preorder_limit: '',
         preorder_deposit_amount: '',
         preorder_deposit_type: 'percentage',
+        country_of_origin: '',
       });
       setImages([]);
       setVariations([]);
@@ -197,6 +200,7 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
       if (formData.weight_unit) submitData.weight_unit = formData.weight_unit;
       if (formData.meta_title) submitData.meta_title = formData.meta_title;
       if (formData.meta_description) submitData.meta_description = formData.meta_description;
+      if (formData.country_of_origin) submitData.country_of_origin = formData.country_of_origin;
 
       // Add pre-order data
       submitData.is_preorder = formData.is_preorder;
@@ -592,6 +596,19 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
                 <option value="lb">Pounds (lb)</option>
                 <option value="oz">Ounces (oz)</option>
               </select>
+            </div>
+
+            <div className="md:col-span-2">
+              <label className="mb-2 block text-sm font-medium text-gray-700">
+                Country of Origin
+              </label>
+              <input
+                type="text"
+                value={formData.country_of_origin}
+                onChange={(e) => setFormData({ ...formData, country_of_origin: e.target.value })}
+                className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm transition-all focus:border-[#FF6F00] focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
+                placeholder="e.g. China, USA, Germany"
+              />
             </div>
 
             {/* Features */}

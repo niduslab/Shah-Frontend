@@ -1,13 +1,17 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ShoppingCart, Search, Plus, Minus, Trash2, User, Phone, Mail, CreditCard, Banknote, DollarSign, Receipt, X, Barcode } from 'lucide-react';
+import {
+  ShoppingCart, Search, Plus, Minus, Trash2, User, Phone, Mail,
+  CreditCard, Banknote, DollarSign, Receipt, X, Barcode, FileText
+} from 'lucide-react';
 import { toast } from 'sonner';
-import { 
+import {
   useSearchPOSProducts,
   useGetProductBySKU,
   useCalculatePOSOrder,
-  useCreatePOSOrder
+  useCreatePOSOrder,
+  useGenerateQuotation,
 } from '@/lib/hooks/admin/usePOS';
 
 interface CartItem {
@@ -29,8 +33,10 @@ interface CustomerInfo {
 }
 
 type PaymentMethod = 'cash' | 'card' | 'manual';
+type ActiveTab = 'pos' | 'quotation';
 
 export default function POSPage() {
+  const [activeTab, setActiveTab] = useState<ActiveTab>('pos');
   const [searchQuery, setSearchQuery] = useState('');
   const [skuQuery, setSkuQuery] = useState('');
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -46,12 +52,10 @@ export default function POSPage() {
   const [orderSummary, setOrderSummary] = useState<any>(null);
 
   const { data: searchResults, isLoading: isSearching, error: searchError } = useSearchPOSProducts(searchQuery);
-  
   const { data: skuProduct } = useGetProductBySKU(skuQuery);
 
   useEffect(() => {
     if (skuProduct && 'success' in skuProduct && skuProduct.success && 'data' in skuProduct && skuProduct.data) {
-      // Handle paginated response - get first product from data array
       const products = Array.isArray(skuProduct.data) ? skuProduct.data : skuProduct.data.data;
       if (products && products.length > 0) {
         const product = products[0];
@@ -73,6 +77,7 @@ export default function POSPage() {
 
   const calculateMutation = useCalculatePOSOrder();
   const createOrderMutation = useCreatePOSOrder();
+  const generateQuotationMutation = useGenerateQuotation();
 
   useEffect(() => {
     const data = createOrderMutation.data;
@@ -80,17 +85,7 @@ export default function POSPage() {
       toast.success('Order created successfully', {
         description: `Order #${data.data.order_number} has been created.`
       });
-      // Reset form
-      setCart([]);
-      setDiscount(0);
-      setNotes('');
-      setCustomerInfo({
-        customer_name: '',
-        customer_email: '',
-        customer_phone: ''
-      });
-      setShowCustomerForm(false);
-      setOrderSummary(null);
+      resetForm();
     }
   }, [createOrderMutation.isSuccess, createOrderMutation.data]);
 
@@ -100,6 +95,15 @@ export default function POSPage() {
       setOrderSummary(data.data);
     }
   }, [calculateMutation.isSuccess, calculateMutation.data]);
+
+  const resetForm = () => {
+    setCart([]);
+    setDiscount(0);
+    setNotes('');
+    setCustomerInfo({ customer_name: '', customer_email: '', customer_phone: '' });
+    setShowCustomerForm(false);
+    setOrderSummary(null);
+  };
 
   const addToCart = (product: any) => {
     const existingItem = cart.find(
@@ -157,18 +161,11 @@ export default function POSPage() {
   const calculateTotal = () => {
     const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const discountAmount = (subtotal * discount) / 100;
-    return {
-      subtotal,
-      discount: discountAmount,
-      total: subtotal - discountAmount
-    };
+    return { subtotal, discount: discountAmount, total: subtotal - discountAmount };
   };
 
   const handleCalculate = () => {
-    if (cart.length === 0) {
-      toast.error('Cart is empty');
-      return;
-    }
+    if (cart.length === 0) { toast.error('Cart is empty'); return; }
     calculateMutation.mutate({
       items: cart.map(item => ({
         product_id: item.product_id,
@@ -180,12 +177,9 @@ export default function POSPage() {
   };
 
   const handleCheckout = () => {
-    if (cart.length === 0) {
-      toast.error('Cart is empty');
-      return;
-    }
+    if (cart.length === 0) { toast.error('Cart is empty'); return; }
     if (!customerInfo.customer_name || !customerInfo.customer_phone) {
-      toast.error('Please fill in customer information');
+      toast.error('Please fill in customer name and phone');
       setShowCustomerForm(true);
       return;
     }
@@ -204,15 +198,83 @@ export default function POSPage() {
     });
   };
 
+  const handleGenerateQuotation = () => {
+    if (cart.length === 0) { toast.error('Cart is empty'); return; }
+    if (!customerInfo.customer_name) {
+      toast.error('Please fill in customer name');
+      setShowCustomerForm(true);
+      return;
+    }
+    generateQuotationMutation.mutate(
+      {
+        customer_name: customerInfo.customer_name,
+        customer_email: customerInfo.customer_email,
+        customer_phone: customerInfo.customer_phone,
+        items: cart.map(item => ({
+          product_id: item.product_id,
+          variation_id: item.variation_id,
+          quantity: item.quantity
+        })),
+        discount,
+        notes
+      },
+      {
+        onSuccess: () => toast.success('Quotation PDF downloaded'),
+        onError: () => toast.error('Failed to generate quotation'),
+      }
+    );
+  };
+
   const totals = calculateTotal();
+  const isQuotation = activeTab === 'quotation';
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">Point of Sale</h1>
-          <p className="text-gray-600">Create in-store orders</p>
+        {/* Header + Tab Switcher */}
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">
+              {isQuotation ? 'Quotation' : 'Point of Sale'}
+            </h1>
+            <p className="text-gray-600">
+              {isQuotation ? 'Generate a PDF quotation for the customer' : 'Create in-store orders'}
+            </p>
+          </div>
+
+          {/* Tab Switcher */}
+          <div className="flex rounded-xl border border-gray-200 bg-white p-1 shadow-sm">
+            <button
+              onClick={() => setActiveTab('pos')}
+              className={`flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold transition-all ${
+                activeTab === 'pos'
+                  ? 'bg-orange-500 text-white shadow'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              <Receipt className="h-4 w-4" />
+              POS
+            </button>
+            <button
+              onClick={() => setActiveTab('quotation')}
+              className={`flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold transition-all ${
+                activeTab === 'quotation'
+                  ? 'bg-blue-600 text-white shadow'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              <FileText className="h-4 w-4" />
+              Quotation
+            </button>
+          </div>
         </div>
+
+        {/* Mode Banner */}
+        {isQuotation && (
+          <div className="mb-4 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800">
+            <strong>Quotation Mode:</strong> No order will be created. A PDF quotation will be downloaded for the customer.
+          </div>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Section - Product Search & Cart */}
@@ -248,45 +310,29 @@ export default function POSPage() {
                 {searchQuery && searchResults && 'success' in searchResults && searchResults.success && (
                   <div className="max-h-60 overflow-y-auto border border-gray-200 rounded-lg">
                     {(() => {
-                      // Handle paginated response
                       const products = Array.isArray(searchResults.data) ? searchResults.data : searchResults.data?.data || [];
-                      
                       if (products.length === 0) {
-                        return (
-                          <div className="p-4 text-center text-gray-500">
-                            No products found
-                          </div>
-                        );
+                        return <div className="p-4 text-center text-gray-500">No products found</div>;
                       }
-                      
                       return products.map((product: any) => {
                         const price = parseFloat(product.price);
                         const stock = product.quantity || 0;
                         const primaryImage = product.images?.find((img: any) => img.is_primary)?.full_url || product.images?.[0]?.full_url;
-                        
                         return (
                           <button
                             key={product.id}
                             onClick={() => addToCart({
-                              id: product.id,
-                              name: product.name,
-                              sku: product.sku,
-                              price: price,
-                              image: primaryImage,
-                              stock: stock,
-                              variation_id: null,
-                              variation_name: null
+                              id: product.id, name: product.name, sku: product.sku,
+                              price, image: primaryImage, stock, variation_id: null, variation_name: null
                             })}
                             className="w-full p-3 hover:bg-gray-50 border-b last:border-b-0 text-left flex items-center gap-3"
                           >
                             {primaryImage ? (
-                              <img 
-                                src={primaryImage.startsWith('http') ? primaryImage : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}${primaryImage}`} 
-                                alt={product.name} 
-                                className="w-12 h-12 object-cover rounded" 
-                                onError={(e) => {
-                                  (e.target as HTMLImageElement).src = '/placeholder-product.png';
-                                }}
+                              <img
+                                src={primaryImage.startsWith('http') ? primaryImage : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}${primaryImage}`}
+                                alt={product.name}
+                                className="w-12 h-12 object-cover rounded"
+                                onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder-product.png'; }}
                               />
                             ) : (
                               <div className="w-12 h-12 bg-gray-200 rounded flex items-center justify-center">
@@ -296,15 +342,11 @@ export default function POSPage() {
                             <div className="flex-1">
                               <p className="font-medium text-gray-900">{product.name}</p>
                               <p className="text-sm text-gray-500">SKU: {product.sku}</p>
-                              {product.brand && (
-                                <p className="text-xs text-gray-400">{product.brand.name}</p>
-                              )}
+                              {product.brand && <p className="text-xs text-gray-400">{product.brand.name}</p>}
                             </div>
                             <div className="text-right">
                               <p className="font-semibold text-orange-600">${price.toFixed(2)}</p>
-                              <p className={`text-xs ${stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                                Stock: {stock}
-                              </p>
+                              <p className={`text-xs ${stock > 0 ? 'text-green-600' : 'text-red-600'}`}>Stock: {stock}</p>
                             </div>
                           </button>
                         );
@@ -312,17 +354,12 @@ export default function POSPage() {
                     })()}
                   </div>
                 )}
-                
+
                 {searchQuery && isSearching && (
-                  <div className="p-4 text-center text-gray-500">
-                    Searching...
-                  </div>
+                  <div className="p-4 text-center text-gray-500">Searching...</div>
                 )}
-                
                 {searchQuery && searchError && (
-                  <div className="p-4 text-center text-red-500">
-                    Error searching products
-                  </div>
+                  <div className="p-4 text-center text-red-500">Error searching products</div>
                 )}
               </div>
             </div>
@@ -335,10 +372,7 @@ export default function POSPage() {
                   Cart ({cart.length})
                 </h2>
                 {cart.length > 0 && (
-                  <button
-                    onClick={() => setCart([])}
-                    className="text-sm text-red-600 hover:text-red-700"
-                  >
+                  <button onClick={() => setCart([])} className="text-sm text-red-600 hover:text-red-700">
                     Clear All
                   </button>
                 )}
@@ -354,13 +388,11 @@ export default function POSPage() {
                   {cart.map((item, index) => (
                     <div key={index} className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg">
                       {item.image ? (
-                        <img 
-                          src={item.image.startsWith('http') ? item.image : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}${item.image}`} 
-                          alt={item.name} 
+                        <img
+                          src={item.image.startsWith('http') ? item.image : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}${item.image}`}
+                          alt={item.name}
                           className="w-16 h-16 object-cover rounded"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src = '/placeholder-product.png';
-                          }}
+                          onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder-product.png'; }}
                         />
                       ) : (
                         <div className="w-16 h-16 bg-gray-200 rounded flex items-center justify-center">
@@ -369,17 +401,12 @@ export default function POSPage() {
                       )}
                       <div className="flex-1">
                         <p className="font-medium text-gray-900">{item.name}</p>
-                        {item.variation_name && (
-                          <p className="text-sm text-gray-500">{item.variation_name}</p>
-                        )}
+                        {item.variation_name && <p className="text-sm text-gray-500">{item.variation_name}</p>}
                         <p className="text-sm text-gray-500">SKU: {item.sku}</p>
                         <p className="text-sm font-semibold text-orange-600">${item.price.toFixed(2)}</p>
                       </div>
                       <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => updateQuantity(index, item.quantity - 1)}
-                          className="p-1 rounded hover:bg-gray-100"
-                        >
+                        <button onClick={() => updateQuantity(index, item.quantity - 1)} className="p-1 rounded hover:bg-gray-100">
                           <Minus className="h-4 w-4" />
                         </button>
                         <input
@@ -390,19 +417,13 @@ export default function POSPage() {
                           min="1"
                           max={item.stock}
                         />
-                        <button
-                          onClick={() => updateQuantity(index, item.quantity + 1)}
-                          className="p-1 rounded hover:bg-gray-100"
-                        >
+                        <button onClick={() => updateQuantity(index, item.quantity + 1)} className="p-1 rounded hover:bg-gray-100">
                           <Plus className="h-4 w-4" />
                         </button>
                       </div>
                       <div className="text-right">
                         <p className="font-semibold text-gray-900">${(item.price * item.quantity).toFixed(2)}</p>
-                        <button
-                          onClick={() => removeFromCart(index)}
-                          className="text-red-600 hover:text-red-700 mt-1"
-                        >
+                        <button onClick={() => removeFromCart(index)} className="text-red-600 hover:text-red-700 mt-1">
                           <Trash2 className="h-4 w-4" />
                         </button>
                       </div>
@@ -413,7 +434,7 @@ export default function POSPage() {
             </div>
           </div>
 
-          {/* Right Section - Checkout */}
+          {/* Right Section */}
           <div className="space-y-6">
             {/* Customer Info */}
             <div className="bg-white rounded-lg shadow-sm p-6">
@@ -433,9 +454,7 @@ export default function POSPage() {
               {showCustomerForm ? (
                 <div className="space-y-3">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Name *
-                    </label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Name *</label>
                     <input
                       type="text"
                       value={customerInfo.customer_name}
@@ -446,7 +465,7 @@ export default function POSPage() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Phone *
+                      Phone {!isQuotation && '*'}
                     </label>
                     <input
                       type="tel"
@@ -457,9 +476,7 @@ export default function POSPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Email
-                    </label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
                     <input
                       type="email"
                       value={customerInfo.customer_email}
@@ -474,10 +491,8 @@ export default function POSPage() {
                   {customerInfo.customer_name ? (
                     <>
                       <p className="text-gray-900">{customerInfo.customer_name}</p>
-                      <p className="text-sm text-gray-600">{customerInfo.customer_phone}</p>
-                      {customerInfo.customer_email && (
-                        <p className="text-sm text-gray-600">{customerInfo.customer_email}</p>
-                      )}
+                      {customerInfo.customer_phone && <p className="text-sm text-gray-600">{customerInfo.customer_phone}</p>}
+                      {customerInfo.customer_email && <p className="text-sm text-gray-600">{customerInfo.customer_email}</p>}
                     </>
                   ) : (
                     <p className="text-gray-500 text-sm">No customer information</p>
@@ -486,60 +501,45 @@ export default function POSPage() {
               )}
             </div>
 
-            {/* Payment Method */}
-            <div className="bg-white rounded-lg shadow-sm p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Payment Method</h2>
-              <div className="grid grid-cols-3 gap-2">
-                <button
-                  onClick={() => setPaymentMethod('cash')}
-                  className={`p-3 rounded-lg border-2 flex flex-col items-center gap-2 ${
-                    paymentMethod === 'cash'
-                      ? 'border-orange-500 bg-orange-50'
-                      : 'border-gray-200 hover:border-gray-300'
-                  }`}
-                >
-                  <Banknote className="h-6 w-6" />
-                  <span className="text-sm font-medium">Cash</span>
-                </button>
-                <button
-                  onClick={() => setPaymentMethod('card')}
-                  className={`p-3 rounded-lg border-2 flex flex-col items-center gap-2 ${
-                    paymentMethod === 'card'
-                      ? 'border-orange-500 bg-orange-50'
-                      : 'border-gray-200 hover:border-gray-300'
-                  }`}
-                >
-                  <CreditCard className="h-6 w-6" />
-                  <span className="text-sm font-medium">Card</span>
-                </button>
-                <button
-                  onClick={() => setPaymentMethod('manual')}
-                  className={`p-3 rounded-lg border-2 flex flex-col items-center gap-2 ${
-                    paymentMethod === 'manual'
-                      ? 'border-orange-500 bg-orange-50'
-                      : 'border-gray-200 hover:border-gray-300'
-                  }`}
-                >
-                  <DollarSign className="h-6 w-6" />
-                  <span className="text-sm font-medium">Manual</span>
-                </button>
+            {/* Payment Method — POS only */}
+            {!isQuotation && (
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">Payment Method</h2>
+                <div className="grid grid-cols-3 gap-2">
+                  {(['cash', 'card', 'manual'] as PaymentMethod[]).map((method) => {
+                    const icons = { cash: <Banknote className="h-6 w-6" />, card: <CreditCard className="h-6 w-6" />, manual: <DollarSign className="h-6 w-6" /> };
+                    const labels = { cash: 'Cash', card: 'Card', manual: 'Manual' };
+                    return (
+                      <button
+                        key={method}
+                        onClick={() => setPaymentMethod(method)}
+                        className={`p-3 rounded-lg border-2 flex flex-col items-center gap-2 ${
+                          paymentMethod === method ? 'border-orange-500 bg-orange-50' : 'border-gray-200 hover:border-gray-300'
+                        }`}
+                      >
+                        {icons[method]}
+                        <span className="text-sm font-medium">{labels[method]}</span>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Order Summary */}
-            <div className="bg-white rounded-lg shadow-sm p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Order Summary</h2>
-              
+            <div className={`bg-white rounded-lg shadow-sm p-6 ${isQuotation ? 'border-2 border-blue-200' : ''}`}>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                {isQuotation ? 'Quotation Summary' : 'Order Summary'}
+              </h2>
+
               <div className="space-y-3 mb-4">
                 <div className="flex justify-between text-gray-600">
                   <span>Subtotal</span>
                   <span>${totals.subtotal.toFixed(2)}</span>
                 </div>
-                
+
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Discount (%)
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Discount (%)</label>
                   <input
                     type="number"
                     value={discount}
@@ -565,26 +565,35 @@ export default function POSPage() {
               </div>
 
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Notes
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
                 <textarea
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   rows={3}
-                  placeholder="Order notes..."
+                  placeholder={isQuotation ? 'Quotation notes for customer...' : 'Order notes...'}
                 />
               </div>
 
-              <button
-                onClick={handleCheckout}
-                disabled={cart.length === 0 || createOrderMutation.isPending}
-                className="w-full bg-gradient-to-r from-orange-400 to-orange-500 text-white py-3 rounded-lg font-semibold hover:from-orange-500 hover:to-orange-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              >
-                <Receipt className="h-5 w-5" />
-                {createOrderMutation.isPending ? 'Processing...' : 'Complete Order'}
-              </button>
+              {isQuotation ? (
+                <button
+                  onClick={handleGenerateQuotation}
+                  disabled={cart.length === 0 || generateQuotationMutation.isPending}
+                  className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  <FileText className="h-5 w-5" />
+                  {generateQuotationMutation.isPending ? 'Generating PDF...' : 'Download Quotation PDF'}
+                </button>
+              ) : (
+                <button
+                  onClick={handleCheckout}
+                  disabled={cart.length === 0 || createOrderMutation.isPending}
+                  className="w-full bg-gradient-to-r from-orange-400 to-orange-500 text-white py-3 rounded-lg font-semibold hover:from-orange-500 hover:to-orange-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  <Receipt className="h-5 w-5" />
+                  {createOrderMutation.isPending ? 'Processing...' : 'Complete Order'}
+                </button>
+              )}
             </div>
           </div>
         </div>

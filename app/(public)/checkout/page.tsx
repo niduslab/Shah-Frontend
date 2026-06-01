@@ -1343,13 +1343,20 @@ export default function CheckoutPage() {
                           <h3 className="text-sm font-medium text-black line-clamp-2">
                             {item.product?.name || 'Unknown Product'}
                           </h3>
-                          {item.variation && (
-                            <p className="text-xs text-gray-500 mt-1">
-                              {item.variation.attribute_values?.map((attr: any) => 
-                                `${attr.attribute_name}: ${attr.value}`
-                              ).join(', ')}
-                            </p>
-                          )}
+                          <p className="text-xs text-gray-500 mt-1">
+                            {item.variation && (
+                              <span>
+                                {item.variation.attribute_values?.map((attr: any) =>
+                                  `${attr.attribute_name}: ${attr.value}`
+                                ).join(', ')}
+                              </span>
+                            )}
+                            {item.product?.country_of_origin && (
+                              <span className="ml-1 text-black font-bold">
+                                Origin: {item.product.country_of_origin}
+                              </span>
+                            )}
+                          </p>
                           <div className="flex items-center justify-between mt-2">
                             <span className="text-sm text-gray-600">
                               ${price.toFixed(2)} × {item.quantity}

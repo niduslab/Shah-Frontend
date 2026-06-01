@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Package, Search, Eye, X, Truck, FileText, Calendar, DollarSign, User, MapPin, Filter, Download } from 'lucide-react';
 import Pagination from '@/components/ui/Pagination';
 import { toast } from 'sonner';
@@ -53,6 +53,7 @@ interface Order {
 export default function OrdersPage() {
   const [mounted, setMounted] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [statusFilter, setStatusFilter] = useState<OrderStatus | 'all'>('all');
@@ -73,6 +74,14 @@ export default function OrdersPage() {
     setMounted(true);
   }, []);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+      setCurrentPage(1);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
   const filters = {
     page: currentPage,
     per_page: perPage,
@@ -81,10 +90,10 @@ export default function OrdersPage() {
     ...(orderTypeFilter !== 'all' && { order_type: orderTypeFilter }),
     ...(dateFrom && { date_from: dateFrom }),
     ...(dateTo && { date_to: dateTo }),
-    ...(searchQuery && { search: searchQuery })
+    ...(debouncedSearch && { search: debouncedSearch })
   };
 
-  const { data: ordersData, isLoading } = useAdminOrders(filters);
+  const { data: ordersData, isLoading, isFetching } = useAdminOrders(filters);
   const updateStatusMutation = useUpdateOrderStatus();
   const cancelMutation = useCancelAdminOrder();
   const trackingMutation = useAssignTracking();
@@ -187,6 +196,7 @@ export default function OrdersPage() {
     setDateFrom('');
     setDateTo('');
     setSearchQuery('');
+    setDebouncedSearch('');
   };
 
   const handleDownloadInvoice = async (orderNumber: string) => {
@@ -221,7 +231,7 @@ export default function OrdersPage() {
     }
   };
 
-  if (isLoading) {
+  if (isLoading && !ordersData) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
         <div className="text-center">
@@ -262,8 +272,13 @@ export default function OrdersPage() {
                   placeholder="Search by order number or customer name..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full rounded-xl border border-gray-300 bg-gray-50 py-2.5 pl-11 pr-4 text-sm transition-all focus:border-[#FF6F00] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
+                  className="w-full rounded-xl border border-gray-300 bg-gray-50 py-2.5 pl-11 pr-10 text-sm transition-all focus:border-[#FF6F00] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
                 />
+                {isFetching && (
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-200 border-t-[#FF6F00]"></div>
+                  </div>
+                )}
               </div>
               <button
                 onClick={() => setShowFilters(!showFilters)}

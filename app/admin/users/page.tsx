@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Plus, Edit2, Trash2, Search, Users, UserCheck, UserX, Eye, ToggleLeft, ToggleRight, Mail, Phone } from 'lucide-react';
 import Pagination from '@/components/ui/Pagination';
 import { toast } from 'sonner';
-import { 
+import {
   useAdminUsers,
   useCreateUser,
   useUpdateUser,
@@ -12,7 +13,6 @@ import {
   useToggleUserStatus
 } from '@/lib/hooks/admin/useAdminUsers';
 import UserModal from '@/app/admin/users/_components/UserModal';
-import UserDetailsModal from '@/app/admin/users/_components/UserDetailsModal';
 import DeleteConfirmModal from '@/app/admin/users/_components/DeleteConfirmModal';
 
 interface User {
@@ -31,23 +31,33 @@ interface User {
 }
 
 export default function UsersPage() {
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+      setCurrentPage(1);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
   const [currentPage, setCurrentPage] = useState(1);
   const [userTypeFilter, setUserTypeFilter] = useState<'all' | 'customer' | 'admin' | 'vendor'>('all');
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   const filters = {
     page: currentPage,
     per_page: 15,
+    ...(debouncedSearch.trim() && { search: debouncedSearch.trim() }),
     ...(userTypeFilter !== 'all' && { user_type: userTypeFilter }),
     ...(statusFilter !== 'all' && { status: statusFilter === 'active' }),
   };
 
-  const { data: usersData, isLoading } = useAdminUsers(filters);
+  const { data: usersData, isLoading, isFetching } = useAdminUsers(filters);
   const createMutation = useCreateUser();
   const updateMutation = useUpdateUser();
   const deleteMutation = useDeleteUser();
@@ -55,16 +65,7 @@ export default function UsersPage() {
 
   const users = (usersData as any)?.data?.data || [];
   const paginationData = (usersData as any)?.data;
-
-  const filteredUsers = users.filter((user: User) => {
-    const matchesSearch = 
-      user.first_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.last_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (user.phone && user.phone.includes(searchQuery));
-    
-    return matchesSearch;
-  });
+  const filteredUsers = users;
 
   const handleCreate = () => {
     setSelectedUser(null);
@@ -77,8 +78,7 @@ export default function UsersPage() {
   };
 
   const handleViewDetails = (user: User) => {
-    setSelectedUser(user);
-    setIsDetailsModalOpen(true);
+    router.push(`/admin/users/${user.id}`);
   };
 
   const handleDelete = (user: User) => {
@@ -141,7 +141,7 @@ export default function UsersPage() {
     });
   };
 
-  if (isLoading) {
+  if (isLoading && !usersData) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
         <div className="text-center">
@@ -238,8 +238,13 @@ export default function UsersPage() {
                 placeholder="Search by name, email, or phone..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-xl border border-gray-300 bg-gray-50 py-2.5 pl-11 pr-4 text-sm transition-all focus:border-[#FF6F00] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
+                className="w-full rounded-xl border border-gray-300 bg-gray-50 py-2.5 pl-11 pr-10 text-sm transition-all focus:border-[#FF6F00] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
               />
+              {isFetching && (
+                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-200 border-t-[#FF6F00]" />
+                </div>
+              )}
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3">
@@ -248,7 +253,7 @@ export default function UsersPage() {
                 <label className="block text-xs font-medium text-gray-700 mb-1.5">User Type</label>
                 <div className="flex items-center gap-1 rounded-xl bg-gray-100 p-1">
                   <button
-                    onClick={() => setUserTypeFilter('all')}
+                    onClick={() => { setUserTypeFilter('all'); setCurrentPage(1); }}
                     className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
                       userTypeFilter === 'all'
                         ? 'bg-white text-gray-900 shadow-sm'
@@ -258,7 +263,7 @@ export default function UsersPage() {
                     All
                   </button>
                   <button
-                    onClick={() => setUserTypeFilter('customer')}
+                    onClick={() => { setUserTypeFilter('customer'); setCurrentPage(1); }}
                     className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
                       userTypeFilter === 'customer'
                         ? 'bg-white text-gray-900 shadow-sm'
@@ -268,7 +273,7 @@ export default function UsersPage() {
                     Customers
                   </button>
                   <button
-                    onClick={() => setUserTypeFilter('admin')}
+                    onClick={() => { setUserTypeFilter('admin'); setCurrentPage(1); }}
                     className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
                       userTypeFilter === 'admin'
                         ? 'bg-white text-gray-900 shadow-sm'
@@ -278,7 +283,7 @@ export default function UsersPage() {
                     Admins
                   </button>
                   <button
-                    onClick={() => setUserTypeFilter('vendor')}
+                    onClick={() => { setUserTypeFilter('vendor'); setCurrentPage(1); }}
                     className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
                       userTypeFilter === 'vendor'
                         ? 'bg-white text-gray-900 shadow-sm'
@@ -295,7 +300,7 @@ export default function UsersPage() {
                 <label className="block text-xs font-medium text-gray-700 mb-1.5">Status</label>
                 <div className="flex items-center gap-1 rounded-xl bg-gray-100 p-1">
                   <button
-                    onClick={() => setStatusFilter('all')}
+                    onClick={() => { setStatusFilter('all'); setCurrentPage(1); }}
                     className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
                       statusFilter === 'all'
                         ? 'bg-white text-gray-900 shadow-sm'
@@ -305,7 +310,7 @@ export default function UsersPage() {
                     All
                   </button>
                   <button
-                    onClick={() => setStatusFilter('active')}
+                    onClick={() => { setStatusFilter('active'); setCurrentPage(1); }}
                     className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
                       statusFilter === 'active'
                         ? 'bg-white text-gray-900 shadow-sm'
@@ -315,7 +320,7 @@ export default function UsersPage() {
                     Active
                   </button>
                   <button
-                    onClick={() => setStatusFilter('inactive')}
+                    onClick={() => { setStatusFilter('inactive'); setCurrentPage(1); }}
                     className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
                       statusFilter === 'inactive'
                         ? 'bg-white text-gray-900 shadow-sm'
@@ -465,7 +470,7 @@ export default function UsersPage() {
           )}
 
           {/* Pagination */}
-          {paginationData && paginationData.last_page > 1 && (
+          {paginationData && paginationData.total > 0 && (
             <Pagination
               currentPage={paginationData.current_page}
               lastPage={paginationData.last_page}
@@ -505,15 +510,6 @@ export default function UsersPage() {
 
         {selectedUser && (
           <>
-            <UserDetailsModal
-              isOpen={isDetailsModalOpen}
-              onClose={() => {
-                setIsDetailsModalOpen(false);
-                setSelectedUser(null);
-              }}
-              userId={selectedUser.id}
-            />
-
             <DeleteConfirmModal
               isOpen={isDeleteModalOpen}
               onClose={() => {
