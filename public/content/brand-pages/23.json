@@ -3,8 +3,8 @@
   "content": {
     "hero": {
       "enabled": true,
-      "backgroundImage": "/images/brand-page/hero/1779354977943-1626139517218749.png",
-      "title": "Turn Your Home\nInto A Complete",
+      "backgroundImage": "/images/brand-page/hero/1780721822012-Gemini_Generated_Image_c2niczc2niczc2ni.png",
+      "title": "ZXCN ",
       "highlightedText": "Fitness Space",
       "description": "",
       "buttonText": "Shop Now",
@@ -17,31 +17,31 @@
         {
           "id": "cat-1779354926192",
           "name": "Cardio",
-          "image": "/images/brand-page/categories/1779354944087-1626139517218749.png",
+          "image": "/images/brand-page/categories/1780721568441-1579522634340347.png",
           "href": "/shop?category=commercial-cardio&brand=zxcn"
         },
         {
           "id": "cat-1779354926390",
           "name": "Strength",
-          "image": "/images/brand-page/categories/1779354946375-1579573705344801.png",
+          "image": "/images/brand-page/categories/1780721570481-1743401503883261.png",
           "href": "/shop?category=strength&brand=zxcn"
         },
         {
           "id": "cat-1779354926561",
           "name": "Free Weight",
-          "image": "/images/brand-page/categories/1779354948574-ZXCH-1500.png",
+          "image": "/images/brand-page/categories/1780721572686-1579515895873925.png",
           "href": "/shop?category=free-weight&brand=zxcn"
         },
         {
           "id": "cat-1779354926759",
           "name": "Sports",
-          "image": "/images/brand-page/categories/1779354950850-20200121-1579573381167177.png",
+          "image": "/images/brand-page/categories/1780721574902-1743219797575255.png",
           "href": "/shop?category=sports&brand=zxcn"
         }
       ]
     },
     "behindTheWork": {
-      "enabled": true,
+      "enabled": false,
       "title": "Thinking Behind the Work",
       "description": "",
       "stats": [
@@ -101,5 +101,5 @@
       "backgroundColor": "#E8DED3"
     }
   },
-  "updatedAt": "2026-05-21T09:16:20.738Z"
+  "updatedAt": "2026-06-06T04:59:30.278Z"
 }

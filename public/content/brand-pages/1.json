@@ -3,10 +3,10 @@
   "content": {
     "hero": {
       "enabled": true,
-      "backgroundImage": "/images/brand-page/hero/1779340106387-foam-roller2.jpg",
+      "backgroundImage": "/images/brand-page/hero/1780568065085-ead021_7fabadf31c93493da15c8c57ab1fa2ec~mv2.jpg",
       "title": "Adidas",
       "highlightedText": "",
-      "description": "",
+      "description": "HIGH-PERFORMANCE RUNNING,    WITHOUT LEAVING THE HOUSE.",
       "buttonText": "Shop Now",
       "buttonUrl": "/shop?brand=adidas"
     },
@@ -17,31 +17,31 @@
         {
           "id": "cat-1779351099639",
           "name": "Cardio",
-          "image": "/images/brand-page/categories/1779351192735-Screenshot 2026-05-21 141254.png",
+          "image": "/images/brand-page/categories/1780568336614-Screenshot 2026-06-04 161824.png",
           "href": "/shop?category=fitness-cardio&brand=adidas"
         },
         {
           "id": "cat-1779351107863",
           "name": "Strength",
-          "image": "/images/brand-page/categories/1779351196736-Screenshot 2026-05-21 141257.png",
+          "image": "/images/brand-page/categories/1780568241076-Screenshot 2026-06-04 161638.png",
           "href": "/shop?category=strength&brand=adidas"
         },
         {
           "id": "cat-1779351108072",
           "name": "Free Weight",
-          "image": "/images/brand-page/categories/1779351199733-Screenshot 2026-05-21 141301.png",
+          "image": "/images/brand-page/categories/1780568245416-Screenshot 2026-06-04 161648.png",
           "href": "/shop?category=free-weight&brand=adidas"
         },
         {
           "id": "cat-1779351108273",
           "name": "Sports",
-          "image": "/images/brand-page/categories/1779351203161-Screenshot 2026-05-21 141304.png",
+          "image": "/images/brand-page/categories/1780568342184-Screenshot 2026-06-04 161619.png",
           "href": "/shop?category=sports&brand=adidas"
         }
       ]
     },
     "behindTheWork": {
-      "enabled": true,
+      "enabled": false,
       "title": "Thinking Behind the Work",
       "description": "",
       "stats": [
@@ -130,5 +130,5 @@
       "backgroundColor": "#E8DED3"
     }
   },
-  "updatedAt": "2026-05-21T08:14:48.240Z"
+  "updatedAt": "2026-06-04T10:19:19.651Z"
 }

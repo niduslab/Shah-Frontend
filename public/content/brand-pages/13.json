@@ -3,10 +3,10 @@
   "content": {
     "hero": {
       "enabled": true,
-      "backgroundImage": "/images/brand-page/hero/1779353077348-download.jpg",
+      "backgroundImage": "/images/brand-page/hero/1780684011842-massage-chair-in-hotel-gym.jpg",
       "title": "Turn Your Home\nInto A Complete",
       "highlightedText": "Fitness Space",
-      "description": "",
+      "description": "iRest is a global brand founded in 2003. The company’s headquarters are located in Wenzhou, Zhejiang province. Massage chairs that are used by millions of people around the world are constructed in modern factories covering a total area of 350,000 square metres. In fact, up to 2,000 massage chairs are produced here every day!",
       "buttonText": "Shop Now",
       "buttonUrl": "/shop?brand=irest"
     },
@@ -17,19 +17,19 @@
         {
           "id": "cat-1779353079743",
           "name": "Cardio",
-          "image": "/images/brand-page/categories/1779353093677-b6e12d0a104ade504a507d7fb87eaf1-removebg-preview-300x300.png",
+          "image": "/images/brand-page/categories/1780684017295-fotel-masujacy-iRest-Grandease-A550-galeria-315-ciemny.jpg",
           "href": "/shop?category=commercial-cardio&brand=irest"
         },
         {
           "id": "cat-1779353079926",
           "name": "Strength",
-          "image": "/images/brand-page/categories/1779353095864-c6bfe316ce989ef643611048be9911a-removebg-preview-300x300.png",
+          "image": "/images/brand-page/categories/1780684020003-fotel-masujacy-iRest-Grandease-A550-galeria-315-1.jpg",
           "href": "/shop?category=strength&brand=irest"
         },
         {
           "id": "cat-1779353080095",
           "name": "Free Weight",
-          "image": "/images/brand-page/categories/1779353098277-A-665-2-430x423.png",
+          "image": "/images/brand-page/categories/1780684022597-61CL7KqZYyL._AC_SX679_.jpg",
           "href": "/shop?category=free-weight&brand=irest"
         },
         {
@@ -41,7 +41,7 @@
       ]
     },
     "behindTheWork": {
-      "enabled": true,
+      "enabled": false,
       "title": "Thinking Behind the Work",
       "description": "",
       "stats": [
@@ -101,5 +101,5 @@
       "backgroundColor": "#E8DED3"
     }
   },
-  "updatedAt": "2026-05-21T08:45:22.923Z"
+  "updatedAt": "2026-06-05T18:28:17.554Z"
 }

@@ -2,18 +2,43 @@
   "brandId": "20",
   "content": {
     "hero": {
-      "enabled": false,
-      "backgroundImage": "/images/brand-page/brand-page-hero-img.png",
-      "title": "Turn Your Home\nInto A Complete",
+      "enabled": true,
+      "backgroundImage": "/images/brand-page/hero/1780720667679-Gemini_Generated_Image_e5k1jme5k1jme5k1.png",
+      "title": "Boker ",
       "highlightedText": "Fitness Space",
-      "description": "",
+      "description": "Your premier factory-direct partner for elite fitness spaces. Boker connects you with heavy-duty, institutional-grade gym equipment and high-performance infrastructure—engineered for maximum durability, absolute safety, and top-tier athletic performance.",
       "buttonText": "Shop Now",
       "buttonUrl": "/shop?brand=boker"
     },
     "categories": {
-      "enabled": false,
+      "enabled": true,
       "sectionTitle": "Explore Categories",
-      "items": []
+      "items": [
+        {
+          "id": "cat-1780720199050",
+          "name": "Strength",
+          "image": "/images/brand-page/categories/1780720203938-GS348QP4_HERO_720x.png",
+          "href": "/shop?category=strength&brand=boker"
+        },
+        {
+          "id": "cat-1780720199427",
+          "name": "Strength",
+          "image": "/images/brand-page/categories/1780720206412-EXM3000LPS_HERO_M_720x.png",
+          "href": "/shop?category=strength&brand=boker"
+        },
+        {
+          "id": "cat-1780720199859",
+          "name": "Strength",
+          "image": "/images/brand-page/categories/1780720208601-G9S_with_GKR9_0051_500px_540x.png",
+          "href": "/shop?category=strength&brand=boker"
+        },
+        {
+          "id": "cat-1780720200211",
+          "name": "Strength",
+          "image": "/images/brand-page/categories/1780720211004-G424-3Q-ft_540x.png",
+          "href": "/shop?category=strength&brand=boker"
+        }
+      ]
     },
     "behindTheWork": {
       "enabled": false,
@@ -76,5 +101,5 @@
       "backgroundColor": "#E8DED3"
     }
   },
-  "updatedAt": "2026-05-21T09:07:52.078Z"
+  "updatedAt": "2026-06-06T04:38:15.084Z"
 }

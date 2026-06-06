@@ -71,12 +71,6 @@ export function DynamicHeroSection({ data }: DynamicHeroSectionProps) {
         </div>
       </div>
 
-      {/* Slider Indicators */}
-      <div className="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 gap-4">
-        <div className="h-1.5 w-12 rounded-full bg-white/40"></div>
-        <div className="h-1.5 w-12 rounded-full bg-[#FFC107]"></div>
-        <div className="h-1.5 w-12 rounded-full bg-white/40"></div>
-      </div>
     </div>
   );
 }

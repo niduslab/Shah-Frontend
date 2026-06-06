@@ -3,17 +3,42 @@
   "content": {
     "hero": {
       "enabled": true,
-      "backgroundImage": "/images/brand-page/hero/1779354549700-Screenshot 2026-05-21 150852.png",
+      "backgroundImage": "/images/brand-page/hero/1780720714110-Gemini_Generated_Image_7ifdn37ifdn37ifd.png",
       "title": "Stex ",
       "highlightedText": "Fitness Space",
-      "description": "",
+      "description": "Engineered for the future of fitness, Stex delivers premium, technology-driven workout ecosystems. Combining sleek European design with intelligent, interactive interfaces, Stex empowers athletes with fluid, high-performance training systems that redefine wellness and athletic excellence.",
       "buttonText": "Shop Now",
       "buttonUrl": "/shop?brand=stex"
     },
     "categories": {
-      "enabled": false,
+      "enabled": true,
       "sectionTitle": "Explore Categories",
-      "items": []
+      "items": [
+        {
+          "id": "cat-1780720759944",
+          "name": "Strength",
+          "image": "/images/brand-page/categories/1780720843738-s25e-1.jpg",
+          "href": "/shop?category=strength&brand=stex"
+        },
+        {
+          "id": "cat-1780720760121",
+          "name": "Strength",
+          "image": "/images/brand-page/categories/1780720845860-S25U.jpg",
+          "href": "/shop?category=strength&brand=stex"
+        },
+        {
+          "id": "cat-1780720760330",
+          "name": "Strength",
+          "image": "/images/brand-page/categories/1780720856287-Screenshot 2026-06-06 104000.png",
+          "href": "/shop?category=strength&brand=stex"
+        },
+        {
+          "id": "cat-1780720760609",
+          "name": "Strength",
+          "image": "/images/brand-page/categories/1780720860246-Screenshot 2026-06-06 104016.png",
+          "href": "/shop?category=strength&brand=stex"
+        }
+      ]
     },
     "behindTheWork": {
       "enabled": false,
@@ -76,5 +101,5 @@
       "backgroundColor": "#E8DED3"
     }
   },
-  "updatedAt": "2026-05-21T09:09:25.369Z"
+  "updatedAt": "2026-06-06T04:41:02.411Z"
 }

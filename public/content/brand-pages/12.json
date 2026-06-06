@@ -3,10 +3,10 @@
   "content": {
     "hero": {
       "enabled": true,
-      "backgroundImage": "/images/brand-page/hero/1779352732911-pes10-taiwan-excellence-award-1920x680.webp",
-      "title": "Turn Your Home\nInto A Complete",
+      "backgroundImage": "/images/brand-page/hero/1780683634451-Gemini_Generated_Image_nvzjhinvzjhinvzj.png",
+      "title": "SteelFlex ",
       "highlightedText": "Fitness Space",
-      "description": "",
+      "description": "The strength equipment of Steelflex is designed with ergonomics and biomechanics for enhancing total body fitness in safety, efficiency,  and reliability.",
       "buttonText": "Shop Now",
       "buttonUrl": "/shop?brand=steelflex"
     },
@@ -17,25 +17,25 @@
         {
           "id": "cat-1779352737774",
           "name": "Cardio",
-          "image": "/images/brand-page/categories/1779352850490-33-400x296.jpg",
+          "image": "/images/brand-page/categories/1780683307480-01_cl2cs-2025-01.jpg",
           "href": "/shop?category=commercial-cardio&brand=steelflex"
         },
         {
           "id": "cat-1779352737960",
           "name": "Strength",
-          "image": "/images/brand-page/categories/1779352852796-10-300x300.jpg",
+          "image": "/images/brand-page/categories/1780683309884-01_pst10-01.jpg",
           "href": "/shop?category=strength&brand=steelflex"
         },
         {
           "id": "cat-1779352738127",
           "name": "Free Weight",
-          "image": "/images/brand-page/categories/1779352856210-34-400x296.jpg",
+          "image": "/images/brand-page/categories/1780683312071-02_pb10-01.jpg",
           "href": "/shop?category=free-weight&brand=steelflex"
         },
         {
           "id": "cat-1779352738439",
           "name": "Sports",
-          "image": "/images/brand-page/categories/1779352858651-05_cl2ec-sp_540x540-300x300.jpg",
+          "image": "/images/brand-page/categories/1780683314787-08_pt60_hd-01.jpg",
           "href": "/shop?category=sports&brand=steelflex"
         }
       ]
@@ -101,5 +101,5 @@
       "backgroundColor": "#E8DED3"
     }
   },
-  "updatedAt": "2026-05-21T08:41:11.875Z"
+  "updatedAt": "2026-06-05T18:21:51.182Z"
 }

@@ -3,10 +3,10 @@
   "content": {
     "hero": {
       "enabled": true,
-      "backgroundImage": "/images/brand-page/hero/1779351507175-bs-main-2-text.jpg",
-      "title": "Turn Your Home\nInto A Complete",
+      "backgroundImage": "/images/brand-page/hero/1780570489778-Gemini_Generated_Image_m0zrd7m0zrd7m0zr.png",
+      "title": "Body Solid",
       "highlightedText": "Fitness Space",
-      "description": "",
+      "description": "FOCUS YOUR TRAINING",
       "buttonText": "Shop Now",
       "buttonUrl": "/shop?brand=body-solid"
     },
@@ -17,31 +17,31 @@
         {
           "id": "cat-1779351378680",
           "name": "Cardio",
-          "image": "/images/brand-page/categories/1779351435881-Screenshot 2026-05-21 141652.png",
+          "image": "/images/brand-page/categories/1780570632641-T150_0089-1028px__06814.jpg",
           "href": "/shop?category=fitness-cardio&brand=body-solid"
         },
         {
           "id": "cat-1779351378896",
           "name": "Strength",
-          "image": "/images/brand-page/categories/1779351444689-Screenshot 2026-05-21 141657.png",
+          "image": "/images/brand-page/categories/1780570635046-T50_DSF1873-1028px__45095.jpg",
           "href": "/shop?category=strength&brand=body-solid"
         },
         {
           "id": "cat-1779351379096",
           "name": "Free Weight",
-          "image": "/images/brand-page/categories/1779351447524-Screenshot 2026-05-21 141703.png",
+          "image": "/images/brand-page/categories/1780570637530-E5000_DSF9990-1028px__34861.jpg",
           "href": "/shop?category=free-weight&brand=body-solid"
         },
         {
           "id": "cat-1779351379287",
           "name": "Sports",
-          "image": "/images/brand-page/categories/1779351450363-Screenshot 2026-05-21 141712.png",
+          "image": "/images/brand-page/categories/1780570640025-ESB250_DSF1268-1028px__38160.jpg",
           "href": "/shop?category=sports&brand=body-solid"
         }
       ]
     },
     "behindTheWork": {
-      "enabled": true,
+      "enabled": false,
       "title": "Thinking Behind the Work",
       "description": "",
       "stats": [
@@ -101,5 +101,5 @@
       "backgroundColor": "#E8DED3"
     }
   },
-  "updatedAt": "2026-05-21T08:18:30.027Z"
+  "updatedAt": "2026-06-05T03:54:30.645Z"
 }

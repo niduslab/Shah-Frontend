@@ -4,7 +4,7 @@
     "hero": {
       "enabled": true,
       "backgroundImage": "/images/brand-page/hero/1779353451732-UFC-GYM.jpg",
-      "title": "Turn Your Home\nInto A Complete",
+      "title": "UFC ",
       "highlightedText": "Fitness Space",
       "description": "",
       "buttonText": "Shop Now",
@@ -17,31 +17,31 @@
         {
           "id": "cat-1779353455519",
           "name": "Cardio",
-          "image": "/images/brand-page/categories/1779353469685-download (1).jpg",
+          "image": "/images/brand-page/categories/1780684479709-ca6926_fb6c4c57f6bc445bb1d882aef3d08a53~mv2.jpg",
           "href": "/shop?category=commercial-cardio&brand=ufc"
         },
         {
           "id": "cat-1779353455695",
           "name": "Strength",
-          "image": "/images/brand-page/categories/1779353472508-download (2).jpg",
+          "image": "/images/brand-page/categories/1780684481981-ca6926_e7033b9f8d014e64a56d6194cb27b3ee~mv2.jpg",
           "href": "/shop?category=strength&brand=ufc"
         },
         {
           "id": "cat-1779353455879",
           "name": "Free Weight",
-          "image": "/images/brand-page/categories/1779353474850-download (3).jpg",
+          "image": "/images/brand-page/categories/1780684484385-ca6926_23f69df5458d49069ff2f5d0826068b2~mv2.jpg",
           "href": "/shop?category=free-weight&brand=ufc"
         },
         {
           "id": "cat-1779353456047",
           "name": "Sports",
-          "image": "/images/brand-page/categories/1779353477123-download (4).jpg",
+          "image": "/images/brand-page/categories/1780684487742-9ab980_e103d0183da348d7a6f1b3298c4cae9a~mv2.jpg",
           "href": "/shop?category=sports&brand=ufc"
         }
       ]
     },
     "behindTheWork": {
-      "enabled": true,
+      "enabled": false,
       "title": "Thinking Behind the Work",
       "description": "",
       "stats": [
@@ -101,5 +101,5 @@
       "backgroundColor": "#E8DED3"
     }
   },
-  "updatedAt": "2026-05-21T08:51:38.387Z"
+  "updatedAt": "2026-06-05T18:34:52.308Z"
 }

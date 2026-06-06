@@ -6,7 +6,7 @@
       "backgroundImage": "/images/brand-page/hero/1779349248923-Screenshot 2026-05-21 134040.png",
       "title": "Shua ",
       "highlightedText": "Fitness Space",
-      "description": "",
+      "description": "Embrace an easy way to stay active.",
       "buttonText": "Shop Now",
       "buttonUrl": "/shop?brand=shua"
     },
@@ -17,25 +17,25 @@
         {
           "id": "cat-1779350151623",
           "name": "Cardio",
-          "image": "/images/brand-page/categories/1779350211640-Screenshot 2026-05-21 135613.png",
+          "image": "/images/brand-page/categories/1780569724143-shua_0005_20200914无动力最终版.454-removebg-preview.jpg",
           "href": "/shop?category=commercial-cardio&brand=shua"
         },
         {
           "id": "cat-1779350214248",
           "name": "Strength",
-          "image": "/images/brand-page/categories/1779350240048-Screenshot 2026-05-21 135618.png",
+          "image": "/images/brand-page/categories/1780569658172-B9100UT22-1-removebg-preview.jpg",
           "href": "/shop?category=strength&brand=shua"
         },
         {
           "id": "cat-1779350214439",
           "name": "Free Weight",
-          "image": "/images/brand-page/categories/1779350364646-Screenshot 2026-05-21 135848.png",
+          "image": "/images/brand-page/categories/1780569661706-SH-T8919T-removebg-preview.jpg",
           "href": "/shop?category=free-weight&brand=shua"
         },
         {
           "id": "cat-1779350214607",
           "name": "Sports",
-          "image": "/images/brand-page/categories/1779350246401-Screenshot 2026-05-21 135638.png",
+          "image": "/images/brand-page/categories/1780569728444-SH-R8800-Commercial-Rower-4-removebg-preview.jpg",
           "href": "/shop?category=sports&brand=shua"
         }
       ]
@@ -101,5 +101,5 @@
       "backgroundColor": "#E8DED3"
     }
   },
-  "updatedAt": "2026-05-21T08:15:16.229Z"
+  "updatedAt": "2026-06-04T10:46:43.880Z"
 }

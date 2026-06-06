@@ -3,10 +3,10 @@
   "content": {
     "hero": {
       "enabled": true,
-      "backgroundImage": "/images/brand-page/hero/1779351618732-D_1920x800_CardioSale_May4-May22.webp",
-      "title": "Turn Your Home\nInto A Complete",
+      "backgroundImage": "/images/brand-page/hero/1780570962021-Gemini_Generated_Image_ycz90ycz90ycz90y.png",
+      "title": "Marcy ",
       "highlightedText": "Fitness Space",
-      "description": "",
+      "description": "SHOP HOME GYM EQUIPMENT",
       "buttonText": "Shop Now",
       "buttonUrl": "/shop?brand=marcy"
     },
@@ -17,31 +17,31 @@
         {
           "id": "cat-1779351625006",
           "name": "Cardio",
-          "image": "/images/brand-page/categories/1779351644093-HOME_GYM_-_CATEGORY-min.webp",
+          "image": "/images/brand-page/categories/1780572376964-SM-4033_m_01.jpg",
           "href": "/shop?category=commercial-cardio&brand=marcy"
         },
         {
           "id": "cat-1779351625182",
           "name": "Free Weight",
-          "image": "/images/brand-page/categories/1779351646494-CARDIO_-_CATEGORY-min.webp",
+          "image": "/images/brand-page/categories/1780572380319-Marcy_100lb_Stack_Home_Gym_MKM-81030_-_Male_Model_using_Upper_Pulley_with_Lat_Bar_for_Lat_Bar_Pulldowns__81981.1704907354.1280.1280.jpg",
           "href": "/shop?category=free-weight&brand=marcy"
         },
         {
           "id": "cat-1779351625350",
           "name": "Strength",
-          "image": "/images/brand-page/categories/1779351648665-B_BenchesAndTrainers_1080x1080_f3cf1fcd-b709-4058-90ea-4ee0af58d3e5.webp",
+          "image": "/images/brand-page/categories/1780572383792-Marcy_Home_Gym_System_150lb_Weight_Stack_Machine_MWM-988_-_Rear_Lat_Pull_Down__53065.1677714781.1280.1280.jpg",
           "href": "/shop?category=strength&brand=marcy"
         },
         {
           "id": "cat-1779351625535",
           "name": "Sports",
-          "image": "/images/brand-page/categories/1779351651079-B_WeightsAndBars_1080x1080_58e5adb5-e038-4ce1-b32b-c8d34be844a9.webp",
+          "image": "/images/brand-page/categories/1780572387208-MWM-7041_m_02w.jpg",
           "href": "/shop?category=sports&brand=marcy"
         }
       ]
     },
     "behindTheWork": {
-      "enabled": true,
+      "enabled": false,
       "title": "Thinking Behind the Work",
       "description": "",
       "stats": [
@@ -101,5 +101,5 @@
       "backgroundColor": "#E8DED3"
     }
   },
-  "updatedAt": "2026-05-21T08:21:49.196Z"
+  "updatedAt": "2026-06-04T11:26:51.542Z"
 }

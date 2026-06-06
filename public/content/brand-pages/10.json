@@ -3,10 +3,10 @@
   "content": {
     "hero": {
       "enabled": true,
-      "backgroundImage": "/images/brand-page/hero/1779352326349-SOLE_MemorialDay_F80_HomepageSlider_Desktop.webp",
-      "title": "Turn Your Home\nInto A Complete",
+      "backgroundImage": "/images/brand-page/hero/1780682084043-SR550_66_P1051991_SOLE_SR550.webp",
+      "title": "Sole ",
       "highlightedText": "Fitness Space",
-      "description": "",
+      "description": "Unlock your full exercise potential with Sole",
       "buttonText": "Shop Now",
       "buttonUrl": "/shop?brand=sole"
     },
@@ -41,7 +41,7 @@
       ]
     },
     "behindTheWork": {
-      "enabled": true,
+      "enabled": false,
       "title": "Thinking Behind the Work",
       "description": "",
       "stats": [
@@ -101,5 +101,5 @@
       "backgroundColor": "#E8DED3"
     }
   },
-  "updatedAt": "2026-05-21T08:33:19.000Z"
+  "updatedAt": "2026-06-05T17:56:17.125Z"
 }

@@ -3,10 +3,10 @@
   "content": {
     "hero": {
       "enabled": true,
-      "backgroundImage": "/images/brand-page/hero/1779351999238-Screenshot 2026-05-21 142602.png",
-      "title": "Turn Your Home\nInto A Complete",
+      "backgroundImage": "/images/brand-page/hero/1780681802634-freemotio-fitness-strength-genesis-min-scaled-1250x500-c.jpg",
+      "title": "FreeMotion",
       "highlightedText": "Fitness Space",
-      "description": "",
+      "description": "Turn Your Home\nInto A Complete",
       "buttonText": "Shop Now",
       "buttonUrl": "/shop?brand=freemotion"
     },
@@ -41,7 +41,7 @@
       ]
     },
     "behindTheWork": {
-      "enabled": true,
+      "enabled": false,
       "title": "Thinking Behind the Work",
       "description": "",
       "stats": [
@@ -101,5 +101,5 @@
       "backgroundColor": "#E8DED3"
     }
   },
-  "updatedAt": "2026-05-21T08:27:34.418Z"
+  "updatedAt": "2026-06-05T17:50:04.700Z"
 }

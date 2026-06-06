@@ -3,8 +3,8 @@
   "content": {
     "hero": {
       "enabled": true,
-      "backgroundImage": "/images/brand-page/hero/1779354264836-2ce50b5a2cb9b06c5fd1025e319e10b.jpg",
-      "title": "Turn Your Home\nInto A Complete",
+      "backgroundImage": "/images/brand-page/hero/1780720041887-Gemini_Generated_Image_1empzm1empzm1emp.png",
+      "title": "APC ",
       "highlightedText": "Fitness Space",
       "description": "",
       "buttonText": "Shop Now",
@@ -41,7 +41,7 @@
       ]
     },
     "behindTheWork": {
-      "enabled": true,
+      "enabled": false,
       "title": "Thinking Behind the Work",
       "description": "",
       "stats": [
@@ -101,5 +101,5 @@
       "backgroundColor": "#E8DED3"
     }
   },
-  "updatedAt": "2026-05-21T09:05:18.117Z"
+  "updatedAt": "2026-06-06T04:28:06.910Z"
 }

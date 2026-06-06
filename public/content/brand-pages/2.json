@@ -3,10 +3,10 @@
   "content": {
     "hero": {
       "enabled": true,
-      "backgroundImage": "/images/brand-page/hero/1779339149342-3066245b-5153-451f-9ab4-914e883881f0_1.a79e5c2e70eb0e754f261c0190553b7b (1).jpeg",
+      "backgroundImage": "/images/brand-page/hero/1780572693884-Screenshot 2026-06-04 173127.png",
       "title": "REEBOK ",
       "highlightedText": "",
-      "description": "",
+      "description": "Realise your potential energy with Z-Tech Cardio",
       "buttonText": "Shop Now",
       "buttonUrl": "/shop?brand=reebok"
     },
@@ -17,31 +17,31 @@
         {
           "id": "cat-1779350749208",
           "name": "Cardio",
-          "image": "/images/brand-page/categories/1779350805703-3066245b-5153-451f-9ab4-914e883881f0_1.a79e5c2e70eb0e754f261c0190553b7b (3).jpeg",
+          "image": "/images/brand-page/categories/1780572603170-Screenshot 2026-06-04 172821.png",
           "href": "/shop?category=fitness-cardio&brand=reebok"
         },
         {
           "id": "cat-1779350749639",
           "name": "Strength",
-          "image": "/images/brand-page/categories/1779350808351-GT40sTFT.png",
+          "image": "/images/brand-page/categories/1780572607722-Screenshot 2026-06-04 172841.png",
           "href": "/shop?category=strength&brand=reebok"
         },
         {
           "id": "cat-1779350749967",
           "name": "Free Weight",
-          "image": "/images/brand-page/categories/1779350810594-reebok-exercise-bike-jet-430.jpg",
+          "image": "/images/brand-page/categories/1780572612128-Screenshot 2026-06-04 172915.png",
           "href": "/shop?category=free-weight&brand=reebok"
         },
         {
           "id": "cat-1779350750166",
           "name": "Sports",
-          "image": "/images/brand-page/categories/1779350812925-RBKTMSL8DCBT_media-01.webp",
+          "image": "/images/brand-page/categories/1780572616411-Screenshot 2026-06-04 172949.png",
           "href": "/shop?category=sports&brand=reebok"
         }
       ]
     },
     "behindTheWork": {
-      "enabled": true,
+      "enabled": false,
       "title": "Thinking Behind the Work",
       "description": "",
       "stats": [
@@ -116,5 +116,5 @@
       "backgroundColor": "#E8DED3"
     }
   },
-  "updatedAt": "2026-05-21T08:06:58.437Z"
+  "updatedAt": "2026-06-04T11:31:36.002Z"
 }

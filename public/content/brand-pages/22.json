@@ -3,10 +3,10 @@
   "content": {
     "hero": {
       "enabled": true,
-      "backgroundImage": "/images/brand-page/hero/1779354817912-Hebd95691126b467dbee2a1093c6cae12Y-600x600-1.webp",
-      "title": "Turn Your Home\nInto A Complete",
+      "backgroundImage": "/images/brand-page/hero/1780721306106-Gemini_Generated_Image_kiy0l9kiy0l9kiy0.png",
+      "title": "XPD ",
       "highlightedText": "Fitness Space",
-      "description": "",
+      "description": "Engineered for the technical athlete, XPD delivers high-performance sports footwear designed to anchor your training. Featuring precision dial-lacing systems and sport-specific sole geometry, XPD footwear provides the ultimate fusion of stability, grip, and power transfer across cardio, strength, and court disciplines.",
       "buttonText": "Shop Now",
       "buttonUrl": "/shop?brand=xpd"
     },
@@ -41,7 +41,7 @@
       ]
     },
     "behindTheWork": {
-      "enabled": true,
+      "enabled": false,
       "title": "Thinking Behind the Work",
       "description": "",
       "stats": [
@@ -101,5 +101,5 @@
       "backgroundColor": "#E8DED3"
     }
   },
-  "updatedAt": "2026-05-21T09:13:42.557Z"
+  "updatedAt": "2026-06-06T04:49:58.831Z"
 }

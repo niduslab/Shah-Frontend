@@ -3,7 +3,7 @@
   "content": {
     "hero": {
       "enabled": true,
-      "backgroundImage": "/images/brand-page/hero/1779353654550-Screenshot 2026-05-21 145247.png",
+      "backgroundImage": "/images/brand-page/hero/1780718344994-Gemini_Generated_Image_86uq2986uq2986uq.png",
       "title": "Turn Your Home\nInto A Complete",
       "highlightedText": "Fitness Space",
       "description": "",
@@ -41,7 +41,7 @@
       ]
     },
     "behindTheWork": {
-      "enabled": true,
+      "enabled": false,
       "title": "Thinking Behind the Work",
       "description": "",
       "stats": [
@@ -101,5 +101,5 @@
       "backgroundColor": "#E8DED3"
     }
   },
-  "updatedAt": "2026-05-21T08:55:18.944Z"
+  "updatedAt": "2026-06-06T03:59:10.776Z"
 }

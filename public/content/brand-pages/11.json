@@ -3,10 +3,10 @@
   "content": {
     "hero": {
       "enabled": true,
-      "backgroundImage": "/images/brand-page/hero/1779352553640-Screenshot 2026-05-21 143543.png",
-      "title": "Turn Your Home\nInto A Complete",
+      "backgroundImage": "/images/brand-page/hero/1780683108352-Gemini_Generated_Image_i3pc0qi3pc0qi3pc.png",
+      "title": "Xterra ",
       "highlightedText": "Fitness Space",
-      "description": "",
+      "description": "Step Into Smarter Home Fitness with XTERRA",
       "buttonText": "Shop Now",
       "buttonUrl": "/shop?brand=xterra"
     },
@@ -17,31 +17,31 @@
         {
           "id": "cat-1779352560358",
           "name": "Cardio",
-          "image": "/images/brand-page/categories/1779352588730-new-tr65r-april-update.webp",
+          "image": "/images/brand-page/categories/1780682925588-Screenshot 2026-06-06 000812.png",
           "href": "/shop?category=commercial-cardio&brand=xterra"
         },
         {
           "id": "cat-1779352560534",
           "name": "Strength",
-          "image": "/images/brand-page/categories/1779352591169-adb55_1__png.webp",
+          "image": "/images/brand-page/categories/1780682929763-trx2500_wmodel_rtq_jpg.webp",
           "href": "/shop?category=strength&brand=xterra"
         },
         {
           "id": "cat-1779352560686",
           "name": "Free Weight",
-          "image": "/images/brand-page/categories/1779352593820-file.webp",
+          "image": "/images/brand-page/categories/1780682932468-fb360_square_model_white_4_jpg.webp",
           "href": "/shop?category=free-weight&brand=xterra"
         },
         {
           "id": "cat-1779352560894",
           "name": "Sports",
-          "image": "/images/brand-page/categories/1779352597469-TR75_R-R-3-4-with-update-size-re_1.webp",
+          "image": "/images/brand-page/categories/1780682934858-xterra-erg750w-photo-md-20260115-13716.jpg",
           "href": "/shop?category=sports&brand=xterra"
         }
       ]
     },
     "behindTheWork": {
-      "enabled": true,
+      "enabled": false,
       "title": "Thinking Behind the Work",
       "description": "",
       "stats": [
@@ -101,5 +101,5 @@
       "backgroundColor": "#E8DED3"
     }
   },
-  "updatedAt": "2026-05-21T08:37:10.430Z"
+  "updatedAt": "2026-06-05T18:11:49.707Z"
 }
