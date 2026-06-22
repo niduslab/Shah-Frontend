@@ -41,27 +41,27 @@
       ]
     },
     "behindTheWork": {
-      "enabled": false,
+      "enabled": true,
       "title": "Thinking Behind the Work",
-      "description": "",
+      "description": "Fitness is a way of life. Equipment designed to inspire movement, enhance performance, and push physical boundaries.",
       "stats": [
         {
-          "value": "51+",
+          "value": "68+",
           "label": "Years of Experience"
         },
         {
-          "value": "1M+",
-          "label": "Happy Customers"
+          "value": "1958",
+          "label": "Established"
         },
         {
-          "value": "50+",
-          "label": "Available In Countries"
+          "value": "UK",
+          "label": "Country Origin"
         }
       ],
       "images": {
         "left": "/images/brand-page/behind-work/1779339603668-Screenshot 2026-05-21 105932.png",
         "center": "/images/brand-page/behind-work/1779339606804-Screenshot 2026-05-21 105912.png",
-        "right": "/images/brand-page/behind-work/1779339609747-Screenshot 2026-05-21 105857.png"
+        "right": "/images/brand-page/behind-work/1781084423698-step-tile.webp"
       }
     },
     "shopBy": {
@@ -116,5 +116,5 @@
       "backgroundColor": "#E8DED3"
     }
   },
-  "updatedAt": "2026-06-04T11:31:36.002Z"
+  "updatedAt": "2026-06-10T09:58:04.721Z"
 }

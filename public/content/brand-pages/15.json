@@ -41,27 +41,27 @@
       ]
     },
     "behindTheWork": {
-      "enabled": false,
-      "title": "Thinking Behind the Work",
-      "description": "",
+      "enabled": true,
+      "title": "Train like a champion.",
+      "description": "Train like a champion. \nCombat-inspired fitness equipment built to support ultimate strength, conditioning, and\nendurance",
       "stats": [
         {
-          "value": "51+",
+          "value": "1993",
+          "label": "Established"
+        },
+        {
+          "value": "33+",
           "label": "Years of Experience"
         },
         {
-          "value": "1M+",
-          "label": "Happy Customers"
-        },
-        {
-          "value": "50+",
-          "label": "Available In Countries"
+          "value": "USA",
+          "label": "Origin Country"
         }
       ],
       "images": {
-        "left": "/images/brand-page/behind-work/1779353480553-download (2).jpg",
-        "center": "/images/brand-page/behind-work/1779353483270-download (3).jpg",
-        "right": "/images/brand-page/behind-work/1779353485602-download (4).jpg"
+        "left": "/images/brand-page/behind-work/1781084495311-ufc2.webp",
+        "center": "/images/brand-page/behind-work/1781084476189-ufc1.webp",
+        "right": "/images/brand-page/behind-work/1781084498951-ufc3.webp"
       }
     },
     "shopBy": {
@@ -101,5 +101,5 @@
       "backgroundColor": "#E8DED3"
     }
   },
-  "updatedAt": "2026-06-05T18:34:52.308Z"
+  "updatedAt": "2026-06-10T10:28:48.815Z"
 }

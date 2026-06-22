@@ -5,9 +5,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'http',
-        hostname: 'localhost',
-        port: '8000',
-        pathname: '/storage/**',
+        hostname: '**',
       },
       {
         protocol: 'https',
@@ -19,12 +17,6 @@ const nextConfig: NextConfig = {
     contentDispositionType: 'attachment',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
-  // For development with localhost backend
-  ...(process.env.NODE_ENV === 'development' && {
-    experimental: {
-      // This allows localhost images in development
-    },
-  }),
 };
 
 export default nextConfig;

@@ -41,27 +41,27 @@
       ]
     },
     "behindTheWork": {
-      "enabled": false,
+      "enabled": true,
       "title": "Thinking Behind the Work",
-      "description": "",
+      "description": "Built for life. Commercial-grade strength equipment specifically designed to endure rigorous workouts and deliver lasting results.",
       "stats": [
         {
-          "value": "51+",
+          "value": "37+",
           "label": "Years of Experience"
         },
         {
-          "value": "1M+",
-          "label": "Happy Customers"
+          "value": "1989",
+          "label": "Established"
         },
         {
-          "value": "50+",
-          "label": "Available In Countries"
+          "value": "USA",
+          "label": "Country Origin"
         }
       ],
       "images": {
-        "left": "/images/brand-page/behind-work/1779351455160-Screenshot 2026-05-21 141712.png",
-        "center": "/images/brand-page/behind-work/1779351457994-Screenshot 2026-05-21 141657.png",
-        "right": "/images/brand-page/behind-work/1779351460848-Screenshot 2026-05-21 141652.png"
+        "left": "/images/brand-page/behind-work/1781085245924-Screenshot 2026-06-10 155115.webp",
+        "center": "/images/brand-page/behind-work/1781085254838-p1377_22_UKTMO.webp",
+        "right": "/images/brand-page/behind-work/1781085263595-body-solid-g9s-two-stack-gym-warehouse-view_2044x2044.webp"
       }
     },
     "shopBy": {
@@ -101,5 +101,5 @@
       "backgroundColor": "#E8DED3"
     }
   },
-  "updatedAt": "2026-06-05T03:54:30.645Z"
+  "updatedAt": "2026-06-10T09:55:49.302Z"
 }

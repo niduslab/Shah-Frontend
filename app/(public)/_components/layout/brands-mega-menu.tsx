@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { useBrands } from "@/lib/hooks/public/useBrands";
 
@@ -93,13 +92,11 @@ export function BrandsMegaMenu({ className, onLinkClick }: { className?: string;
                   onClick={onLinkClick}
                 >
                   <div className="relative h-full w-full transition-all duration-300 group-hover:scale-105">
-                    <Image
+                    <img
                       src={getImageUrl(brand.logo)}
                       alt={`${brand.name} logo`}
-                      fill
-                      className="object-contain filter grayscale-[20%] group-hover:grayscale-0 transition-all duration-300"
-                      sizes="115px"
-                      unoptimized={getImageUrl(brand.logo).includes('localhost')}
+                      className="h-full w-full object-contain filter grayscale-[20%] group-hover:grayscale-0 transition-all duration-300"
+                      onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                     />
                   </div>
                   {/* Subtle shine effect on hover */}

@@ -5,6 +5,11 @@ import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import Pusher from 'pusher-js';
 import Echo from 'laravel-echo';
+
+// Expose Pusher globally so Laravel Echo's reverb broadcaster can find it
+if (typeof window !== 'undefined') {
+  (window as any).Pusher = Pusher;
+}
 import { playNotificationSound } from '@/lib/utils/notification-helper';
 
 interface NotificationContextType {
@@ -40,17 +45,24 @@ export function NotificationProvider({ children, userId, isAdmin = false }: Noti
   useEffect(() => {
     if (!userId) return;
 
-    // Initialize Pusher/Echo
-    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY || '', {
-      cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER || 'ap2',
-      forceTLS: true,
-    });
+    // Initialize Echo with Laravel Reverb
+    const pusher = new Pusher(process.env.NEXT_PUBLIC_REVERB_APP_KEY || '', {
+      wsHost: process.env.NEXT_PUBLIC_REVERB_HOST || 'localhost',
+      wsPort: parseInt(process.env.NEXT_PUBLIC_REVERB_PORT || '8080'),
+      wssPort: parseInt(process.env.NEXT_PUBLIC_REVERB_PORT || '8080'),
+      forceTLS: (process.env.NEXT_PUBLIC_REVERB_SCHEME || 'http') === 'https',
+      enabledTransports: ['ws', 'wss'],
+      disableStats: true,
+    } as any);
 
     const echo = new Echo({
-      broadcaster: 'pusher',
-      key: process.env.NEXT_PUBLIC_PUSHER_KEY,
-      cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER || 'ap2',
-      forceTLS: true,
+      broadcaster: 'reverb',
+      key: process.env.NEXT_PUBLIC_REVERB_APP_KEY,
+      wsHost: process.env.NEXT_PUBLIC_REVERB_HOST || 'localhost',
+      wsPort: parseInt(process.env.NEXT_PUBLIC_REVERB_PORT || '8080'),
+      wssPort: parseInt(process.env.NEXT_PUBLIC_REVERB_PORT || '8080'),
+      forceTLS: (process.env.NEXT_PUBLIC_REVERB_SCHEME || 'http') === 'https',
+      enabledTransports: ['ws', 'wss'],
       authEndpoint: `${process.env.NEXT_PUBLIC_API_URL}/broadcasting/auth`,
       auth: {
         headers: {
@@ -63,12 +75,12 @@ export function NotificationProvider({ children, userId, isAdmin = false }: Noti
     // Connection status
     pusher.connection.bind('connected', () => {
       setIsConnected(true);
-      console.log('✅ Notification service connected');
+      console.log('✅ Reverb notification service connected');
     });
 
     pusher.connection.bind('disconnected', () => {
       setIsConnected(false);
-      console.log('❌ Notification service disconnected');
+      console.log('❌ Reverb notification service disconnected');
     });
 
     // Subscribe to user/admin channel
@@ -117,7 +129,7 @@ export function NotificationProvider({ children, userId, isAdmin = false }: Noti
     return () => {
       channel.stopListening('.notification');
       echo.leave(channelName);
-      pusher.disconnect();
+      echo.disconnect();
     };
   }, [userId, isAdmin, refreshNotifications]);
 

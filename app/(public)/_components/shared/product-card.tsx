@@ -42,7 +42,7 @@ export function ProductCard({ product, imageHeight = "h-[372px]" }: ProductCardP
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   
   // Wishlist hooks
-  const { data: wishlistCheck } = useCheckWishlist(product.id);
+  const { data: wishlistCheck } = useCheckWishlist(product.id, { enabled: !!user });
   const addToWishlistMutation = useAddToWishlist();
   const removeFromWishlistMutation = useRemoveFromWishlistByProduct();
   
@@ -219,17 +219,27 @@ export function ProductCard({ product, imageHeight = "h-[372px]" }: ProductCardP
         </h3>
         
         {/* Rating */}
-        <div className="flex items-center gap-2">
-          <div className="flex text-primary">
-            {[...Array(5)].map((_, i) => (
-              <Star 
-                key={i} 
-                className={`h-3.5 w-3.5 ${i < product.rating ? "fill-current" : "text-gray-300"}`} 
-              />
-            ))}
+        {product.reviews > 0 && (
+          <div className="flex items-center gap-2">
+            <div className="flex text-primary">
+              {[...Array(5)].map((_, i) => {
+                const fill = Math.min(1, Math.max(0, product.rating - i));
+                return (
+                  <span key={i} className="relative h-3.5 w-3.5">
+                    <Star className="absolute inset-0 h-3.5 w-3.5 text-gray-300" />
+                    <span
+                      className="absolute inset-0 overflow-hidden"
+                      style={{ width: `${fill * 100}%` }}
+                    >
+                      <Star className="h-3.5 w-3.5 fill-current text-primary" />
+                    </span>
+                  </span>
+                );
+              })}
+            </div>
+            <span className="text-xs text-gray-500">({product.reviews} Reviews)</span>
           </div>
-          <span className="text-xs text-gray-500">({product.reviews} Reviews)</span>
-        </div>
+        )}
 
         {/* Price */}
         {product.flash_price ? (

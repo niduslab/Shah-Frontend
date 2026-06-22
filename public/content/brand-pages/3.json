@@ -3,7 +3,7 @@
   "content": {
     "hero": {
       "enabled": true,
-      "backgroundImage": "/images/brand-page/hero/1779349248923-Screenshot 2026-05-21 134040.png",
+      "backgroundImage": "/images/brand-page/hero/1781084712751-index_big_img_02.webp",
       "title": "Shua ",
       "highlightedText": "Fitness Space",
       "description": "Embrace an easy way to stay active.",
@@ -43,19 +43,19 @@
     "behindTheWork": {
       "enabled": true,
       "title": "Thinking Behind the Work",
-      "description": "",
+      "description": "Leading health and wellness solutions on a global scale. Integrating smart technology with ergonomic design to promote a healthier life.",
       "stats": [
         {
-          "value": "51+",
+          "value": "+30",
           "label": "Years of Experience"
         },
         {
-          "value": "1M+",
-          "label": "Happy Customers"
+          "value": "1996",
+          "label": "Established"
         },
         {
-          "value": "50+",
-          "label": "Available In Countries"
+          "value": "China",
+          "label": "Country Origin"
         }
       ],
       "images": {
@@ -101,5 +101,5 @@
       "backgroundColor": "#E8DED3"
     }
   },
-  "updatedAt": "2026-06-04T10:46:43.880Z"
+  "updatedAt": "2026-06-10T09:45:15.586Z"
 }

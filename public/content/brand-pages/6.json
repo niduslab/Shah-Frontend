@@ -1,67 +1,42 @@
 {
-  "brandId": "9",
+  "brandId": "6",
   "content": {
     "hero": {
       "enabled": true,
-      "backgroundImage": "/images/brand-page/hero/1780681867999-9ab980_3080f8f4763c4d1cadb917d7e1409b3c~mv2.png",
-      "title": "Spirit",
+      "backgroundImage": "/images/brand-page/brand-page-hero-img.png",
+      "title": "Turn Your Home\nInto A Complete",
       "highlightedText": "Fitness Space",
-      "description": "ELEGANTLY DESIGNED. \nPOWERED BY INNOVATION.",
+      "description": "",
       "buttonText": "Shop Now",
-      "buttonUrl": "/shop?brand=spirit"
+      "buttonUrl": "/shop?brand=nordictrack"
     },
     "categories": {
       "enabled": true,
       "sectionTitle": "Explore Categories",
-      "items": [
-        {
-          "id": "cat-1779352179343",
-          "name": "Cardio",
-          "image": "/images/brand-page/categories/1780681981353-ChatGPT Image 2026年1月29日 下午03_34_18.png",
-          "href": "/shop?category=commercial-cardio&brand=spirit"
-        },
-        {
-          "id": "cat-1779352179519",
-          "name": "Free Weight",
-          "image": "/images/brand-page/categories/1780681983830-Gemini_Generated_Image_4ew00h4ew00h4ew0.jpg",
-          "href": "/shop?category=free-weight&brand=spirit"
-        },
-        {
-          "id": "cat-1779352179679",
-          "name": "Strength",
-          "image": "/images/brand-page/categories/1780681985886-ChatGPT Image 2026年1月29日 下午03_18_26.png",
-          "href": "/shop?category=strength&brand=spirit"
-        },
-        {
-          "id": "cat-1779352179862",
-          "name": "Sports",
-          "image": "/images/brand-page/categories/1780681987968-9ab980_d8895a23c9014d9484f4c27019374dfa~mv2.jpg",
-          "href": "/shop?category=sports&brand=spirit"
-        }
-      ]
+      "items": []
     },
     "behindTheWork": {
       "enabled": true,
       "title": "Thinking Behind the Work",
-      "description": "Building high-quality, durable equipment to help you achieve your fitness goals. Committed to continuous innovation and steadfast reliability for over 40 years.",
+      "description": "Innovation and technology for premium home fitness. Bringing the personal trainer experience directly into your living room.",
       "stats": [
         {
-          "value": "41+",
+          "value": "51+",
           "label": "Years of Experience"
         },
         {
-          "value": "1983",
+          "value": "1975",
           "label": "Established"
         },
         {
-          "value": " USA",
+          "value": "USA",
           "label": "Country Origin"
         }
       ],
       "images": {
-        "left": "/images/brand-page/behind-work/1779352211053-Screenshot 2026-05-21 142835.png",
-        "center": "/images/brand-page/behind-work/1779352213733-Screenshot 2026-05-21 142832.png",
-        "right": "/images/brand-page/behind-work/1779352216570-Screenshot 2026-05-21 142827.png"
+        "left": "/images/brand-page/behind-work/1781086233359-Nordic.webp",
+        "center": "/images/brand-page/behind-work/1781086238497-homepage_banner-split_X24Treadmill-jun26-v1.webp",
+        "right": "/images/brand-page/behind-work/1781086251568-cat_17048_nordictrack-hero.webp"
       }
     },
     "shopBy": {
@@ -101,5 +76,5 @@
       "backgroundColor": "#E8DED3"
     }
   },
-  "updatedAt": "2026-06-10T10:30:22.747Z"
+  "updatedAt": "2026-06-10T10:11:58.018Z"
 }

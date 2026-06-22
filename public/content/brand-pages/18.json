@@ -41,26 +41,26 @@
       ]
     },
     "behindTheWork": {
-      "enabled": false,
+      "enabled": true,
       "title": "Thinking Behind the Work",
-      "description": "",
+      "description": "Top-of-the-line strength training equipment and multi-function functional trainers. \nBringing durable, versatile, and space-saving gym solutions to North America.",
       "stats": [
         {
-          "value": "51+",
+          "value": "9+",
           "label": "Years of Experience"
         },
         {
-          "value": "1M+",
-          "label": "Happy Customers"
+          "value": "2017",
+          "label": "Established"
         },
         {
-          "value": "50+",
-          "label": "Available In Countries"
+          "value": "Canada",
+          "label": "Origin Country"
         }
       ],
       "images": {
         "left": "/images/brand-page/behind-work/1779354126130-7_12cf89ad-5bed-4cc0-99aa-f7eb25011213.webp",
-        "center": "/images/brand-page/behind-work/1779354128123-3075_1_6e197163-e6a8-42a6-ad30-594a63e66292.webp",
+        "center": "/images/brand-page/behind-work/1781085560993-atlas.webp",
         "right": "/images/brand-page/behind-work/1779354130543-8_5f080c90-b4a4-47f4-89de-de547ea7d615.webp"
       }
     },
@@ -101,5 +101,5 @@
       "backgroundColor": "#E8DED3"
     }
   },
-  "updatedAt": "2026-06-06T04:22:18.456Z"
+  "updatedAt": "2026-06-10T10:00:39.802Z"
 }

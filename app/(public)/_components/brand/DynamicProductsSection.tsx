@@ -92,7 +92,7 @@ export function DynamicProductsSection({ brandId, brandName }: DynamicProductsSe
       price: price,
       // Hide original price if preorder is active
       originalPrice: isPreorderActive ? undefined : comparePrice,
-      rating: product.average_rating || 5,
+      rating: product.average_rating ?? 0,
       reviews: product.review_count || 0,
       is_preorder: product.is_preorder,
       preorder_release_date: product.preorder_release_date,

@@ -24,7 +24,7 @@ export function DiscountedProducts() {
     image: getPrimaryImageUrl(product.images),
     price: parseFloat(product.price),
     originalPrice: product.compare_price ? parseFloat(product.compare_price) : undefined,
-    rating: product.average_rating || 5,
+    rating: product.average_rating ?? 0,
     reviews: product.review_count || 0,
     kinomap: product.kinomap,
     badge: product.compare_price

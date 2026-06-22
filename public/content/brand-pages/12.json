@@ -43,19 +43,19 @@
     "behindTheWork": {
       "enabled": true,
       "title": "Thinking Behind the Work",
-      "description": "",
+      "description": "High-quality strength and cardio training equipment engineered for excellence. Delivering superior health solutions backed by state-of-the-art global manufacturing.",
       "stats": [
         {
-          "value": "51+",
+          "value": "24+",
           "label": "Years of Experience"
         },
         {
-          "value": "1M+",
-          "label": "Happy Customers"
+          "value": "2002",
+          "label": "Established"
         },
         {
-          "value": "50+",
-          "label": "Available In Countries"
+          "value": "Taiwan",
+          "label": "Country Origin"
         }
       ],
       "images": {
@@ -101,5 +101,5 @@
       "backgroundColor": "#E8DED3"
     }
   },
-  "updatedAt": "2026-06-05T18:21:51.182Z"
+  "updatedAt": "2026-06-10T10:27:36.688Z"
 }

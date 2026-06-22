@@ -41,21 +41,21 @@
       ]
     },
     "behindTheWork": {
-      "enabled": false,
+      "enabled": true,
       "title": "Thinking Behind the Work",
-      "description": "",
+      "description": "Pioneering the home gym experience since the mid-20th century. Providing accessible, high-quality strength equipment for all fitness levels.",
       "stats": [
         {
-          "value": "51+",
+          "value": "80+",
           "label": "Years of Experience"
         },
         {
-          "value": "1M+",
-          "label": "Happy Customers"
+          "value": "1946",
+          "label": "Established"
         },
         {
-          "value": "50+",
-          "label": "Available In Countries"
+          "value": "USA",
+          "label": "Country Origin"
         }
       ],
       "images": {
@@ -101,5 +101,5 @@
       "backgroundColor": "#E8DED3"
     }
   },
-  "updatedAt": "2026-06-04T11:26:51.542Z"
+  "updatedAt": "2026-06-10T10:01:35.422Z"
 }

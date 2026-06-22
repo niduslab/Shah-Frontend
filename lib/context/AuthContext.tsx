@@ -9,7 +9,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<any>;
   register: (data: RegisterData) => Promise<any>;
   logout: () => Promise<void>;
-  checkAuth: () => Promise<void>;
+  checkAuth: (showLoading?: boolean) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -31,8 +31,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  const checkAuth = useCallback(async () => {
-    setLoading(true);
+  const checkAuth = useCallback(async (showLoading = true) => {
+    if (showLoading) setLoading(true);
     try {
       const response = await authService.getUser();
       setUser(response.data);
@@ -41,15 +41,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(null);
       userRef.current = null;
     } finally {
-      setLoading(false);
+      if (showLoading) setLoading(false);
     }
   }, []);
 
-  // Periodic session check (every 5 minutes) — uses ref so interval never restarts
+  // Periodic session check (every 5 minutes) — silent, no loading flash
   useEffect(() => {
     const intervalId = setInterval(() => {
       if (userRef.current) {
-        checkAuth();
+        checkAuth(false);
       }
     }, 5 * 60 * 1000);
 
