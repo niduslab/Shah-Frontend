@@ -14,7 +14,9 @@
 /coverage
 
 # next.js
-/.next/
+# .next is committed so the server can pull a prebuilt app (server can't build).
+# Only the local build cache is excluded.
+/.next/cache/
 /out/
 
 # production

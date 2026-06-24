@@ -290,7 +290,7 @@ export default function PromotionsPage() {
                           {promotion.promotion_type === 'flash_sale' && 'Flash Sale'}
                           {promotion.promotion_type === 'combo_offer' && 'Combo Offer'}
                         </span>
-                        {promotion.min_purchase_amount > 0 && (
+                        {(promotion.min_purchase_amount ?? 0) > 0 && (
                           <span className="inline-flex items-center rounded-full bg-orange-50 px-2.5 py-0.5 text-xs font-medium text-orange-700">
                             Min Purchase: ${promotion.min_purchase_amount}
                           </span>

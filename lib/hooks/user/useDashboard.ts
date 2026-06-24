@@ -3,7 +3,7 @@ import api from '@/lib/api/axios';
 import authService from '@/lib/services/authService';
 import { toast } from 'sonner';
 
-export const useDashboard = (options?: UseQueryOptions) => {
+export const useDashboard = (options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['dashboard'],
     queryFn: async () => {
@@ -14,7 +14,7 @@ export const useDashboard = (options?: UseQueryOptions) => {
   });
 };
 
-export const useProfile = (options?: UseQueryOptions) => {
+export const useProfile = (options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['profile'],
     queryFn: async () => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { Save, Plus, Edit2, Trash2, Eye, ArrowLeft, GripVertical } from "lucide-react";
 import { usePageContents, useCreatePageContent, useUpdatePageContent, useDeletePageContent } from "@/lib/hooks/admin/usePageContent";
 import { useBrands } from "@/lib/hooks/public/useBrands";
@@ -11,7 +11,7 @@ import ContentEditor from "../_components/ContentEditor";
 import { useSearchParams } from "next/navigation";
 import { getImageUrl, getPlaceholderImage } from "@/lib/utils/image";
 
-export default function BrandPagesDBManagement() {
+function BrandPagesDBManagementContent() {
   const searchParams = useSearchParams();
   const brandIdFromUrl = searchParams.get('brand');
   
@@ -379,5 +379,13 @@ export default function BrandPagesDBManagement() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function BrandPagesDBManagement() {
+  return (
+    <Suspense fallback={null}>
+      <BrandPagesDBManagementContent />
+    </Suspense>
   );
 }

@@ -14,7 +14,7 @@ interface AddressData {
   is_default?: boolean;
 }
 
-export const useAddresses = (options?: UseQueryOptions) => {
+export const useAddresses = (options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['addresses'],
     queryFn: async () => {
@@ -25,7 +25,7 @@ export const useAddresses = (options?: UseQueryOptions) => {
   });
 };
 
-export const useAddress = (id: number, options?: UseQueryOptions) => {
+export const useAddress = (id: number, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['address', id],
     queryFn: async () => {

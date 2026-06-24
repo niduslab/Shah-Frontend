@@ -3,7 +3,7 @@ import api from '@/lib/api/axios';
 
 type PolicyType = 'privacy' | 'terms' | 'shipping' | 'return' | 'refund';
 
-export const usePolicies = (options?: UseQueryOptions) => {
+export const usePolicies = (options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['policies'],
     queryFn: async () => {
@@ -14,7 +14,7 @@ export const usePolicies = (options?: UseQueryOptions) => {
   });
 };
 
-export const usePolicy = (type: PolicyType, options?: UseQueryOptions) => {
+export const usePolicy = (type: PolicyType, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['policy', type],
     queryFn: async () => {
@@ -26,7 +26,7 @@ export const usePolicy = (type: PolicyType, options?: UseQueryOptions) => {
   });
 };
 
-export const usePage = (slug: string, options?: UseQueryOptions) => {
+export const usePage = (slug: string, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['page', slug],
     queryFn: async () => {
@@ -38,7 +38,7 @@ export const usePage = (slug: string, options?: UseQueryOptions) => {
   });
 };
 
-export const useBanners = (position: string, options?: UseQueryOptions) => {
+export const useBanners = (position: string, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['banners', position],
     queryFn: async () => {

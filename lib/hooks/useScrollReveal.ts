@@ -8,8 +8,10 @@ import { useEffect, useRef } from "react";
  * "revealed" class when they enter the viewport. CSS handles the animation.
  * Survives Next.js client-side navigation because it never touches GSAP.
  */
-export function useScrollReveal(options?: IntersectionObserverInit) {
-  const ref = useRef<HTMLElement | null>(null);
+export function useScrollReveal<T extends HTMLElement = HTMLElement>(
+  options?: IntersectionObserverInit
+) {
+  const ref = useRef<T | null>(null);
 
   useEffect(() => {
     const el = ref.current;
@@ -37,5 +39,5 @@ export function useScrollReveal(options?: IntersectionObserverInit) {
     return () => observer.disconnect();
   }, []);
 
-  return ref as React.RefObject<HTMLElement>;
+  return ref as React.RefObject<T>;
 }

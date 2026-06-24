@@ -23,7 +23,7 @@ interface BulkAdjustment {
   quantity: number;
 }
 
-export const useInventory = (filters?: InventoryFilters, options?: UseQueryOptions) => {
+export const useInventory = (filters?: InventoryFilters, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'inventory', filters],
     queryFn: async () => {
@@ -34,7 +34,7 @@ export const useInventory = (filters?: InventoryFilters, options?: UseQueryOptio
   });
 };
 
-export const useLowStockProducts = (options?: UseQueryOptions) => {
+export const useLowStockProducts = (options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'inventory', 'low-stock'],
     queryFn: async () => {
@@ -45,7 +45,7 @@ export const useLowStockProducts = (options?: UseQueryOptions) => {
   });
 };
 
-export const useProductInventory = (productId: number, options?: UseQueryOptions) => {
+export const useProductInventory = (productId: number, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'inventory', productId],
     queryFn: async () => {
@@ -94,7 +94,7 @@ export const useBulkStockAdjustment = (
 
 export const useInventoryLogs = (
   filters?: { product_id?: number; reason?: string; date_from?: string; per_page?: number; page?: number },
-  options?: UseQueryOptions
+  options?: Partial<UseQueryOptions<any>>
 ) => {
   return useQuery({
     queryKey: ['admin', 'inventory', 'logs', filters],

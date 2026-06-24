@@ -80,7 +80,7 @@ export interface ShopResponse {
  */
 export const useShopProducts = (
   filters?: ShopFilters,
-  options?: UseQueryOptions<ShopResponse>
+  options?: Partial<UseQueryOptions<ShopResponse>>
 ) => {
   return useQuery<ShopResponse>({
     queryKey: ['shop', 'products', filters],
@@ -98,7 +98,7 @@ export const useShopProducts = (
  */
 export const useShopProduct = (
   slug: string,
-  options?: UseQueryOptions<any>
+  options?: Partial<UseQueryOptions<any>>
 ) => {
   return useQuery({
     queryKey: ['shop', 'product', slug],
@@ -117,7 +117,7 @@ export const useShopProduct = (
  */
 export const useShopFeaturedProducts = (
   perPage: number = 12,
-  options?: UseQueryOptions<any>
+  options?: Partial<UseQueryOptions<any>>
 ) => {
   return useQuery({
     queryKey: ['shop', 'featured', perPage],
@@ -137,7 +137,7 @@ export const useShopFeaturedProducts = (
  */
 export const useShopTrendingProducts = (
   perPage: number = 12,
-  options?: UseQueryOptions<any>
+  options?: Partial<UseQueryOptions<any>>
 ) => {
   return useQuery({
     queryKey: ['shop', 'trending', perPage],

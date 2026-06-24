@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 import api from '@/lib/api/axios';
 
-export const useWishlist = (options?: UseQueryOptions<any>) => {
+export const useWishlist = (options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['wishlist'],
     queryFn: async () => {
@@ -57,7 +57,7 @@ export const useRemoveFromWishlistByProduct = (options?: UseMutationOptions<any,
   });
 };
 
-export const useCheckWishlist = (productId: number, options?: UseQueryOptions<any>) => {
+export const useCheckWishlist = (productId: number, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['wishlist', 'check', productId],
     queryFn: async () => {

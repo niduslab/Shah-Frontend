@@ -11,7 +11,7 @@ interface OrderFilters {
   date_to?: string;
 }
 
-export const useOrders = (filters?: OrderFilters, options?: UseQueryOptions<any>) => {
+export const useOrders = (filters?: OrderFilters, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['orders', filters],
     queryFn: async () => {
@@ -34,7 +34,7 @@ export const useOrders = (filters?: OrderFilters, options?: UseQueryOptions<any>
   });
 };
 
-export const useOrder = (orderNumber: string, options?: UseQueryOptions<any>) => {
+export const useOrder = (orderNumber: string, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['order', orderNumber],
     queryFn: async () => {

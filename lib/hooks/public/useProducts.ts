@@ -16,7 +16,7 @@ interface ProductFilters {
   page?: number;
 }
 
-export const useProducts = (filters?: ProductFilters, options?: UseQueryOptions<any>) => {
+export const useProducts = (filters?: ProductFilters, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['products', filters],
     queryFn: async () => {
@@ -27,7 +27,7 @@ export const useProducts = (filters?: ProductFilters, options?: UseQueryOptions<
   });
 };
 
-export const useProduct = (slug: string, options?: UseQueryOptions<any>) => {
+export const useProduct = (slug: string, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['product', slug],
     queryFn: async () => {
@@ -39,7 +39,7 @@ export const useProduct = (slug: string, options?: UseQueryOptions<any>) => {
   });
 };
 
-export const useFeaturedProducts = (perPage: number = 12, options?: UseQueryOptions<any>) => {
+export const useFeaturedProducts = (perPage: number = 12, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['products', 'featured', perPage],
     queryFn: async () => {
@@ -52,7 +52,7 @@ export const useFeaturedProducts = (perPage: number = 12, options?: UseQueryOpti
   });
 };
 
-export const useTrendingProducts = (perPage: number = 12, options?: UseQueryOptions<any>) => {
+export const useTrendingProducts = (perPage: number = 12, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['products', 'trending', perPage],
     queryFn: async () => {

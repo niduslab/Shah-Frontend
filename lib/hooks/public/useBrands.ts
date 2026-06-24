@@ -17,7 +17,7 @@ export const useBrands = (options?: Partial<UseQueryOptions<BrandsResponse>>) =>
   });
 };
 
-export const useBrand = (slug: string, options?: UseQueryOptions) => {
+export const useBrand = (slug: string, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['brand', slug],
     queryFn: async () => {
@@ -32,7 +32,7 @@ export const useBrand = (slug: string, options?: UseQueryOptions) => {
 export const useBrandProducts = (
   slug: string,
   params?: { page?: number; per_page?: number },
-  options?: UseQueryOptions
+  options?: Partial<UseQueryOptions<any>>
 ) => {
   return useQuery({
     queryKey: ['brand', slug, 'products', params],

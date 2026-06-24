@@ -51,7 +51,7 @@ const DEFAULT_STORIES: SuccessStory[] = [
 ];
 
 export function SuccessStories() {
-  const sectionRef = useScrollReveal();
+  const sectionRef = useScrollReveal<HTMLDivElement>();
   const videoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>({});
   const [storiesData, setStoriesData] = useState<SuccessStoriesData>({
     enabled: true,
@@ -115,7 +115,7 @@ export function SuccessStories() {
   }
 
   return (
-    <div ref={sectionRef as React.RefObject<HTMLElement>} className="w-full bg-[#FFF9F0] py-16 px-4 md:px-6">
+    <div ref={sectionRef} className="w-full bg-[#FFF9F0] py-16 px-4 md:px-6">
       <div className="mx-auto w-full max-w-[1400px] px-4 md:px-6">
         {/* Header */}
         <div data-reveal className="mb-10 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">

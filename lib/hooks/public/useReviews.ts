@@ -4,7 +4,7 @@ import api from '@/lib/api/axios';
 export const useProductReviews = (
   productId: number,
   params?: { page?: number; per_page?: number },
-  options?: UseQueryOptions
+  options?: Partial<UseQueryOptions<any>>
 ) => {
   return useQuery({
     queryKey: ['product-reviews', productId, params],

@@ -10,7 +10,7 @@ interface TrackingData {
   updated_at: string;
 }
 
-export const useTrackOrder = (orderNumber: string | null, options?: UseQueryOptions) => {
+export const useTrackOrder = (orderNumber: string | null, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['track-order', orderNumber],
     queryFn: async () => {

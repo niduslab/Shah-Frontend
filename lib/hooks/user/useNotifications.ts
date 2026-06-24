@@ -6,7 +6,7 @@ interface NotificationFilters {
   per_page?: number;
 }
 
-export const useNotifications = (filters?: NotificationFilters, options?: UseQueryOptions) => {
+export const useNotifications = (filters?: NotificationFilters, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['notifications', filters],
     queryFn: async () => {
@@ -17,7 +17,7 @@ export const useNotifications = (filters?: NotificationFilters, options?: UseQue
   });
 };
 
-export const useUnreadCount = (options?: UseQueryOptions) => {
+export const useUnreadCount = (options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['notifications', 'unread-count'],
     queryFn: async () => {

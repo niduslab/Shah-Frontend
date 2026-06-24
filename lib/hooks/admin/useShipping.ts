@@ -55,8 +55,8 @@ export const useShippingRates = (
     is_active?: string; 
     page?: number; 
     per_page?: number;
-  }, 
-  options?: UseQueryOptions
+  },
+  options?: Partial<UseQueryOptions<any>>
 ) => {
   return useQuery({
     queryKey: ['admin', 'shipping-rates', params],
@@ -68,7 +68,7 @@ export const useShippingRates = (
   });
 };
 
-export const useShippingRate = (id: number, options?: UseQueryOptions) => {
+export const useShippingRate = (id: number, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'shipping-rate', id],
     queryFn: async () => {
@@ -88,9 +88,9 @@ export const useCreateShippingRate = (options?: UseMutationOptions<any, any, Shi
       const response = await api.post('/api/admin/shipping-rates', data);
       return response.data;
     },
-    onSuccess: async (data, variables, context) => {
+    onSuccess: async (data, variables, onMutateResult, context) => {
       await queryClient.invalidateQueries({ queryKey: ['admin', 'shipping-rates'] });
-      options?.onSuccess?.(data, variables, context);
+      options?.onSuccess?.(data, variables, onMutateResult, context);
     },
     onError: options?.onError,
   });
@@ -106,10 +106,10 @@ export const useUpdateShippingRate = (
       const response = await api.put(`/api/admin/shipping-rates/${id}`, data);
       return response.data;
     },
-    onSuccess: async (data, variables, context) => {
+    onSuccess: async (data, variables, onMutateResult, context) => {
       await queryClient.invalidateQueries({ queryKey: ['admin', 'shipping-rates'] });
       await queryClient.invalidateQueries({ queryKey: ['admin', 'shipping-rate', variables.id] });
-      options?.onSuccess?.(data, variables, context);
+      options?.onSuccess?.(data, variables, onMutateResult, context);
     },
     onError: options?.onError,
   });
@@ -131,7 +131,7 @@ export const useDeleteShippingRate = (options?: UseMutationOptions<any, any, num
 };
 
 // Shipping Classes Hooks
-export const useShippingClasses = (options?: UseQueryOptions) => {
+export const useShippingClasses = (options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'shipping-classes'],
     queryFn: async () => {
@@ -142,7 +142,7 @@ export const useShippingClasses = (options?: UseQueryOptions) => {
   });
 };
 
-export const useShippingClass = (id: number, options?: UseQueryOptions) => {
+export const useShippingClass = (id: number, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'shipping-class', id],
     queryFn: async () => {

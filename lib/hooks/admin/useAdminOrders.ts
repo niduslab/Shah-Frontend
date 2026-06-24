@@ -14,7 +14,7 @@ interface OrderFilters {
 
 type OrderStatus = 'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
 
-export const useAdminOrders = (filters?: OrderFilters, options?: UseQueryOptions) => {
+export const useAdminOrders = (filters?: OrderFilters, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'orders', filters],
     queryFn: async () => {
@@ -26,7 +26,7 @@ export const useAdminOrders = (filters?: OrderFilters, options?: UseQueryOptions
   });
 };
 
-export const useAdminOrder = (id: number, options?: UseQueryOptions) => {
+export const useAdminOrder = (id: number, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'order', id],
     queryFn: async () => {

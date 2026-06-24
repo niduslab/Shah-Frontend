@@ -19,7 +19,7 @@ interface UserData {
   status?: boolean;
 }
 
-export const useAdminUsers = (filters?: UserFilters, options?: UseQueryOptions) => {
+export const useAdminUsers = (filters?: UserFilters, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'users', filters],
     queryFn: async () => {
@@ -37,7 +37,7 @@ interface UserDetailParams {
   cart_page?: number;
 }
 
-export const useAdminUser = (id: number, params?: UserDetailParams, options?: UseQueryOptions) => {
+export const useAdminUser = (id: number, params?: UserDetailParams, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'user', id, params],
     queryFn: async () => {

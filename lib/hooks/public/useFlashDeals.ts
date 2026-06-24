@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import api from '@/lib/api/axios';
 
-export const useFlashDeals = (status?: 'active' | 'upcoming', options?: UseQueryOptions) => {
+export const useFlashDeals = (status?: 'active' | 'upcoming', options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['flash-deals', status],
     queryFn: async () => {
@@ -14,7 +14,7 @@ export const useFlashDeals = (status?: 'active' | 'upcoming', options?: UseQuery
   });
 };
 
-export const useUpcomingFlashDeals = (options?: UseQueryOptions) => {
+export const useUpcomingFlashDeals = (options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['flash-deals', 'upcoming'],
     queryFn: async () => {
@@ -25,7 +25,7 @@ export const useUpcomingFlashDeals = (options?: UseQueryOptions) => {
   });
 };
 
-export const useFlashDeal = (id: number, options?: UseQueryOptions) => {
+export const useFlashDeal = (id: number, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['flash-deal', id],
     queryFn: async () => {

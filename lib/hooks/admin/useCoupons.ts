@@ -19,7 +19,7 @@ interface CouponData {
   category_ids?: number[];
 }
 
-export const useAdminCoupons = (params?: { page?: number; per_page?: number }, options?: UseQueryOptions) => {
+export const useAdminCoupons = (params?: { page?: number; per_page?: number }, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'coupons', params],
     queryFn: async () => {
@@ -30,7 +30,7 @@ export const useAdminCoupons = (params?: { page?: number; per_page?: number }, o
   });
 };
 
-export const useAdminCoupon = (id: number, options?: UseQueryOptions) => {
+export const useAdminCoupon = (id: number, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'coupon', id],
     queryFn: async () => {
@@ -91,7 +91,7 @@ export const useDeleteCoupon = (options?: UseMutationOptions<any, any, number>) 
 export const useCouponUsageHistory = (
   id: number,
   params?: { page?: number; per_page?: number },
-  options?: UseQueryOptions
+  options?: Partial<UseQueryOptions<any>>
 ) => {
   return useQuery({
     queryKey: ['admin', 'coupon', id, 'usage', params],

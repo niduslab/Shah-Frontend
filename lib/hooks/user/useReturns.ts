@@ -16,7 +16,7 @@ interface ReturnsQueryParams {
   search?: string;
 }
 
-export const useReturns = (params?: ReturnsQueryParams, options?: UseQueryOptions) => {
+export const useReturns = (params?: ReturnsQueryParams, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['returns', params],
     queryFn: async () => {
@@ -33,7 +33,7 @@ export const useReturns = (params?: ReturnsQueryParams, options?: UseQueryOption
   });
 };
 
-export const useReturn = (id: number, options?: UseQueryOptions) => {
+export const useReturn = (id: number, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['return', id],
     queryFn: async () => {

@@ -1,0 +1,16 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/(public)/layout,_N_T_/(public)/basketball-flooring/layout,_N_T_/(public)/basketball-flooring/page,_N_T_/basketball-flooring"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/!KHB1YmxpYyk/basketball-flooring/__PAGE__",
+    "/!KHB1YmxpYyk/basketball-flooring",
+    "/!KHB1YmxpYyk",
+    "/_index",
+    "/_head"
+  ]
+}

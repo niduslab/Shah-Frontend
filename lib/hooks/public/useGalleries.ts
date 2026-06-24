@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import api from '@/lib/api/axios';
 
-export const useGalleries = (options?: UseQueryOptions) => {
+export const useGalleries = (options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['galleries'],
     queryFn: async () => {
@@ -12,7 +12,7 @@ export const useGalleries = (options?: UseQueryOptions) => {
   });
 };
 
-export const useGallery = (slug: string, options?: UseQueryOptions) => {
+export const useGallery = (slug: string, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['gallery', slug],
     queryFn: async () => {

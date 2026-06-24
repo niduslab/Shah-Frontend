@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { Save, ArrowRight, Edit2, Plus, Trash2 } from "lucide-react";
 import Image from "next/image";
 import EditModal from "../_components/EditModal";
@@ -57,7 +57,7 @@ interface BrandHero {
   };
 }
 
-export default function BrandPagesManagement() {
+function BrandPagesManagementContent() {
   const searchParams = useSearchParams();
   const brandIdFromUrl = searchParams.get('brand');
   
@@ -1497,5 +1497,13 @@ export default function BrandPagesManagement() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function BrandPagesManagement() {
+  return (
+    <Suspense fallback={null}>
+      <BrandPagesManagementContent />
+    </Suspense>
   );
 }

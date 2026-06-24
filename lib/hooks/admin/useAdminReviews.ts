@@ -8,7 +8,7 @@ interface ReviewFilters {
   product_id?: number;
 }
 
-export const useAdminReviews = (filters?: ReviewFilters, options?: UseQueryOptions) => {
+export const useAdminReviews = (filters?: ReviewFilters, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'reviews', filters],
     queryFn: async () => {
@@ -19,7 +19,7 @@ export const useAdminReviews = (filters?: ReviewFilters, options?: UseQueryOptio
   });
 };
 
-export const useReviewStatistics = (options?: UseQueryOptions) => {
+export const useReviewStatistics = (options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'reviews', 'statistics'],
     queryFn: async () => {
@@ -30,7 +30,7 @@ export const useReviewStatistics = (options?: UseQueryOptions) => {
   });
 };
 
-export const useAdminReview = (id: number, options?: UseQueryOptions) => {
+export const useAdminReview = (id: number, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'review', id],
     queryFn: async () => {

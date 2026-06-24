@@ -7,7 +7,7 @@ interface NotificationFilters {
   read?: boolean;
 }
 
-export const useAdminNotifications = (filters?: NotificationFilters, options?: UseQueryOptions) => {
+export const useAdminNotifications = (filters?: NotificationFilters, options?: Partial<UseQueryOptions<any>>) => {
   // Serialize filters to primitives so the queryKey is stable across renders
   const page = filters?.page ?? 1;
   const perPage = filters?.per_page ?? 10;
@@ -23,7 +23,7 @@ export const useAdminNotifications = (filters?: NotificationFilters, options?: U
   });
 };
 
-export const useAdminUnreadCount = (options?: UseQueryOptions) => {
+export const useAdminUnreadCount = (options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin-notifications', 'unread-count'],
     queryFn: async () => {

@@ -10,7 +10,7 @@ interface ReviewData {
   images?: string[];
 }
 
-export const useMyReviews = (page: number = 1, options?: UseQueryOptions) => {
+export const useMyReviews = (page: number = 1, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['my-reviews', page],
     queryFn: async () => {
@@ -23,7 +23,7 @@ export const useMyReviews = (page: number = 1, options?: UseQueryOptions) => {
   });
 };
 
-export const useReviewableItems = (options?: UseQueryOptions) => {
+export const useReviewableItems = (options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['reviewable-items'],
     queryFn: async () => {
@@ -34,7 +34,7 @@ export const useReviewableItems = (options?: UseQueryOptions) => {
   });
 };
 
-export const useOrderItemReviews = (orderNumber: string, options?: UseQueryOptions) => {
+export const useOrderItemReviews = (orderNumber: string, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['order-reviews', orderNumber],
     queryFn: async () => {

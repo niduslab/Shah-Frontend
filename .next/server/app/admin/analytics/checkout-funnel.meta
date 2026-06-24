@@ -1,0 +1,17 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/admin/layout,_N_T_/admin/analytics/layout,_N_T_/admin/analytics/checkout-funnel/layout,_N_T_/admin/analytics/checkout-funnel/page,_N_T_/admin/analytics/checkout-funnel"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/admin/analytics/checkout-funnel/__PAGE__",
+    "/admin/analytics/checkout-funnel",
+    "/admin/analytics",
+    "/admin",
+    "/_index",
+    "/_head"
+  ]
+}

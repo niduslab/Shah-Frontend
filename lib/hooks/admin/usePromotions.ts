@@ -32,7 +32,7 @@ interface PromotionParams {
   status?: string;
 }
 
-export const useAdminPromotions = (params?: PromotionParams, options?: UseQueryOptions) => {
+export const useAdminPromotions = (params?: PromotionParams, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'promotions', params],
     queryFn: async () => {
@@ -43,7 +43,7 @@ export const useAdminPromotions = (params?: PromotionParams, options?: UseQueryO
   });
 };
 
-export const useAdminPromotion = (id: number, options?: UseQueryOptions) => {
+export const useAdminPromotion = (id: number, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'promotion', id],
     queryFn: async () => {

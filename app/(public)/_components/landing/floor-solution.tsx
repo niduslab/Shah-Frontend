@@ -12,10 +12,10 @@ const IMAGES = {
 };
 
 export function FloorSolution() {
-  const sectionRef = useScrollReveal();
+  const sectionRef = useScrollReveal<HTMLDivElement>();
 
   return (
-    <div ref={sectionRef as React.RefObject<HTMLElement>} className="w-full bg-white px-4 py-4 md:px-6 md:py-6">
+    <div ref={sectionRef} className="w-full bg-white px-4 py-4 md:px-6 md:py-6">
       <div data-reveal-stagger className="mx-auto grid w-full max-w-[1400px] grid-cols-1 gap-4 md:grid-cols-2">
         {/* Floor Mat */}
         <div data-reveal className="group relative h-[300px] overflow-hidden rounded-xs md:h-[620px]">

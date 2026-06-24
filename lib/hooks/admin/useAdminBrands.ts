@@ -10,7 +10,7 @@ interface BrandData {
   sort_order?: number;
 }
 
-export const useAdminBrands = (params?: { page?: number; per_page?: number }, options?: UseQueryOptions) => {
+export const useAdminBrands = (params?: { page?: number; per_page?: number }, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'brands', params],
     queryFn: async () => {
@@ -21,7 +21,7 @@ export const useAdminBrands = (params?: { page?: number; per_page?: number }, op
   });
 };
 
-export const useAdminBrand = (id: number, options?: UseQueryOptions) => {
+export const useAdminBrand = (id: number, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'brand', id],
     queryFn: async () => {

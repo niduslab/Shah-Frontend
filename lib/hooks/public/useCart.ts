@@ -51,7 +51,7 @@ export const useCheckAvailability = (options?: UseMutationOptions<any, any, Avai
   });
 };
 
-export const useAvailableCoupons = (options?: UseQueryOptions<any, any, any>) => {
+export const useAvailableCoupons = (options?: Partial<UseQueryOptions<any, any, any>>) => {
   return useQuery({
     queryKey: ['available-coupons'],
     queryFn: async () => {

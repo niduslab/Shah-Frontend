@@ -37,7 +37,7 @@ interface VariationData {
   attributes: Record<string, string>;
 }
 
-export const useAdminProducts = (filters?: ProductFilters, options?: UseQueryOptions<any>) => {
+export const useAdminProducts = (filters?: ProductFilters, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'products', filters],
     queryFn: async () => {
@@ -48,7 +48,7 @@ export const useAdminProducts = (filters?: ProductFilters, options?: UseQueryOpt
   });
 };
 
-export const useAdminProduct = (id: number, options?: UseQueryOptions<any>) => {
+export const useAdminProduct = (id: number, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'product', id],
     queryFn: async () => {

@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import api from '@/lib/api/axios';
 
-export const useCategories = (options?: UseQueryOptions<any>) => {
+export const useCategories = (options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['categories'],
     queryFn: async () => {
@@ -12,7 +12,7 @@ export const useCategories = (options?: UseQueryOptions<any>) => {
   });
 };
 
-export const useCategory = (slug: string, options?: UseQueryOptions<any>) => {
+export const useCategory = (slug: string, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['category', slug],
     queryFn: async () => {
@@ -27,7 +27,7 @@ export const useCategory = (slug: string, options?: UseQueryOptions<any>) => {
 export const useCategoryProducts = (
   slug: string,
   params?: { page?: number; per_page?: number },
-  options?: UseQueryOptions<any>
+  options?: Partial<UseQueryOptions<any>>
 ) => {
   return useQuery({
     queryKey: ['category', slug, 'products', params],

@@ -50,7 +50,7 @@ interface BulkCreateOptionsData {
 /**
  * Get all variation types with their options
  */
-export const useAdminVariations = (options?: UseQueryOptions) => {
+export const useAdminVariations = (options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'variations'],
     queryFn: async () => {
@@ -64,7 +64,7 @@ export const useAdminVariations = (options?: UseQueryOptions) => {
 /**
  * Get single variation type with options
  */
-export const useAdminVariation = (id: number, options?: UseQueryOptions) => {
+export const useAdminVariation = (id: number, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'variation', id],
     queryFn: async () => {
@@ -140,7 +140,7 @@ export const useDeleteVariationType = (options?: UseMutationOptions<any, any, nu
 /**
  * Get all options for a variation type
  */
-export const useVariationOptions = (variationId: number, options?: UseQueryOptions) => {
+export const useVariationOptions = (variationId: number, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'variation', variationId, 'options'],
     queryFn: async () => {

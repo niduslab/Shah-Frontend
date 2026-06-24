@@ -12,7 +12,7 @@ interface CategoryData {
   meta_description?: string;
 }
 
-export const useAdminCategories = (params?: { page?: number; per_page?: number }, options?: UseQueryOptions<any>) => {
+export const useAdminCategories = (params?: { page?: number; per_page?: number }, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'categories', params],
     queryFn: async () => {
@@ -23,7 +23,7 @@ export const useAdminCategories = (params?: { page?: number; per_page?: number }
   });
 };
 
-export const useAdminCategoryTree = (params?: { page?: number; per_page?: number }, options?: UseQueryOptions<any>) => {
+export const useAdminCategoryTree = (params?: { page?: number; per_page?: number }, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'categories', 'tree', params],
     queryFn: async () => {
@@ -35,7 +35,7 @@ export const useAdminCategoryTree = (params?: { page?: number; per_page?: number
   });
 };
 
-export const useAdminCategory = (id: number, options?: UseQueryOptions<any>) => {
+export const useAdminCategory = (id: number, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'category', id],
     queryFn: async () => {

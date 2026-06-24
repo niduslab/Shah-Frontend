@@ -26,7 +26,7 @@ interface SectionContentData {
 }
 
 // Pages Hooks
-export const useAdminPages = (params?: { page?: number; per_page?: number; type?: string }, options?: UseQueryOptions) => {
+export const useAdminPages = (params?: { page?: number; per_page?: number; type?: string }, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'pages', params],
     queryFn: async () => {
@@ -37,7 +37,7 @@ export const useAdminPages = (params?: { page?: number; per_page?: number; type?
   });
 };
 
-export const useAdminPage = (id: number, options?: UseQueryOptions) => {
+export const useAdminPage = (id: number, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'page', id],
     queryFn: async () => {
@@ -96,7 +96,7 @@ export const useDeletePage = (options?: UseMutationOptions<any, any, number>) =>
 };
 
 // Sections Hooks
-export const usePageSections = (pageId: number, options?: UseQueryOptions) => {
+export const usePageSections = (pageId: number, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'page', pageId, 'sections'],
     queryFn: async () => {
@@ -108,7 +108,7 @@ export const usePageSections = (pageId: number, options?: UseQueryOptions) => {
   });
 };
 
-export const useSection = (pageId: number, sectionId: number, options?: UseQueryOptions) => {
+export const useSection = (pageId: number, sectionId: number, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'page', pageId, 'section', sectionId],
     queryFn: async () => {
@@ -186,7 +186,7 @@ export const useReorderSections = (options?: UseMutationOptions<any, any, { page
 };
 
 // Section Content Hooks
-export const useSectionContent = (pageId: number, sectionId: number, options?: UseQueryOptions) => {
+export const useSectionContent = (pageId: number, sectionId: number, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'page', pageId, 'section', sectionId, 'content'],
     queryFn: async () => {
@@ -216,7 +216,7 @@ export const useUpdateSectionContent = (options?: UseMutationOptions<any, any, {
 };
 
 // Template Hooks
-export const usePageTemplates = (params?: { page_type?: string; category?: string }, options?: UseQueryOptions) => {
+export const usePageTemplates = (params?: { page_type?: string; category?: string }, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'page-templates', params],
     queryFn: async () => {
@@ -227,7 +227,7 @@ export const usePageTemplates = (params?: { page_type?: string; category?: strin
   });
 };
 
-export const useTemplatesByPageType = (pageType: string, options?: UseQueryOptions) => {
+export const useTemplatesByPageType = (pageType: string, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'page-templates', 'page-type', pageType],
     queryFn: async () => {
@@ -239,7 +239,7 @@ export const useTemplatesByPageType = (pageType: string, options?: UseQueryOptio
   });
 };
 
-export const useTemplatesByCategory = (category: string, options?: UseQueryOptions) => {
+export const useTemplatesByCategory = (category: string, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'page-templates', 'category', category],
     queryFn: async () => {
@@ -251,7 +251,7 @@ export const useTemplatesByCategory = (category: string, options?: UseQueryOptio
   });
 };
 
-export const useTemplateSchema = (templateType: string, options?: UseQueryOptions) => {
+export const useTemplateSchema = (templateType: string, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'page-templates', 'schema', templateType],
     queryFn: async () => {

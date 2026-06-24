@@ -22,7 +22,7 @@ interface FlashDealData {
 
 export const useAdminFlashDeals = (
   params?: { status?: 'active' | 'inactive'; page?: number; per_page?: number },
-  options?: UseQueryOptions
+  options?: Partial<UseQueryOptions<any>>
 ) => {
   return useQuery({
     queryKey: ['admin', 'flash-deals', params],
@@ -34,7 +34,7 @@ export const useAdminFlashDeals = (
   });
 };
 
-export const useAdminFlashDeal = (id: number, options?: UseQueryOptions) => {
+export const useAdminFlashDeal = (id: number, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'flash-deal', id],
     queryFn: async () => {
@@ -110,7 +110,7 @@ export const useToggleFlashDeal = (options?: UseMutationOptions<any, any, number
   });
 };
 
-export const useFlashDealStatistics = (id: number, options?: UseQueryOptions) => {
+export const useFlashDealStatistics = (id: number, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'flash-deal', id, 'statistics'],
     queryFn: async () => {

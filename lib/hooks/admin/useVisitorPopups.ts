@@ -11,7 +11,7 @@ interface VisitorPopupFilters {
   date_to?: string;
 }
 
-export const useVisitorPopups = (filters?: VisitorPopupFilters, options?: UseQueryOptions) => {
+export const useVisitorPopups = (filters?: VisitorPopupFilters, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'visitor-popups', filters],
     queryFn: async () => {
@@ -22,7 +22,7 @@ export const useVisitorPopups = (filters?: VisitorPopupFilters, options?: UseQue
   });
 };
 
-export const useVisitorPopup = (id: number, options?: UseQueryOptions) => {
+export const useVisitorPopup = (id: number, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'visitor-popup', id],
     queryFn: async () => {
@@ -34,7 +34,7 @@ export const useVisitorPopup = (id: number, options?: UseQueryOptions) => {
   });
 };
 
-export const useVisitorPopupStatistics = (options?: UseQueryOptions) => {
+export const useVisitorPopupStatistics = (options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['admin', 'visitor-popups', 'statistics'],
     queryFn: async () => {

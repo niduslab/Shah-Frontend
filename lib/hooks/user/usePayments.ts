@@ -21,7 +21,7 @@ export const usePayPreorderBalance = (options?: UseMutationOptions<any, any, str
   });
 };
 
-export const usePaymentStatus = (orderNumber: string, options?: UseQueryOptions) => {
+export const usePaymentStatus = (orderNumber: string, options?: Partial<UseQueryOptions<any>>) => {
   return useQuery({
     queryKey: ['payment-status', orderNumber],
     queryFn: async () => {

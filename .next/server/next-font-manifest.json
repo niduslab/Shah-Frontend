@@ -1,0 +1,277 @@
+{
+  "app": {
+    "[project]/app/(auth)/forgot-password/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(auth)/login/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(auth)/register/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/about-us/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/about/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/badminton-flooring/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/basketball-flooring/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/brand/[slug]/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/brand/nordictrack/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/brands/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/cart/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/checkout/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/contact/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/dashboard/addresses/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/dashboard/notifications/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/dashboard/orders/[orderNumber]/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/dashboard/orders/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/dashboard/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/dashboard/profile/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/dashboard/returns/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/dashboard/reviews/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/dashboard/settings/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/dashboard/wishlist/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/flash-sale/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/floor-mat/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/flooring-solution/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/invoice/[orderNumber]/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/joyfull-series/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/kino-map/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/multipurpose-flooring/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/our-proud-clients/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/payment/cancel/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/payment/failed/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/payment/success/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/product/[slug]/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/services/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/shop/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/table-tennis-flooring/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/track-order/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/trioflex-multipurpose-flooring/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/trioflex-series/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/_not-found/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin-direct/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/analytics/abandoned-carts/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/analytics/cart-events/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/analytics/checkout-funnel/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/analytics/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/analytics/page-views/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/analytics/product-views/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/analytics/search/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/analytics/visitors/[id]/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/analytics/visitors/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/brands/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/categories/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/content-editor/[filename]/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/content-editor/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/coupons/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/discounts/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/dynamic-contents/brand-pages-db/[brandId]/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/dynamic-contents/brand-pages-db/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/dynamic-contents/brand-pages/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/dynamic-contents/landing-page-db/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/dynamic-contents/landing-page/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/dynamic-contents/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/dynamic-pages/[id]/sections/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/dynamic-pages/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/flash-deals/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/inventory/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/login/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/notifications/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/orders/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/page-templates/[type]/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/page-templates/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/pages/[id]/sections/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/pages/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/pos/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/products/bulk-import/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/products/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/promotions/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/reports/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/reviews/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/shipping-classes/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/shipping-rates/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/test/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/users/[id]/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/users/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/variations/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/visitor-popups/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ]
+  },
+  "appUsingSizeAdjust": true,
+  "pages": {},
+  "pagesUsingSizeAdjust": false
+}

@@ -8,7 +8,7 @@ interface ImportFilters {
 }
 
 // List all imports
-export function useBulkImports(filters?: ImportFilters, options?: UseQueryOptions) {
+export function useBulkImports(filters?: ImportFilters, options?: Partial<UseQueryOptions<any>>) {
   return useQuery({
     queryKey: ['admin', 'bulk-imports', filters],
     queryFn: async () => {
@@ -20,7 +20,7 @@ export function useBulkImports(filters?: ImportFilters, options?: UseQueryOption
 }
 
 // Get single import status
-export function useImportStatus(importId: number, options?: UseQueryOptions) {
+export function useImportStatus(importId: number, options?: Partial<UseQueryOptions<any>>) {
   return useQuery({
     queryKey: ['admin', 'bulk-import', importId],
     queryFn: async () => {
@@ -139,7 +139,7 @@ export function useDeleteImport(options?: UseMutationOptions<any, any, number>) 
 }
 
 // Get import errors
-export function useImportErrors(importId: number, options?: UseQueryOptions) {
+export function useImportErrors(importId: number, options?: Partial<UseQueryOptions<any>>) {
   return useQuery({
     queryKey: ['admin', 'bulk-import-errors', importId],
     queryFn: async () => {
