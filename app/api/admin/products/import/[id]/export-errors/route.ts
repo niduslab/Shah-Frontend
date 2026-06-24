@@ -5,9 +5,10 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const cookieStore = cookies();
     const token = cookieStore.get('auth_token')?.value;
 
@@ -18,7 +19,7 @@ export async function GET(
       );
     }
 
-    const response = await fetch(`${API_BASE_URL}/admin/products/import/${params.id}/export-errors`, {
+    const response = await fetch(`${API_BASE_URL}/admin/products/import/${id}/export-errors`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -38,7 +39,7 @@ export async function GET(
     return new NextResponse(blob, {
       headers: {
         'Content-Type': 'text/csv',
-        'Content-Disposition': `attachment; filename="import_errors_${params.id}.csv"`,
+        'Content-Disposition': `attachment; filename="import_errors_${id}.csv"`,
       },
     });
   } catch (error: any) {

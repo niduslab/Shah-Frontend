@@ -4,13 +4,14 @@ import path from "path";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { filename: string } }
+  { params }: { params: Promise<{ filename: string }> }
 ) {
   try {
+    const { filename } = await params;
     const filePath = path.join(
       process.cwd(),
       "public/content",
-      `${params.filename}.json`
+      `${filename}.json`
     );
 
     if (!fs.existsSync(filePath)) {
@@ -37,14 +38,15 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { filename: string } }
+  { params }: { params: Promise<{ filename: string }> }
 ) {
   try {
+    const { filename } = await params;
     const body = await request.json();
     const filePath = path.join(
       process.cwd(),
       "public/content",
-      `${params.filename}.json`
+      `${filename}.json`
     );
 
     // Create directory if it doesn't exist

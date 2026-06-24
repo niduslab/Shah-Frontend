@@ -6,10 +6,10 @@ const CONTENT_DIR = path.join(process.cwd(), 'public', 'content', 'brand-pages')
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { brandId: string } }
+  { params }: { params: Promise<{ brandId: string }> }
 ) {
   try {
-    const { brandId } = params;
+    const { brandId } = await params;
     const filePath = path.join(CONTENT_DIR, `${brandId}.json`);
 
     if (!fs.existsSync(filePath)) {

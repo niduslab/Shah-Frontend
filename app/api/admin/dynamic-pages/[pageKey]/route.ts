@@ -4,11 +4,12 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { pageKey: string } }
+  { params }: { params: Promise<{ pageKey: string }> }
 ) {
   try {
+    const { pageKey } = await params;
     const response = await fetch(
-      `${API_BASE_URL}/admin/dynamic-pages/${params.pageKey}`,
+      `${API_BASE_URL}/admin/dynamic-pages/${pageKey}`,
       {
         headers: {
           Cookie: request.headers.get("cookie") || "",
@@ -37,13 +38,14 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { pageKey: string } }
+  { params }: { params: Promise<{ pageKey: string }> }
 ) {
   try {
+    const { pageKey } = await params;
     const body = await request.json();
 
     const response = await fetch(
-      `${API_BASE_URL}/admin/dynamic-pages/${params.pageKey}`,
+      `${API_BASE_URL}/admin/dynamic-pages/${pageKey}`,
       {
         method: "PUT",
         headers: {
@@ -75,11 +77,12 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { pageKey: string } }
+  { params }: { params: Promise<{ pageKey: string }> }
 ) {
   try {
+    const { pageKey } = await params;
     const response = await fetch(
-      `${API_BASE_URL}/admin/dynamic-pages/${params.pageKey}`,
+      `${API_BASE_URL}/admin/dynamic-pages/${pageKey}`,
       {
         method: "DELETE",
         headers: {

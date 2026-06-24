@@ -246,10 +246,10 @@ const BRANDS_DATA = [
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const { slug } = params;
+    const { slug } = await params;
     
     const brand = BRANDS_DATA.find(b => b.slug === slug);
     

@@ -5,9 +5,10 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const cookieStore = cookies();
     const token = cookieStore.get('auth_token')?.value;
 
@@ -18,7 +19,7 @@ export async function POST(
       );
     }
 
-    const response = await fetch(`${API_BASE_URL}/admin/products/import/${params.id}/cancel`, {
+    const response = await fetch(`${API_BASE_URL}/admin/products/import/${id}/cancel`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
