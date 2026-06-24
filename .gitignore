@@ -15,8 +15,10 @@
 
 # next.js
 # .next is committed so the server can pull a prebuilt app (server can't build).
-# Only the local build cache is excluded.
+# Only local build/dev caches are excluded (huge, machine-specific, not needed for `npm start`).
 /.next/cache/
+/.next/dev/
+/.next/diagnostics/
 /out/
 
 # production

@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 7, "column": 0}, "map": {"version":3,"sources":["file:///S:/Client%20Projects/Shah/shah_frontned/app/icon.png.mjs%20%28structured%20image%20object%29"],"sourcesContent":["import src from \"IMAGE\";\nexport default { src, width: 455, height: 548 }\n"],"names":[],"mappings":";;;;AAAA;;uCACe;IAAE,KAAA,gIAAG;IAAE,OAAO;IAAK,QAAQ;AAAI"}}]
-}
