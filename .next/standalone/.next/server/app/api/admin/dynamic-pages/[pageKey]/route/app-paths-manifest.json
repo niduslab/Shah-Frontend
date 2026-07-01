@@ -1,0 +1,3 @@
+{
+  "/api/admin/dynamic-pages/[pageKey]/route": "app/api/admin/dynamic-pages/[pageKey]/route.js"
+}

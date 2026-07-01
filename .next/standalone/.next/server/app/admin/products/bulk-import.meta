@@ -1,0 +1,17 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/admin/layout,_N_T_/admin/products/layout,_N_T_/admin/products/bulk-import/layout,_N_T_/admin/products/bulk-import/page,_N_T_/admin/products/bulk-import"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/admin/products/bulk-import/__PAGE__",
+    "/admin/products/bulk-import",
+    "/admin/products",
+    "/admin",
+    "/_index",
+    "/_head"
+  ]
+}

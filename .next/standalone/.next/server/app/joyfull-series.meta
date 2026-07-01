@@ -1,0 +1,16 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/(public)/layout,_N_T_/(public)/joyfull-series/layout,_N_T_/(public)/joyfull-series/page,_N_T_/joyfull-series"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/!KHB1YmxpYyk/joyfull-series/__PAGE__",
+    "/!KHB1YmxpYyk/joyfull-series",
+    "/!KHB1YmxpYyk",
+    "/_index",
+    "/_head"
+  ]
+}

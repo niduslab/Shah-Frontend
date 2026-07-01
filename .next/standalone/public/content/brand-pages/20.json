@@ -1,0 +1,105 @@
+{
+  "brandId": "20",
+  "content": {
+    "hero": {
+      "enabled": true,
+      "backgroundImage": "/images/brand-page/hero/1780720667679-Gemini_Generated_Image_e5k1jme5k1jme5k1.png",
+      "title": "Boker ",
+      "highlightedText": "Fitness Space",
+      "description": "Your premier factory-direct partner for elite fitness spaces. Boker connects you with heavy-duty, institutional-grade gym equipment and high-performance infrastructure—engineered for maximum durability, absolute safety, and top-tier athletic performance.",
+      "buttonText": "Shop Now",
+      "buttonUrl": "/shop?brand=boker"
+    },
+    "categories": {
+      "enabled": true,
+      "sectionTitle": "Explore Categories",
+      "items": [
+        {
+          "id": "cat-1780720199050",
+          "name": "Strength",
+          "image": "/images/brand-page/categories/1780720203938-GS348QP4_HERO_720x.png",
+          "href": "/shop?category=strength&brand=boker"
+        },
+        {
+          "id": "cat-1780720199427",
+          "name": "Strength",
+          "image": "/images/brand-page/categories/1780720206412-EXM3000LPS_HERO_M_720x.png",
+          "href": "/shop?category=strength&brand=boker"
+        },
+        {
+          "id": "cat-1780720199859",
+          "name": "Strength",
+          "image": "/images/brand-page/categories/1780720208601-G9S_with_GKR9_0051_500px_540x.png",
+          "href": "/shop?category=strength&brand=boker"
+        },
+        {
+          "id": "cat-1780720200211",
+          "name": "Strength",
+          "image": "/images/brand-page/categories/1780720211004-G424-3Q-ft_540x.png",
+          "href": "/shop?category=strength&brand=boker"
+        }
+      ]
+    },
+    "behindTheWork": {
+      "enabled": false,
+      "title": "Thinking Behind the Work",
+      "description": "",
+      "stats": [
+        {
+          "value": "51+",
+          "label": "Years of Experience"
+        },
+        {
+          "value": "1M+",
+          "label": "Happy Customers"
+        },
+        {
+          "value": "50+",
+          "label": "Available In Countries"
+        }
+      ],
+      "images": {
+        "left": "",
+        "center": "",
+        "right": ""
+      }
+    },
+    "shopBy": {
+      "enabled": false,
+      "cards": []
+    },
+    "promoBanner": {
+      "enabled": false,
+      "badge": "LIMITED-TIME EVENT",
+      "title": "Fitness",
+      "highlightedText": "30% off",
+      "subtitle": "Essentials",
+      "description": "Save on select NordicTrack equipment during the Winter Sale Event",
+      "buttonText": "Shop Now",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#3D2817",
+      "textColor": "#FFFFFF"
+    },
+    "featureSection1": {
+      "enabled": false,
+      "layout": "image-left",
+      "image": "",
+      "title": "Smart Rowing. Full-Body Results. Real Progress.",
+      "description": "Experience a powerful, low-impact workout that engages your entire body. Smart rowing machines automatically adjust resistance to match your trainer's intensity, helping you build strength, endurance, and consistency— every session, every stroke.",
+      "buttonText": "Shop Rowers",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#E8DED3"
+    },
+    "featureSection2": {
+      "enabled": false,
+      "layout": "image-right",
+      "image": "",
+      "title": "Where Refined Design meets uncompromising power.",
+      "description": "Experience a powerful, low-impact workout that engages your entire body. Smart rowing machines automatically adjust resistance to match your trainer's intensity, helping you build strength, endurance, and consistency— every session, every stroke.",
+      "buttonText": "Shop Rowers",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#E8DED3"
+    }
+  },
+  "updatedAt": "2026-06-06T04:38:15.084Z"
+}

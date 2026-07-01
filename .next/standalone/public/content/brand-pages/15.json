@@ -1,0 +1,105 @@
+{
+  "brandId": "15",
+  "content": {
+    "hero": {
+      "enabled": true,
+      "backgroundImage": "/images/brand-page/hero/1779353451732-UFC-GYM.jpg",
+      "title": "UFC ",
+      "highlightedText": "Fitness Space",
+      "description": "",
+      "buttonText": "Shop Now",
+      "buttonUrl": "/shop?brand=ufc"
+    },
+    "categories": {
+      "enabled": true,
+      "sectionTitle": "Explore Categories",
+      "items": [
+        {
+          "id": "cat-1779353455519",
+          "name": "Cardio",
+          "image": "/images/brand-page/categories/1780684479709-ca6926_fb6c4c57f6bc445bb1d882aef3d08a53~mv2.jpg",
+          "href": "/shop?category=commercial-cardio&brand=ufc"
+        },
+        {
+          "id": "cat-1779353455695",
+          "name": "Strength",
+          "image": "/images/brand-page/categories/1780684481981-ca6926_e7033b9f8d014e64a56d6194cb27b3ee~mv2.jpg",
+          "href": "/shop?category=strength&brand=ufc"
+        },
+        {
+          "id": "cat-1779353455879",
+          "name": "Free Weight",
+          "image": "/images/brand-page/categories/1780684484385-ca6926_23f69df5458d49069ff2f5d0826068b2~mv2.jpg",
+          "href": "/shop?category=free-weight&brand=ufc"
+        },
+        {
+          "id": "cat-1779353456047",
+          "name": "Sports",
+          "image": "/images/brand-page/categories/1780684487742-9ab980_e103d0183da348d7a6f1b3298c4cae9a~mv2.jpg",
+          "href": "/shop?category=sports&brand=ufc"
+        }
+      ]
+    },
+    "behindTheWork": {
+      "enabled": true,
+      "title": "Train like a champion.",
+      "description": "Train like a champion. \nCombat-inspired fitness equipment built to support ultimate strength, conditioning, and\nendurance",
+      "stats": [
+        {
+          "value": "1993",
+          "label": "Established"
+        },
+        {
+          "value": "33+",
+          "label": "Years of Experience"
+        },
+        {
+          "value": "USA",
+          "label": "Origin Country"
+        }
+      ],
+      "images": {
+        "left": "/images/brand-page/behind-work/1781084495311-ufc2.webp",
+        "center": "/images/brand-page/behind-work/1781084476189-ufc1.webp",
+        "right": "/images/brand-page/behind-work/1781084498951-ufc3.webp"
+      }
+    },
+    "shopBy": {
+      "enabled": false,
+      "cards": []
+    },
+    "promoBanner": {
+      "enabled": true,
+      "badge": "LIMITED-TIME EVENT",
+      "title": "Fitness",
+      "highlightedText": "30% off",
+      "subtitle": "Essentials",
+      "description": "Save on select NordicTrack equipment during the Winter Sale Event",
+      "buttonText": "Shop Now",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#3D2817",
+      "textColor": "#FFFFFF"
+    },
+    "featureSection1": {
+      "enabled": false,
+      "layout": "image-left",
+      "image": "",
+      "title": "Smart Rowing. Full-Body Results. Real Progress.",
+      "description": "Experience a powerful, low-impact workout that engages your entire body. Smart rowing machines automatically adjust resistance to match your trainer's intensity, helping you build strength, endurance, and consistency— every session, every stroke.",
+      "buttonText": "Shop Rowers",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#E8DED3"
+    },
+    "featureSection2": {
+      "enabled": false,
+      "layout": "image-right",
+      "image": "",
+      "title": "Where Refined Design meets uncompromising power.",
+      "description": "Experience a powerful, low-impact workout that engages your entire body. Smart rowing machines automatically adjust resistance to match your trainer's intensity, helping you build strength, endurance, and consistency— every session, every stroke.",
+      "buttonText": "Shop Rowers",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#E8DED3"
+    }
+  },
+  "updatedAt": "2026-06-10T10:28:48.815Z"
+}

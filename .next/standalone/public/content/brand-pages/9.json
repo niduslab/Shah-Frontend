@@ -1,0 +1,105 @@
+{
+  "brandId": "9",
+  "content": {
+    "hero": {
+      "enabled": true,
+      "backgroundImage": "/images/brand-page/hero/1780681867999-9ab980_3080f8f4763c4d1cadb917d7e1409b3c~mv2.png",
+      "title": "Spirit",
+      "highlightedText": "Fitness Space",
+      "description": "ELEGANTLY DESIGNED. \nPOWERED BY INNOVATION.",
+      "buttonText": "Shop Now",
+      "buttonUrl": "/shop?brand=spirit"
+    },
+    "categories": {
+      "enabled": true,
+      "sectionTitle": "Explore Categories",
+      "items": [
+        {
+          "id": "cat-1779352179343",
+          "name": "Cardio",
+          "image": "/images/brand-page/categories/1780681981353-ChatGPT Image 2026年1月29日 下午03_34_18.png",
+          "href": "/shop?category=commercial-cardio&brand=spirit"
+        },
+        {
+          "id": "cat-1779352179519",
+          "name": "Free Weight",
+          "image": "/images/brand-page/categories/1780681983830-Gemini_Generated_Image_4ew00h4ew00h4ew0.jpg",
+          "href": "/shop?category=free-weight&brand=spirit"
+        },
+        {
+          "id": "cat-1779352179679",
+          "name": "Strength",
+          "image": "/images/brand-page/categories/1780681985886-ChatGPT Image 2026年1月29日 下午03_18_26.png",
+          "href": "/shop?category=strength&brand=spirit"
+        },
+        {
+          "id": "cat-1779352179862",
+          "name": "Sports",
+          "image": "/images/brand-page/categories/1780681987968-9ab980_d8895a23c9014d9484f4c27019374dfa~mv2.jpg",
+          "href": "/shop?category=sports&brand=spirit"
+        }
+      ]
+    },
+    "behindTheWork": {
+      "enabled": true,
+      "title": "Thinking Behind the Work",
+      "description": "Building high-quality, durable equipment to help you achieve your fitness goals. Committed to continuous innovation and steadfast reliability for over 40 years.",
+      "stats": [
+        {
+          "value": "41+",
+          "label": "Years of Experience"
+        },
+        {
+          "value": "1983",
+          "label": "Established"
+        },
+        {
+          "value": " USA",
+          "label": "Country Origin"
+        }
+      ],
+      "images": {
+        "left": "/images/brand-page/behind-work/1779352211053-Screenshot 2026-05-21 142835.png",
+        "center": "/images/brand-page/behind-work/1779352213733-Screenshot 2026-05-21 142832.png",
+        "right": "/images/brand-page/behind-work/1779352216570-Screenshot 2026-05-21 142827.png"
+      }
+    },
+    "shopBy": {
+      "enabled": true,
+      "cards": []
+    },
+    "promoBanner": {
+      "enabled": true,
+      "badge": "LIMITED-TIME EVENT",
+      "title": "Fitness",
+      "highlightedText": "30% off",
+      "subtitle": "Essentials",
+      "description": "Save on select NordicTrack equipment during the Winter Sale Event",
+      "buttonText": "Shop Now",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#3D2817",
+      "textColor": "#FFFFFF"
+    },
+    "featureSection1": {
+      "enabled": true,
+      "layout": "image-left",
+      "image": "",
+      "title": "Smart Rowing. Full-Body Results. Real Progress.",
+      "description": "Experience a powerful, low-impact workout that engages your entire body. Smart rowing machines automatically adjust resistance to match your trainer's intensity, helping you build strength, endurance, and consistency— every session, every stroke.",
+      "buttonText": "Shop Rowers",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#E8DED3"
+    },
+    "featureSection2": {
+      "enabled": true,
+      "layout": "image-right",
+      "image": "",
+      "title": "Where Refined Design meets uncompromising power.",
+      "description": "Experience a powerful, low-impact workout that engages your entire body. Smart rowing machines automatically adjust resistance to match your trainer's intensity, helping you build strength, endurance, and consistency— every session, every stroke.",
+      "buttonText": "Shop Rowers",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#E8DED3"
+    }
+  },
+  "updatedAt": "2026-06-10T10:30:22.747Z"
+}

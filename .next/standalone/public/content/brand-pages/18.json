@@ -1,0 +1,105 @@
+{
+  "brandId": "18",
+  "content": {
+    "hero": {
+      "enabled": true,
+      "backgroundImage": "/images/brand-page/hero/1780719369769-Gemini_Generated_Image_rkcr7grkcr7grkcr.png",
+      "title": "Atlas ",
+      "highlightedText": "Fitness Space",
+      "description": "Transform your space with commercial-grade engineering. Altas Strength brings heavycduty, multi-functional smith machines and power racks right to your gym floor designed for maximum versatility, ultimate safety, and zero compromises on your training.",
+      "buttonText": "Shop Now",
+      "buttonUrl": "/shop?brand=atlas"
+    },
+    "categories": {
+      "enabled": true,
+      "sectionTitle": "Explore Categories",
+      "items": [
+        {
+          "id": "cat-1779354033423",
+          "name": "Cardio",
+          "image": "/images/brand-page/categories/1779354051934-7_12cf89ad-5bed-4cc0-99aa-f7eb25011213.webp",
+          "href": "/shop?category=commercial-cardio&brand=atlas"
+        },
+        {
+          "id": "cat-1779354033591",
+          "name": "Strength",
+          "image": "/images/brand-page/categories/1779354054231-3075_1_6e197163-e6a8-42a6-ad30-594a63e66292.webp",
+          "href": "/shop?category=strength&brand=atlas"
+        },
+        {
+          "id": "cat-1779354033775",
+          "name": "Free Weight",
+          "image": "/images/brand-page/categories/1779354056329-1_a15dc186-37cf-4c0a-aa5b-1470198fe5de.webp",
+          "href": "/shop?category=free-weight&brand=atlas"
+        },
+        {
+          "id": "cat-1779354033942",
+          "name": "Sports",
+          "image": "/images/brand-page/categories/1779354058347-8_5f080c90-b4a4-47f4-89de-de547ea7d615.webp",
+          "href": "/shop?category=sports&brand=atlas"
+        }
+      ]
+    },
+    "behindTheWork": {
+      "enabled": true,
+      "title": "Thinking Behind the Work",
+      "description": "Top-of-the-line strength training equipment and multi-function functional trainers. \nBringing durable, versatile, and space-saving gym solutions to North America.",
+      "stats": [
+        {
+          "value": "9+",
+          "label": "Years of Experience"
+        },
+        {
+          "value": "2017",
+          "label": "Established"
+        },
+        {
+          "value": "Canada",
+          "label": "Origin Country"
+        }
+      ],
+      "images": {
+        "left": "/images/brand-page/behind-work/1779354126130-7_12cf89ad-5bed-4cc0-99aa-f7eb25011213.webp",
+        "center": "/images/brand-page/behind-work/1781085560993-atlas.webp",
+        "right": "/images/brand-page/behind-work/1779354130543-8_5f080c90-b4a4-47f4-89de-de547ea7d615.webp"
+      }
+    },
+    "shopBy": {
+      "enabled": false,
+      "cards": []
+    },
+    "promoBanner": {
+      "enabled": true,
+      "badge": "LIMITED-TIME EVENT",
+      "title": "Fitness",
+      "highlightedText": "30% off",
+      "subtitle": "Essentials",
+      "description": "Save on select NordicTrack equipment during the Winter Sale Event",
+      "buttonText": "Shop Now",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#3D2817",
+      "textColor": "#FFFFFF"
+    },
+    "featureSection1": {
+      "enabled": false,
+      "layout": "image-left",
+      "image": "",
+      "title": "Smart Rowing. Full-Body Results. Real Progress.",
+      "description": "Experience a powerful, low-impact workout that engages your entire body. Smart rowing machines automatically adjust resistance to match your trainer's intensity, helping you build strength, endurance, and consistency— every session, every stroke.",
+      "buttonText": "Shop Rowers",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#E8DED3"
+    },
+    "featureSection2": {
+      "enabled": false,
+      "layout": "image-right",
+      "image": "",
+      "title": "Where Refined Design meets uncompromising power.",
+      "description": "Experience a powerful, low-impact workout that engages your entire body. Smart rowing machines automatically adjust resistance to match your trainer's intensity, helping you build strength, endurance, and consistency— every session, every stroke.",
+      "buttonText": "Shop Rowers",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#E8DED3"
+    }
+  },
+  "updatedAt": "2026-06-10T10:00:39.802Z"
+}

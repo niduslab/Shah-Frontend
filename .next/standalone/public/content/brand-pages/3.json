@@ -1,0 +1,105 @@
+{
+  "brandId": "3",
+  "content": {
+    "hero": {
+      "enabled": true,
+      "backgroundImage": "/images/brand-page/hero/1781084712751-index_big_img_02.webp",
+      "title": "Shua ",
+      "highlightedText": "Fitness Space",
+      "description": "Embrace an easy way to stay active.",
+      "buttonText": "Shop Now",
+      "buttonUrl": "/shop?brand=shua"
+    },
+    "categories": {
+      "enabled": true,
+      "sectionTitle": "Explore Categories",
+      "items": [
+        {
+          "id": "cat-1779350151623",
+          "name": "Cardio",
+          "image": "/images/brand-page/categories/1780569724143-shua_0005_20200914无动力最终版.454-removebg-preview.jpg",
+          "href": "/shop?category=commercial-cardio&brand=shua"
+        },
+        {
+          "id": "cat-1779350214248",
+          "name": "Strength",
+          "image": "/images/brand-page/categories/1780569658172-B9100UT22-1-removebg-preview.jpg",
+          "href": "/shop?category=strength&brand=shua"
+        },
+        {
+          "id": "cat-1779350214439",
+          "name": "Free Weight",
+          "image": "/images/brand-page/categories/1780569661706-SH-T8919T-removebg-preview.jpg",
+          "href": "/shop?category=free-weight&brand=shua"
+        },
+        {
+          "id": "cat-1779350214607",
+          "name": "Sports",
+          "image": "/images/brand-page/categories/1780569728444-SH-R8800-Commercial-Rower-4-removebg-preview.jpg",
+          "href": "/shop?category=sports&brand=shua"
+        }
+      ]
+    },
+    "behindTheWork": {
+      "enabled": true,
+      "title": "Thinking Behind the Work",
+      "description": "Leading health and wellness solutions on a global scale. Integrating smart technology with ergonomic design to promote a healthier life.",
+      "stats": [
+        {
+          "value": "+30",
+          "label": "Years of Experience"
+        },
+        {
+          "value": "1996",
+          "label": "Established"
+        },
+        {
+          "value": "China",
+          "label": "Country Origin"
+        }
+      ],
+      "images": {
+        "left": "/images/brand-page/behind-work/1779350351133-Screenshot 2026-05-21 135829.png",
+        "center": "/images/brand-page/behind-work/1779350354307-Screenshot 2026-05-21 135837.png",
+        "right": "/images/brand-page/behind-work/1779350357557-Screenshot 2026-05-21 135842.png"
+      }
+    },
+    "shopBy": {
+      "enabled": true,
+      "cards": []
+    },
+    "promoBanner": {
+      "enabled": true,
+      "badge": "LIMITED-TIME EVENT",
+      "title": "Fitness",
+      "highlightedText": "30% off",
+      "subtitle": "Essentials",
+      "description": "Save on select NordicTrack equipment during the Winter Sale Event",
+      "buttonText": "Shop Now",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#3D2817",
+      "textColor": "#FFFFFF"
+    },
+    "featureSection1": {
+      "enabled": false,
+      "layout": "image-left",
+      "image": "",
+      "title": "Smart Rowing. Full-Body Results. Real Progress.",
+      "description": "Experience a powerful, low-impact workout that engages your entire body. Smart rowing machines automatically adjust resistance to match your trainer's intensity, helping you build strength, endurance, and consistency— every session, every stroke.",
+      "buttonText": "Shop Rowers",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#E8DED3"
+    },
+    "featureSection2": {
+      "enabled": false,
+      "layout": "image-right",
+      "image": "",
+      "title": "Where Refined Design meets uncompromising power.",
+      "description": "Experience a powerful, low-impact workout that engages your entire body. Smart rowing machines automatically adjust resistance to match your trainer's intensity, helping you build strength, endurance, and consistency— every session, every stroke.",
+      "buttonText": "Shop Rowers",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#E8DED3"
+    }
+  },
+  "updatedAt": "2026-06-10T09:45:15.586Z"
+}

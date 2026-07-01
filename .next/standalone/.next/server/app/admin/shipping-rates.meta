@@ -1,0 +1,16 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/admin/layout,_N_T_/admin/shipping-rates/layout,_N_T_/admin/shipping-rates/page,_N_T_/admin/shipping-rates"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/admin/shipping-rates/__PAGE__",
+    "/admin/shipping-rates",
+    "/admin",
+    "/_index",
+    "/_head"
+  ]
+}

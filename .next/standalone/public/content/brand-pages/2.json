@@ -1,0 +1,120 @@
+{
+  "brandId": "2",
+  "content": {
+    "hero": {
+      "enabled": true,
+      "backgroundImage": "/images/brand-page/hero/1780572693884-Screenshot 2026-06-04 173127.png",
+      "title": "REEBOK ",
+      "highlightedText": "",
+      "description": "Realise your potential energy with Z-Tech Cardio",
+      "buttonText": "Shop Now",
+      "buttonUrl": "/shop?brand=reebok"
+    },
+    "categories": {
+      "enabled": true,
+      "sectionTitle": "Explore Categories",
+      "items": [
+        {
+          "id": "cat-1779350749208",
+          "name": "Cardio",
+          "image": "/images/brand-page/categories/1780572603170-Screenshot 2026-06-04 172821.png",
+          "href": "/shop?category=fitness-cardio&brand=reebok"
+        },
+        {
+          "id": "cat-1779350749639",
+          "name": "Strength",
+          "image": "/images/brand-page/categories/1780572607722-Screenshot 2026-06-04 172841.png",
+          "href": "/shop?category=strength&brand=reebok"
+        },
+        {
+          "id": "cat-1779350749967",
+          "name": "Free Weight",
+          "image": "/images/brand-page/categories/1780572612128-Screenshot 2026-06-04 172915.png",
+          "href": "/shop?category=free-weight&brand=reebok"
+        },
+        {
+          "id": "cat-1779350750166",
+          "name": "Sports",
+          "image": "/images/brand-page/categories/1780572616411-Screenshot 2026-06-04 172949.png",
+          "href": "/shop?category=sports&brand=reebok"
+        }
+      ]
+    },
+    "behindTheWork": {
+      "enabled": true,
+      "title": "Thinking Behind the Work",
+      "description": "Fitness is a way of life. Equipment designed to inspire movement, enhance performance, and push physical boundaries.",
+      "stats": [
+        {
+          "value": "68+",
+          "label": "Years of Experience"
+        },
+        {
+          "value": "1958",
+          "label": "Established"
+        },
+        {
+          "value": "UK",
+          "label": "Country Origin"
+        }
+      ],
+      "images": {
+        "left": "/images/brand-page/behind-work/1779339603668-Screenshot 2026-05-21 105932.png",
+        "center": "/images/brand-page/behind-work/1779339606804-Screenshot 2026-05-21 105912.png",
+        "right": "/images/brand-page/behind-work/1781084423698-step-tile.webp"
+      }
+    },
+    "shopBy": {
+      "enabled": false,
+      "cards": [
+        {
+          "id": "card-1776403248351",
+          "image": "/images/brand-page/shop-by/1776403253799-gallery01.jpg-768x512.jpg",
+          "title": "New Product",
+          "buttonText": "Shop Now",
+          "buttonUrl": "/shop"
+        },
+        {
+          "id": "card-1776403250047",
+          "image": "/images/brand-page/shop-by/1776403266023-cfa8138ad5135723dcedad5236627bc4d080c002.png",
+          "title": "New Product",
+          "buttonText": "Shop Now",
+          "buttonUrl": "/shop"
+        }
+      ]
+    },
+    "promoBanner": {
+      "enabled": true,
+      "badge": "LIMITED-TIME EVENT",
+      "title": "Fitness",
+      "highlightedText": "30% off",
+      "subtitle": "Essentials",
+      "description": "Save on select NordicTrack equipment during the Winter Sale Event",
+      "buttonText": "Shop Now",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#3D2817",
+      "textColor": "#FFFFFF"
+    },
+    "featureSection1": {
+      "enabled": false,
+      "layout": "image-left",
+      "image": "",
+      "title": "Smart Rowing. Full-Body Results. Real Progress.",
+      "description": "Experience a powerful, low-impact workout that engages your entire body. Smart rowing machines automatically adjust resistance to match your trainer's intensity, helping you build strength, endurance, and consistency— every session, every stroke.",
+      "buttonText": "Shop Rowers",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#E8DED3"
+    },
+    "featureSection2": {
+      "enabled": false,
+      "layout": "image-right",
+      "image": "",
+      "title": "Where Refined Design meets uncompromising power.",
+      "description": "Experience a powerful, low-impact workout that engages your entire body. Smart rowing machines automatically adjust resistance to match your trainer's intensity, helping you build strength, endurance, and consistency— every session, every stroke.",
+      "buttonText": "Shop Rowers",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#E8DED3"
+    }
+  },
+  "updatedAt": "2026-06-10T09:58:04.721Z"
+}

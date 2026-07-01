@@ -1,0 +1,80 @@
+{
+  "brandId": "6",
+  "content": {
+    "hero": {
+      "enabled": true,
+      "backgroundImage": "/images/brand-page/brand-page-hero-img.png",
+      "title": "Turn Your Home\nInto A Complete",
+      "highlightedText": "Fitness Space",
+      "description": "",
+      "buttonText": "Shop Now",
+      "buttonUrl": "/shop?brand=nordictrack"
+    },
+    "categories": {
+      "enabled": true,
+      "sectionTitle": "Explore Categories",
+      "items": []
+    },
+    "behindTheWork": {
+      "enabled": true,
+      "title": "Thinking Behind the Work",
+      "description": "Innovation and technology for premium home fitness. Bringing the personal trainer experience directly into your living room.",
+      "stats": [
+        {
+          "value": "51+",
+          "label": "Years of Experience"
+        },
+        {
+          "value": "1975",
+          "label": "Established"
+        },
+        {
+          "value": "USA",
+          "label": "Country Origin"
+        }
+      ],
+      "images": {
+        "left": "/images/brand-page/behind-work/1781086233359-Nordic.webp",
+        "center": "/images/brand-page/behind-work/1781086238497-homepage_banner-split_X24Treadmill-jun26-v1.webp",
+        "right": "/images/brand-page/behind-work/1781086251568-cat_17048_nordictrack-hero.webp"
+      }
+    },
+    "shopBy": {
+      "enabled": true,
+      "cards": []
+    },
+    "promoBanner": {
+      "enabled": true,
+      "badge": "LIMITED-TIME EVENT",
+      "title": "Fitness",
+      "highlightedText": "30% off",
+      "subtitle": "Essentials",
+      "description": "Save on select NordicTrack equipment during the Winter Sale Event",
+      "buttonText": "Shop Now",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#3D2817",
+      "textColor": "#FFFFFF"
+    },
+    "featureSection1": {
+      "enabled": true,
+      "layout": "image-left",
+      "image": "",
+      "title": "Smart Rowing. Full-Body Results. Real Progress.",
+      "description": "Experience a powerful, low-impact workout that engages your entire body. Smart rowing machines automatically adjust resistance to match your trainer's intensity, helping you build strength, endurance, and consistency— every session, every stroke.",
+      "buttonText": "Shop Rowers",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#E8DED3"
+    },
+    "featureSection2": {
+      "enabled": true,
+      "layout": "image-right",
+      "image": "",
+      "title": "Where Refined Design meets uncompromising power.",
+      "description": "Experience a powerful, low-impact workout that engages your entire body. Smart rowing machines automatically adjust resistance to match your trainer's intensity, helping you build strength, endurance, and consistency— every session, every stroke.",
+      "buttonText": "Shop Rowers",
+      "buttonUrl": "/shop",
+      "backgroundColor": "#E8DED3"
+    }
+  },
+  "updatedAt": "2026-06-10T10:11:58.018Z"
+}

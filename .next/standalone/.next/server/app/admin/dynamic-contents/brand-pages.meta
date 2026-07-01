@@ -1,0 +1,17 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/admin/layout,_N_T_/admin/dynamic-contents/layout,_N_T_/admin/dynamic-contents/brand-pages/layout,_N_T_/admin/dynamic-contents/brand-pages/page,_N_T_/admin/dynamic-contents/brand-pages"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/admin/dynamic-contents/brand-pages/__PAGE__",
+    "/admin/dynamic-contents/brand-pages",
+    "/admin/dynamic-contents",
+    "/admin",
+    "/_index",
+    "/_head"
+  ]
+}
