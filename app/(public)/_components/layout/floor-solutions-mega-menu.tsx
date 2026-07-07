@@ -7,13 +7,13 @@ import { cn } from "@/lib/utils";
 const floorCategories = [
   {
     title: "Floor Mat",
-    href: "/floor-solutions/floor-mat",
+    href: "/floor-mat",
     image: "/images/landing/floor-solution/57e9ba3f08e9becbf9b3d9c11be4bb6c027f1918.jpg",
     description: "Premium gym and fitness mats"
   },
   {
     title: "Flooring Solution",
-    href: "/floor-solutions/flooring",
+    href: "/flooring-solution",
     image: "/images/landing/floor-solution/b54b7f7c87e2a09fb14f9ba6f305a970c2bcdacf.jpg",
     description: "Complete court and surface solutions"
   },

@@ -23,9 +23,11 @@ export default function PublicLayout({
       <Footer />
       <WhatsAppButton />
       <ScrollToTop />
-      <CookieConsent />
       <VisitorPopup delay={5000} />
-      <SiteUpgradeNotice />
+      <div className="fixed bottom-0 left-0 right-0 z-50 flex flex-col">
+        <CookieConsent />
+        <SiteUpgradeNotice />
+      </div>
     </div>
   );
 }

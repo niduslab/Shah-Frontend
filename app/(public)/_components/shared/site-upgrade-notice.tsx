@@ -1,39 +1,20 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X, Sparkles } from "lucide-react";
-
-const DISMISS_KEY = "site_upgrade_notice_dismissed";
-const EXIT_ANIMATION_MS = 350;
+import { Sparkles } from "lucide-react";
 
 export function SiteUpgradeNotice() {
   const [isMounted, setIsMounted] = useState(false);
-  const [isLeaving, setIsLeaving] = useState(false);
 
   useEffect(() => {
-    const dismissed = sessionStorage.getItem(DISMISS_KEY);
-    if (!dismissed) {
-      const timer = setTimeout(() => setIsMounted(true), 400);
-      return () => clearTimeout(timer);
-    }
+    const timer = setTimeout(() => setIsMounted(true), 400);
+    return () => clearTimeout(timer);
   }, []);
-
-  const handleDismiss = () => {
-    sessionStorage.setItem(DISMISS_KEY, "true");
-    setIsLeaving(true);
-    setTimeout(() => setIsMounted(false), EXIT_ANIMATION_MS);
-  };
 
   if (!isMounted) return null;
 
   return (
-    <div
-      className={`fixed bottom-0 left-0 right-0 z-40 ${
-        isLeaving ? "slide-down-fade" : "slide-up-fade"
-      }`}
-      role="status"
-      aria-live="polite"
-    >
+    <div className="slide-up-fade" role="status" aria-live="polite">
       {/* Gradient accent line */}
       <div className="h-[2px] bg-gradient-to-r from-transparent via-amber-400 to-transparent" />
 
@@ -42,26 +23,17 @@ export function SiteUpgradeNotice() {
         <div className="pointer-events-none absolute inset-0 upgrade-shimmer" />
 
         <div className="container relative mx-auto px-4 py-3.5 sm:py-3">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3 min-w-0">
-              <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-amber-400/10 ring-1 ring-amber-400/30">
-                <Sparkles className="h-4 w-4 text-amber-400 upgrade-icon-pulse" />
+          <div className="flex items-center justify-center gap-3 text-center">
+            <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-amber-400/10 ring-1 ring-amber-400/30">
+              <Sparkles className="h-4 w-4 text-amber-400 upgrade-icon-pulse" />
+            </span>
+            <p className="text-sm leading-snug text-gray-100">
+              <span className="font-semibold text-white">We're upgrading our website.</span>{" "}
+              <span className="text-gray-300">
+                Some features may be temporarily limited while we roll out improvements.
+                The full experience will be live soon, thank you for your patience.
               </span>
-              <p className="text-sm leading-snug text-gray-100">
-                <span className="font-semibold text-white">We're upgrading our website.</span>{" "}
-                <span className="text-gray-300">
-                  Some features may be temporarily limited while we roll out improvements.
-                  The full experience will be live soon, thank you for your patience.
-                </span>
-              </p>
-            </div>
-            <button
-              onClick={handleDismiss}
-              className="flex-shrink-0 rounded-full p-1.5 text-gray-400 transition-colors hover:bg-white/10 hover:text-white"
-              aria-label="Dismiss notice"
-            >
-              <X className="h-4 w-4" />
-            </button>
+            </p>
           </div>
         </div>
       </div>

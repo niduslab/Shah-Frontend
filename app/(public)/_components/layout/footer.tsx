@@ -76,17 +76,12 @@ export function Footer() {
               </li>
               <li>
                 <Link href="/faq" className="hover:text-[#FFB81E] transition-colors">
-                  Faq
+                  FAQ
                 </Link>
               </li>
               <li>
                 <Link href="/contact" className="hover:text-[#FFB81E] transition-colors">
                   Contact Us
-                </Link>
-              </li>
-              <li>
-                <Link href="/store" className="hover:text-[#FFB81E] transition-colors">
-                  Our Store
                 </Link>
               </li>
               <li>
@@ -102,33 +97,28 @@ export function Footer() {
             <h4 className="text-lg font-bold text-white">Categories</h4>
             <ul className="flex flex-col gap-3 text-sm text-gray-300">
               <li>
-                <Link href="/products" className="hover:text-[#FFB81E] transition-colors">
+                <Link href="/kino-map" className="hover:text-[#FFB81E] transition-colors">
+                  Kinomap
+                </Link>
+              </li>
+              <li>
+                <Link href="/shop" className="hover:text-[#FFB81E] transition-colors">
                   All Products
                 </Link>
               </li>
               <li>
-                <Link href="/category/cardio" className="hover:text-[#FFB81E] transition-colors">
-                  Cardio Equipment
+                <Link href="/shop?category=fitness" className="hover:text-[#FFB81E] transition-colors">
+                  Fitness Equipment
                 </Link>
               </li>
               <li>
-                <Link href="/category/free-weights" className="hover:text-[#FFB81E] transition-colors">
-                  Free Weights
-                </Link>
-              </li>
-              <li>
-                <Link href="/category/strength" className="hover:text-[#FFB81E] transition-colors">
-                  Strength Training
-                </Link>
-              </li>
-              <li>
-                <Link href="/category/sports" className="hover:text-[#FFB81E] transition-colors">
+                <Link href="/shop?category=sports" className="hover:text-[#FFB81E] transition-colors">
                   Sports Equipment
                 </Link>
               </li>
               <li>
-                <Link href="/kino-map" className="hover:text-[#FFB81E] transition-colors">
-                  Kinomap
+                <Link href="/shop?category=floor-solutions" className="hover:text-[#FFB81E] transition-colors">
+                  Floor Solutions
                 </Link>
               </li>
             </ul>
@@ -145,7 +135,7 @@ export function Footer() {
               </li>
               <li>
                 <Link href="/returns" className="hover:text-[#FFB81E] transition-colors">
-                  Refubd & Return
+                  Return & Refund Policy
                 </Link>
               </li>
               <li>
@@ -155,12 +145,12 @@ export function Footer() {
               </li>
               <li>
                 <Link href="/privacy" className="hover:text-[#FFB81E] transition-colors">
-                  Terms & Privacy Policy
+                  Privacy Policy
                 </Link>
               </li>
               <li>
                 <Link href="/shipping" className="hover:text-[#FFB81E] transition-colors">
-                  Shiping Policy
+                  Shipping Policy
                 </Link>
               </li>
             </ul>
