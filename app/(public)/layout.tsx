@@ -6,6 +6,7 @@ import { ScrollToTop } from "./_components/shared/scroll-to-top";
 import { WhatsAppButton } from "./_components/shared/whatsapp-button";
 import { CookieConsent } from "./_components/shared/cookie-consent";
 import { VisitorPopup } from "./_components/shared/visitor-popup";
+import { SiteUpgradeNotice } from "./_components/shared/site-upgrade-notice";
 
 export default function PublicLayout({
   children,
@@ -24,6 +25,7 @@ export default function PublicLayout({
       <ScrollToTop />
       <CookieConsent />
       <VisitorPopup delay={5000} />
+      <SiteUpgradeNotice />
     </div>
   );
 }
