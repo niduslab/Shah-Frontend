@@ -694,6 +694,12 @@
       "namedRegex": "^/dashboard/wishlist(?:/)?$"
     },
     {
+      "page": "/faq",
+      "regex": "^/faq(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/faq(?:/)?$"
+    },
+    {
       "page": "/favicon.ico",
       "regex": "^/favicon\\.ico(?:/)?$",
       "routeKeys": {},
@@ -778,10 +784,22 @@
       "namedRegex": "^/payment/success(?:/)?$"
     },
     {
+      "page": "/privacy",
+      "regex": "^/privacy(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/privacy(?:/)?$"
+    },
+    {
       "page": "/register",
       "regex": "^/register(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/register(?:/)?$"
+    },
+    {
+      "page": "/returns",
+      "regex": "^/returns(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/returns(?:/)?$"
     },
     {
       "page": "/services",
@@ -790,16 +808,34 @@
       "namedRegex": "^/services(?:/)?$"
     },
     {
+      "page": "/shipping",
+      "regex": "^/shipping(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/shipping(?:/)?$"
+    },
+    {
       "page": "/shop",
       "regex": "^/shop(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/shop(?:/)?$"
     },
     {
+      "page": "/store",
+      "regex": "^/store(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/store(?:/)?$"
+    },
+    {
       "page": "/table-tennis-flooring",
       "regex": "^/table\\-tennis\\-flooring(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/table\\-tennis\\-flooring(?:/)?$"
+    },
+    {
+      "page": "/terms",
+      "regex": "^/terms(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/terms(?:/)?$"
     },
     {
       "page": "/track-order",

@@ -69,6 +69,9 @@
     "[project]/app/(public)/dashboard/wishlist/page": [
       "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
     ],
+    "[project]/app/(public)/faq/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
     "[project]/app/(public)/flash-sale/page": [
       "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
     ],
@@ -105,16 +108,31 @@
     "[project]/app/(public)/payment/success/page": [
       "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
     ],
+    "[project]/app/(public)/privacy/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
     "[project]/app/(public)/product/[slug]/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/returns/page": [
       "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
     ],
     "[project]/app/(public)/services/page": [
       "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
     ],
+    "[project]/app/(public)/shipping/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
     "[project]/app/(public)/shop/page": [
       "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
     ],
+    "[project]/app/(public)/store/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
     "[project]/app/(public)/table-tennis-flooring/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/(public)/terms/page": [
       "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
     ],
     "[project]/app/(public)/track-order/page": [
