@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
+import { toast } from 'sonner';
 import { useCreateShippingClass, useUpdateShippingClass } from '@/lib/hooks/admin/useShipping';
 
 interface ShippingClassModalProps {
@@ -19,23 +20,27 @@ export default function ShippingClassModal({ shippingClass, onClose }: ShippingC
 
   const createClass = useCreateShippingClass({
     onSuccess: () => {
+      toast.success('Shipping class created successfully');
       onClose();
     },
     onError: (error: any) => {
       if (error.response?.data?.errors) {
         setErrors(error.response.data.errors);
       }
+      toast.error(error.response?.data?.message || 'Failed to create shipping class');
     },
   });
 
   const updateClass = useUpdateShippingClass({
     onSuccess: () => {
+      toast.success('Shipping class updated successfully');
       onClose();
     },
     onError: (error: any) => {
       if (error.response?.data?.errors) {
         setErrors(error.response.data.errors);
       }
+      toast.error(error.response?.data?.message || 'Failed to update shipping class');
     },
   });
 

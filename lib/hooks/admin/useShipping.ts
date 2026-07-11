@@ -156,16 +156,18 @@ export const useShippingClass = (id: number, options?: Partial<UseQueryOptions<a
 
 export const useCreateShippingClass = (options?: UseMutationOptions<any, any, ShippingClassData>) => {
   const queryClient = useQueryClient();
-  
+  const { onSuccess, ...restOptions } = options || {};
+
   return useMutation({
     mutationFn: async (data: ShippingClassData) => {
       const response = await api.post('/api/admin/shipping-classes', data);
       return response.data;
     },
-    onSuccess: () => {
+    onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'shipping-classes'] });
+      onSuccess?.(data, variables, context);
     },
-    ...options,
+    ...restOptions,
   });
 };
 
@@ -173,31 +175,35 @@ export const useUpdateShippingClass = (
   options?: UseMutationOptions<any, any, { id: number; data: Partial<ShippingClassData> }>
 ) => {
   const queryClient = useQueryClient();
-  
+  const { onSuccess, ...restOptions } = options || {};
+
   return useMutation({
     mutationFn: async ({ id, data }) => {
       const response = await api.put(`/api/admin/shipping-classes/${id}`, data);
       return response.data;
     },
-    onSuccess: (_, variables) => {
+    onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'shipping-classes'] });
       queryClient.invalidateQueries({ queryKey: ['admin', 'shipping-class', variables.id] });
+      onSuccess?.(data, variables, context);
     },
-    ...options,
+    ...restOptions,
   });
 };
 
 export const useDeleteShippingClass = (options?: UseMutationOptions<any, any, number>) => {
   const queryClient = useQueryClient();
-  
+  const { onSuccess, ...restOptions } = options || {};
+
   return useMutation({
     mutationFn: async (id: number) => {
       const response = await api.delete(`/api/admin/shipping-classes/${id}`);
       return response.data;
     },
-    onSuccess: () => {
+    onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'shipping-classes'] });
+      onSuccess?.(data, variables, context);
     },
-    ...options,
+    ...restOptions,
   });
 };

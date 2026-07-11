@@ -48,7 +48,7 @@ export function AdminSidebar() {
   const [isDynamicContentsOpen, setIsDynamicContentsOpen] = useState(false);
 
   return (
-    <div className="flex h-screen w-64 flex-col bg-white shadow-sm">
+    <div className="flex h-screen w-64 flex-shrink-0 flex-col bg-white shadow-sm">
       {/* Logo */}
       <div className="flex h-[72px] items-center px-6">
         <div className="flex items-center gap-2">

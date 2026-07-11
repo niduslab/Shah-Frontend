@@ -11,17 +11,34 @@ interface RecommendedProductsProps {
 }
 
 export function RecommendedProducts({ currentProductId, categoryId }: RecommendedProductsProps) {
-  const { data, isLoading } = useShopProducts({
+  const { data: categoryData, isLoading: isCategoryLoading } = useShopProducts({
     category_id: categoryId,
     per_page: 8,
-    is_featured: true,
   });
 
-  const products = data?.data?.data || [];
-  
-  // Filter out the current product and limit to 4
+  const categoryProducts = (categoryData?.data?.data || []).filter(
+    (p: any) => p.id !== currentProductId
+  );
+
+  // Fall back to trending products if the category doesn't have enough results
+  const needsFallback = !isCategoryLoading && categoryProducts.length < 4;
+  const { data: fallbackData, isLoading: isFallbackLoading } = useShopProducts(
+    { is_trending: true, per_page: 8 },
+    { enabled: needsFallback }
+  );
+
+  const isLoading = isCategoryLoading || (needsFallback && isFallbackLoading);
+
+  const fallbackProducts = (fallbackData?.data?.data || []).filter(
+    (p: any) => p.id !== currentProductId && !categoryProducts.some((cp: any) => cp.id === p.id)
+  );
+
+  const products = needsFallback
+    ? [...categoryProducts, ...fallbackProducts]
+    : categoryProducts;
+
+  // Limit to 4
   const recommendedProducts = products
-    .filter((p: any) => p.id !== currentProductId)
     .slice(0, 4)
     .map((product: any) => ({
       id: product.id,

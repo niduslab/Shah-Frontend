@@ -143,12 +143,6 @@ export function PreOrderSection() {
                   <ArrowRight className="h-4 w-4" />
                 </span>
               </div>
-
-              <div className="absolute bottom-8 right-8 flex gap-2 z-10">
-                <div className="h-2 w-2 rounded-full bg-white/50"></div>
-                <div className="h-2 w-2 rounded-full bg-[#FFB800]"></div>
-                <div className="h-2 w-2 rounded-full bg-white/50"></div>
-              </div>
             </div>
           </Link>
 

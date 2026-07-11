@@ -20,11 +20,11 @@ export default function AdminLayout({
       requireAdmin 
       redirectTo={`/admin/login?redirect=${encodeURIComponent(pathname)}`}
     >
-      <div className="flex min-h-screen bg-[#F8F9FA]">
+      <div className="flex h-screen bg-[#F8F9FA] overflow-hidden">
         <AdminSidebar />
-        <div className="flex flex-1 flex-col">
+        <div className="flex flex-1 flex-col overflow-hidden">
           <AdminHeader />
-          <main className="flex-1 p-8 overflow-auto">
+          <main className="flex-1 overflow-y-auto p-8">
             {children}
           </main>
         </div>

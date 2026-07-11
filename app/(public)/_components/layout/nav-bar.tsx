@@ -126,7 +126,7 @@ export function NavBar() {
   };
 
   return (
-    <header className="relative w-full bg-[#00072D] text-white z-50">
+    <header className="sticky top-0 w-full bg-[#00072D] text-white z-50">
       <div className="mx-auto flex w-full max-w-[1400px] items-center justify-between py-4 px-4 md:px-6">
         
         {/* Left Section: Logo & Mobile Menu Toggle */}

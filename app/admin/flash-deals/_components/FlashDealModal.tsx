@@ -33,6 +33,7 @@ export default function FlashDealModal({ isOpen, onClose, flashDeal, onSubmit }:
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
   const [productSearch, setProductSearch] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Fetch products and categories
   const { data: productsData } = useAdminProducts({ search: productSearch, per_page: 50 });
@@ -42,6 +43,7 @@ export default function FlashDealModal({ isOpen, onClose, flashDeal, onSubmit }:
   const categories = (categoriesData as any)?.data?.data || [];
 
   useEffect(() => {
+    setErrors({});
     if (flashDeal) {
       setFormData({
         title: flashDeal.title || '',
@@ -88,8 +90,38 @@ export default function FlashDealModal({ isOpen, onClose, flashDeal, onSubmit }:
     }
   }, [flashDeal, isOpen]);
 
+  const validate = (): Record<string, string> => {
+    const validationErrors: Record<string, string> = {};
+    const now = new Date();
+    const startsAt = formData.starts_at ? new Date(formData.starts_at) : null;
+    const endsAt = formData.ends_at ? new Date(formData.ends_at) : null;
+
+    // Editing an existing deal may legitimately have a start date in the past
+    if (startsAt && !flashDeal && startsAt <= now) {
+      validationErrors.starts_at = 'Start date & time must be in the future.';
+    }
+    if (startsAt && endsAt && endsAt <= startsAt) {
+      validationErrors.ends_at = 'End date & time must be after the start date & time.';
+    }
+    if (!formData.discount_value || parseFloat(formData.discount_value) <= 0) {
+      validationErrors.discount_value = 'Discount value must be greater than 0.';
+    }
+    if (formData.discount_type === 'percentage' && parseFloat(formData.discount_value) > 100) {
+      validationErrors.discount_value = 'Percentage discount cannot exceed 100.';
+    }
+
+    return validationErrors;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+    setErrors({});
     setIsSubmitting(true);
 
     try {
@@ -126,6 +158,15 @@ export default function FlashDealModal({ isOpen, onClose, flashDeal, onSubmit }:
       }
 
       await onSubmit(submitData);
+    } catch (error: any) {
+      const backendErrors = error?.response?.data?.errors;
+      if (backendErrors) {
+        const flattened: Record<string, string> = {};
+        Object.entries(backendErrors).forEach(([field, messages]) => {
+          flattened[field] = Array.isArray(messages) ? messages[0] : String(messages);
+        });
+        setErrors(flattened);
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -230,9 +271,17 @@ export default function FlashDealModal({ isOpen, onClose, flashDeal, onSubmit }:
                 type="datetime-local"
                 required
                 value={formData.starts_at}
-                onChange={(e) => setFormData({ ...formData, starts_at: e.target.value })}
-                className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm transition-all focus:border-[#FF6F00] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
+                onChange={(e) => {
+                  setFormData({ ...formData, starts_at: e.target.value });
+                  setErrors((prev) => ({ ...prev, starts_at: '' }));
+                }}
+                className={`w-full rounded-xl border bg-gray-50 px-4 py-2.5 text-sm transition-all focus:bg-white focus:outline-none focus:ring-2 ${
+                  errors.starts_at
+                    ? 'border-red-400 focus:border-red-400 focus:ring-red-400/20'
+                    : 'border-gray-300 focus:border-[#FF6F00] focus:ring-[#FF6F00]/20'
+                }`}
               />
+              {errors.starts_at && <p className="mt-1 text-xs text-red-600">{errors.starts_at}</p>}
             </div>
             <div>
               <label className="mb-2 block text-sm font-medium text-gray-700">
@@ -242,9 +291,17 @@ export default function FlashDealModal({ isOpen, onClose, flashDeal, onSubmit }:
                 type="datetime-local"
                 required
                 value={formData.ends_at}
-                onChange={(e) => setFormData({ ...formData, ends_at: e.target.value })}
-                className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm transition-all focus:border-[#FF6F00] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
+                onChange={(e) => {
+                  setFormData({ ...formData, ends_at: e.target.value });
+                  setErrors((prev) => ({ ...prev, ends_at: '' }));
+                }}
+                className={`w-full rounded-xl border bg-gray-50 px-4 py-2.5 text-sm transition-all focus:bg-white focus:outline-none focus:ring-2 ${
+                  errors.ends_at
+                    ? 'border-red-400 focus:border-red-400 focus:ring-red-400/20'
+                    : 'border-gray-300 focus:border-[#FF6F00] focus:ring-[#FF6F00]/20'
+                }`}
               />
+              {errors.ends_at && <p className="mt-1 text-xs text-red-600">{errors.ends_at}</p>}
             </div>
           </div>
 
@@ -278,11 +335,19 @@ export default function FlashDealModal({ isOpen, onClose, flashDeal, onSubmit }:
                   min="0"
                   step="0.01"
                   value={formData.discount_value}
-                  onChange={(e) => setFormData({ ...formData, discount_value: e.target.value })}
-                  className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-2.5 pl-10 text-sm transition-all focus:border-[#FF6F00] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
+                  onChange={(e) => {
+                    setFormData({ ...formData, discount_value: e.target.value });
+                    setErrors((prev) => ({ ...prev, discount_value: '' }));
+                  }}
+                  className={`w-full rounded-xl border bg-gray-50 px-4 py-2.5 pl-10 text-sm transition-all focus:bg-white focus:outline-none focus:ring-2 ${
+                    errors.discount_value
+                      ? 'border-red-400 focus:border-red-400 focus:ring-red-400/20'
+                      : 'border-gray-300 focus:border-[#FF6F00] focus:ring-[#FF6F00]/20'
+                  }`}
                   placeholder={formData.discount_type === 'percentage' ? '20' : '50.00'}
                 />
               </div>
+              {errors.discount_value && <p className="mt-1 text-xs text-red-600">{errors.discount_value}</p>}
             </div>
           </div>
 

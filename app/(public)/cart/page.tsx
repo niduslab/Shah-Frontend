@@ -6,55 +6,12 @@ import { ChevronRight, Minus, Plus, Trash2, Loader2, Tag, ChevronDown, ChevronUp
 import { useAuth } from "@/lib/context/AuthContext";
 import { useCart } from "@/lib/context/CartContext";
 import { useCalculateCartSummary, useValidateCoupon, useAvailableCoupons } from "@/lib/hooks/public/useCart";
+import { useShopProducts } from "@/lib/hooks/public";
 import { ProductCard } from "../_components/shared/product-card";
 import { toast } from "sonner";
 import { getPlaceholderImage, getPrimaryImageUrl, getImageUrl } from "@/lib/utils/image";
 import { formatCurrency } from "@/lib/utils/currency";
 import { useAnalytics } from "@/lib/hooks/useAnalytics";
-
-// Data for "You May Also Like"
-const RELATED_PRODUCTS = [
-  {
-    id: 1,
-    name: "XPD Woven J-20",
-    image: "/images/landing/new-arrival/d28b697c5ffd69551d236e0311c369e1daa2111e.png",
-    price: 29.99,
-    originalPrice: 34.99,
-    rating: 5,
-    reviews: 12,
-    badge: { text: "-15% off", className: "bg-red-500" },
-  },
-  {
-    id: 2,
-    name: "Wave Men's Sport Swimming Boxer",
-    image: "/images/landing/new-arrival/3c81b2d5cfd837c1a87f80ecd4654d112931d943.png",
-    price: 16.00,
-    originalPrice: 19.00,
-    rating: 5,
-    reviews: 39,
-    badge: { text: "-25% off", className: "bg-red-500" },
-  },
-  {
-    id: 3,
-    name: "IREST LEG MASSAGER C 30A",
-    image: "/images/landing/new-arrival/48ea1efb27d9c62811e189727ecd54692bf0e529.png",
-    price: 599.00,
-    originalPrice: 799.00,
-    rating: 5,
-    reviews: 39,
-    badge: { text: "-25% off", className: "bg-red-500" },
-  },
-  {
-    id: 4,
-    name: "Xterra Adjustable Dumbbell 50kg Set",
-    image: "/images/landing/new-arrival/d6d857a1c8f1272b3e4a3e6e66b8975e36f83230.png",
-    price: 438.00,
-    originalPrice: 473.00,
-    rating: 5,
-    reviews: 39,
-    badge: { text: "-25% off", className: "bg-red-500" },
-  },
-];
 
 export default function CartPage() {
   const { loading: authLoading } = useAuth();
@@ -70,6 +27,32 @@ export default function CartPage() {
   const calculateSummary = useCalculateCartSummary();
   const validateCoupon = useValidateCoupon();
   const { data: availableCouponsData, isLoading: loadingCoupons } = useAvailableCoupons();
+
+  // "You May Also Like" - trending products, excluding anything already in the cart
+  const { data: relatedProductsData } = useShopProducts(
+    { is_trending: true, per_page: 8 },
+    { enabled: items.length > 0 }
+  );
+  const cartProductIds = new Set(items.map((item) => item.product_id));
+  const relatedProducts = (relatedProductsData?.data?.data || [])
+    .filter((p: any) => !cartProductIds.has(p.id))
+    .slice(0, 4)
+    .map((product: any) => ({
+      id: product.id,
+      name: product.name,
+      slug: product.slug,
+      image: getPrimaryImageUrl(product.images),
+      price: parseFloat(product.price as any),
+      originalPrice: product.compare_price ? parseFloat(product.compare_price as any) : undefined,
+      rating: product.average_rating || 5,
+      reviews: product.review_count || 0,
+      badge: product.compare_price
+        ? {
+            text: `-${Math.round(((parseFloat(product.compare_price as any) - parseFloat(product.price as any)) / parseFloat(product.compare_price as any)) * 100)}% off`,
+            className: "bg-red-500",
+          }
+        : undefined,
+    }));
 
   // Client-side fallback calculation
   const calculateClientSideSummary = () => {
@@ -346,7 +329,7 @@ export default function CartPage() {
 
                       {/* Quantity & Remove */}
                       <div className="flex items-center justify-between gap-6 sm:justify-end">
-                        <div className="flex items-center rounded-sm border border-gray-200">
+                        <div className="flex items-center rounded-sm border border-gray-200 bg-white">
                           <button
                             type="button"
                             onClick={(e) => {
@@ -643,20 +626,20 @@ export default function CartPage() {
         )}
 
         {/* You May Also Like Section */}
-        {items.length > 0 && (
+        {items.length > 0 && relatedProducts.length > 0 && (
           <div className="mt-20">
             <div className="mb-8 flex items-center justify-between">
               <h2 className="text-3xl font-bold text-black">You May Also Like</h2>
-              <Link 
+              <Link
                 href="/shop?sort=discount"
                 className="flex items-center gap-1 text-sm font-bold text-black hover:text-primary"
               >
                 View Discount Products <ChevronRight className="h-4 w-4" />
               </Link>
             </div>
-            
+
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {RELATED_PRODUCTS.map((product) => (
+              {relatedProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>

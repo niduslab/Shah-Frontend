@@ -382,10 +382,12 @@ export default function FlashDealsPage() {
               }
               setIsModalOpen(false);
               setSelectedFlashDeal(null);
-            } catch (error) {
+            } catch (error: any) {
+              const backendMessage = error?.response?.data?.message;
               toast.error(selectedFlashDeal ? 'Failed to update flash deal' : 'Failed to create flash deal', {
-                description: 'Please try again or contact support if the problem persists.'
+                description: backendMessage || 'Please try again or contact support if the problem persists.'
               });
+              throw error;
             }
           }}
         />

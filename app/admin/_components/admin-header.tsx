@@ -1,6 +1,6 @@
 "use client";
 
-import { MessageSquare, Search, ChevronDown, LogOut, User, Settings } from "lucide-react";
+import { MessageSquare, Search, ChevronDown, LogOut, User } from "lucide-react";
 import { useAuth } from "@/lib/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
@@ -137,17 +137,6 @@ export function AdminHeader() {
                 >
                   <User className="h-4 w-4" />
                   Profile
-                </button>
-                
-                <button
-                  onClick={() => {
-                    setIsDropdownOpen(false);
-                    router.push('/admin/settings');
-                  }}
-                  className="flex w-full items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                >
-                  <Settings className="h-4 w-4" />
-                  Settings
                 </button>
               </div>
 

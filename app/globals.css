@@ -61,6 +61,13 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Public site: links & buttons always show a pointer cursor, even when disabled styling is absent */
+.public-site a,
+.public-site button:not(:disabled),
+.public-site [role="button"]:not(:disabled) {
+  cursor: pointer;
+}
+
 /* ─── Scroll Reveal ────────────────────────────────────────────────────────
    Elements with [data-reveal] start visible by default (no JS flash).
    When IntersectionObserver adds .scroll-revealed the animation plays once.

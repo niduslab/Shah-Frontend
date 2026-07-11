@@ -484,16 +484,16 @@ export function ProductInfo({ product }: ProductInfoProps) {
             {(inStock || isPreorderActive) && (
               <div className="mb-8 flex flex-wrap gap-4">
                 {/* Quantity */}
-                <div className="flex h-12 items-center rounded-xs border border-gray-200">
-                  <button 
+                <div className="flex h-12 items-center rounded-xs border border-gray-200 bg-white">
+                  <button
                     onClick={() => setQuantity(q => Math.max(1, q - 1))}
                     className="flex h-full w-12 items-center justify-center text-gray-500 hover:text-black"
                     aria-label="Decrease quantity"
                   >
                     <Minus className="h-4 w-4" />
                   </button>
-                  <span className="w-12 text-center font-semibold">{quantity}</span>
-                  <button 
+                  <span className="w-12 text-center font-semibold text-black">{quantity}</span>
+                  <button
                     onClick={() => setQuantity(q => Math.min(isPreorderActive ? (product.preorder_limit || 999) : currentStock, q + 1))}
                     className="flex h-full w-12 items-center justify-center text-gray-500 hover:text-black"
                     aria-label="Increase quantity"
