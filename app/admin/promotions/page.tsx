@@ -293,7 +293,7 @@ export default function PromotionsPage() {
                         </span>
                         {(promotion.min_purchase_amount ?? 0) > 0 && (
                           <span className="inline-flex items-center rounded-full bg-orange-50 px-2.5 py-0.5 text-xs font-medium text-orange-700">
-                            Min Purchase: {formatCurrency(promotion.min_purchase_amount)}
+                            Min Purchase: {formatCurrency(promotion.min_purchase_amount ?? 0)}
                           </span>
                         )}
                       </div>

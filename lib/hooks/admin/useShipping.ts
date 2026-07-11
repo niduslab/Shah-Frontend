@@ -163,9 +163,9 @@ export const useCreateShippingClass = (options?: UseMutationOptions<any, any, Sh
       const response = await api.post('/api/admin/shipping-classes', data);
       return response.data;
     },
-    onSuccess: (data, variables, context) => {
+    onSuccess: (...args) => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'shipping-classes'] });
-      onSuccess?.(data, variables, context);
+      onSuccess?.(...args);
     },
     ...restOptions,
   });
@@ -182,10 +182,10 @@ export const useUpdateShippingClass = (
       const response = await api.put(`/api/admin/shipping-classes/${id}`, data);
       return response.data;
     },
-    onSuccess: (data, variables, context) => {
+    onSuccess: (data, variables, ...rest) => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'shipping-classes'] });
       queryClient.invalidateQueries({ queryKey: ['admin', 'shipping-class', variables.id] });
-      onSuccess?.(data, variables, context);
+      onSuccess?.(data, variables, ...rest);
     },
     ...restOptions,
   });
@@ -200,9 +200,9 @@ export const useDeleteShippingClass = (options?: UseMutationOptions<any, any, nu
       const response = await api.delete(`/api/admin/shipping-classes/${id}`);
       return response.data;
     },
-    onSuccess: (data, variables, context) => {
+    onSuccess: (...args) => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'shipping-classes'] });
-      onSuccess?.(data, variables, context);
+      onSuccess?.(...args);
     },
     ...restOptions,
   });
