@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
@@ -57,11 +56,10 @@ export function DynamicFeatureSection({ data }: DynamicFeatureSectionProps) {
         <div className={`flex-1 ${isImageLeft ? "lg:order-1" : "lg:order-2"}`}>
           <div className="relative aspect-square w-full overflow-hidden rounded-sm bg-[#A4C8F0]/30 md:aspect-[4/3]">
             {data.image ? (
-              <Image
+              <img
                 src={data.image}
                 alt={data.title}
-                fill
-                className="object-cover"
+                className="absolute inset-0 h-full w-full object-cover"
               />
             ) : (
               <div className="flex h-full items-center justify-center bg-gray-200">

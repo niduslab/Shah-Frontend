@@ -129,6 +129,7 @@
   "/api/catalog/categories/route": "/api/catalog/categories",
   "/api/hero-sections/route": "/api/hero-sections",
   "/api/orders/route": "/api/orders",
+  "/api/uploads/[...path]/route": "/api/uploads/[...path]",
   "/favicon.ico/route": "/favicon.ico",
   "/icon.png/route": "/icon.png"
 }

@@ -1,6 +1,6 @@
 export function LocationMapSection() {
   return (
-    <section className="pb-12 md:pb-20 bg-white">
+    <section id="location-map" className="scroll-mt-24 pb-12 md:pb-20 bg-white">
       <div className="container mx-auto px-6 md:px-12">
         <div className="w-full h-[400px] md:h-[500px] rounded-lg overflow-hidden bg-gray-100 shadow-sm">
           <iframe

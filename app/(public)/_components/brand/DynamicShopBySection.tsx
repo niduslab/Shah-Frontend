@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
@@ -38,11 +37,10 @@ export function DynamicShopBySection({ data }: DynamicShopBySectionProps) {
               className="group relative h-[400px] w-full overflow-hidden rounded-sm bg-gradient-to-b from-[#EAEAEA] to-[#B8B8B8] md:h-[500px]"
             >
               {/* Background Image */}
-              <Image
+              <img
                 src={card.image}
                 alt={card.title}
-                fill
-                className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
               />
 
               {/* Gradient Overlay */}

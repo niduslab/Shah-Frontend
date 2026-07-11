@@ -19,7 +19,7 @@ export function TopBar() {
 
         {/* Links - Centered on mobile, right-aligned on desktop */}
         <div className="flex items-center justify-center gap-4 md:gap-6">
-          <Link href="/find-store" className="flex items-center gap-2 hover:text-orange-500 transition-colors">
+          <Link href="/contact#location-map" className="flex items-center gap-2 hover:text-orange-500 transition-colors">
             <MapPin className="h-3.5 w-3.5 flex-shrink-0" />
             <span>Find Store</span>
           </Link>

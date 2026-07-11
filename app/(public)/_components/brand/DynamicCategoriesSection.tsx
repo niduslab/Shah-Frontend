@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 
 interface Category {
@@ -43,12 +42,10 @@ export function DynamicCategoriesSection({ data }: DynamicCategoriesSectionProps
               className="group flex flex-col gap-4"
             >
               <div className="relative aspect-[3/4] w-full overflow-hidden rounded-sm bg-white/5 transition-transform duration-300 group-hover:-translate-y-2">
-                <Image
+                <img
                   src={category.image}
                   alt={category.name}
-                  fill
-                  className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
                 />
               </div>
               <h3 className="text-xl font-medium text-white transition-colors group-hover:text-[#FFC107]">

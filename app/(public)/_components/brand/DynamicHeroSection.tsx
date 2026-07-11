@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
@@ -29,12 +28,10 @@ export function DynamicHeroSection({ data }: DynamicHeroSectionProps) {
     <div className="relative h-[600px] w-full overflow-hidden bg-black md:h-[700px] lg:h-[800px]">
       {/* Background Image */}
       <div className="absolute inset-0">
-        <Image
+        <img
           src={data.backgroundImage}
           alt="Brand Hero"
-          fill
-          className="object-cover object-top"
-          priority
+          className="absolute inset-0 h-full w-full object-cover object-top"
         />
       </div>
 

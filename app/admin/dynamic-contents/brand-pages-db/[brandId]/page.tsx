@@ -6,7 +6,6 @@ import { useParams, useRouter } from "next/navigation";
 import { useBrands } from "@/lib/hooks/public/useBrands";
 import { useCategories } from "@/lib/hooks/public/useCategories";
 import { toast } from "sonner";
-import Image from "next/image";
 
 interface BrandPageContent {
   hero: {
@@ -576,11 +575,10 @@ export default function BrandPageEditor() {
                 <label className="mb-2 block text-sm font-medium text-gray-700">Background Image</label>
                 <div className="relative h-64 overflow-hidden rounded-lg border-2 border-dashed border-gray-300 bg-gray-50">
                   {content.hero.backgroundImage && (
-                    <Image
+                    <img
                       src={content.hero.backgroundImage}
                       alt="Hero background"
-                      fill
-                      className="object-cover"
+                      className="absolute inset-0 h-full w-full object-cover"
                     />
                   )}
                   <input
@@ -773,7 +771,7 @@ export default function BrandPageEditor() {
 
                       <div className="relative h-32 overflow-hidden rounded-lg border border-gray-300">
                         {item.image && (
-                          <Image src={item.image} alt={item.name} fill className="object-cover" />
+                          <img src={item.image} alt={item.name} className="absolute inset-0 h-full w-full object-cover" />
                         )}
                         <input
                           type="file"
@@ -926,11 +924,10 @@ export default function BrandPageEditor() {
                     <label className="mb-2 block text-xs text-gray-600">Left Image</label>
                     <div className="relative h-48 overflow-hidden rounded-lg border-2 border-dashed border-gray-300 bg-gray-50">
                       {content.behindTheWork.images.left && (
-                        <Image
+                        <img
                           src={content.behindTheWork.images.left}
                           alt="Left"
-                          fill
-                          className="object-cover"
+                          className="absolute inset-0 h-full w-full object-cover"
                         />
                       )}
                       <input
@@ -961,11 +958,10 @@ export default function BrandPageEditor() {
                     <label className="mb-2 block text-xs text-gray-600">Center Image</label>
                     <div className="relative h-48 overflow-hidden rounded-lg border-2 border-dashed border-gray-300 bg-gray-50">
                       {content.behindTheWork.images.center && (
-                        <Image
+                        <img
                           src={content.behindTheWork.images.center}
                           alt="Center"
-                          fill
-                          className="object-cover"
+                          className="absolute inset-0 h-full w-full object-cover"
                         />
                       )}
                       <input
@@ -996,11 +992,10 @@ export default function BrandPageEditor() {
                     <label className="mb-2 block text-xs text-gray-600">Right Image</label>
                     <div className="relative h-48 overflow-hidden rounded-lg border-2 border-dashed border-gray-300 bg-gray-50">
                       {content.behindTheWork.images.right && (
-                        <Image
+                        <img
                           src={content.behindTheWork.images.right}
                           alt="Right"
-                          fill
-                          className="object-cover"
+                          className="absolute inset-0 h-full w-full object-cover"
                         />
                       )}
                       <input
@@ -1101,7 +1096,7 @@ export default function BrandPageEditor() {
                     {/* Image Upload */}
                     <div className="relative h-48 overflow-hidden rounded-lg border border-gray-300">
                       {card.image && (
-                        <Image src={card.image} alt={card.title} fill className="object-cover" />
+                        <img src={card.image} alt={card.title} className="absolute inset-0 h-full w-full object-cover" />
                       )}
                       <input
                         type="file"
@@ -1513,11 +1508,10 @@ export default function BrandPageEditor() {
                 <label className="mb-2 block text-sm font-medium text-gray-700">Feature Image</label>
                 <div className="relative h-64 overflow-hidden rounded-lg border-2 border-dashed border-gray-300 bg-gray-50">
                   {content.featureSection1?.image && (
-                    <Image
+                    <img
                       src={content.featureSection1.image}
                       alt="Feature"
-                      fill
-                      className="object-cover"
+                      className="absolute inset-0 h-full w-full object-cover"
                     />
                   )}
                   <input
@@ -1676,11 +1670,10 @@ export default function BrandPageEditor() {
                 <label className="mb-2 block text-sm font-medium text-gray-700">Feature Image</label>
                 <div className="relative h-64 overflow-hidden rounded-lg border-2 border-dashed border-gray-300 bg-gray-50">
                   {content.featureSection2?.image && (
-                    <Image
+                    <img
                       src={content.featureSection2.image}
                       alt="Feature"
-                      fill
-                      className="object-cover"
+                      className="absolute inset-0 h-full w-full object-cover"
                     />
                   )}
                   <input

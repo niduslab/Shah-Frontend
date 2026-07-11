@@ -1,7 +1,5 @@
 "use client";
 
-import Image from "next/image";
-
 interface Stat {
   value: string;
   label: string;
@@ -57,11 +55,10 @@ export function DynamicBehindTheWorkSection({
             {/* Left Image (Rower) - Behind */}
             {data.images.left && (
               <div className="absolute left-1/2 top-1/2 h-[300px] w-[200px] max-w-[268px] -translate-x-[85%] -translate-y-1/2 overflow-hidden rounded-[2px] bg-blue-50 shadow-lg md:h-[400px] md:w-[268px]">
-                <Image
+                <img
                   src={data.images.left}
                   alt="Left"
-                  fill
-                  className="object-cover object-center"
+                  className="absolute inset-0 h-full w-full object-cover object-center"
                 />
               </div>
             )}
@@ -69,11 +66,10 @@ export function DynamicBehindTheWorkSection({
             {/* Right Image (Treadmill) - Behind */}
             {data.images.right && (
               <div className="absolute left-1/2 top-1/2 h-[300px] w-[200px] max-w-[268px] -translate-x-[15%] -translate-y-1/2 overflow-hidden rounded-[2px] bg-gray-50 shadow-lg md:h-[400px] md:w-[268px]">
-                <Image
+                <img
                   src={data.images.right}
                   alt="Right"
-                  fill
-                  className="object-cover object-center"
+                  className="absolute inset-0 h-full w-full object-cover object-center"
                 />
               </div>
             )}
@@ -81,11 +77,10 @@ export function DynamicBehindTheWorkSection({
             {/* Center Image (Bike) - Front & Tallest */}
             {data.images.center && (
               <div className="absolute left-1/2 top-1/2 z-10 h-[360px] w-[220px] max-w-[268px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[2px] bg-[#E5DCC5] shadow-2xl md:h-[480px] md:w-[268px]">
-                <Image
+                <img
                   src={data.images.center}
                   alt="Center"
-                  fill
-                  className="object-cover object-center"
+                  className="absolute inset-0 h-full w-full object-cover object-center"
                 />
               </div>
             )}

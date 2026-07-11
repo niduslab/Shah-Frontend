@@ -55,8 +55,14 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
+      const trimmedName = name.trim();
+      const spaceIndex = trimmedName.indexOf(' ');
+      const first_name = spaceIndex === -1 ? trimmedName : trimmedName.slice(0, spaceIndex);
+      const last_name = spaceIndex === -1 ? trimmedName : trimmedName.slice(spaceIndex + 1).trim();
+
       const response = await register({
-        name,
+        first_name,
+        last_name,
         email,
         phone,
         password,

@@ -2,11 +2,19 @@ import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 
+export const runtime = "nodejs";
+
+// Persistent, writable location for runtime uploads.
+// In standalone production builds, files written into the build-time `public/`
+// snapshot are NOT served as static assets, so we store uploads here and serve
+// them back through the /api/uploads/[...path] route instead of a static path.
+const UPLOAD_ROOT = path.join(process.cwd(), "public", "uploads");
+
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
     const file = formData.get("file") as File;
-    const folder = (formData.get("folder") as string) || "uploads";
+    const folder = (formData.get("folder") as string) || "misc";
 
     if (!file) {
       return NextResponse.json(
@@ -15,8 +23,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create upload directory if it doesn't exist
-    const uploadDir = path.join(process.cwd(), "public/images", folder);
+    // Sanitize folder to prevent path traversal
+    const safeFolder = folder
+      .split("/")
+      .map((seg) => seg.replace(/[^a-zA-Z0-9_-]/g, ""))
+      .filter(Boolean)
+      .join("/");
+
+    const uploadDir = path.join(UPLOAD_ROOT, safeFolder);
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }
@@ -24,7 +38,9 @@ export async function POST(request: NextRequest) {
     // Generate unique filename
     const timestamp = Date.now();
     const ext = path.extname(file.name);
-    const nameWithoutExt = path.basename(file.name, ext);
+    const nameWithoutExt = path
+      .basename(file.name, ext)
+      .replace(/[^a-zA-Z0-9_-]/g, "-");
     const filename = `${timestamp}-${nameWithoutExt}${ext}`;
     const filePath = path.join(uploadDir, filename);
 
@@ -32,8 +48,8 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(await file.arrayBuffer());
     fs.writeFileSync(filePath, buffer);
 
-    // Return public URL
-    const publicUrl = `/images/${folder}/${filename}`;
+    // Return a URL served by our API route (works in standalone production).
+    const publicUrl = `/api/uploads/${safeFolder}/${filename}`;
 
     return NextResponse.json({
       success: true,

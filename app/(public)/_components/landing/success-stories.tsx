@@ -52,6 +52,7 @@ const DEFAULT_STORIES: SuccessStory[] = [
 
 export function SuccessStories() {
   const sectionRef = useScrollReveal<HTMLDivElement>();
+  const scrollRef = useRef<HTMLDivElement>(null);
   const videoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>({});
   const [storiesData, setStoriesData] = useState<SuccessStoriesData>({
     enabled: true,
@@ -80,6 +81,21 @@ export function SuccessStories() {
 
     fetchStoriesData();
   }, []);
+
+  const handleScroll = (direction: "left" | "right") => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    const firstCard = container.querySelector<HTMLElement>(".story-card");
+    const cardWidth = firstCard?.offsetWidth ?? container.clientWidth;
+    // scroll by roughly one card + gap (gap-6 = 24px)
+    const amount = cardWidth + 24;
+
+    container.scrollBy({
+      left: direction === "left" ? -amount : amount,
+      behavior: "smooth",
+    });
+  };
 
   const handleVideoClick = (storyId: string) => {
     const clickedVideo = videoRefs.current[storyId];
@@ -123,22 +139,36 @@ export function SuccessStories() {
             {storiesData.sectionTitle}
           </h2>
           <div className="flex gap-3">
-            <button className="flex h-12 w-12 items-center justify-center rounded-xs bg-[#F3F4F6] text-black transition-colors hover:bg-gray-200">
+            <button
+              type="button"
+              onClick={() => handleScroll("left")}
+              aria-label="Previous stories"
+              className="flex h-12 w-12 items-center justify-center rounded-xs bg-[#F3F4F6] text-black transition-colors hover:bg-gray-200"
+            >
               <ArrowLeft className="h-5 w-5" />
             </button>
-            <button className="flex h-12 w-12 items-center justify-center rounded-xs bg-primary text-black transition-colors hover:bg-primary/90">
+            <button
+              type="button"
+              onClick={() => handleScroll("right")}
+              aria-label="Next stories"
+              className="flex h-12 w-12 items-center justify-center rounded-xs bg-primary text-black transition-colors hover:bg-primary/90"
+            >
               <ArrowRight className="h-5 w-5" />
             </button>
           </div>
         </div>
 
-        {/* Grid */}
-        <div data-reveal-stagger className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Carousel */}
+        <div
+          ref={scrollRef}
+          data-reveal-stagger
+          className="story-scroll flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+        >
           {storiesData.stories.map((story) => (
             <div
               key={story.id}
               data-reveal
-              className="story-card group relative h-[400px] overflow-hidden rounded-xs bg-gray-100"
+              className="story-card group relative h-[400px] w-[85%] flex-shrink-0 snap-start overflow-hidden rounded-xs bg-gray-100 sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-4.5rem)/4)]"
             >
               {story.mediaType === "video" ? (
                 <video
