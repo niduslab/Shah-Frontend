@@ -143,7 +143,7 @@ export function NavBar() {
           {/* Logo */}
           <Link href="/" className="flex items-center">
             <Image
-              src="/shah-sports-logo.webp"
+              src="/shah_sports_logo_main.svg"
               alt="Shah Sports"
               width={220}
               height={82}
@@ -387,7 +387,7 @@ export function NavBar() {
           {/* Header */}
           <div className="flex items-center justify-between mb-2 pb-2">
             <Image
-              src="/shah-sports-logo.webp"
+              src="/shah_sports_logo_main.svg"
               alt="Shah Sports"
               width={140}
               height={52}
