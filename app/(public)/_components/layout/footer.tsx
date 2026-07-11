@@ -30,10 +30,10 @@ export function Footer() {
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-4">
               <Image
-                src="/shah-sports-logo.png"
+                src="/shah-sports-logo.webp"
                 alt="Shah Sports"
                 width={220}
-                height={70}
+                height={82}
                 className="h-12 object-contain md:h-16"
               />
               <p className="text-sm leading-relaxed text-gray-300">

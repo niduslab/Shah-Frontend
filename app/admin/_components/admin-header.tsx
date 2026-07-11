@@ -1,6 +1,6 @@
 "use client";
 
-import { MessageSquare, Search, ChevronDown, LogOut, User } from "lucide-react";
+import { MessageSquare, Search, ChevronDown, LogOut } from "lucide-react";
 import { useAuth } from "@/lib/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
@@ -128,19 +128,6 @@ export function AdminHeader() {
               </div>
               
               <div className="py-2">
-                <button
-                  onClick={() => {
-                    setIsDropdownOpen(false);
-                    router.push('/admin/profile');
-                  }}
-                  className="flex w-full items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                >
-                  <User className="h-4 w-4" />
-                  Profile
-                </button>
-              </div>
-
-              <div className="border-t border-gray-100 py-2">
                 <button
                   onClick={handleLogout}
                   className="flex w-full items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"

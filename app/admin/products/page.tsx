@@ -53,6 +53,7 @@ export default function ProductsPage() {
     return () => clearTimeout(timer);
   }, [searchQuery]);
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive' | 'draft'>('all');
+  const [perPage, setPerPage] = useState(20);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -60,7 +61,7 @@ export default function ProductsPage() {
 
   const filters = {
     page: currentPage,
-    per_page: 15,
+    per_page: perPage,
     search: debouncedSearch || undefined,
     status: statusFilter !== 'all' ? statusFilter : undefined,
   };
@@ -185,6 +186,23 @@ export default function ProductsPage() {
                 <option value="active">Active</option>
                 <option value="inactive">Inactive</option>
                 <option value="draft">Draft</option>
+              </select>
+
+              {/* Per Page Selector */}
+              <select
+                value={perPage}
+                onChange={(e) => {
+                  setPerPage(Number(e.target.value));
+                  setCurrentPage(1);
+                }}
+                className="rounded-xl border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm transition-all focus:border-[#FF6F00] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
+                title="Products per page"
+              >
+                <option value={10}>10 / page</option>
+                <option value={20}>20 / page</option>
+                <option value={50}>50 / page</option>
+                <option value={100}>100 / page</option>
+                <option value={500}>500 / page</option>
               </select>
 
               {/* Bulk Import Button */}

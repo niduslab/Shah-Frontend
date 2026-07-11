@@ -51,11 +51,11 @@ export default function AdminLoginPage() {
       <div className="w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-xl">
         <div className="bg-[#00072D] p-8 text-center">
           <Image
-            src="/Shah Sports.png"
+            src="/shah-sports-logo.webp"
             alt="Shah Sports"
             width={180}
-            height={50}
-            className="mx-auto h-12 w-auto object-contain brightness-0 invert"
+            height={67}
+            className="mx-auto h-12 w-auto object-contain"
           />
           <h2 className="mt-4 text-2xl font-bold text-white">Admin Portal</h2>
           <p className="mt-2 text-sm text-gray-300">Sign in to manage your dashboard</p>

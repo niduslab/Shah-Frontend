@@ -143,10 +143,10 @@ export function NavBar() {
           {/* Logo */}
           <Link href="/" className="flex items-center">
             <Image
-              src="/shah-sports-logo.png"
+              src="/shah-sports-logo.webp"
               alt="Shah Sports"
               width={220}
-              height={70}
+              height={82}
               className="h-10 w-auto object-contain md:h-16"
               priority
             />
@@ -386,18 +386,11 @@ export function NavBar() {
         <div className="flex flex-col p-6 h-full">
           {/* Header */}
           <div className="flex items-center justify-between mb-2 pb-2">
-             {/* <Image
-              src="/Shah Sports.png"
-              alt="Shah Sports"
-              width={140}
-              height={40}
-              className="h-8 w-auto object-contain invert brightness-0" 
-            /> */}
             <Image
-              src="/Shah Sports.png"
+              src="/shah-sports-logo.webp"
               alt="Shah Sports"
               width={140}
-              height={40}
+              height={52}
               className="h-8 w-auto object-contain md:h-12"
               priority
             />
