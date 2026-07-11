@@ -89,7 +89,7 @@ export async function generateMetadata({
     },
     other: {
       'product:price:amount': price.toString(),
-      'product:price:currency': 'USD',
+      'product:price:currency': 'BDT',
       ...(comparePrice && { 'product:price:standard_amount': comparePrice.toString() }),
       'product:availability': product.stock_status === 'in_stock' ? 'in stock' : 'out of stock',
       'product:condition': 'new',
@@ -140,7 +140,7 @@ export default async function ProductDetailsPage({
             offers: {
               '@type': 'Offer',
               url: `${siteUrl}/product/${product.slug}`,
-              priceCurrency: 'USD',
+              priceCurrency: 'BDT',
               price: parseFloat(product.price),
               priceValidUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
               availability: product.stock_status === 'in_stock' 

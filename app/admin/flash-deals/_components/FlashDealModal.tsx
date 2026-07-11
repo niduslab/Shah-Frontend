@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { X, Calendar, Percent, DollarSign, Package, Search, Plus, Trash2 } from 'lucide-react';
 import { useAdminProducts } from '@/lib/hooks/admin/useAdminProducts';
 import { useAdminCategories } from '@/lib/hooks/admin/useAdminCategories';
+import { formatCurrency } from '@/lib/utils/currency';
 
 interface FlashDealModalProps {
   isOpen: boolean;
@@ -433,7 +434,7 @@ export default function FlashDealModal({ isOpen, onClose, flashDeal, onSubmit }:
                         >
                           <div>
                             <p className="font-medium text-gray-900">{product.name}</p>
-                            <p className="text-xs text-gray-500">${product.price}</p>
+                            <p className="text-xs text-gray-500">{formatCurrency(product.price)}</p>
                           </div>
                           <Plus className="h-4 w-4 text-[#FF6F00]" />
                         </button>
@@ -454,7 +455,7 @@ export default function FlashDealModal({ isOpen, onClose, flashDeal, onSubmit }:
                           <div className="flex items-start justify-between mb-2">
                             <div className="flex-1">
                               <p className="font-medium text-gray-900 text-sm">{product.name}</p>
-                              <p className="text-xs text-gray-500">Original: ${product.price}</p>
+                              <p className="text-xs text-gray-500">Original: {formatCurrency(product.price)}</p>
                             </div>
                             <button
                               type="button"

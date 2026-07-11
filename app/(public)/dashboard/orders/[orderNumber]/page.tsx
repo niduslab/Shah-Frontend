@@ -26,6 +26,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getPrimaryImageUrl } from '@/lib/utils/image';
+import { formatCurrency } from '@/lib/utils/currency';
 
 const statusConfig = {
   pending: { color: 'bg-yellow-100 text-yellow-800', icon: Clock },
@@ -322,7 +323,7 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
 
           <div className="text-right">
             <p className="text-sm text-gray-500">Total Amount</p>
-            <p className="text-2xl font-bold text-gray-900">${order.total_amount}</p>
+            <p className="text-2xl font-bold text-gray-900">{formatCurrency(order.total_amount)}</p>
           </div>
         </div>
 
@@ -438,10 +439,10 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
                         
                         <div className="text-right flex-shrink-0">
                           <p className="text-sm text-gray-600">
-                            ${item.unit_price} × {item.quantity}
+                            {formatCurrency(item.unit_price)} × {item.quantity}
                           </p>
                           <p className="font-semibold text-gray-900">
-                            ${item.total_price}
+                            {formatCurrency(item.total_price)}
                           </p>
                         </div>
                       </div>
@@ -626,10 +627,10 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
               <div className="space-y-2 text-sm text-blue-800">
                 <p><span className="font-medium">Status:</span> {order.preorder_payment_status}</p>
                 {order.preorder_deposit_paid && (
-                  <p><span className="font-medium">Deposit Paid:</span> ${order.preorder_deposit_paid}</p>
+                  <p><span className="font-medium">Deposit Paid:</span> {formatCurrency(order.preorder_deposit_paid)}</p>
                 )}
                 {order.preorder_remaining_amount && (
-                  <p><span className="font-medium">Remaining Amount:</span> ${order.preorder_remaining_amount}</p>
+                  <p><span className="font-medium">Remaining Amount:</span> {formatCurrency(order.preorder_remaining_amount)}</p>
                 )}
               </div>
             </div>
@@ -643,25 +644,25 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
             <div className="space-y-3">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Subtotal:</span>
-                <span className="text-gray-900 font-medium">${order.subtotal}</span>
+                <span className="text-gray-900 font-medium">{formatCurrency(order.subtotal)}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Shipping:</span>
-                <span className="text-gray-900 font-medium">${order.shipping_cost || '0.00'}</span>
+                <span className="text-gray-900 font-medium">{formatCurrency(order.shipping_cost || '0.00')}</span>
               </div>
               {order.discount_amount > 0 && (
                 <div className="flex justify-between text-sm text-green-600">
                   <span>Discount:</span>
-                  <span className="font-medium">-${order.discount_amount}</span>
+                  <span className="font-medium">-{formatCurrency(order.discount_amount)}</span>
                 </div>
               )}
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Tax:</span>
-                <span className="text-gray-900 font-medium">${order.tax_amount || '0.00'}</span>
+                <span className="text-gray-900 font-medium">{formatCurrency(order.tax_amount || '0.00')}</span>
               </div>
               <div className="border-t border-gray-200 pt-3 flex justify-between">
                 <span className="font-semibold text-gray-900">Total:</span>
-                <span className="font-bold text-xl text-gray-900">${order.total_amount}</span>
+                <span className="font-bold text-xl text-gray-900">{formatCurrency(order.total_amount)}</span>
               </div>
             </div>
 

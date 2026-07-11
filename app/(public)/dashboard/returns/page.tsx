@@ -17,6 +17,7 @@ import {
   Search
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { formatCurrency } from '@/lib/utils/currency';
 
 const returnStatusConfig = {
   pending: { 
@@ -344,7 +345,7 @@ export default function ReturnsPage() {
                     </div>
                     <div>
                       <p className="text-gray-500">Refund Amount</p>
-                      <p className="font-semibold">${returnItem.refund_amount || '0.00'}</p>
+                      <p className="font-semibold">{formatCurrency(returnItem.refund_amount || '0.00')}</p>
                     </div>
                     <div>
                       <p className="text-gray-500">Requested</p>

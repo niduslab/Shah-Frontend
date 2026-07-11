@@ -180,7 +180,7 @@ export function ShopSidebar({ onPriceRangeChange, onAvailabilityChange, onBrandC
                 type="number"
                 value={minPriceInput}
                 onChange={(e) => setMinPriceInput(e.target.value)}
-                placeholder="$0"
+                placeholder="৳0"
                 className="w-full rounded-sm border border-gray-200 px-3 py-2 text-sm text-gray-600 focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
               />
             </div>
@@ -190,7 +190,7 @@ export function ShopSidebar({ onPriceRangeChange, onAvailabilityChange, onBrandC
                 type="number"
                 value={maxPriceInput}
                 onChange={(e) => setMaxPriceInput(e.target.value)}
-                placeholder="$1000"
+                placeholder="৳1000"
                 className="w-full rounded-sm border border-gray-200 px-3 py-2 text-sm text-gray-600 focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
               />
             </div>

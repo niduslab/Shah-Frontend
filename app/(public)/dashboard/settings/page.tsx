@@ -42,7 +42,7 @@ export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('notifications');
   const [theme, setTheme] = useState<'light' | 'dark' | 'system'>('system');
   const [language, setLanguage] = useState('en');
-  const [currency, setCurrency] = useState('USD');
+  const [currency, setCurrency] = useState('BDT');
   
   const [notifications, setNotifications] = useState<NotificationSettings>({
     email_orders: true,
@@ -342,11 +342,7 @@ export default function SettingsPage() {
                       onChange={(e) => setCurrency(e.target.value)}
                       className="w-full max-w-xs px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#00072D] focus:border-transparent"
                     >
-                      <option value="USD">USD - US Dollar</option>
-                      <option value="EUR">EUR - Euro</option>
-                      <option value="GBP">GBP - British Pound</option>
-                      <option value="CAD">CAD - Canadian Dollar</option>
-                      <option value="AUD">AUD - Australian Dollar</option>
+                      <option value="BDT">BDT - Bangladeshi Taka</option>
                     </select>
                   </div>
                 </div>

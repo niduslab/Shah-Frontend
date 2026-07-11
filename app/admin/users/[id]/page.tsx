@@ -10,6 +10,7 @@ import {
 import Pagination from '@/components/ui/Pagination';
 import { useAdminUser, useUpdateUser, useToggleUserStatus } from '@/lib/hooks/admin/useAdminUsers';
 import UserModal from '@/app/admin/users/_components/UserModal';
+import { formatCurrency } from '@/lib/utils/currency';
 import { toast } from 'sonner';
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? '';
@@ -321,7 +322,7 @@ export default function UserDetailPage() {
                           </span>
                         </div>
                         <p className="text-sm font-bold text-gray-900 ml-auto">
-                          ${parseFloat(order.total_amount ?? 0).toFixed(2)}
+                          {formatCurrency(order.total_amount ?? 0)}
                         </p>
                       </div>
                     ))}
@@ -374,7 +375,7 @@ export default function UserDetailPage() {
                             <p className="text-xs text-gray-400 mt-0.5">Added {formatDate(item.created_at)}</p>
                           </div>
                           <div className="text-right flex-shrink-0">
-                            <p className="font-bold text-gray-900">${parseFloat(product?.price ?? 0).toFixed(2)}</p>
+                            <p className="font-bold text-gray-900">{formatCurrency(product?.price ?? 0)}</p>
                             <span className={`text-xs font-medium ${product?.status === 'active' ? 'text-emerald-600' : 'text-gray-400'}`}>
                               {product?.status ?? '—'}
                             </span>
@@ -433,7 +434,7 @@ export default function UserDetailPage() {
                             </p>
                           </div>
                           <div className="text-right flex-shrink-0">
-                            <p className="font-bold text-gray-900">${parseFloat(item.price ?? 0).toFixed(2)}</p>
+                            <p className="font-bold text-gray-900">{formatCurrency(item.price ?? 0)}</p>
                             <p className="text-xs text-gray-400">per unit</p>
                           </div>
                         </div>

@@ -14,6 +14,7 @@ import {
 } from '@/lib/hooks/admin/usePromotions';
 import PromotionModal from '@/app/admin/promotions/_components/PromotionModal';
 import DeleteConfirmModal from '@/app/admin/promotions/_components/DeleteConfirmModal';
+import { formatCurrency } from '@/lib/utils/currency';
 
 export default function PromotionsPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -285,14 +286,14 @@ export default function PromotionsPage() {
                       <div className="flex flex-wrap gap-2">
                         <span className="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700">
                           {promotion.promotion_type === 'percentage' && `${promotion.discount_value}% Off`}
-                          {promotion.promotion_type === 'fixed_amount' && `$${promotion.discount_value} Off`}
+                          {promotion.promotion_type === 'fixed_amount' && `${formatCurrency(promotion.discount_value)} Off`}
                           {promotion.promotion_type === 'free_delivery' && 'Free Delivery'}
                           {promotion.promotion_type === 'flash_sale' && 'Flash Sale'}
                           {promotion.promotion_type === 'combo_offer' && 'Combo Offer'}
                         </span>
                         {(promotion.min_purchase_amount ?? 0) > 0 && (
                           <span className="inline-flex items-center rounded-full bg-orange-50 px-2.5 py-0.5 text-xs font-medium text-orange-700">
-                            Min Purchase: ${promotion.min_purchase_amount}
+                            Min Purchase: {formatCurrency(promotion.min_purchase_amount)}
                           </span>
                         )}
                       </div>

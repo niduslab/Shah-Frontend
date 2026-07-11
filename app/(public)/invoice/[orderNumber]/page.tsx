@@ -16,6 +16,7 @@ import {
   Calendar
 } from 'lucide-react';
 import { getPrimaryImageUrl } from '@/lib/utils/image';
+import { formatCurrency } from '@/lib/utils/currency';
 
 interface InvoicePageProps {
   params: {
@@ -272,10 +273,10 @@ export default function InvoicePage({ params }: InvoicePageProps) {
                           {item.quantity}
                         </td>
                         <td className="py-4 px-2 text-right text-sm text-gray-700">
-                          ${parseFloat(item.unit_price).toFixed(2)}
+                          {formatCurrency(item.unit_price)}
                         </td>
                         <td className="py-4 px-2 text-right text-sm font-medium text-gray-900">
-                          ${parseFloat(item.total_price).toFixed(2)}
+                          {formatCurrency(item.total_price)}
                         </td>
                       </tr>
                     );
@@ -291,30 +292,30 @@ export default function InvoicePage({ params }: InvoicePageProps) {
               <div className="w-full md:w-1/2 space-y-3">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Subtotal:</span>
-                  <span className="text-gray-900 font-medium">${parseFloat(order.subtotal).toFixed(2)}</span>
+                  <span className="text-gray-900 font-medium">{formatCurrency(order.subtotal)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Shipping:</span>
                   <span className="text-gray-900 font-medium">
-                    ${parseFloat(order.shipping_cost || '0').toFixed(2)}
+                    {formatCurrency(order.shipping_cost || '0')}
                   </span>
                 </div>
                 {order.discount_amount > 0 && (
                   <div className="flex justify-between text-sm text-green-600">
                     <span>Discount:</span>
-                    <span className="font-medium">-${parseFloat(order.discount_amount).toFixed(2)}</span>
+                    <span className="font-medium">-{formatCurrency(order.discount_amount)}</span>
                   </div>
                 )}
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Tax:</span>
                   <span className="text-gray-900 font-medium">
-                    ${parseFloat(order.tax_amount || '0').toFixed(2)}
+                    {formatCurrency(order.tax_amount || '0')}
                   </span>
                 </div>
                 <div className="border-t border-gray-200 pt-3 flex justify-between">
                   <span className="font-bold text-gray-900 text-lg">Total:</span>
                   <span className="font-bold text-xl text-[#0B3B2D]">
-                    ${parseFloat(order.total_amount).toFixed(2)}
+                    {formatCurrency(order.total_amount)}
                   </span>
                 </div>
               </div>

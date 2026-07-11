@@ -182,11 +182,8 @@ export default function OrdersPage() {
 
   const formatCurrency = (amount: number) => {
     if (!mounted) return ''; // Return empty string during SSR
-    
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(amount);
+
+    return `৳${(Number.isFinite(amount) ? amount : 0).toFixed(2)}`;
   };
 
   const clearFilters = () => {

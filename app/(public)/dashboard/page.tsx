@@ -19,6 +19,7 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { formatCurrency } from '@/lib/utils/currency';
 
 export default function UserDashboard() {
   const { user } = useAuth();
@@ -85,7 +86,7 @@ export default function UserDashboard() {
     },
     {
       title: 'Total Spent',
-      value: `$${(stats.total_spent || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+      value: formatCurrency(stats.total_spent || 0),
       icon: DollarSign,
       color: 'text-purple-600',
       bgColor: 'bg-purple-50',
@@ -129,7 +130,7 @@ export default function UserDashboard() {
     },
     // {
     //   title: 'Preorder Balance',
-    //   value: `$${(stats.preorder_balance || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+    //   value: formatCurrency(stats.preorder_balance || 0),
     //   icon: TrendingUp,
     //   color: 'text-indigo-600',
     //   bgColor: 'bg-indigo-50',
@@ -336,7 +337,7 @@ export default function UserDashboard() {
                   </div>
                   <div className="text-right ml-4">
                     <p className="text-lg font-bold text-gray-900">
-                      ${parseFloat(order.total).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      {formatCurrency(order.total)}
                     </p>
                     <div className="flex items-center text-sm text-gray-500 group-hover:text-gray-700 mt-1">
                       <span>View details</span>

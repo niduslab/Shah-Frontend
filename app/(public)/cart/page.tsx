@@ -9,6 +9,7 @@ import { useCalculateCartSummary, useValidateCoupon, useAvailableCoupons } from 
 import { ProductCard } from "../_components/shared/product-card";
 import { toast } from "sonner";
 import { getPlaceholderImage, getPrimaryImageUrl, getImageUrl } from "@/lib/utils/image";
+import { formatCurrency } from "@/lib/utils/currency";
 import { useAnalytics } from "@/lib/hooks/useAnalytics";
 
 // Data for "You May Also Like"
@@ -329,11 +330,11 @@ export default function CartPage() {
                           )}
                         </p>
                         <div className="flex items-center gap-3">
-                          <span className="text-lg font-bold text-black">${price.toFixed(2)}</span>
+                          <span className="text-lg font-bold text-black">{formatCurrency(price)}</span>
                           {comparePrice && comparePrice > price && (
                             <>
                               <span className="text-sm text-gray-400 line-through">
-                                ${comparePrice.toFixed(2)}
+                                {formatCurrency(comparePrice)}
                               </span>
                               <span className="bg-red-500 px-2 py-0.5 text-xs font-bold text-white rounded-sm">
                                 -{discount}% off
@@ -434,7 +435,7 @@ export default function CartPage() {
                             {appliedCoupon.coupon?.name || 'Discount Applied'}
                           </p>
                           <p className="text-xs text-green-600 mt-1">
-                            You saved ${appliedCoupon.discount_amount.toFixed(2)}
+                            You saved {formatCurrency(appliedCoupon.discount_amount)}
                           </p>
                         </div>
                         <button
@@ -531,10 +532,10 @@ export default function CartPage() {
                                       )}
                                       <div className="flex flex-wrap gap-2 text-xs text-gray-500">
                                         {coupon.min_purchase_amount && parseFloat(coupon.min_purchase_amount) > 0 && (
-                                          <span>Min: ${parseFloat(coupon.min_purchase_amount).toFixed(2)}</span>
+                                          <span>Min: {formatCurrency(coupon.min_purchase_amount)}</span>
                                         )}
                                         {coupon.max_discount_amount && parseFloat(coupon.max_discount_amount) > 0 && (
-                                          <span>Max: ${parseFloat(coupon.max_discount_amount).toFixed(2)}</span>
+                                          <span>Max: {formatCurrency(coupon.max_discount_amount)}</span>
                                         )}
                                         {coupon.expires_at && (
                                           <span>
@@ -582,24 +583,24 @@ export default function CartPage() {
                       </div>
                       <div className="flex justify-between text-gray-600">
                         <span>Sub Total</span>
-                        <span className="font-medium text-black">${subTotal.toFixed(2)}</span>
+                        <span className="font-medium text-black">{formatCurrency(subTotal)}</span>
                       </div>
                       {discount > 0 && (
                         <div className="flex justify-between text-green-600">
                           <span>Discount</span>
-                          <span className="font-medium">-${discount.toFixed(2)}</span>
+                          <span className="font-medium">-{formatCurrency(discount)}</span>
                         </div>
                       )}
                       {tax > 0 && (
                         <div className="flex justify-between text-gray-600">
                           <span>Tax</span>
-                          <span className="font-medium text-black">${tax.toFixed(2)}</span>
+                          <span className="font-medium text-black">{formatCurrency(tax)}</span>
                         </div>
                       )}
                       {shipping > 0 && (
                         <div className="flex justify-between text-gray-600">
                           <span>Shipping</span>
-                          <span className="font-medium text-black">${shipping.toFixed(2)}</span>
+                          <span className="font-medium text-black">{formatCurrency(shipping)}</span>
                         </div>
                       )}
                     </div>
@@ -607,7 +608,7 @@ export default function CartPage() {
                     {/* Total Price */}
                     <div className="mb-8 flex justify-between text-base font-bold text-black">
                       <span>Total Price</span>
-                      <span>${totalPrice.toFixed(2)}</span>
+                      <span>{formatCurrency(totalPrice)}</span>
                     </div>
                   </>
                 )}

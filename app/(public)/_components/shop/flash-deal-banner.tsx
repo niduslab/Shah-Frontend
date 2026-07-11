@@ -59,7 +59,7 @@ export function FlashDealBanner() {
   const discountLabel =
     deal.discount_type === "percentage"
       ? `${parseFloat(deal.discount_value)}% OFF`
-      : `$${parseFloat(deal.discount_value)} OFF`;
+      : `৳${parseFloat(deal.discount_value)} OFF`;
 
   return (
     <div className="mb-8 overflow-hidden rounded-xl bg-gradient-to-r from-red-600 via-orange-500 to-yellow-500 p-px shadow-lg">

@@ -13,6 +13,7 @@ import {
   useCreatePOSOrder,
   useGenerateQuotation,
 } from '@/lib/hooks/admin/usePOS';
+import { formatCurrency } from '@/lib/utils/currency';
 
 interface CartItem {
   product_id: number;
@@ -345,7 +346,7 @@ export default function POSPage() {
                               {product.brand && <p className="text-xs text-gray-400">{product.brand.name}</p>}
                             </div>
                             <div className="text-right">
-                              <p className="font-semibold text-orange-600">${price.toFixed(2)}</p>
+                              <p className="font-semibold text-orange-600">{formatCurrency(price)}</p>
                               <p className={`text-xs ${stock > 0 ? 'text-green-600' : 'text-red-600'}`}>Stock: {stock}</p>
                             </div>
                           </button>
@@ -403,7 +404,7 @@ export default function POSPage() {
                         <p className="font-medium text-gray-900">{item.name}</p>
                         {item.variation_name && <p className="text-sm text-gray-500">{item.variation_name}</p>}
                         <p className="text-sm text-gray-500">SKU: {item.sku}</p>
-                        <p className="text-sm font-semibold text-orange-600">${item.price.toFixed(2)}</p>
+                        <p className="text-sm font-semibold text-orange-600">{formatCurrency(item.price)}</p>
                       </div>
                       <div className="flex items-center gap-2">
                         <button onClick={() => updateQuantity(index, item.quantity - 1)} className="p-1 rounded hover:bg-gray-100">
@@ -422,7 +423,7 @@ export default function POSPage() {
                         </button>
                       </div>
                       <div className="text-right">
-                        <p className="font-semibold text-gray-900">${(item.price * item.quantity).toFixed(2)}</p>
+                        <p className="font-semibold text-gray-900">{formatCurrency(item.price * item.quantity)}</p>
                         <button onClick={() => removeFromCart(index)} className="text-red-600 hover:text-red-700 mt-1">
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -535,7 +536,7 @@ export default function POSPage() {
               <div className="space-y-3 mb-4">
                 <div className="flex justify-between text-gray-600">
                   <span>Subtotal</span>
-                  <span>${totals.subtotal.toFixed(2)}</span>
+                  <span>{formatCurrency(totals.subtotal)}</span>
                 </div>
 
                 <div>
@@ -554,13 +555,13 @@ export default function POSPage() {
                 {discount > 0 && (
                   <div className="flex justify-between text-green-600">
                     <span>Discount ({discount}%)</span>
-                    <span>-${totals.discount.toFixed(2)}</span>
+                    <span>-{formatCurrency(totals.discount)}</span>
                   </div>
                 )}
 
                 <div className="border-t pt-3 flex justify-between text-lg font-semibold text-gray-900">
                   <span>Total</span>
-                  <span>${totals.total.toFixed(2)}</span>
+                  <span>{formatCurrency(totals.total)}</span>
                 </div>
               </div>
 

@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getPlaceholderImage } from '@/lib/utils/image';
+import { formatCurrency } from '@/lib/utils/currency';
 import { toast } from 'sonner';
 
 const ITEMS_PER_PAGE = 8;
@@ -267,11 +268,11 @@ export default function WishlistPage() {
 
                   <div className="flex items-center space-x-2 mb-3">
                     <span className="text-xl font-bold text-gray-900">
-                      ${item.product.price}
+                      {formatCurrency(item.product.price)}
                     </span>
                     {item.product.compare_price && item.product.compare_price > item.product.price && (
                       <span className="text-sm text-gray-500 line-through">
-                        ${item.product.compare_price}
+                        {formatCurrency(item.product.compare_price)}
                       </span>
                     )}
                   </div>

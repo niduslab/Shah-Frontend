@@ -14,6 +14,7 @@ import {
 } from '@/lib/hooks/admin/useAdminUsers';
 import UserModal from '@/app/admin/users/_components/UserModal';
 import DeleteConfirmModal from '@/app/admin/users/_components/DeleteConfirmModal';
+import { formatCurrency } from '@/lib/utils/currency';
 
 interface User {
   id: number;
@@ -420,7 +421,7 @@ export default function UsersPage() {
                         {user.total_spent !== undefined && (
                           <>
                             <span>•</span>
-                            <span>${user.total_spent.toFixed(2)} spent</span>
+                            <span>{formatCurrency(user.total_spent)} spent</span>
                           </>
                         )}
                       </div>

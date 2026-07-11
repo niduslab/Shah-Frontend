@@ -602,7 +602,7 @@ export default function SectionEditor({
                                 type="text"
                                 value={content[`product_${num}_price`] || ''}
                                 onChange={(e) => handleContentChange(`product_${num}_price`, e.target.value)}
-                                placeholder="$999"
+                                placeholder="৳999"
                                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-[#FF6F00] focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
                               />
                             </div>

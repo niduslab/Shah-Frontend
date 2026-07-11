@@ -13,6 +13,7 @@ import {
 import CouponModal from '@/app/admin/coupons/_components/CouponModal';
 import DeleteConfirmModal from '@/app/admin/coupons/_components/DeleteConfirmModal';
 import CouponUsageModal from '@/app/admin/coupons/_components/CouponUsageModal';
+import { formatCurrency } from '@/lib/utils/currency';
 
 interface Coupon {
   id: number;
@@ -145,7 +146,7 @@ export default function CouponsPage() {
       return <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-purple-100 text-purple-700 ring-1 ring-purple-600/20">{coupon.discount_value}% OFF</span>;
     }
     if (coupon.discount_type === 'fixed') {
-      return <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-indigo-100 text-indigo-700 ring-1 ring-indigo-600/20">${coupon.discount_value} OFF</span>;
+      return <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-indigo-100 text-indigo-700 ring-1 ring-indigo-600/20">{formatCurrency(coupon.discount_value)} OFF</span>;
     }
     return <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-teal-100 text-teal-700 ring-1 ring-teal-600/20">Free Shipping</span>;
   };
@@ -314,12 +315,12 @@ export default function CouponsPage() {
                       <div className="flex flex-wrap gap-2">
                         {coupon.min_purchase_amount && (
                           <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700">
-                            Min: ${coupon.min_purchase_amount}
+                            Min: {formatCurrency(coupon.min_purchase_amount)}
                           </span>
                         )}
                         {coupon.max_discount_amount && (
                           <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700">
-                            Max: ${coupon.max_discount_amount}
+                            Max: {formatCurrency(coupon.max_discount_amount)}
                           </span>
                         )}
                         {coupon.once_per_customer && (

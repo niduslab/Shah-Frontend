@@ -13,6 +13,7 @@ import {
   useDeleteProduct 
 } from '@/lib/hooks/admin/useAdminProducts';
 import { getImageUrl, getPlaceholderImage, getPrimaryImageUrl } from '@/lib/utils/image';
+import { formatCurrency } from '@/lib/utils/currency';
 import ProductModal from './_components/ProductModal';
 import DeleteConfirmModal from './_components/DeleteConfirmModal';
 
@@ -336,9 +337,9 @@ export default function ProductsPage() {
                         </td>
                         <td className="px-6 py-4">
                           <div>
-                            <p className="font-semibold text-gray-900">${Number(product.price).toFixed(2)}</p>
+                            <p className="font-semibold text-gray-900">{formatCurrency(product.price)}</p>
                             {product.compare_price && Number(product.compare_price) > Number(product.price) && (
-                              <p className="text-xs text-gray-400 line-through">${Number(product.compare_price).toFixed(2)}</p>
+                              <p className="text-xs text-gray-400 line-through">{formatCurrency(product.compare_price)}</p>
                             )}
                           </div>
                         </td>

@@ -2,6 +2,7 @@
 
 import { X, User, Mail, Phone, Calendar, ShoppingBag, Shield, CheckCircle, XCircle, Heart, ShoppingCart } from 'lucide-react';
 import { useAdminUser } from '@/lib/hooks/admin/useAdminUsers';
+import { formatCurrency } from '@/lib/utils/currency';
 
 interface UserDetailsModalProps {
   isOpen: boolean;
@@ -170,7 +171,7 @@ export default function UserDetailsModal({ isOpen, onClose, userId }: UserDetail
                   {user.total_spent !== undefined && (
                     <div>
                       <p className="text-gray-500">Total Spent</p>
-                      <p className="font-medium text-gray-900">${user.total_spent.toFixed(2)}</p>
+                      <p className="font-medium text-gray-900">{formatCurrency(user.total_spent)}</p>
                     </div>
                   )}
                 </div>
@@ -209,7 +210,7 @@ export default function UserDetailsModal({ isOpen, onClose, userId }: UserDetail
                           <p className="text-xs text-gray-500">{product?.sku ?? ''}</p>
                         </div>
                         <div className="text-right flex-shrink-0">
-                          <p className="text-sm font-semibold text-gray-900">${parseFloat(product?.price ?? 0).toFixed(2)}</p>
+                          <p className="text-sm font-semibold text-gray-900">{formatCurrency(product?.price ?? 0)}</p>
                           <span className={`text-xs font-medium ${product?.status === 'active' ? 'text-emerald-600' : 'text-gray-400'}`}>
                             {product?.status ?? '—'}
                           </span>
@@ -253,7 +254,7 @@ export default function UserDetailsModal({ isOpen, onClose, userId }: UserDetail
                           <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
                         </div>
                         <div className="text-right flex-shrink-0">
-                          <p className="text-sm font-semibold text-gray-900">${parseFloat(item.price ?? 0).toFixed(2)}</p>
+                          <p className="text-sm font-semibold text-gray-900">{formatCurrency(item.price ?? 0)}</p>
                           <p className="text-xs text-gray-400">{item.event_at ? new Date(item.event_at).toLocaleDateString() : ''}</p>
                         </div>
                       </div>

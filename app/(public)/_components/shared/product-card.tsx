@@ -8,6 +8,7 @@ import { useAuth } from "@/lib/context/AuthContext";
 import { useCart } from "@/lib/context/CartContext";
 import { useCheckWishlist, useAddToWishlist, useRemoveFromWishlistByProduct } from "@/lib/hooks/user/useWishlist";
 import { getPlaceholderImage } from "@/lib/utils/image";
+import { formatCurrency } from "@/lib/utils/currency";
 import { toast } from "sonner";
 
 export interface Product {
@@ -246,10 +247,10 @@ export function ProductCard({ product, imageHeight = "h-[372px]" }: ProductCardP
           <div className="flex flex-col gap-0.5">
             <div className="flex items-baseline gap-2">
               <span className="text-xl font-bold text-red-600">
-                ${product.flash_price.toFixed(2)}
+                {formatCurrency(product.flash_price)}
               </span>
               <span className="text-sm text-gray-400 line-through">
-                ${product.price.toFixed(2)}
+                {formatCurrency(product.price)}
               </span>
             </div>
             {product.flash_discount_label && (
@@ -261,11 +262,11 @@ export function ProductCard({ product, imageHeight = "h-[372px]" }: ProductCardP
         ) : (
           <div className="flex items-baseline gap-3">
             <span className="text-xl font-bold text-black">
-              ${product.price.toFixed(2)}
+              {formatCurrency(product.price)}
             </span>
             {!isPreorderActive && product.originalPrice && (
               <span className="text-sm text-gray-400 line-through">
-                ${product.originalPrice.toFixed(2)}
+                {formatCurrency(product.originalPrice)}
               </span>
             )}
           </div>

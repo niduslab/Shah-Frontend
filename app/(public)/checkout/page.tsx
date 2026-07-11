@@ -9,6 +9,7 @@ import { useProcessCheckout, useGetShippingMethods, useSendRegistrationOtp } fro
 import { otpAuthService } from "@/lib/services/otpAuthService";
 import { toast } from "sonner";
 import { getPlaceholderImage, getPrimaryImageUrl, getImageUrl } from "@/lib/utils/image";
+import { formatCurrency } from "@/lib/utils/currency";
 import OtpInput from "@/lib/components/OtpInput";
 import { useAnalytics } from "@/lib/hooks/useAnalytics";
 import { 
@@ -1198,13 +1199,13 @@ export default function CheckoutPage() {
                               </p>
                               {method.free_shipping_min_order > 0 && !method.is_free && subTotal < method.free_shipping_min_order && (
                                 <p className="text-xs text-amber-600 mt-2 bg-amber-50 px-2 py-1 rounded">
-                                  Add ${(method.free_shipping_min_order - subTotal).toFixed(2)} more for free shipping
+                                  Add {formatCurrency(method.free_shipping_min_order - subTotal)} more for free shipping
                                 </p>
                               )}
                             </div>
                             <div className="text-right">
                               <div className={`text-lg font-bold ${method.is_free ? 'text-green-600' : 'text-black'}`}>
-                                {method.is_free ? 'FREE' : `$${method.cost.toFixed(2)}`}
+                                {method.is_free ? 'FREE' : formatCurrency(method.cost)}
                               </div>
                               {selectedShipping === method.code && (
                                 <div className="mt-1 inline-flex items-center gap-1 rounded-full bg-black px-2 py-0.5 text-xs font-bold text-white">
@@ -1359,10 +1360,10 @@ export default function CheckoutPage() {
                           </p>
                           <div className="flex items-center justify-between mt-2">
                             <span className="text-sm text-gray-600">
-                              ${price.toFixed(2)} × {item.quantity}
+                              {formatCurrency(price)} × {item.quantity}
                             </span>
                             <span className="text-sm font-bold text-black">
-                              ${itemTotal.toFixed(2)}
+                              {formatCurrency(itemTotal)}
                             </span>
                           </div>
                         </div>
@@ -1375,7 +1376,7 @@ export default function CheckoutPage() {
                 <div className="space-y-3 border-t border-gray-200 pt-4">
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Subtotal ({totalItems} items)</span>
-                    <span className="font-medium text-black">${subTotal.toFixed(2)}</span>
+                    <span className="font-medium text-black">{formatCurrency(subTotal)}</span>
                   </div>
                   
                   {appliedCoupon && discount > 0 && (
@@ -1386,20 +1387,20 @@ export default function CheckoutPage() {
                           {appliedCoupon.code}
                         </span>
                       </div>
-                      <span className="font-medium text-green-600">-${discount.toFixed(2)}</span>
+                      <span className="font-medium text-green-600">-{formatCurrency(discount)}</span>
                     </div>
                   )}
                   
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Shipping</span>
                     <span className="font-medium text-black">
-                      {selectedShippingMethod?.is_free ? 'FREE' : `$${shipping.toFixed(2)}`}
+                      {selectedShippingMethod?.is_free ? 'FREE' : formatCurrency(shipping)}
                     </span>
                   </div>
-                  
+
                   <div className="flex justify-between border-t border-gray-200 pt-3 text-lg font-bold">
                     <span className="text-black">Total</span>
-                    <span className="text-black">${totalPrice.toFixed(2)}</span>
+                    <span className="text-black">{formatCurrency(totalPrice)}</span>
                   </div>
                 </div>
 

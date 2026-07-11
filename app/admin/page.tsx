@@ -6,7 +6,7 @@ import { Area, AreaChart, Bar, BarChart, Cell, Pie, PieChart, ResponsiveContaine
 const stats = [
   {
     title: "Total Gross",
-    value: "$983,410",
+    value: "৳983,410",
     change: "+2.3%",
     changeText: "vs last week",
     trend: "up",
@@ -79,19 +79,19 @@ const trafficSources = [
 ];
 
 const recentOrders = [
-  { id: "#10234", customer: "Ananya Walter", product: "Wireless Headphones", qty: 2, total: "$300", status: "Shipped" },
-  { id: "#10235", customer: "Sebastian Adams", product: "Running Shoes", qty: 1, total: "$75", status: "Processing" },
-  { id: "#10236", customer: "Suzanne Wright", product: "Smartwatch", qty: 1, total: "$200", status: "Delivered" },
-  { id: "#10237", customer: "Peter Havel", product: "Coffee Maker", qty: 1, total: "$80", status: "Pending" },
-  { id: "#10238", customer: "Aria Singh", product: "Bluetooth Speaker", qty: 3, total: "$120", status: "Shipped" },
+  { id: "#10234", customer: "Ananya Walter", product: "Wireless Headphones", qty: 2, total: "৳300", status: "Shipped" },
+  { id: "#10235", customer: "Sebastian Adams", product: "Running Shoes", qty: 1, total: "৳75", status: "Processing" },
+  { id: "#10236", customer: "Suzanne Wright", product: "Smartwatch", qty: 1, total: "৳200", status: "Delivered" },
+  { id: "#10237", customer: "Peter Havel", product: "Coffee Maker", qty: 1, total: "৳80", status: "Pending" },
+  { id: "#10238", customer: "Aria Singh", product: "Bluetooth Speaker", qty: 3, total: "৳120", status: "Shipped" },
 ];
 
 const recentActivity = [
-  { text: "Olivia purchased purchased 2 items totaling $250", time: "10:30 AM" },
-  { text: "The price of \"Smart TV\" was updated from $500 to $450", time: "9:45 AM" },
+  { text: "Olivia purchased purchased 2 items totaling ৳250", time: "10:30 AM" },
+  { text: "The price of \"Smart TV\" was updated from ৳500 to ৳450", time: "9:45 AM" },
   { text: "Vincent Laurent left a 5-star review for \"Wireless Headphones\"", time: "8:20 AM" },
   { text: "\"Running Shoes\" stock is below 10 units", time: "7:15 AM" },
-  { text: "Payment of $1,200 order is \"Processing\"", time: "6:00 AM" },
+  { text: "Payment of ৳1,200 order is \"Processing\"", time: "6:00 AM" },
 ];
 
 export default function AdminPage() {
@@ -135,7 +135,7 @@ export default function AdminPage() {
               </button>
             </div>
             <div className="mb-4 flex items-baseline gap-2">
-              <span className="text-3xl font-bold text-gray-900">$14,521</span>
+              <span className="text-3xl font-bold text-gray-900">৳14,521</span>
               <span className="text-sm text-gray-500">Revenue</span>
             </div>
             <div className="h-[240px] w-full">
@@ -190,35 +190,35 @@ export default function AdminPage() {
             <div className="mt-6 space-y-3">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-gray-600">Target</span>
-                <span className="font-semibold text-gray-900">$3,400,000</span>
+                <span className="font-semibold text-gray-900">৳3,400,000</span>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <div className="flex items-center gap-2">
                   <div className="h-2 w-2 rounded-full bg-orange-500"></div>
                   <span className="text-gray-600">Electronics</span>
                 </div>
-                <span className="font-semibold text-gray-900">$1,200,000</span>
+                <span className="font-semibold text-gray-900">৳1,200,000</span>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <div className="flex items-center gap-2">
                   <div className="h-2 w-2 rounded-full bg-orange-300"></div>
                   <span className="text-gray-600">Fashion</span>
                 </div>
-                <span className="font-semibold text-gray-900">$990,000</span>
+                <span className="font-semibold text-gray-900">৳990,000</span>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <div className="flex items-center gap-2">
                   <div className="h-2 w-2 rounded-full bg-orange-200"></div>
                   <span className="text-gray-600">Home & Kitchen</span>
                 </div>
-                <span className="font-semibold text-gray-900">$750,000</span>
+                <span className="font-semibold text-gray-900">৳750,000</span>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <div className="flex items-center gap-2">
                   <div className="h-2 w-2 rounded-full bg-orange-100"></div>
                   <span className="text-gray-600">Beauty & Personal Care</span>
                 </div>
-                <span className="font-semibold text-gray-900">$500,000</span>
+                <span className="font-semibold text-gray-900">৳500,000</span>
               </div>
             </div>
           </div>

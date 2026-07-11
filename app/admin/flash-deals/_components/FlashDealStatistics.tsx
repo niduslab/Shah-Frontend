@@ -2,6 +2,7 @@
 
 import { X, TrendingUp, DollarSign, Package, Users, Activity } from 'lucide-react';
 import { useFlashDealStatistics } from '@/lib/hooks/admin/useAdminFlashDeals';
+import { formatCurrency } from '@/lib/utils/currency';
 
 interface FlashDealStatisticsProps {
   isOpen: boolean;
@@ -78,7 +79,7 @@ export default function FlashDealStatistics({
                     </div>
                     <div>
                       <p className="text-xs font-medium text-emerald-600">Total Revenue</p>
-                      <p className="text-2xl font-bold text-emerald-900">${stats.total_revenue || '0.00'}</p>
+                      <p className="text-2xl font-bold text-emerald-900">{formatCurrency(stats.total_revenue || '0.00')}</p>
                     </div>
                   </div>
                 </div>
@@ -128,8 +129,8 @@ export default function FlashDealStatistics({
                             <tr key={index} className="hover:bg-gray-50">
                               <td className="px-4 py-3 text-sm text-gray-900">{product.product_name}</td>
                               <td className="px-4 py-3 text-sm text-gray-900 text-right">{product.quantity_sold}</td>
-                              <td className="px-4 py-3 text-sm text-gray-900 text-right">${product.revenue}</td>
-                              <td className="px-4 py-3 text-sm text-gray-900 text-right">${product.average_price}</td>
+                              <td className="px-4 py-3 text-sm text-gray-900 text-right">{formatCurrency(product.revenue)}</td>
+                              <td className="px-4 py-3 text-sm text-gray-900 text-right">{formatCurrency(product.average_price)}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -150,11 +151,11 @@ export default function FlashDealStatistics({
                     </div>
                     <div>
                       <p className="text-sm text-gray-600 mb-1">Average Order Value</p>
-                      <p className="text-xl font-bold text-gray-900">${stats.average_order_value || '0.00'}</p>
+                      <p className="text-xl font-bold text-gray-900">{formatCurrency(stats.average_order_value || '0.00')}</p>
                     </div>
                     <div>
                       <p className="text-sm text-gray-600 mb-1">Discount Given</p>
-                      <p className="text-xl font-bold text-gray-900">${stats.total_discount || '0.00'}</p>
+                      <p className="text-xl font-bold text-gray-900">{formatCurrency(stats.total_discount || '0.00')}</p>
                     </div>
                   </div>
                 </div>

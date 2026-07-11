@@ -25,11 +25,8 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }: OrderDet
 
   const formatCurrency = (amount: number) => {
     if (!mounted) return '';
-    
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(amount);
+
+    return `৳${(Number.isFinite(amount) ? amount : 0).toFixed(2)}`;
   };
 
   const formatDate = (dateString: string) => {

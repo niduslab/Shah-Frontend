@@ -31,7 +31,7 @@ export function ProductAccordions({ product }: ProductAccordionsProps) {
     {
       id: "shipping",
       title: "Shipping & Return",
-      content: product.shipping_notes || "Free shipping on all orders over $50. We offer a 30-day money-back guarantee on all products. If you are not satisfied with your purchase, you can return it for a full refund within 30 days of delivery. Return shipping costs may apply.",
+      content: product.shipping_notes || "Free shipping on all orders over ৳50. We offer a 30-day money-back guarantee on all products. If you are not satisfied with your purchase, you can return it for a full refund within 30 days of delivery. Return shipping costs may apply.",
       isHtml: false
     }
   ];

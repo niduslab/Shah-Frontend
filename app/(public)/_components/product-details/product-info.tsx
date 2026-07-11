@@ -16,6 +16,7 @@ import {
 import { useAuth } from "@/lib/context/AuthContext";
 import { useCart } from "@/lib/context/CartContext";
 import { getPrimaryImageUrl, getAllImageUrls, getPlaceholderImage } from "@/lib/utils/image";
+import { formatCurrency } from "@/lib/utils/currency";
 import { ProductAccordions } from "./product-accordions";
 import { useProductReviews } from "@/lib/hooks/public/useProductReviews";
 import { useProductViewTracking, useAnalytics } from "@/lib/hooks/useAnalytics";
@@ -347,11 +348,11 @@ export function ProductInfo({ product }: ProductInfoProps) {
 
             {/* Price */}
             <div className="mb-6 flex items-center gap-3">
-              <span className="text-3xl font-bold text-black">${currentPrice.toFixed(2)}</span>
+              <span className="text-3xl font-bold text-black">{formatCurrency(currentPrice)}</span>
               {/* Hide original price if preorder is active */}
               {!isPreorderActive && comparePrice && comparePrice > currentPrice && (
                 <>
-                  <span className="text-xl text-gray-400 line-through">${comparePrice.toFixed(2)}</span>
+                  <span className="text-xl text-gray-400 line-through">{formatCurrency(comparePrice)}</span>
                   <span className="rounded bg-red-500 px-2 py-1 text-sm font-bold text-white">
                     -{discount}% off
                   </span>

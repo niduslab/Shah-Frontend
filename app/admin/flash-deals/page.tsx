@@ -14,6 +14,7 @@ import {
 import FlashDealModal from './_components/FlashDealModal';
 import DeleteConfirmModal from './_components/DeleteConfirmModal';
 import FlashDealStatistics from './_components/FlashDealStatistics';
+import { formatCurrency } from '@/lib/utils/currency';
 
 interface FlashDeal {
   id: number;
@@ -272,7 +273,7 @@ export default function FlashDealsPage() {
                         <h3 className="text-lg font-semibold text-gray-900">{deal.title}</h3>
                         {getStatusBadge(deal)}
                         <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-purple-100 text-purple-700 ring-1 ring-purple-600/20">
-                          {deal.discount_type === 'percentage' ? `${deal.discount_value}% OFF` : `$${deal.discount_value} OFF`}
+                          {deal.discount_type === 'percentage' ? `${deal.discount_value}% OFF` : `${formatCurrency(deal.discount_value)} OFF`}
                         </span>
                       </div>
 

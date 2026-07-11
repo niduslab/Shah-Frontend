@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { X, TrendingUp, User, Calendar, DollarSign, ShoppingCart } from 'lucide-react';
 import { useCouponUsageHistory } from '@/lib/hooks/admin/useCoupons';
 import Pagination from '@/components/ui/Pagination';
+import { formatCurrency } from '@/lib/utils/currency';
 
 interface CouponUsageModalProps {
   isOpen: boolean;
@@ -110,7 +111,7 @@ export default function CouponUsageModal({ isOpen, onClose, couponId, couponCode
                           </div>
                           <div className="flex items-center gap-1.5 text-gray-600">
                             <DollarSign className="h-4 w-4" />
-                            <span>Discount: <span className="font-semibold text-emerald-600">${usage.discount_amount || '0.00'}</span></span>
+                            <span>Discount: <span className="font-semibold text-emerald-600">{formatCurrency(usage.discount_amount || '0.00')}</span></span>
                           </div>
                           <div className="flex items-center gap-1.5 text-gray-600">
                             <Calendar className="h-4 w-4" />

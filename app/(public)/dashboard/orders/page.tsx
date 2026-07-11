@@ -16,6 +16,7 @@ import {
   Filter
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { formatCurrency } from '@/lib/utils/currency';
 
 const statusConfig = {
   pending: { color: 'bg-yellow-100 text-yellow-800', icon: Clock },
@@ -297,7 +298,7 @@ export default function OrdersPage() {
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
                       <div>
                         <p className="text-gray-500">Total Amount</p>
-                        <p className="font-semibold">${orderTotal}</p>
+                        <p className="font-semibold">{formatCurrency(orderTotal)}</p>
                       </div>
                       <div>
                         <p className="text-gray-500">Payment Status</p>
