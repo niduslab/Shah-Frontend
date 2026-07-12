@@ -453,7 +453,7 @@ export function NavBar() {
           {/* Links */}
           <div className="flex flex-col gap-2 flex-1">
             {/* Shop */}
-            <Link href="/shop" className="border-b border-gray-100 py-3 text-base font-bold hover:text-[#ffb81e]">
+            <Link href="/shop" onClick={() => setIsMobileMenuOpen(false)} className="border-b border-gray-100 py-3 text-base font-bold hover:text-[#ffb81e]">
               Shop
             </Link>
 
@@ -474,16 +474,16 @@ export function NavBar() {
                       <div className="flex flex-col">
                         {group.items.length > 0 ? (
                           group.items.map((item: any) => (
-                            <Link key={item.slug} href={`/shop?category=${item.slug}`} className="rounded-md py-2 pl-2 text-sm text-gray-600 active:bg-gray-50">{item.name}</Link>
+                            <Link key={item.slug} href={`/shop?category=${item.slug}`} onClick={() => setIsMobileMenuOpen(false)} className="rounded-md py-2 pl-2 text-sm text-gray-600 active:bg-gray-50">{item.name}</Link>
                           ))
                         ) : (
-                          <Link href={`/shop?category=${group.slug}`} className="rounded-md py-2 pl-2 text-sm text-gray-600 active:bg-gray-50">View All</Link>
+                          <Link href={`/shop?category=${group.slug}`} onClick={() => setIsMobileMenuOpen(false)} className="rounded-md py-2 pl-2 text-sm text-gray-600 active:bg-gray-50">View All</Link>
                         )}
                       </div>
                     </div>
                   ))}
                   {fitnessCategory && (
-                    <Link href={`/shop?category=${fitnessCategory.slug}`} className="flex items-center gap-1 text-sm font-bold text-[#ffb81e]">
+                    <Link href={`/shop?category=${fitnessCategory.slug}`} onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-1 text-sm font-bold text-[#ffb81e]">
                       Shop All Fitness <ChevronRight className="h-3.5 w-3.5" />
                     </Link>
                   )}
@@ -507,7 +507,7 @@ export function NavBar() {
                       <div className="mb-1.5 text-xs font-bold uppercase tracking-wider text-gray-400">Team Sports</div>
                       <div className="flex flex-col">
                         {teamSportsItems.map((item: any) => (
-                          <Link key={item.slug} href={`/shop?category=${item.slug}`} className="rounded-md py-2 pl-2 text-sm text-gray-600 active:bg-gray-50">{item.name}</Link>
+                          <Link key={item.slug} href={`/shop?category=${item.slug}`} onClick={() => setIsMobileMenuOpen(false)} className="rounded-md py-2 pl-2 text-sm text-gray-600 active:bg-gray-50">{item.name}</Link>
                         ))}
                       </div>
                     </div>
@@ -517,13 +517,13 @@ export function NavBar() {
                       <div className="mb-1.5 text-xs font-bold uppercase tracking-wider text-gray-400">Indoor & Individual</div>
                       <div className="flex flex-col">
                         {indoorSportsItems.map((item: any) => (
-                          <Link key={item.slug} href={`/shop?category=${item.slug}`} className="rounded-md py-2 pl-2 text-sm text-gray-600 active:bg-gray-50">{item.name}</Link>
+                          <Link key={item.slug} href={`/shop?category=${item.slug}`} onClick={() => setIsMobileMenuOpen(false)} className="rounded-md py-2 pl-2 text-sm text-gray-600 active:bg-gray-50">{item.name}</Link>
                         ))}
                       </div>
                     </div>
                   )}
                   {sportsCategory && (
-                    <Link href={`/shop?category=${sportsCategory.slug}`} className="flex items-center gap-1 text-sm font-bold text-[#ffb81e]">
+                    <Link href={`/shop?category=${sportsCategory.slug}`} onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-1 text-sm font-bold text-[#ffb81e]">
                       Shop All Sports <ChevronRight className="h-3.5 w-3.5" />
                     </Link>
                   )}
@@ -548,6 +548,7 @@ export function NavBar() {
                         key={brand.slug}
                         href={`/brand/${brand.slug}`}
                         title={brand.name}
+                        onClick={() => setIsMobileMenuOpen(false)}
                         className="flex h-12 items-center justify-center rounded-md border border-gray-100 bg-white p-1.5 active:bg-gray-50"
                       >
                         <img
@@ -559,7 +560,7 @@ export function NavBar() {
                       </Link>
                     ))}
                   </div>
-                  <Link href="/brands" className="flex items-center gap-1 text-sm font-bold text-[#ffb81e]">
+                  <Link href="/brands" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-1 text-sm font-bold text-[#ffb81e]">
                     View All Brands <ChevronRight className="h-3.5 w-3.5" />
                   </Link>
                 </div>
@@ -578,7 +579,7 @@ export function NavBar() {
               <div className={cn("grid overflow-hidden transition-all duration-300", openSubMenu === 'flooring' ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0")}>
                 <div className="overflow-hidden flex flex-col gap-2 pb-3 pt-1">
                   {floorCategories.map((category) => (
-                    <Link key={category.href} href={category.href} className="rounded-md py-2 pl-2 text-sm text-gray-600 active:bg-gray-50">
+                    <Link key={category.href} href={category.href} onClick={() => setIsMobileMenuOpen(false)} className="rounded-md py-2 pl-2 text-sm text-gray-600 active:bg-gray-50">
                       {category.title}
                     </Link>
                   ))}
@@ -586,10 +587,10 @@ export function NavBar() {
               </div>
             </div>
 
-            <Link href="/about-us" className="border-b border-gray-100 py-3 text-base font-bold hover:text-[#ffb81e]">
+            <Link href="/about-us" onClick={() => setIsMobileMenuOpen(false)} className="border-b border-gray-100 py-3 text-base font-bold hover:text-[#ffb81e]">
               About
             </Link>
-            <Link href="/contact" className="border-b border-gray-100 py-3 text-base font-bold hover:text-[#ffb81e]">
+            <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="border-b border-gray-100 py-3 text-base font-bold hover:text-[#ffb81e]">
               Contact
             </Link>
           </div>

@@ -3,7 +3,8 @@
 import { useState, useEffect, useCallback, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { ChevronDown, ChevronLeft, ChevronRight, Loader2, Search } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, Loader2, Search, SlidersHorizontal, X } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { ShopSidebar } from "../_components/shop/shop-sidebar";
 import { ProductCard } from "../_components/shared/product-card";
 import { FlashDealBanner } from "../_components/shop/flash-deal-banner";
@@ -40,6 +41,7 @@ function ShopContent() {
   const [sortBy, setSortBy] = useState<"price" | "name" | "created_at">("created_at");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [showSortDropdown, setShowSortDropdown] = useState(false);
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState(urlSearch);
   const [searchInput, setSearchInput] = useState(urlSearch);
   const [minPrice, setMinPrice] = useState<number | undefined>();
@@ -103,6 +105,14 @@ function ShopContent() {
 
     return () => clearTimeout(timer);
   }, [searchInput]);
+
+  // Prevent body scroll when mobile filter drawer is open
+  useEffect(() => {
+    document.body.style.overflow = isMobileFilterOpen ? "hidden" : "unset";
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isMobileFilterOpen]);
 
   const { data, isLoading, error } = useShopProducts({
     page: currentPage,
@@ -274,16 +284,62 @@ function ShopContent() {
         {hasFlashDeal && <FlashDealBanner />}
 
         <div className="flex flex-col gap-12 lg:flex-row">
-          {/* Sidebar */}
-          <ShopSidebar
-            onPriceRangeChange={handlePriceRangeChange}
-            onAvailabilityChange={handleAvailabilityChange}
-            onBrandChange={handleBrandChange}
-            onCategoryChange={handleCategoryChange}
-            onPreorderChange={handlePreorderChange}
-            initialBrandSlug={urlBrandSlug || undefined}
-            initialCategorySlug={urlCategorySlug || undefined}
+          {/* Sidebar - static on desktop */}
+          <div className="hidden lg:block">
+            <ShopSidebar
+              onPriceRangeChange={handlePriceRangeChange}
+              onAvailabilityChange={handleAvailabilityChange}
+              onBrandChange={handleBrandChange}
+              onCategoryChange={handleCategoryChange}
+              onPreorderChange={handlePreorderChange}
+              initialBrandSlug={urlBrandSlug || undefined}
+              initialCategorySlug={urlCategorySlug || undefined}
+            />
+          </div>
+
+          {/* Mobile Filter Drawer */}
+          <div
+            className={cn(
+              "fixed inset-0 z-50 bg-black/50 transition-opacity duration-300 lg:hidden",
+              isMobileFilterOpen ? "opacity-100" : "pointer-events-none opacity-0"
+            )}
+            onClick={() => setIsMobileFilterOpen(false)}
           />
+          <div
+            className={cn(
+              "fixed top-0 left-0 z-50 h-full w-[85%] max-w-[340px] overflow-y-auto bg-white shadow-2xl transition-transform duration-300 ease-in-out lg:hidden",
+              isMobileFilterOpen ? "translate-x-0" : "-translate-x-full"
+            )}
+          >
+            <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
+              <h2 className="text-lg font-bold text-black">Filters</h2>
+              <button
+                onClick={() => setIsMobileFilterOpen(false)}
+                className="p-1 text-gray-500 hover:text-black"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="px-5 pb-24">
+              <ShopSidebar
+                onPriceRangeChange={handlePriceRangeChange}
+                onAvailabilityChange={handleAvailabilityChange}
+                onBrandChange={handleBrandChange}
+                onCategoryChange={handleCategoryChange}
+                onPreorderChange={handlePreorderChange}
+                initialBrandSlug={urlBrandSlug || undefined}
+                initialCategorySlug={urlCategorySlug || undefined}
+              />
+            </div>
+            <div className="sticky bottom-0 border-t border-gray-100 bg-white p-4">
+              <button
+                onClick={() => setIsMobileFilterOpen(false)}
+                className="w-full rounded-md bg-black py-3 text-sm font-bold text-white"
+              >
+                Show {isLoading ? "" : totalProducts} Results
+              </button>
+            </div>
+          </div>
 
           {/* Main Content */}
           <div className="flex-1">
@@ -294,9 +350,9 @@ function ShopContent() {
                 {isLoading ? "Loading..." : `${totalProducts} products available`}
               </p>
 
-              {/* Search Bar */}
-              <div className="flex-1 min-w-0 max-w-[500]">
-                <div className="relative">
+              {/* Search Bar + Mobile Filter Trigger */}
+              <div className="flex flex-1 min-w-0 max-w-[500] gap-2">
+                <div className="relative flex-1 min-w-0">
                   <input
                     type="text"
                     value={searchInput}
@@ -306,6 +362,13 @@ function ShopContent() {
                   />
                   <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                 </div>
+                <button
+                  onClick={() => setIsMobileFilterOpen(true)}
+                  className="flex flex-shrink-0 items-center gap-1.5 rounded-md border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-black hover:border-gray-300 lg:hidden"
+                >
+                  <SlidersHorizontal className="h-4 w-4" />
+                  Filter
+                </button>
               </div>
 
               {/* Sort By Dropdown */}
