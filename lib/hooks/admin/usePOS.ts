@@ -13,7 +13,10 @@ interface POSOrderData {
   customer_phone: string;
   items: CartItem[];
   discount?: number;
-  payment_method: 'cash' | 'card' | 'manual';
+  payment_method: 'cash' | 'card' | 'manual' | 'bkash' | 'nagad' | 'bank_transfer';
+  reference_number?: string;
+  payment_note?: string;
+  proof?: File;
   notes?: string;
 }
 
@@ -76,7 +79,21 @@ export const useCalculatePOSOrder = (
 export const useCreatePOSOrder = (options?: Omit<UseMutationOptions<ApiResponse, any, POSOrderData>, 'mutationFn'>) => {
   return useMutation<ApiResponse, any, POSOrderData>({
     mutationFn: async (data: POSOrderData) => {
-      const response = await api.post('/api/admin/pos/orders', data);
+      const formData = new FormData();
+      formData.append('customer_name', data.customer_name);
+      if (data.customer_email) formData.append('customer_email', data.customer_email);
+      formData.append('customer_phone', data.customer_phone);
+      formData.append('items', JSON.stringify(data.items));
+      if (data.discount !== undefined) formData.append('discount', data.discount.toString());
+      formData.append('payment_method', data.payment_method);
+      if (data.reference_number) formData.append('reference_number', data.reference_number);
+      if (data.payment_note) formData.append('payment_note', data.payment_note);
+      if (data.proof instanceof File) formData.append('proof', data.proof);
+      if (data.notes) formData.append('notes', data.notes);
+
+      const response = await api.post('/api/admin/pos/orders', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
       return response.data;
     },
     ...options,

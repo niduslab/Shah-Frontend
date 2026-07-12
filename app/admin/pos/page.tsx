@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import {
   ShoppingCart, Search, Plus, Minus, Trash2, User, Phone, Mail,
-  CreditCard, Banknote, DollarSign, Receipt, X, Barcode, FileText
+  CreditCard, Banknote, DollarSign, Receipt, X, Barcode, FileText, Paperclip, Landmark, Smartphone
 } from 'lucide-react';
 import { toast } from 'sonner';
 import {
@@ -33,7 +33,7 @@ interface CustomerInfo {
   customer_phone: string;
 }
 
-type PaymentMethod = 'cash' | 'card' | 'manual';
+type PaymentMethod = 'cash' | 'card' | 'manual' | 'bkash' | 'nagad' | 'bank_transfer';
 type ActiveTab = 'pos' | 'quotation';
 
 export default function POSPage() {
@@ -44,6 +44,9 @@ export default function POSPage() {
   const [discount, setDiscount] = useState(0);
   const [notes, setNotes] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('cash');
+  const [referenceNumber, setReferenceNumber] = useState('');
+  const [paymentNote, setPaymentNote] = useState('');
+  const [proof, setProof] = useState<File | undefined>(undefined);
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({
     customer_name: '',
     customer_email: '',
@@ -101,6 +104,9 @@ export default function POSPage() {
     setCart([]);
     setDiscount(0);
     setNotes('');
+    setReferenceNumber('');
+    setPaymentNote('');
+    setProof(undefined);
     setCustomerInfo({ customer_name: '', customer_email: '', customer_phone: '' });
     setShowCustomerForm(false);
     setOrderSummary(null);
@@ -195,6 +201,9 @@ export default function POSPage() {
       })),
       discount,
       payment_method: paymentMethod,
+      reference_number: paymentMethod !== 'cash' ? referenceNumber || undefined : undefined,
+      payment_note: paymentMethod !== 'cash' ? paymentNote || undefined : undefined,
+      proof: paymentMethod !== 'cash' ? proof : undefined,
       notes
     });
   };
@@ -507,9 +516,16 @@ export default function POSPage() {
               <div className="bg-white rounded-lg shadow-sm p-6">
                 <h2 className="text-xl font-semibold text-gray-900 mb-4">Payment Method</h2>
                 <div className="grid grid-cols-3 gap-2">
-                  {(['cash', 'card', 'manual'] as PaymentMethod[]).map((method) => {
-                    const icons = { cash: <Banknote className="h-6 w-6" />, card: <CreditCard className="h-6 w-6" />, manual: <DollarSign className="h-6 w-6" /> };
-                    const labels = { cash: 'Cash', card: 'Card', manual: 'Manual' };
+                  {(['cash', 'card', 'bkash', 'nagad', 'bank_transfer', 'manual'] as PaymentMethod[]).map((method) => {
+                    const icons = {
+                      cash: <Banknote className="h-6 w-6" />,
+                      card: <CreditCard className="h-6 w-6" />,
+                      bkash: <Smartphone className="h-6 w-6" />,
+                      nagad: <Smartphone className="h-6 w-6" />,
+                      bank_transfer: <Landmark className="h-6 w-6" />,
+                      manual: <DollarSign className="h-6 w-6" />
+                    };
+                    const labels = { cash: 'Cash', card: 'Card', bkash: 'bKash', nagad: 'Nagad', bank_transfer: 'Bank Transfer', manual: 'Manual' };
                     return (
                       <button
                         key={method}
@@ -519,11 +535,51 @@ export default function POSPage() {
                         }`}
                       >
                         {icons[method]}
-                        <span className="text-sm font-medium">{labels[method]}</span>
+                        <span className="text-sm font-medium text-center">{labels[method]}</span>
                       </button>
                     );
                   })}
                 </div>
+
+                {paymentMethod !== 'cash' && (
+                  <div className="mt-4 space-y-3 border-t border-gray-200 pt-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Reference Number</label>
+                      <input
+                        type="text"
+                        value={referenceNumber}
+                        onChange={(e) => setReferenceNumber(e.target.value)}
+                        placeholder="Transaction ID, bank slip no., etc."
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Proof Document <span className="font-normal text-gray-400">(optional)</span>
+                      </label>
+                      <label className="flex cursor-pointer items-center gap-2 rounded-lg border border-dashed border-gray-300 px-3 py-2.5 text-sm text-gray-600 hover:border-orange-400 hover:bg-orange-50/50">
+                        <Paperclip className="h-4 w-4 shrink-0" />
+                        <span className="truncate">{proof ? proof.name : 'Attach receipt or screenshot'}</span>
+                        <input
+                          type="file"
+                          accept="image/png,image/jpeg,image/webp,application/pdf"
+                          className="hidden"
+                          onChange={(e) => setProof(e.target.files?.[0])}
+                        />
+                      </label>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Payment Note</label>
+                      <input
+                        type="text"
+                        value={paymentNote}
+                        onChange={(e) => setPaymentNote(e.target.value)}
+                        placeholder="Optional note about this payment"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 

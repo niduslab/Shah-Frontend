@@ -1,26 +1,28 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Package, Search, Eye, X, Truck, FileText, Calendar, DollarSign, User, MapPin, Filter, Download } from 'lucide-react';
+import { Package, Search, Eye, X, Truck, FileText, Calendar, DollarSign, User, MapPin, Filter, Download, Wallet } from 'lucide-react';
 import Pagination from '@/components/ui/Pagination';
 import { toast } from 'sonner';
 import api from '@/lib/api/axios';
-import { 
+import {
   useAdminOrders,
   useAdminOrder,
   useUpdateOrderStatus,
   useCancelAdminOrder,
   useAssignTracking,
-  useUpdateOrderNotes
+  useUpdateOrderNotes,
+  useRecordOrderPayment
 } from '@/lib/hooks/admin/useAdminOrders';
 import OrderDetailsModal from '@/app/admin/orders/_components/OrderDetailsModal';
 import CancelOrderModal from '@/app/admin/orders/_components/CancelOrderModal';
 import TrackingModal from '@/app/admin/orders/_components/TrackingModal';
 import NotesModal from '@/app/admin/orders/_components/NotesModal';
 import StatusUpdateModal from '@/app/admin/orders/_components/StatusUpdateModal';
+import RecordPaymentModal from '@/app/admin/orders/_components/RecordPaymentModal';
 
 type OrderStatus = 'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
-type PaymentStatus = 'pending' | 'paid' | 'failed' | 'refunded';
+type PaymentStatus = 'pending' | 'partial' | 'paid' | 'failed' | 'refunded';
 type OrderType = 'regular' | 'preorder';
 
 interface Order {
@@ -69,6 +71,7 @@ export default function OrdersPage() {
   const [isTrackingModalOpen, setIsTrackingModalOpen] = useState(false);
   const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
+  const [isRecordPaymentModalOpen, setIsRecordPaymentModalOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -98,6 +101,7 @@ export default function OrdersPage() {
   const cancelMutation = useCancelAdminOrder();
   const trackingMutation = useAssignTracking();
   const notesMutation = useUpdateOrderNotes();
+  const recordPaymentMutation = useRecordOrderPayment();
 
   const orders = (ordersData as any)?.data?.data || [];
   const paginationData = (ordersData as any)?.data;
@@ -127,6 +131,11 @@ export default function OrdersPage() {
     setIsNotesModalOpen(true);
   };
 
+  const handleRecordPayment = (orderId: number) => {
+    setSelectedOrderId(orderId);
+    setIsRecordPaymentModalOpen(true);
+  };
+
   const getStatusBadge = (status: OrderStatus) => {
     const styles = {
       pending: 'bg-yellow-100 text-yellow-700 ring-yellow-600/20',
@@ -147,6 +156,7 @@ export default function OrdersPage() {
   const getPaymentBadge = (status: PaymentStatus) => {
     const styles = {
       pending: 'bg-yellow-100 text-yellow-700 ring-yellow-600/20',
+      partial: 'bg-orange-100 text-orange-700 ring-orange-600/20',
       paid: 'bg-emerald-100 text-emerald-700 ring-emerald-600/20',
       failed: 'bg-red-100 text-red-700 ring-red-600/20',
       refunded: 'bg-gray-100 text-gray-700 ring-gray-600/20'
@@ -322,6 +332,7 @@ export default function OrdersPage() {
                     >
                       <option value="all">All Payments</option>
                       <option value="pending">Pending</option>
+                      <option value="partial">Partial</option>
                       <option value="paid">Paid</option>
                       <option value="failed">Failed</option>
                       <option value="refunded">Refunded</option>
@@ -499,6 +510,15 @@ export default function OrdersPage() {
                           >
                             <Download className="h-5 w-5" />
                           </button>
+                          {order.payment_status !== 'paid' && order.payment_status !== 'refunded' && (
+                            <button
+                              onClick={() => handleRecordPayment(order.id)}
+                              className="rounded-lg p-2 text-emerald-600 transition-all hover:bg-emerald-50 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                              title="Record payment"
+                            >
+                              <Wallet className="h-5 w-5" />
+                            </button>
+                          )}
                           {order.status !== 'cancelled' && order.status !== 'delivered' && (
                             <>
                               <button
@@ -684,6 +704,29 @@ export default function OrdersPage() {
                 } catch (error) {
                   toast.error('Failed to update notes', {
                     description: 'Please try again or contact support if the problem persists.'
+                  });
+                }
+              }}
+            />
+
+            <RecordPaymentModal
+              isOpen={isRecordPaymentModalOpen}
+              onClose={() => {
+                setIsRecordPaymentModalOpen(false);
+                setSelectedOrderId(null);
+              }}
+              orderId={selectedOrderId}
+              onSubmit={async (data) => {
+                try {
+                  await recordPaymentMutation.mutateAsync({ id: selectedOrderId, data });
+                  toast.success('Payment recorded', {
+                    description: 'The payment has been recorded successfully.'
+                  });
+                  setIsRecordPaymentModalOpen(false);
+                  setSelectedOrderId(null);
+                } catch (error: any) {
+                  toast.error('Failed to record payment', {
+                    description: error.response?.data?.message || 'Please try again or contact support if the problem persists.'
                   });
                 }
               }}

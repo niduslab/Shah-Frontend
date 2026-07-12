@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { X, Package, User, MapPin, CreditCard, Truck, FileText, Calendar, DollarSign } from 'lucide-react';
+import { X, Package, User, MapPin, CreditCard, Truck, FileText, Calendar, DollarSign, Wallet, Paperclip } from 'lucide-react';
 import { useAdminOrder } from '@/lib/hooks/admin/useAdminOrders';
 
 interface OrderDetailsModalProps {
@@ -277,6 +277,49 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }: OrderDet
                   </div>
                 </div>
               </div>
+
+              {/* Payments */}
+              {order.payments && order.payments.length > 0 && (
+                <div className="rounded-xl border border-gray-200 p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Wallet className="h-5 w-5 text-[#FF6F00]" />
+                    <h3 className="font-semibold text-gray-900">Payments</h3>
+                  </div>
+                  <div className="space-y-3">
+                    {order.payments.map((payment: any) => (
+                      <div key={payment.id} className="rounded-lg bg-gray-50 p-3 text-sm">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <span className="font-medium text-gray-900 capitalize">
+                            {payment.gateway_response?.method || payment.payment_method}
+                          </span>
+                          <span className="font-semibold text-gray-900">
+                            {formatCurrency(parseFloat(payment.amount || '0'))}
+                          </span>
+                        </div>
+                        <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-600">
+                          <span className="capitalize">Status: {payment.status}</span>
+                          {payment.reference_number && <span>Ref: {payment.reference_number}</span>}
+                          <span>{formatDate(payment.paid_at || payment.created_at)}</span>
+                        </div>
+                        {payment.note && (
+                          <p className="mt-1 text-xs text-gray-600 break-words">{payment.note}</p>
+                        )}
+                        {payment.proof_url && (
+                          <a
+                            href={payment.proof_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-[#FF6F00] hover:underline"
+                          >
+                            <Paperclip className="h-3 w-3" />
+                            View proof document
+                          </a>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Notes */}
               {order.notes && (
