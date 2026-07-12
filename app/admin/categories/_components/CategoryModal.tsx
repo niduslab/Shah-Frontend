@@ -501,7 +501,7 @@ export default function CategoryModal({
             </div>
 
             {/* Footer */}
-            <div className="flex items-center justify-end gap-3 border-t border-gray-200 bg-white px-6 py-4">
+            <div className="flex flex-col-reverse gap-2 border-t border-gray-200 bg-white px-6 py-4 sm:flex-row sm:items-center sm:justify-end sm:gap-3">
               <button
                 type="button"
                 onClick={onClose}

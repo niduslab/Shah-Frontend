@@ -31,16 +31,16 @@ export default function VisitorDetailsModal({ isOpen, onClose, visitor }: Visito
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl">
+      <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white rounded-2xl shadow-2xl">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-gray-200 p-6">
-          <div>
+          <div className="min-w-0">
             <h2 className="text-2xl font-bold text-gray-900">Visitor Details</h2>
             <p className="text-sm text-gray-500 mt-1">Submission ID: #{visitor.id}</p>
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg p-2 text-gray-400 transition-all hover:bg-gray-100 hover:text-gray-600"
+            className="rounded-lg p-2 text-gray-400 transition-all hover:bg-gray-100 hover:text-gray-600 shrink-0"
           >
             <X className="h-5 w-5" />
           </button>
@@ -60,7 +60,7 @@ export default function VisitorDetailsModal({ isOpen, onClose, visitor }: Visito
           </div>
 
           {/* Contact Information */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="rounded-xl bg-gray-50 p-4">
               <div className="flex items-center gap-2 mb-2">
                 <Mail className="h-5 w-5 text-emerald-600" />
@@ -69,7 +69,7 @@ export default function VisitorDetailsModal({ isOpen, onClose, visitor }: Visito
               {visitor.email ? (
                 <a
                   href={`mailto:${visitor.email}`}
-                  className="text-sm font-medium text-emerald-600 hover:underline"
+                  className="text-sm font-medium text-emerald-600 hover:underline break-words"
                 >
                   {visitor.email}
                 </a>
@@ -114,7 +114,7 @@ export default function VisitorDetailsModal({ isOpen, onClose, visitor }: Visito
                   <Globe className="h-5 w-5 text-orange-600" />
                   <label className="text-xs font-medium text-gray-500">IP Address</label>
                 </div>
-                <p className="text-sm font-medium text-gray-900 font-mono">{visitor.ip_address}</p>
+                <p className="text-sm font-medium text-gray-900 font-mono break-all">{visitor.ip_address}</p>
               </div>
             )}
 
@@ -131,7 +131,7 @@ export default function VisitorDetailsModal({ isOpen, onClose, visitor }: Visito
         </div>
 
         {/* Footer */}
-        <div className="flex justify-end gap-3 border-t border-gray-200 p-6">
+        <div className="flex flex-col-reverse gap-2 border-t border-gray-200 p-6 sm:flex-row sm:justify-end sm:gap-3">
           <button
             onClick={onClose}
             className="rounded-xl px-6 py-2.5 text-sm font-medium text-gray-700 transition-all hover:bg-gray-100"

@@ -340,14 +340,14 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
           </div>
         ) : (
           /* Form */
-          <form onSubmit={handleSubmit} className="p-6">
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <form onSubmit={handleSubmit} className="p-4 sm:p-6">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             {/* Basic Information */}
-            <div className="md:col-span-2">
+            <div className="sm:col-span-2">
               <h3 className="mb-4 text-lg font-semibold text-gray-900">Basic Information</h3>
             </div>
 
-            <div className="md:col-span-2">
+            <div className="sm:col-span-2">
               <label className="mb-2 block text-sm font-medium text-gray-700">
                 Product Name <span className="text-red-500">*</span>
               </label>
@@ -450,7 +450,7 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
               </p>
             </div>
 
-            <div className="md:col-span-2">
+            <div className="sm:col-span-2">
               <label className="mb-2 block text-sm font-medium text-gray-700">
                 Short Description
               </label>
@@ -463,7 +463,7 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
               />
             </div>
 
-            <div className="md:col-span-2">
+            <div className="sm:col-span-2">
               <label className="mb-2 block text-sm font-medium text-gray-700">
                 Description
               </label>
@@ -478,7 +478,7 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
             </div>
 
             {/* Pricing */}
-            <div className="md:col-span-2">
+            <div className="sm:col-span-2">
               <h3 className="mb-4 text-lg font-semibold text-gray-900">Pricing</h3>
             </div>
 
@@ -529,7 +529,7 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
             </div>
 
             {/* Inventory */}
-            <div className="md:col-span-2">
+            <div className="sm:col-span-2">
               <h3 className="mb-4 text-lg font-semibold text-gray-900">Inventory</h3>
             </div>
 
@@ -563,7 +563,7 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
             </div>
 
             {/* Shipping */}
-            <div className="md:col-span-2">
+            <div className="sm:col-span-2">
               <h3 className="mb-4 text-lg font-semibold text-gray-900">Shipping</h3>
             </div>
 
@@ -598,7 +598,7 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
               </select>
             </div>
 
-            <div className="md:col-span-2">
+            <div className="sm:col-span-2">
               <label className="mb-2 block text-sm font-medium text-gray-700">
                 Country of Origin
               </label>
@@ -612,11 +612,11 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
             </div>
 
             {/* Features */}
-            <div className="md:col-span-2">
+            <div className="sm:col-span-2">
               <h3 className="mb-4 text-lg font-semibold text-gray-900">Features</h3>
             </div>
 
-            <div className="md:col-span-2 flex items-center gap-6">
+            <div className="sm:col-span-2 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-6">
               <div className="flex items-center gap-2">
                 <input
                   type="checkbox"
@@ -658,11 +658,11 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
             </div>
 
             {/* Pre-Order Settings */}
-            <div className="md:col-span-2">
+            <div className="sm:col-span-2">
               <h3 className="mb-4 text-lg font-semibold text-gray-900">Pre-Order Settings</h3>
             </div>
 
-            <div className="md:col-span-2">
+            <div className="sm:col-span-2">
               <div className="flex items-center gap-2">
                 <input
                   type="checkbox"
@@ -760,11 +760,11 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
             )}
 
             {/* SEO */}
-            <div className="md:col-span-2">
+            <div className="sm:col-span-2">
               <h3 className="mb-4 text-lg font-semibold text-gray-900">SEO</h3>
             </div>
 
-            <div className="md:col-span-2">
+            <div className="sm:col-span-2">
               <label className="mb-2 block text-sm font-medium text-gray-700">
                 Meta Title
               </label>
@@ -777,7 +777,7 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
               />
             </div>
 
-            <div className="md:col-span-2">
+            <div className="sm:col-span-2">
               <label className="mb-2 block text-sm font-medium text-gray-700">
                 Meta Description
               </label>
@@ -791,12 +791,12 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
             </div>
 
             {/* Product Images */}
-            <div className="md:col-span-2">
+            <div className="sm:col-span-2">
               <ImageManager images={images} onChange={setImages} maxImages={10} />
             </div>
 
             {/* Product Variations */}
-            <div className="md:col-span-2">
+            <div className="sm:col-span-2">
               <VariationManager 
                 variations={variations} 
                 onChange={(newVariations) => {
@@ -816,7 +816,7 @@ export default function ProductModal({ isOpen, onClose, product, isLoading = fal
           </div>
 
           {/* Actions */}
-          <div className="mt-8 flex items-center justify-end gap-3 border-t border-gray-200 pt-6">
+          <div className="mt-8 flex flex-col-reverse gap-2 border-t border-gray-200 pt-6 sm:flex-row sm:items-center sm:justify-end sm:gap-3">
             <button
               type="button"
               onClick={onClose}

@@ -75,14 +75,14 @@ export default function PageModal({ isOpen, onClose, page, onSubmit }: PageModal
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-2xl rounded-2xl bg-white shadow-2xl">
+      <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-2xl">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-gray-200 p-6">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#FF6F00] to-[#E65100]">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#FF6F00] to-[#E65100] shrink-0">
               <FileText className="h-5 w-5 text-white" />
             </div>
-            <div>
+            <div className="min-w-0">
               <h2 className="text-xl font-bold text-gray-900">
                 {page ? 'Edit Page' : 'Create Page'}
               </h2>
@@ -93,7 +93,7 @@ export default function PageModal({ isOpen, onClose, page, onSubmit }: PageModal
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+            className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 shrink-0"
           >
             <X className="h-5 w-5" />
           </button>
@@ -215,7 +215,7 @@ export default function PageModal({ isOpen, onClose, page, onSubmit }: PageModal
           </div>
 
           {/* Actions */}
-          <div className="mt-8 flex gap-3">
+          <div className="mt-8 flex flex-col-reverse gap-2 sm:flex-row sm:gap-3">
             <button
               type="button"
               onClick={onClose}

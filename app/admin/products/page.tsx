@@ -134,7 +134,7 @@ export default function ProductsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-6">
       <div className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="mb-8">
@@ -172,7 +172,7 @@ export default function ProductsPage() {
               )}
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
               {/* Status Filter */}
               <select
                 value={statusFilter}
@@ -180,7 +180,7 @@ export default function ProductsPage() {
                   setStatusFilter(e.target.value as any);
                   setCurrentPage(1);
                 }}
-                className="rounded-xl border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm transition-all focus:border-[#FF6F00] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
+                className="w-full sm:w-auto rounded-xl border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm transition-all focus:border-[#FF6F00] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
               >
                 <option value="all">All Status</option>
                 <option value="active">Active</option>
@@ -195,7 +195,7 @@ export default function ProductsPage() {
                   setPerPage(Number(e.target.value));
                   setCurrentPage(1);
                 }}
-                className="rounded-xl border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm transition-all focus:border-[#FF6F00] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
+                className="w-full sm:w-auto rounded-xl border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm transition-all focus:border-[#FF6F00] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
                 title="Products per page"
               >
                 <option value={10}>10 / page</option>
@@ -206,8 +206,8 @@ export default function ProductsPage() {
               </select>
 
               {/* Bulk Import Button */}
-              <Link href="/admin/products/bulk-import">
-                <button className="flex items-center gap-2 rounded-xl border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition-all hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-400">
+              <Link href="/admin/products/bulk-import" className="w-full sm:w-auto">
+                <button className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition-all hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-400">
                   <Upload className="h-5 w-5" />
                   Bulk Import
                 </button>
@@ -216,7 +216,7 @@ export default function ProductsPage() {
               {/* Create Button */}
               <button
                 onClick={handleCreate}
-                className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#FF6F00] to-[#E65100] px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-orange-500/30 transition-all hover:shadow-xl hover:shadow-orange-500/40 focus:outline-none focus:ring-2 focus:ring-[#FF6F00] focus:ring-offset-2"
+                className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#FF6F00] to-[#E65100] px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-orange-500/30 transition-all hover:shadow-xl hover:shadow-orange-500/40 focus:outline-none focus:ring-2 focus:ring-[#FF6F00] focus:ring-offset-2"
               >
                 <Plus className="h-5 w-5" />
                 Add Product
@@ -229,7 +229,7 @@ export default function ProductsPage() {
         <div className="rounded-2xl bg-white shadow-lg ring-1 ring-gray-200">
           {/* Result count + active search indicator */}
           {debouncedSearch && !isFetching && (
-            <div className="flex items-center justify-between border-b border-gray-100 px-6 py-3">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between border-b border-gray-100 px-6 py-3">
               <p className="text-sm text-gray-500">
                 {products.length === 0
                   ? <>No results for <span className="font-medium text-gray-900">"{debouncedSearch}"</span></>

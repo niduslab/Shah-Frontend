@@ -186,7 +186,7 @@ export default function ReviewsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-6 lg:p-8">
       <div className="mx-auto max-w-7xl">
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-3">
@@ -201,7 +201,7 @@ export default function ReviewsPage() {
         </div>
 
         {stats && (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             <div className="rounded-2xl bg-white p-5 shadow-lg ring-1 ring-gray-200">
               <div className="flex items-center justify-between">
                 <div>
@@ -271,7 +271,7 @@ export default function ReviewsPage() {
             <div className="flex flex-col sm:flex-row gap-3">
               <div className="flex-1">
                 <label className="block text-xs font-medium text-gray-700 mb-1.5">Status</label>
-                <div className="flex items-center gap-1 rounded-xl bg-gray-100 p-1">
+                <div className="flex flex-wrap items-center gap-1 rounded-xl bg-gray-100 p-1">
                   <button
                     onClick={() => setStatusFilter('all')}
                     className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
@@ -317,7 +317,7 @@ export default function ReviewsPage() {
 
               <div className="flex-1">
                 <label className="block text-xs font-medium text-gray-700 mb-1.5">Rating</label>
-                <div className="flex items-center gap-1 rounded-xl bg-gray-100 p-1">
+                <div className="flex flex-wrap items-center gap-1 rounded-xl bg-gray-100 p-1">
                   <button
                     onClick={() => setRatingFilter(null)}
                     className={`rounded-lg px-3 py-2 text-sm font-medium transition-all ${
@@ -367,7 +367,7 @@ export default function ReviewsPage() {
                   key={review.id}
                   className="group p-6 transition-all hover:bg-gradient-to-r hover:from-gray-50 hover:to-transparent"
                 >
-                  <div className="flex gap-4">
+                  <div className="flex flex-col gap-4 sm:flex-row">
                     {review.product.image && (
                       <div className="flex-shrink-0">
                         <img
@@ -380,12 +380,12 @@ export default function ReviewsPage() {
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-4 mb-2">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex flex-wrap items-center gap-2 mb-1">
                             {renderStars(review.rating)}
                             {getStatusBadge(review.status)}
                           </div>
-                          <h3 className="text-base font-semibold text-gray-900 mb-1">{review.title}</h3>
+                          <h3 className="text-base font-semibold text-gray-900 mb-1 break-words">{review.title}</h3>
                           <p className="text-sm text-gray-600 line-clamp-2">{review.comment}</p>
                         </div>
                       </div>
@@ -439,7 +439,7 @@ export default function ReviewsPage() {
                       )}
                     </div>
 
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-row gap-2 sm:flex-col">
                       <button
                         onClick={() => handleViewDetails(review)}
                         className="rounded-lg p-2 text-blue-600 transition-all hover:bg-blue-50"

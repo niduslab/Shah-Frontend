@@ -88,13 +88,13 @@ export default function AdminPage() {
   return (
     <div className="space-y-6">
       {/* Stats Grid */}
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
         {stats.map((stat, index) => (
           <div key={stat.title} className={`rounded-2xl ${stat.bgColor} p-6 shadow-sm`}>
             <div className="flex items-start justify-between">
-              <div>
+              <div className="min-w-0">
                 <p className="text-sm font-medium text-gray-600">{stat.title}</p>
-                <h3 className="mt-2 text-3xl font-bold text-gray-900">{stat.value}</h3>
+                <h3 className="mt-2 truncate text-3xl font-bold text-gray-900">{stat.value}</h3>
               </div>
               <div className={`rounded-xl ${index === 0 ? "bg-orange-500" : "bg-gray-100"} p-3`}>
                 <stat.icon className={`h-6 w-6 ${index === 0 ? "text-white" : stat.iconColor}`} />
@@ -105,8 +105,8 @@ export default function AdminPage() {
       </div>
 
       {/* Revenue Analytics */}
-      <div className="rounded-2xl bg-white p-6 shadow-sm">
-        <div className="mb-6 flex items-center justify-between">
+      <div className="rounded-2xl bg-white p-4 shadow-sm sm:p-6">
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h3 className="text-lg font-bold text-gray-900">Revenue Analytics</h3>
             <p className="mt-1 text-sm text-gray-500">Last 7 Days</p>
@@ -141,12 +141,12 @@ export default function AdminPage() {
       </div>
 
       {/* Recent Orders */}
-      <div className="rounded-2xl bg-white p-6 shadow-sm">
-        <div className="mb-6 flex items-center justify-between">
+      <div className="rounded-2xl bg-white p-4 shadow-sm sm:p-6">
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <h3 className="text-lg font-bold text-gray-900">Recent Orders</h3>
           <Link
             href="/admin/orders"
-            className="rounded-lg bg-orange-500 px-4 py-2 text-sm font-semibold text-white hover:bg-orange-600"
+            className="w-full rounded-lg bg-orange-500 px-4 py-2 text-center text-sm font-semibold text-white hover:bg-orange-600 sm:w-auto"
           >
             View All Orders
           </Link>

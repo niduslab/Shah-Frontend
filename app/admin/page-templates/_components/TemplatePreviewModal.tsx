@@ -41,23 +41,23 @@ export default function TemplatePreviewModal({ isOpen, onClose, template }: Temp
         />
 
         {/* Modal */}
-        <div className="relative w-full max-w-5xl rounded-2xl bg-white shadow-2xl">
+        <div className="relative w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-2xl">
           {/* Header */}
-          <div className="flex items-center justify-between border-b border-gray-200 p-6">
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900">{template.name}</h2>
+          <div className="flex items-start justify-between gap-3 border-b border-gray-200 p-6">
+            <div className="min-w-0">
+              <h2 className="text-2xl font-bold text-gray-900 break-words">{template.name}</h2>
               <p className="mt-1 text-sm text-gray-600">{template.description}</p>
             </div>
             <button
               onClick={onClose}
-              className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+              className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 shrink-0"
             >
               <X className="h-6 w-6" />
             </button>
           </div>
 
           {/* Tabs */}
-          <div className="border-b border-gray-200 px-6">
+          <div className="border-b border-gray-200 px-6 overflow-x-auto">
             <div className="flex gap-4">
               <button
                 onClick={() => setActiveTab('preview')}
@@ -99,7 +99,7 @@ export default function TemplatePreviewModal({ isOpen, onClose, template }: Temp
             {activeTab === 'preview' && (
               <div className="space-y-6">
                 {/* Template Info */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="rounded-lg bg-gray-50 p-4">
                     <p className="text-sm font-medium text-gray-600 mb-1">Category</p>
                     <p className="text-lg font-bold text-gray-900 capitalize">{template.category}</p>
@@ -155,11 +155,11 @@ export default function TemplatePreviewModal({ isOpen, onClose, template }: Temp
 
             {activeTab === 'schema' && (
               <div className="space-y-4">
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-4">
                   <h3 className="font-bold text-gray-900">Template Schema</h3>
                   <button
                     onClick={() => copyToClipboard(JSON.stringify(template.schema, null, 2))}
-                    className="flex items-center gap-2 rounded-lg bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-200"
+                    className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-200"
                   >
                     <Copy className="h-4 w-4" />
                     Copy
@@ -194,11 +194,11 @@ export default function TemplatePreviewModal({ isOpen, onClose, template }: Temp
 
             {activeTab === 'example' && (
               <div className="space-y-4">
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-4">
                   <h3 className="font-bold text-gray-900">Example Data</h3>
                   <button
                     onClick={() => copyToClipboard(JSON.stringify(template.example, null, 2))}
-                    className="flex items-center gap-2 rounded-lg bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-200"
+                    className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-200"
                   >
                     <Copy className="h-4 w-4" />
                     Copy
@@ -221,7 +221,7 @@ export default function TemplatePreviewModal({ isOpen, onClose, template }: Temp
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-end gap-3 border-t border-gray-200 p-6">
+          <div className="flex flex-col-reverse gap-2 sm:flex-row sm:items-center sm:justify-end sm:gap-3 border-t border-gray-200 p-6">
             <button
               onClick={onClose}
               className="rounded-lg border border-gray-300 px-6 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
@@ -230,7 +230,7 @@ export default function TemplatePreviewModal({ isOpen, onClose, template }: Temp
             </button>
             <button
               onClick={handleUseTemplate}
-              className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#FF6F00] to-[#E65100] px-6 py-2.5 text-sm font-medium text-white shadow-lg shadow-orange-500/30 transition-all hover:shadow-xl hover:shadow-orange-500/40"
+              className="flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#FF6F00] to-[#E65100] px-6 py-2.5 text-sm font-medium text-white shadow-lg shadow-orange-500/30 transition-all hover:shadow-xl hover:shadow-orange-500/40"
             >
               <Copy className="h-4 w-4" />
               Use This Template

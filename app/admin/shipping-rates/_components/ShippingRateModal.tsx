@@ -96,7 +96,7 @@ export default function ShippingRateModal({ rate, onClose }: ShippingRateModalPr
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-2xl rounded-sm bg-white shadow-xl">
+      <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-sm bg-white shadow-xl">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
           <h2 className="text-xl font-semibold text-gray-900">
@@ -145,7 +145,7 @@ export default function ShippingRateModal({ rate, onClose }: ShippingRateModalPr
             </div>
 
             {/* Zone and Shipping Class */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="mb-1 block text-sm font-medium text-gray-700">
                   Zone
@@ -180,7 +180,7 @@ export default function ShippingRateModal({ rate, onClose }: ShippingRateModalPr
             </div>
 
             {/* Base Cost and Per KG Cost */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="mb-1 block text-sm font-medium text-gray-700">
                   Base Cost (৳) <span className="text-red-500">*</span>
@@ -213,7 +213,7 @@ export default function ShippingRateModal({ rate, onClose }: ShippingRateModalPr
             </div>
 
             {/* Weight Range */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="mb-1 block text-sm font-medium text-gray-700">
                   Min Weight (kg)
@@ -291,7 +291,7 @@ export default function ShippingRateModal({ rate, onClose }: ShippingRateModalPr
           </div>
 
           {/* Actions */}
-          <div className="mt-6 flex justify-end gap-3">
+          <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end sm:gap-3">
             <button
               type="button"
               onClick={onClose}

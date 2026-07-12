@@ -160,18 +160,18 @@ export default function BulkImportPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-6 lg:p-8">
       <div className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="mb-8">
-          <Link 
+          <Link
             href="/admin/products"
             className="mb-4 inline-flex items-center gap-2 text-sm font-medium text-gray-600 transition-colors hover:text-[#FF6F00]"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Products
           </Link>
-          
+
           <div className="flex items-center gap-3">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#FF6F00] to-[#E65100] shadow-lg shadow-orange-500/30">
               <Upload className="h-6 w-6 text-white" />
@@ -189,11 +189,11 @@ export default function BulkImportPage() {
             {/* Upload Section */}
             <div className="rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-200">
               <h2 className="mb-4 text-lg font-semibold text-gray-900">Upload CSV File</h2>
-              
+
               {/* Dropzone */}
               <div
                 {...getRootProps()}
-                className={`relative cursor-pointer rounded-xl border-2 border-dashed p-8 text-center transition-all ${
+                className={`relative w-full cursor-pointer rounded-xl border-2 border-dashed p-4 sm:p-8 text-center transition-all ${
                   isDragActive
                     ? 'border-[#FF6F00] bg-orange-50'
                     : selectedFile
@@ -208,8 +208,8 @@ export default function BulkImportPage() {
                     <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
                       <FileText className="h-8 w-8 text-green-600" />
                     </div>
-                    <div>
-                      <p className="font-semibold text-gray-900">{selectedFile.name}</p>
+                    <div className="max-w-full">
+                      <p className="font-semibold text-gray-900 break-words">{selectedFile.name}</p>
                       <p className="text-sm text-gray-500">
                         {(selectedFile.size / 1024).toFixed(2)} KB
                       </p>
@@ -271,11 +271,11 @@ export default function BulkImportPage() {
 
             {/* Import History */}
             <div className="rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-200">
-              <div className="mb-4 flex items-center justify-between">
+              <div className="mb-4 flex items-center justify-between gap-3">
                 <h2 className="text-lg font-semibold text-gray-900">Import History</h2>
                 <button
                   onClick={() => refetchImports()}
-                  className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100"
+                  className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 shrink-0"
                   title="Refresh"
                 >
                   <RefreshCw className="h-5 w-5" />

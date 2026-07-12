@@ -315,7 +315,7 @@ export default function BrandModal({ isOpen, onClose, brand, onSubmit }: BrandMo
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-3 pt-4 border-t border-gray-200">
+          <div className="flex flex-col-reverse gap-2 pt-4 border-t border-gray-200 sm:flex-row sm:gap-3">
             <button
               type="button"
               onClick={onClose}

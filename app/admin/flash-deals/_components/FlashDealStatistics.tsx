@@ -59,7 +59,7 @@ export default function FlashDealStatistics({
           ) : stats ? (
             <div className="space-y-6">
               {/* Overview Stats */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 p-4 border border-blue-200">
                   <div className="flex items-center gap-3 mb-2">
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500">
@@ -144,7 +144,7 @@ export default function FlashDealStatistics({
               {stats.conversion_rate !== undefined && (
                 <div className="rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 p-6 border border-gray-200">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Additional Metrics</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
                       <p className="text-sm text-gray-600 mb-1">Conversion Rate</p>
                       <p className="text-xl font-bold text-gray-900">{stats.conversion_rate}%</p>

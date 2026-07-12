@@ -120,25 +120,25 @@ export default function UserDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-6 lg:p-8">
       <div className="mx-auto max-w-5xl space-y-6">
 
         {/* Back + Header */}
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
           <button
             onClick={() => router.back()}
-            className="flex items-center gap-2 rounded-xl bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow ring-1 ring-gray-200 transition hover:bg-gray-50"
+            className="flex items-center gap-2 rounded-xl bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow ring-1 ring-gray-200 transition hover:bg-gray-50 w-full sm:w-auto justify-center sm:justify-start"
           >
             <ArrowLeft className="h-4 w-4" />
             Back
           </button>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">
+          <div className="min-w-0">
+            <h1 className="text-2xl font-bold text-gray-900 truncate">
               {user.first_name} {user.last_name}
             </h1>
             <p className="text-sm text-gray-500">User #{user.id}</p>
           </div>
-          <div className="ml-auto flex items-center gap-2">
+          <div className="sm:ml-auto flex items-center gap-2">
             <button
               onClick={() => setIsEditModalOpen(true)}
               className="flex items-center gap-2 rounded-xl bg-white px-4 py-2 text-sm font-medium text-[#FF6F00] shadow ring-1 ring-gray-200 transition hover:bg-orange-50"
@@ -171,8 +171,8 @@ export default function UserDetailPage() {
         </div>
 
         {/* Profile Card */}
-        <div className="rounded-2xl bg-white shadow-lg ring-1 ring-gray-200 p-6">
-          <div className="flex items-center gap-5">
+        <div className="rounded-2xl bg-white shadow-lg ring-1 ring-gray-200 p-4 sm:p-6">
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
             <div className="flex h-20 w-20 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#FF6F00] to-[#E65100] text-white text-3xl font-bold">
               {user.first_name?.charAt(0)}{user.last_name?.charAt(0)}
             </div>
@@ -304,12 +304,12 @@ export default function UserDetailPage() {
                 <>
                   <div className="divide-y divide-gray-100">
                     {orders.data.map((order: any) => (
-                      <div key={order.id} className="flex items-center justify-between gap-4 p-5">
-                        <div>
-                          <p className="font-semibold text-gray-900">#{order.order_number}</p>
+                      <div key={order.id} className="flex flex-wrap items-center justify-between gap-3 p-5">
+                        <div className="min-w-0">
+                          <p className="font-semibold text-gray-900 truncate">#{order.order_number}</p>
                           <p className="text-xs text-gray-500 mt-0.5">{formatDate(order.created_at)}</p>
                         </div>
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-3 flex-wrap">
                           {getOrderStatusBadge(order.status)}
                           <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
                             order.payment_status === 'paid'

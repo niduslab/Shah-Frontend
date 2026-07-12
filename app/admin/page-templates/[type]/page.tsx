@@ -182,8 +182,8 @@ export default function PageBuilderPage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Header */}
       <div className="border-b border-gray-200 bg-white shadow-sm">
-        <div className="mx-auto max-w-[1800px] px-6 py-4">
-          <div className="flex items-center justify-between">
+        <div className="mx-auto max-w-[1800px] px-4 sm:px-6 py-4">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-4">
               <button
                 onClick={() => router.push('/admin/page-templates')}
@@ -192,9 +192,9 @@ export default function PageBuilderPage() {
                 <ArrowLeft className="h-4 w-4" />
                 Back
               </button>
-              <div className="h-8 w-px bg-gray-300" />
-              <div>
-                <h1 className="text-xl font-bold text-gray-900">{pageTypeName} Builder</h1>
+              <div className="hidden sm:block h-8 w-px bg-gray-300" />
+              <div className="min-w-0">
+                <h1 className="text-xl font-bold text-gray-900 truncate">{pageTypeName} Builder</h1>
                 <p className="text-sm text-gray-600">{selectedSections.length} sections added</p>
               </div>
             </div>
@@ -202,7 +202,7 @@ export default function PageBuilderPage() {
             <button
               onClick={handleSavePage}
               disabled={createPageMutation.isPending || createSectionMutation.isPending}
-              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#FF6F00] to-[#E65100] px-6 py-2.5 text-sm font-medium text-white shadow-lg shadow-orange-500/30 transition-all hover:shadow-xl hover:shadow-orange-500/40 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#FF6F00] to-[#E65100] px-6 py-2.5 text-sm font-medium text-white shadow-lg shadow-orange-500/30 transition-all hover:shadow-xl hover:shadow-orange-500/40 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Save className="h-4 w-4" />
               {createPageMutation.isPending || createSectionMutation.isPending ? 'Saving...' : 'Save Page'}
@@ -212,7 +212,7 @@ export default function PageBuilderPage() {
       </div>
 
       {/* Main Content */}
-      <div className="mx-auto max-w-[1800px] p-6">
+      <div className="mx-auto max-w-[1800px] p-4 sm:p-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left: Section Grid */}
           <div className="lg:col-span-2">
@@ -228,7 +228,7 @@ export default function PageBuilderPage() {
 
           {/* Right: Section Editor */}
           <div className="lg:col-span-1">
-            <div className="sticky top-6">
+            <div className="lg:sticky lg:top-6">
               <SectionEditor
                 section={editingSection}
                 pageTitle={pageTitle}

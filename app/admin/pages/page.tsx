@@ -118,7 +118,7 @@ export default function PagesManagementPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-6">
       <div className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="mb-8">
@@ -129,13 +129,13 @@ export default function PagesManagementPage() {
             <ArrowLeft className="h-4 w-4" />
             Back to Page Builder
           </button>
-          
+
           <div className="flex items-center gap-3 mb-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#FF6F00] to-[#E65100] shadow-lg shadow-orange-500/30">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#FF6F00] to-[#E65100] shadow-lg shadow-orange-500/30 shrink-0">
               <FileText className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Manage Pages</h1>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Manage Pages</h1>
               <p className="text-sm text-gray-600">View and manage all your pages</p>
             </div>
           </div>
@@ -178,7 +178,7 @@ export default function PagesManagementPage() {
             {/* Create Button */}
             <button
               onClick={() => router.push('/admin/page-templates')}
-              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#FF6F00] to-[#E65100] px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-orange-500/30 transition-all hover:shadow-xl hover:shadow-orange-500/40"
+              className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#FF6F00] to-[#E65100] px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-orange-500/30 transition-all hover:shadow-xl hover:shadow-orange-500/40"
             >
               <Plus className="h-5 w-5" />
               Create Page
@@ -216,10 +216,10 @@ export default function PagesManagementPage() {
                   key={page.id}
                   className="group p-6 transition-all hover:bg-gradient-to-r hover:from-gray-50 hover:to-transparent"
                 >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-lg font-bold text-gray-900">{page.title}</h3>
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-wrap items-center gap-3 mb-2">
+                        <h3 className="text-lg font-bold text-gray-900 break-words">{page.title}</h3>
                         {getTypeBadge(page.type)}
                         {page.is_active ? (
                           <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-emerald-100 text-emerald-700 ring-1 ring-emerald-600/20">
@@ -232,7 +232,7 @@ export default function PagesManagementPage() {
                         )}
                       </div>
 
-                      <p className="text-sm text-gray-600 mb-3 font-mono">/{page.slug}</p>
+                      <p className="text-sm text-gray-600 mb-3 font-mono break-all">/{page.slug}</p>
 
                       <div className="flex flex-wrap gap-2">
                         {(page.sections_count !== undefined || (page as any).sections) && (
@@ -244,7 +244,7 @@ export default function PagesManagementPage() {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 shrink-0">
                       <button
                         onClick={() => handleToggle(page)}
                         className={`rounded-lg p-2 transition-all focus:outline-none focus:ring-2 ${

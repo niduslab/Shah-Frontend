@@ -59,7 +59,7 @@ export default function DeleteConfirmModal({
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-3 border-t border-gray-200 px-6 py-4">
+        <div className="flex flex-col-reverse gap-2 border-t border-gray-200 px-6 py-4 sm:flex-row sm:gap-3">
           <button
             type="button"
             onClick={onClose}

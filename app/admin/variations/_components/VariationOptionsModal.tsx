@@ -131,7 +131,7 @@ export default function VariationOptionsModal({
             <h3 className="mb-3 text-sm font-semibold text-gray-900">Add New Options</h3>
             <div className="space-y-3">
               {options.map((option, index) => (
-                <div key={index} className="flex gap-3">
+                <div key={index} className="flex flex-col gap-2 sm:flex-row sm:gap-3">
                   <input
                     type="text"
                     value={option.value}
@@ -149,7 +149,7 @@ export default function VariationOptionsModal({
                   <button
                     type="button"
                     onClick={() => handleRemoveOption(index)}
-                    className="rounded-lg p-2 text-red-600 hover:bg-red-50"
+                    className="self-end rounded-lg p-2 text-red-600 hover:bg-red-50 sm:self-auto"
                     title="Remove"
                   >
                     <Trash2 className="h-4 w-4" />
@@ -169,7 +169,7 @@ export default function VariationOptionsModal({
           </div>
 
           {/* Actions */}
-          <div className="mt-6 flex items-center justify-end gap-3 border-t border-gray-200 pt-6">
+          <div className="mt-6 flex flex-col-reverse gap-2 border-t border-gray-200 pt-6 sm:flex-row sm:items-center sm:justify-end sm:gap-3">
             <button
               type="button"
               onClick={onClose}

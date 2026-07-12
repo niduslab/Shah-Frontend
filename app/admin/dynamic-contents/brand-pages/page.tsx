@@ -341,17 +341,17 @@ function BrandPagesManagementContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
       <div className="mx-auto max-w-[1600px]">
-        <div className="mb-8 flex items-center justify-between">
+        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Brand Pages Management</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Brand Pages Management</h1>
             <p className="mt-2 text-gray-600">Manage hero sections for brand pages</p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row">
             <button
               onClick={addNewBrand}
-              className="flex items-center gap-2 rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200"
+              className="flex items-center justify-center gap-2 rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200"
             >
               <Plus className="h-4 w-4" />
               Add Brand
@@ -359,7 +359,7 @@ function BrandPagesManagementContent() {
             <button
               onClick={handleSave}
               disabled={saving}
-              className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-orange-400 to-orange-500 px-6 py-2 text-sm font-medium text-white hover:from-orange-500 hover:to-orange-600 disabled:opacity-50"
+              className="flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-orange-400 to-orange-500 px-6 py-2 text-sm font-medium text-white hover:from-orange-500 hover:to-orange-600 disabled:opacity-50"
             >
               <Save className="h-4 w-4" />
               {saving ? "Saving..." : "Save Changes"}
@@ -370,9 +370,9 @@ function BrandPagesManagementContent() {
         {/* Brand List */}
         <div className="space-y-6">
           {brands.map((brand) => (
-            <div key={brand.id} className="rounded-xl bg-white p-6 shadow-lg">
-              <div className="mb-4 flex items-center justify-between">
-                <div className="flex items-center gap-4">
+            <div key={brand.id} className="rounded-xl bg-white p-4 sm:p-6 shadow-lg">
+              <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex flex-wrap items-center gap-4">
                   <h2 className="text-xl font-semibold text-gray-900">{brand.brandName}</h2>
                   <label className="flex items-center gap-2">
                     <input
@@ -449,7 +449,7 @@ function BrandPagesManagementContent() {
                   </div>
 
                   {/* Content */}
-                  <div className="relative z-20 flex h-full items-center px-8 md:px-12">
+                  <div className="relative z-20 flex h-full items-center px-4 sm:px-8 md:px-12">
                     <div className="max-w-xl md:max-w-2xl">
                       <h1 className="mb-6 text-3xl font-bold leading-tight text-white sm:text-4xl md:text-5xl lg:text-[56px]">
                         {renderTitle(brand.title)} <br />
@@ -477,9 +477,9 @@ function BrandPagesManagementContent() {
               {/* Categories Section Preview */}
               {brand.categories && brand.categories.enabled && (
                 <div className="mt-6 border-t pt-6">
-                  <div className="mb-4 flex items-center justify-between">
+                  <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <h3 className="text-lg font-semibold text-gray-900">Categories Section</h3>
-                    <div className="flex items-center gap-3">
+                    <div className="flex flex-wrap items-center gap-3">
                       <button
                         onClick={() => {
                           setEditingBrand(brand.id);
@@ -504,8 +504,8 @@ function BrandPagesManagementContent() {
                     </div>
                   </div>
 
-                  <div 
-                    className="rounded-xl p-8"
+                  <div
+                    className="rounded-xl p-4 sm:p-6 lg:p-8"
                     style={{
                       background: "radial-gradient(72.28% 72.28% at 53.3% 84.54%, #EC9A24 0%, #1B150F 100%)",
                     }}
@@ -568,9 +568,9 @@ function BrandPagesManagementContent() {
               {/* Behind The Work Section Preview */}
               {brand.behindTheWork && brand.behindTheWork.enabled && (
                 <div className="mt-6 border-t pt-6">
-                  <div className="mb-4 flex items-center justify-between">
+                  <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <h3 className="text-lg font-semibold text-gray-900">Behind The Work Section</h3>
-                    <div className="flex items-center gap-3">
+                    <div className="flex flex-wrap items-center gap-3">
                       <button
                         onClick={() => {
                           setEditingBrand(brand.id);
@@ -595,7 +595,7 @@ function BrandPagesManagementContent() {
                     </div>
                   </div>
 
-                  <div className="rounded-xl bg-white p-8">
+                  <div className="rounded-xl bg-white p-4 sm:p-6 lg:p-8">
                     <div className="flex flex-col gap-8 lg:flex-row lg:items-center">
                       {/* Content Side */}
                       <div className="flex-1">
@@ -607,7 +607,7 @@ function BrandPagesManagementContent() {
                         </p>
 
                         {/* Stats */}
-                        <div className="grid grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                           {brand.behindTheWork.stats.map((stat, index) => (
                             <div key={index}>
                               <div className="mb-1 text-2xl font-bold italic text-black md:text-3xl">
@@ -661,9 +661,9 @@ function BrandPagesManagementContent() {
               {/* Shop By Section Preview */}
               {brand.shopBy && brand.shopBy.enabled && (
                 <div className="mt-6 border-t pt-6">
-                  <div className="mb-4 flex items-center justify-between">
+                  <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <h3 className="text-lg font-semibold text-gray-900">Shop By Section</h3>
-                    <div className="flex items-center gap-4">
+                    <div className="flex flex-wrap items-center gap-4">
                       <button
                         onClick={() => {
                           const newCard = {

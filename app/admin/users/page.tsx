@@ -156,7 +156,7 @@ export default function UsersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-6 lg:p-8">
       <div className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="mb-8">
@@ -172,7 +172,7 @@ export default function UsersPage() {
         </div>
 
         {/* Statistics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <div className="rounded-2xl bg-white p-5 shadow-lg ring-1 ring-gray-200">
             <div className="flex items-center justify-between">
               <div>
@@ -252,7 +252,7 @@ export default function UsersPage() {
               {/* User Type Filter */}
               <div className="flex-1">
                 <label className="block text-xs font-medium text-gray-700 mb-1.5">User Type</label>
-                <div className="flex items-center gap-1 rounded-xl bg-gray-100 p-1">
+                <div className="flex flex-wrap items-center gap-1 rounded-xl bg-gray-100 p-1">
                   <button
                     onClick={() => { setUserTypeFilter('all'); setCurrentPage(1); }}
                     className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
@@ -299,7 +299,7 @@ export default function UsersPage() {
               {/* Status Filter */}
               <div className="flex-1">
                 <label className="block text-xs font-medium text-gray-700 mb-1.5">Status</label>
-                <div className="flex items-center gap-1 rounded-xl bg-gray-100 p-1">
+                <div className="flex flex-wrap items-center gap-1 rounded-xl bg-gray-100 p-1">
                   <button
                     onClick={() => { setStatusFilter('all'); setCurrentPage(1); }}
                     className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
@@ -375,17 +375,17 @@ export default function UsersPage() {
                   key={user.id}
                   className="group p-6 transition-all hover:bg-gradient-to-r hover:from-gray-50 hover:to-transparent"
                 >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1">
+                  <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-3 mb-2">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#FF6F00] to-[#E65100] text-white font-semibold">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#FF6F00] to-[#E65100] text-white font-semibold">
                           {user.first_name.charAt(0)}{user.last_name.charAt(0)}
                         </div>
-                        <div>
-                          <h3 className="text-base font-bold text-gray-900">
+                        <div className="min-w-0">
+                          <h3 className="text-base font-bold text-gray-900 truncate">
                             {user.first_name} {user.last_name}
                           </h3>
-                          <div className="flex items-center gap-2 mt-0.5">
+                          <div className="flex flex-wrap items-center gap-2 mt-0.5">
                             {getUserTypeBadge(user.user_type)}
                             {getStatusBadge(user.status)}
                             {user.email_verified_at && (
@@ -398,13 +398,13 @@ export default function UsersPage() {
                       </div>
 
                       <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 mb-2">
-                        <div className="flex items-center gap-1.5">
-                          <Mail className="h-4 w-4" />
-                          <span>{user.email}</span>
+                        <div className="flex items-center gap-1.5 min-w-0">
+                          <Mail className="h-4 w-4 shrink-0" />
+                          <span className="truncate">{user.email}</span>
                         </div>
                         {user.phone && (
                           <div className="flex items-center gap-1.5">
-                            <Phone className="h-4 w-4" />
+                            <Phone className="h-4 w-4 shrink-0" />
                             <span>{user.phone}</span>
                           </div>
                         )}

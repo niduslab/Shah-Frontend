@@ -304,7 +304,7 @@ export default function CouponModal({ isOpen, onClose, coupon, onSubmit }: Coupo
           </div>
 
           {/* Date Range */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="mb-2 block text-sm font-medium text-gray-700">
                 Start Date & Time
@@ -340,7 +340,7 @@ export default function CouponModal({ isOpen, onClose, coupon, onSubmit }: Coupo
           </div>
 
           {/* Usage Limits */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="mb-2 block text-sm font-medium text-gray-700">
                 Total Usage Limit
@@ -558,7 +558,7 @@ export default function CouponModal({ isOpen, onClose, coupon, onSubmit }: Coupo
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
+          <div className="flex flex-col-reverse gap-2 pt-4 border-t border-gray-200 sm:flex-row sm:justify-end sm:gap-3">
             <button
               type="button"
               onClick={onClose}

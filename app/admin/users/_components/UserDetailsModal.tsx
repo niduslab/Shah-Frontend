@@ -77,14 +77,14 @@ export default function UserDetailsModal({ isOpen, onClose, userId }: UserDetail
           <div className="p-6 space-y-6">
             {/* User Header */}
             <div className="flex items-center gap-4">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[#FF6F00] to-[#E65100] text-white text-2xl font-bold">
+              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#FF6F00] to-[#E65100] text-white text-2xl font-bold">
                 {user.first_name?.charAt(0)}{user.last_name?.charAt(0)}
               </div>
-              <div className="flex-1">
-                <h3 className="text-2xl font-bold text-gray-900">
+              <div className="flex-1 min-w-0">
+                <h3 className="text-2xl font-bold text-gray-900 truncate">
                   {user.first_name} {user.last_name}
                 </h3>
-                <div className="flex items-center gap-2 mt-1">
+                <div className="flex flex-wrap items-center gap-2 mt-1">
                   {getUserTypeBadge(user.user_type)}
                   {user.status ? (
                     <span className="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium bg-emerald-100 text-emerald-700 ring-1 ring-emerald-600/20">

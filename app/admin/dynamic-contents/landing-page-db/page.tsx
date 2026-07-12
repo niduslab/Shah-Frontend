@@ -94,25 +94,25 @@ export default function LandingPageDBManagement() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
       <div className="mx-auto max-w-[1600px]">
-        <div className="mb-8 flex items-center justify-between">
+        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Landing Page Content (Database)</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Landing Page Content (Database)</h1>
             <p className="mt-2 text-gray-600">Manage landing page sections stored in database</p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row">
             <a
               href="/"
               target="_blank"
-              className="flex items-center gap-2 rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200"
+              className="flex items-center justify-center gap-2 rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200"
             >
               <Eye className="h-4 w-4" />
               Preview Live
             </a>
             <button
               onClick={handleCreateSection}
-              className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-orange-400 to-orange-500 px-6 py-2 text-sm font-medium text-white hover:from-orange-500 hover:to-orange-600"
+              className="flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-orange-400 to-orange-500 px-6 py-2 text-sm font-medium text-white hover:from-orange-500 hover:to-orange-600"
             >
               <Plus className="h-4 w-4" />
               Add Section
@@ -125,13 +125,13 @@ export default function LandingPageDBManagement() {
           {sections
             .sort((a: any, b: any) => a.sort_order - b.sort_order)
             .map((section: any) => (
-              <div key={section.id} className="rounded-xl bg-white p-6 shadow-lg">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <GripVertical className="h-5 w-5 text-gray-400 cursor-move" />
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900">{section.title}</h3>
-                      <p className="text-sm text-gray-500">
+              <div key={section.id} className="rounded-xl bg-white p-4 sm:p-6 shadow-lg">
+                <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                  <div className="flex flex-wrap items-center gap-4">
+                    <GripVertical className="hidden sm:block h-5 w-5 text-gray-400 cursor-move" />
+                    <div className="min-w-0">
+                      <h3 className="text-lg font-semibold text-gray-900 break-words">{section.title}</h3>
+                      <p className="text-sm text-gray-500 break-words">
                         Section: {section.section_name} | Order: {section.sort_order}
                       </p>
                     </div>
@@ -153,14 +153,14 @@ export default function LandingPageDBManagement() {
                   <div className="flex gap-2">
                     <button
                       onClick={() => handleEditSection(section)}
-                      className="flex items-center gap-2 rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200"
+                      className="flex flex-1 lg:flex-none items-center justify-center gap-2 rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200"
                     >
                       <Edit2 className="h-4 w-4" />
                       Edit
                     </button>
                     <button
                       onClick={() => handleDeleteSection(section.id)}
-                      className="flex items-center gap-2 rounded-lg bg-red-50 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-100"
+                      className="flex flex-1 lg:flex-none items-center justify-center gap-2 rounded-lg bg-red-50 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-100"
                     >
                       <Trash2 className="h-4 w-4" />
                       Delete
@@ -186,8 +186,8 @@ export default function LandingPageDBManagement() {
 
         {/* Edit Modal */}
         {isModalOpen && editingSection && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-            <div className="max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-xl bg-white p-8 shadow-2xl">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+            <div className="max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-xl bg-white p-4 sm:p-6 lg:p-8 shadow-2xl">
               <h2 className="mb-6 text-2xl font-bold text-gray-900">
                 {editingSection.id ? "Edit Section" : "Create Section"}
               </h2>
@@ -257,7 +257,7 @@ export default function LandingPageDBManagement() {
                   sectionType={editingSection.section_name}
                 />
 
-                <div className="flex justify-end gap-3">
+                <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end sm:gap-3">
                   <button
                     onClick={() => {
                       setIsModalOpen(false);
@@ -270,7 +270,7 @@ export default function LandingPageDBManagement() {
                   <button
                     onClick={handleSaveSection}
                     disabled={createMutation.isPending || updateMutation.isPending}
-                    className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-orange-400 to-orange-500 px-6 py-2 text-sm font-medium text-white hover:from-orange-500 hover:to-orange-600 disabled:opacity-50"
+                    className="flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-orange-400 to-orange-500 px-6 py-2 text-sm font-medium text-white hover:from-orange-500 hover:to-orange-600 disabled:opacity-50"
                   >
                     <Save className="h-4 w-4" />
                     {createMutation.isPending || updateMutation.isPending ? "Saving..." : "Save"}

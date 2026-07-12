@@ -131,7 +131,7 @@ export default function ImageManager({ images, onChange, maxImages = 10 }: Image
         className="hidden"
       />
 
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h3 className="text-lg font-semibold text-gray-900">Product Images</h3>
           <p className="text-sm text-gray-500">
@@ -142,7 +142,7 @@ export default function ImageManager({ images, onChange, maxImages = 10 }: Image
           type="button"
           onClick={handleAddImageClick}
           disabled={images.length >= maxImages}
-          className="flex items-center gap-2 rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 transition-all hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 transition-all hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Upload className="h-4 w-4" />
           Upload Images
@@ -174,11 +174,11 @@ export default function ImageManager({ images, onChange, maxImages = 10 }: Image
                 draggedIndex === index ? 'opacity-50' : ''
               } ${image.is_primary ? 'border-[#FF6F00] ring-2 ring-[#FF6F00]/20' : 'border-gray-200'}`}
             >
-              <div className="flex gap-4">
+              <div className="flex flex-col gap-4 sm:flex-row">
                 {/* Drag Handle */}
-                <div className="flex flex-col items-center justify-center">
+                <div className="flex flex-row items-center gap-2 sm:flex-col sm:justify-center sm:gap-0">
                   <GripVertical className="h-5 w-5 cursor-move text-gray-400" />
-                  <span className="mt-1 text-xs text-gray-500">#{index + 1}</span>
+                  <span className="sm:mt-1 text-xs text-gray-500">#{index + 1}</span>
                 </div>
 
                 {/* Image Preview */}
@@ -244,7 +244,7 @@ export default function ImageManager({ images, onChange, maxImages = 10 }: Image
                 </div>
 
                 {/* Actions */}
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-row gap-2 sm:flex-col">
                   <button
                     type="button"
                     onClick={() => handleSetPrimary(index)}

@@ -264,7 +264,7 @@ export default function ContentEditor({ content, onChange, sectionType }: Conten
 
   return (
     <div>
-      <div className="mb-4 flex items-center justify-between">
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h3 className="text-lg font-semibold text-gray-900">Content</h3>
         <div className="flex gap-2">
           <button

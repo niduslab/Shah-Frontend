@@ -32,7 +32,7 @@ export default function SectionGrid({
   return (
     <div className="space-y-6">
       {/* Available Sections */}
-      <div className="rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-200">
+      <div className="rounded-2xl bg-white p-4 sm:p-6 shadow-lg ring-1 ring-gray-200">
         <h2 className="text-lg font-bold text-gray-900 mb-4">Available Sections</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {sections.map((section) => (
@@ -72,7 +72,7 @@ export default function SectionGrid({
 
       {/* Selected Sections */}
       {selectedSections.length > 0 && (
-        <div className="rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-200">
+        <div className="rounded-2xl bg-white p-4 sm:p-6 shadow-lg ring-1 ring-gray-200">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-bold text-gray-900">Your Page Sections</h2>
             <span className="text-sm text-gray-600">{selectedSections.length} sections</span>

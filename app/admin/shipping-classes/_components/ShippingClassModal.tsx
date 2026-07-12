@@ -71,7 +71,7 @@ export default function ShippingClassModal({ shippingClass, onClose }: ShippingC
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-lg rounded-sm bg-white shadow-xl">
+      <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-sm bg-white shadow-xl">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
           <h2 className="text-xl font-semibold text-gray-900">
@@ -120,7 +120,7 @@ export default function ShippingClassModal({ shippingClass, onClose }: ShippingC
           </div>
 
           {/* Actions */}
-          <div className="mt-6 flex justify-end gap-3">
+          <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end sm:gap-3">
             <button
               type="button"
               onClick={onClose}

@@ -31,7 +31,7 @@ export default function DeleteConfirmModal({
             </div>
           </div>
 
-          <div className="mt-6 flex justify-end gap-3">
+          <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end sm:gap-3">
             <button
               onClick={onCancel}
               disabled={isLoading}

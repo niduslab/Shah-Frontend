@@ -39,7 +39,7 @@ export default function DeleteConfirmModal({
           This will also delete all its options and cannot be undone.
         </p>
 
-        <div className="flex gap-3">
+        <div className="flex flex-col-reverse gap-2 sm:flex-row sm:gap-3">
           <button
             onClick={onClose}
             disabled={isLoading}

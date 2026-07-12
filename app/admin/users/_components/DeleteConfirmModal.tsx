@@ -52,7 +52,7 @@ export default function DeleteConfirmModal({ isOpen, onClose, onConfirm, userNam
           </p>
         </div>
 
-        <div className="flex gap-3 border-t border-gray-200 bg-gray-50 px-6 py-4">
+        <div className="flex flex-col-reverse gap-2 border-t border-gray-200 bg-gray-50 px-6 py-4 sm:flex-row sm:gap-3">
           <button
             onClick={onClose}
             disabled={isLoading}

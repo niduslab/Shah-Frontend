@@ -239,11 +239,11 @@ export default function CategoriesPage() {
 
     return (
       <div key={category.id}>
-        <div 
-          className="group flex items-center justify-between p-4 transition-all hover:bg-gradient-to-r hover:from-gray-50 hover:to-transparent"
+        <div
+          className="group flex flex-col gap-3 p-4 transition-all hover:bg-gradient-to-r hover:from-gray-50 hover:to-transparent sm:flex-row sm:items-center sm:justify-between"
           style={{ paddingLeft: `${level * 2 + 1}rem` }}
         >
-          <div className="flex flex-1 items-center gap-3">
+          <div className="flex flex-1 items-center gap-3 min-w-0">
             {hasChildren ? (
               <button
                 onClick={() => toggleExpand(category.id)}
@@ -256,18 +256,18 @@ export default function CategoriesPage() {
                 )}
               </button>
             ) : (
-              <div className="w-7" />
+              <div className="w-7 flex-shrink-0" />
             )}
-            
-            <div className="flex-1">
-              <div className="flex items-center gap-2.5">
+
+            <div className="flex-1 min-w-0">
+              <div className="flex flex-wrap items-center gap-2.5">
                 <h3 className="font-semibold text-gray-900">{highlight(category.name)}</h3>
                 <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600 ring-1 ring-gray-600/20">
                   ID: {category.id}
                 </span>
                 <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                  category.is_active 
-                    ? 'bg-emerald-100 text-emerald-700 ring-1 ring-emerald-600/20' 
+                  category.is_active
+                    ? 'bg-emerald-100 text-emerald-700 ring-1 ring-emerald-600/20'
                     : 'bg-gray-100 text-gray-600 ring-1 ring-gray-600/20'
                 }`}>
                   {category.is_active ? 'Active' : 'Inactive'}
@@ -284,7 +284,7 @@ export default function CategoriesPage() {
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5 opacity-0 transition-opacity group-hover:opacity-100">
+          <div className="flex items-center gap-1.5 self-end opacity-100 transition-opacity sm:self-auto sm:opacity-0 sm:group-hover:opacity-100">
             <button
               onClick={() => handleEdit(category)}
               className="rounded-lg p-2 text-[#FF6F00] transition-all hover:bg-orange-50 focus:outline-none focus:ring-2 focus:ring-[#FF6F00]"
@@ -325,7 +325,7 @@ export default function CategoriesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-6">
       <div className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="mb-8">
@@ -360,7 +360,7 @@ export default function CategoriesPage() {
               )}
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
               {/* View Toggle */}
               <div className="flex items-center gap-1 rounded-xl bg-gray-100 p-1">
                 <button
@@ -368,7 +368,7 @@ export default function CategoriesPage() {
                     setView('tree');
                     setCurrentPage(1);
                   }}
-                  className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+                  className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-all sm:flex-none ${
                     view === 'tree'
                       ? 'bg-white text-gray-900 shadow-sm'
                       : 'text-gray-600 hover:text-gray-900'
@@ -381,7 +381,7 @@ export default function CategoriesPage() {
                     setView('list');
                     setCurrentPage(1);
                   }}
-                  className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+                  className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-all sm:flex-none ${
                     view === 'list'
                       ? 'bg-white text-gray-900 shadow-sm'
                       : 'text-gray-600 hover:text-gray-900'
@@ -394,7 +394,7 @@ export default function CategoriesPage() {
               {/* Create Button */}
               <button
                 onClick={handleCreate}
-                className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#FF6F00] to-[#E65100] px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-orange-500/30 transition-all hover:shadow-xl hover:shadow-orange-500/40 focus:outline-none focus:ring-2 focus:ring-[#FF6F00] focus:ring-offset-2"
+                className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#FF6F00] to-[#E65100] px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-orange-500/30 transition-all hover:shadow-xl hover:shadow-orange-500/40 focus:outline-none focus:ring-2 focus:ring-[#FF6F00] focus:ring-offset-2"
               >
                 <Plus className="h-5 w-5" />
                 Add Category

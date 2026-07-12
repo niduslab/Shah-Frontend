@@ -117,7 +117,7 @@ export default function VariationTypeModal({
           </div>
 
           {/* Actions */}
-          <div className="mt-6 flex items-center justify-end gap-3">
+          <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:items-center sm:justify-end sm:gap-3">
             <button
               type="button"
               onClick={onClose}

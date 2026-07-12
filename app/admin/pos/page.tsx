@@ -230,7 +230,7 @@ export default function POSPage() {
   const isQuotation = activeTab === 'quotation';
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
       <div className="mx-auto max-w-7xl">
         {/* Header + Tab Switcher */}
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -332,20 +332,20 @@ export default function POSPage() {
                               <img
                                 src={primaryImage.startsWith('http') ? primaryImage : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}${primaryImage}`}
                                 alt={product.name}
-                                className="w-12 h-12 object-cover rounded"
+                                className="w-12 h-12 shrink-0 object-cover rounded"
                                 onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder-product.png'; }}
                               />
                             ) : (
-                              <div className="w-12 h-12 bg-gray-200 rounded flex items-center justify-center">
+                              <div className="w-12 h-12 shrink-0 bg-gray-200 rounded flex items-center justify-center">
                                 <ShoppingCart className="h-6 w-6 text-gray-400" />
                               </div>
                             )}
-                            <div className="flex-1">
-                              <p className="font-medium text-gray-900">{product.name}</p>
-                              <p className="text-sm text-gray-500">SKU: {product.sku}</p>
-                              {product.brand && <p className="text-xs text-gray-400">{product.brand.name}</p>}
+                            <div className="flex-1 min-w-0">
+                              <p className="font-medium text-gray-900 truncate">{product.name}</p>
+                              <p className="text-sm text-gray-500 truncate">SKU: {product.sku}</p>
+                              {product.brand && <p className="text-xs text-gray-400 truncate">{product.brand.name}</p>}
                             </div>
-                            <div className="text-right">
+                            <div className="text-right shrink-0">
                               <p className="font-semibold text-orange-600">{formatCurrency(price)}</p>
                               <p className={`text-xs ${stock > 0 ? 'text-green-600' : 'text-red-600'}`}>Stock: {stock}</p>
                             </div>
@@ -387,21 +387,21 @@ export default function POSPage() {
               ) : (
                 <div className="space-y-3">
                   {cart.map((item, index) => (
-                    <div key={index} className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg">
+                    <div key={index} className="flex flex-wrap items-center gap-3 p-3 border border-gray-200 rounded-lg sm:flex-nowrap">
                       {item.image ? (
                         <img
                           src={item.image.startsWith('http') ? item.image : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}${item.image}`}
                           alt={item.name}
-                          className="w-16 h-16 object-cover rounded"
+                          className="w-16 h-16 shrink-0 object-cover rounded"
                           onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder-product.png'; }}
                         />
                       ) : (
-                        <div className="w-16 h-16 bg-gray-200 rounded flex items-center justify-center">
+                        <div className="w-16 h-16 shrink-0 bg-gray-200 rounded flex items-center justify-center">
                           <ShoppingCart className="h-8 w-8 text-gray-400" />
                         </div>
                       )}
-                      <div className="flex-1">
-                        <p className="font-medium text-gray-900">{item.name}</p>
+                      <div className="flex-1 min-w-[140px]">
+                        <p className="font-medium text-gray-900 break-words">{item.name}</p>
                         {item.variation_name && <p className="text-sm text-gray-500">{item.variation_name}</p>}
                         <p className="text-sm text-gray-500">SKU: {item.sku}</p>
                         <p className="text-sm font-semibold text-orange-600">{formatCurrency(item.price)}</p>

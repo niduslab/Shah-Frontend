@@ -312,7 +312,7 @@ export default function AnalyticsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
       {/* Mock Data Banner */}
       {usingMockData && (
         <div className="mb-6 rounded-lg border-2 border-yellow-400 bg-yellow-50 p-4">
@@ -332,19 +332,19 @@ export default function AnalyticsPage() {
       )}
 
       {/* Header */}
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Analytics Dashboard</h1>
           <p className="mt-1 text-sm text-gray-500">
             Track customer behavior and optimize your store
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:flex-wrap">
           {/* Date Range Selector */}
           <select
             value={dateRange}
             onChange={(e) => setDateRange(e.target.value)}
-            className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            className="w-full rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 sm:w-auto"
           >
             <option value="1">Last 24 Hours</option>
             <option value="7">Last 7 Days</option>
@@ -356,7 +356,7 @@ export default function AnalyticsPage() {
           <button
             onClick={fetchAnalytics}
             disabled={refreshing}
-            className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+            className="flex w-full items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 sm:w-auto"
           >
             <RefreshCw className={`h-4 w-4 ${refreshing ? "animate-spin" : ""}`} />
             Refresh
@@ -365,7 +365,7 @@ export default function AnalyticsPage() {
           {/* Export Button */}
           <button
             onClick={handleExport}
-            className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-black hover:bg-primary/90"
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-black hover:bg-primary/90 sm:w-auto"
           >
             <Download className="h-4 w-4" />
             Export
@@ -374,13 +374,13 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {/* Visitors */}
         <div className="rounded-lg bg-white p-6 shadow-sm">
           <div className="flex items-center justify-between">
-            <div>
+            <div className="min-w-0">
               <p className="text-sm font-medium text-gray-500">Total Visitors</p>
-              <p className="mt-2 text-3xl font-bold text-gray-900">{formatNumber(stats.visitors.total)}</p>
+              <p className="mt-2 truncate text-3xl font-bold text-gray-900">{formatNumber(stats.visitors.total)}</p>
               <p className="mt-1 text-xs text-gray-500">
                 {formatNumber(stats.visitors.unique)} unique
               </p>
@@ -394,9 +394,9 @@ export default function AnalyticsPage() {
         {/* Page Views */}
         <div className="rounded-lg bg-white p-6 shadow-sm">
           <div className="flex items-center justify-between">
-            <div>
+            <div className="min-w-0">
               <p className="text-sm font-medium text-gray-500">Page Views</p>
-              <p className="mt-2 text-3xl font-bold text-gray-900">{formatNumber(stats.page_views.total)}</p>
+              <p className="mt-2 truncate text-3xl font-bold text-gray-900">{formatNumber(stats.page_views.total)}</p>
               <p className="mt-1 text-xs text-gray-500">
                 {formatDecimal(stats.page_views.avg_time_on_page, 0)}s avg time
               </p>
@@ -410,9 +410,9 @@ export default function AnalyticsPage() {
         {/* Product Views */}
         <div className="rounded-lg bg-white p-6 shadow-sm">
           <div className="flex items-center justify-between">
-            <div>
+            <div className="min-w-0">
               <p className="text-sm font-medium text-gray-500">Product Views</p>
-              <p className="mt-2 text-3xl font-bold text-gray-900">{formatNumber(stats.products.total_views)}</p>
+              <p className="mt-2 truncate text-3xl font-bold text-gray-900">{formatNumber(stats.products.total_views)}</p>
               <p className="mt-1 text-xs text-gray-500">
                 {formatDecimal(stats.products.view_to_cart_rate)}% to cart
               </p>
@@ -426,9 +426,9 @@ export default function AnalyticsPage() {
         {/* Cart Events */}
         <div className="rounded-lg bg-white p-6 shadow-sm">
           <div className="flex items-center justify-between">
-            <div>
+            <div className="min-w-0">
               <p className="text-sm font-medium text-gray-500">Cart Events</p>
-              <p className="mt-2 text-3xl font-bold text-gray-900">{formatNumber(stats.cart.total_events)}</p>
+              <p className="mt-2 truncate text-3xl font-bold text-gray-900">{formatNumber(stats.cart.total_events)}</p>
               <p className="mt-1 text-xs text-gray-500">
                 {formatNumber(stats.cart.items_added)} items added
               </p>
@@ -449,7 +449,7 @@ export default function AnalyticsPage() {
         <p className="mb-4 text-sm text-gray-500">
           Explore detailed analytics reports and insights
         </p>
-        <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {/* Visitors List */}
           <Link
             href="/admin/analytics/visitors"
@@ -584,7 +584,7 @@ export default function AnalyticsPage() {
       {/* Device Breakdown */}
       <div className="mt-6 rounded-lg bg-white p-6 shadow-sm">
         <h2 className="text-lg font-semibold text-gray-900">Device Breakdown</h2>
-        <div className="mt-4 grid gap-4 md:grid-cols-3">
+        <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div className="rounded-lg border border-gray-200 p-4">
             <p className="text-sm font-medium text-gray-500">Mobile</p>
             <p className="mt-2 text-2xl font-bold text-gray-900">
@@ -648,7 +648,7 @@ export default function AnalyticsPage() {
       {/* Search Analytics */}
       <div className="mt-6 rounded-lg bg-white p-6 shadow-sm">
         <h2 className="text-lg font-semibold text-gray-900">Search Analytics</h2>
-        <div className="mt-4 grid gap-4 md:grid-cols-2">
+        <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="rounded-lg border border-gray-200 p-4">
             <div className="flex items-center gap-3">
               <div className="rounded-full bg-indigo-100 p-2">
@@ -675,7 +675,7 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Conversion Metrics */}
-      <div className="mt-6 grid gap-6 md:grid-cols-2">
+      <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2">
         <div className="rounded-lg bg-white p-6 shadow-sm">
           <h2 className="text-lg font-semibold text-gray-900">Product Conversion</h2>
           <div className="mt-4 space-y-3">

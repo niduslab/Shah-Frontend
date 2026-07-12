@@ -125,8 +125,8 @@ export default function PageSectionsEditor() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Header */}
       <div className="border-b border-gray-200 bg-white shadow-sm">
-        <div className="mx-auto max-w-[1800px] px-6 py-4">
-          <div className="flex items-center justify-between">
+        <div className="mx-auto max-w-[1800px] px-4 sm:px-6 py-4">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-4">
               <button
                 onClick={() => router.push('/admin/pages')}
@@ -135,16 +135,16 @@ export default function PageSectionsEditor() {
                 <ArrowLeft className="h-4 w-4" />
                 Back to Pages
               </button>
-              <div className="h-8 w-px bg-gray-300" />
-              <div>
-                <h1 className="text-xl font-bold text-gray-900">{pageTitle || 'Edit Page'}</h1>
+              <div className="hidden sm:block h-8 w-px bg-gray-300" />
+              <div className="min-w-0">
+                <h1 className="text-xl font-bold text-gray-900 truncate">{pageTitle || 'Edit Page'}</h1>
                 <p className="text-sm text-gray-600">{sections.length} sections</p>
               </div>
             </div>
 
             <button
               onClick={handleUpdatePageInfo}
-              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#FF6F00] to-[#E65100] px-6 py-2.5 text-sm font-medium text-white shadow-lg shadow-orange-500/30 transition-all hover:shadow-xl hover:shadow-orange-500/40"
+              className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#FF6F00] to-[#E65100] px-6 py-2.5 text-sm font-medium text-white shadow-lg shadow-orange-500/30 transition-all hover:shadow-xl hover:shadow-orange-500/40"
             >
               <Save className="h-4 w-4" />
               Save Changes
@@ -154,16 +154,16 @@ export default function PageSectionsEditor() {
       </div>
 
       {/* Main Content */}
-      <div className="mx-auto max-w-[1800px] p-6">
+      <div className="mx-auto max-w-[1800px] p-4 sm:p-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left: Sections List */}
           <div className="lg:col-span-2">
-            <div className="rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-200">
-              <div className="flex items-center justify-between mb-6">
+            <div className="rounded-2xl bg-white p-4 sm:p-6 shadow-lg ring-1 ring-gray-200">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-6">
                 <h2 className="text-lg font-bold text-gray-900">Page Sections</h2>
                 <button
                   onClick={() => router.push(`/admin/page-templates/${(pageData as any)?.data?.type || 'landing'}`)}
-                  className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#FF6F00] to-[#E65100] px-4 py-2 text-sm font-medium text-white shadow-lg shadow-orange-500/30"
+                  className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#FF6F00] to-[#E65100] px-4 py-2 text-sm font-medium text-white shadow-lg shadow-orange-500/30"
                 >
                   <Plus className="h-4 w-4" />
                   Add Section
@@ -277,7 +277,7 @@ export default function PageSectionsEditor() {
 
           {/* Right: Section Editor */}
           <div className="lg:col-span-1">
-            <div className="sticky top-6">
+            <div className="lg:sticky lg:top-6">
               <SectionEditor
                 section={editingSection ? {
                   ...editingSection,

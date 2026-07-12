@@ -169,12 +169,12 @@ export default function AdminNotificationsPage() {
         </div>
         
         {notifications.length > 0 && (
-          <div className="mt-4 sm:mt-0 flex items-center space-x-3">
+          <div className="mt-4 sm:mt-0 flex flex-col gap-3 sm:flex-row sm:items-center">
             {unreadCount > 0 && (
               <button
                 onClick={handleMarkAllAsRead}
                 disabled={markAllAsReadMutation.isPending}
-                className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-orange-400 to-orange-500 rounded-lg hover:from-orange-500 hover:to-orange-600 transition-all shadow-sm disabled:opacity-50"
+                className="inline-flex w-full items-center justify-center px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-orange-400 to-orange-500 rounded-lg hover:from-orange-500 hover:to-orange-600 transition-all shadow-sm disabled:opacity-50 sm:w-auto"
               >
                 <CheckCircle className="w-4 h-4 mr-2" />
                 Mark All Read
@@ -183,7 +183,7 @@ export default function AdminNotificationsPage() {
             <button
               onClick={handleClearAll}
               disabled={clearNotificationsMutation.isPending}
-              className="inline-flex items-center px-4 py-2 text-sm font-medium text-red-700 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 transition-colors disabled:opacity-50"
+              className="inline-flex w-full items-center justify-center px-4 py-2 text-sm font-medium text-red-700 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 transition-colors disabled:opacity-50 sm:w-auto"
             >
               <Trash2 className="w-4 h-4 mr-2" />
               Clear All
@@ -194,7 +194,7 @@ export default function AdminNotificationsPage() {
 
       {/* Filters */}
       <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-        <div className="flex space-x-2">
+        <div className="flex flex-wrap gap-2">
           {(['all', 'unread', 'read'] as const).map((filterOption) => (
             <button
               key={filterOption}

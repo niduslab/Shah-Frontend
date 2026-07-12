@@ -1,17 +1,19 @@
 "use client";
 
-import { MessageSquare, Search, ChevronDown, LogOut } from "lucide-react";
+import { MessageSquare, Search, ChevronDown, LogOut, Menu } from "lucide-react";
 import { useAuth } from "@/lib/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { NotificationBell } from "@/lib/components/NotificationBell";
 import { useAdminNotifications, useAdminUnreadCount, useAdminMarkAsRead, useAdminMarkAllAsRead, useAdminDeleteNotification } from "@/lib/hooks/admin";
+import { useSidebar } from "./sidebar-context";
 
 const NOTIFICATION_FILTERS = { page: 1, per_page: 20 };
 
 export function AdminHeader() {
   const { user, logout } = useAuth();
   const router = useRouter();
+  const { toggle } = useSidebar();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -70,21 +72,33 @@ export function AdminHeader() {
   };
 
   return (
-    <header className="flex h-[72px] items-center justify-between border-b border-gray-100 bg-white px-8">
-      {/* Search */}
-      <div className="relative w-96">
-        <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-        <input
-          type="text"
-          placeholder="Search stock, order, etc"
-          className="h-11 w-full rounded-lg border border-gray-200 bg-gray-50 pl-11 pr-4 text-sm outline-none transition-all focus:border-orange-400 focus:bg-white focus:ring-2 focus:ring-orange-100"
-        />
+    <header className="flex h-[72px] items-center justify-between gap-2 border-b border-gray-100 bg-white px-4 sm:gap-4 sm:px-6 lg:px-8">
+      {/* Left: hamburger (mobile) + search */}
+      <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-4">
+        {/* Hamburger — opens the sidebar drawer below lg */}
+        <button
+          onClick={toggle}
+          className="flex-shrink-0 rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900 lg:hidden"
+          aria-label="Open menu"
+        >
+          <Menu className="h-6 w-6" />
+        </button>
+
+        {/* Search */}
+        <div className="relative w-full max-w-md lg:w-96">
+          <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Search stock, order, etc"
+            className="h-11 w-full rounded-lg border border-gray-200 bg-gray-50 pl-11 pr-4 text-sm outline-none transition-all focus:border-orange-400 focus:bg-white focus:ring-2 focus:ring-orange-100"
+          />
+        </div>
       </div>
 
       {/* Right Actions */}
-      <div className="flex items-center gap-4">
+      <div className="flex flex-shrink-0 items-center gap-2 sm:gap-4">
         {/* Message Icon */}
-        <button className="relative rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-50 hover:text-gray-700">
+        <button className="relative hidden rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-50 hover:text-gray-700 sm:block">
           <MessageSquare className="h-5 w-5" />
         </button>
 

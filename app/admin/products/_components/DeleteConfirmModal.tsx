@@ -38,7 +38,7 @@ export default function DeleteConfirmModal({
           Are you sure you want to delete <span className="font-semibold">{productName}</span>? This action cannot be undone and will also delete all associated images.
         </p>
 
-        <div className="flex gap-3">
+        <div className="flex flex-col-reverse gap-2 sm:flex-row sm:gap-3">
           <button
             onClick={onClose}
             disabled={isLoading}

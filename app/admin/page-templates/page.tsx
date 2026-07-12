@@ -30,24 +30,24 @@ export default function PageTemplatesPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-6">
       <div className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-3">
             <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#FF6F00] to-[#E65100] shadow-lg shadow-orange-500/30">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#FF6F00] to-[#E65100] shadow-lg shadow-orange-500/30 shrink-0">
                 <FileText className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">Page Builder</h1>
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Page Builder</h1>
                 <p className="text-sm text-gray-600">Choose a page type to start building</p>
               </div>
             </div>
-            
+
             <button
               onClick={() => router.push('/admin/pages')}
-              className="flex items-center gap-2 rounded-xl border-2 border-[#FF6F00] bg-white px-5 py-2.5 text-sm font-medium text-[#FF6F00] transition-all hover:bg-[#FF6F00] hover:text-white"
+              className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl border-2 border-[#FF6F00] bg-white px-5 py-2.5 text-sm font-medium text-[#FF6F00] transition-all hover:bg-[#FF6F00] hover:text-white"
             >
               <FileText className="h-4 w-4" />
               Manage Pages

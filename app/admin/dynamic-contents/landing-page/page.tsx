@@ -622,18 +622,18 @@ export default function LandingPageManagement() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
       <div className="mx-auto max-w-[1600px]">
-        <div className="mb-8 flex items-center justify-between">
+        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Landing Page - Hero Section</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Landing Page - Hero Section</h1>
             <p className="mt-2 text-gray-600">Click on any section to edit content and images</p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row">
             <a
               href="/"
               target="_blank"
-              className="flex items-center gap-2 rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200"
+              className="flex items-center justify-center gap-2 rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200"
             >
               <Eye className="h-4 w-4" />
               Preview Live
@@ -641,7 +641,7 @@ export default function LandingPageManagement() {
             <button
               onClick={handleSave}
               disabled={saving}
-              className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-orange-400 to-orange-500 px-6 py-2 text-sm font-medium text-white hover:from-orange-500 hover:to-orange-600 disabled:opacity-50"
+              className="flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-orange-400 to-orange-500 px-6 py-2 text-sm font-medium text-white hover:from-orange-500 hover:to-orange-600 disabled:opacity-50"
             >
               <Save className="h-4 w-4" />
               {saving ? "Saving..." : "Save Changes"}
@@ -810,7 +810,7 @@ export default function LandingPageManagement() {
 
         {/* Pre-Order Section Preview */}
         <div className="mb-8 rounded-xl bg-white p-6 shadow-lg">
-          <div className="mb-4 flex items-center justify-between">
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <h2 className="text-xl font-semibold text-gray-900">Pre-Order Section Preview</h2>
             <label className="flex items-center gap-2">
               <input
@@ -913,7 +913,7 @@ export default function LandingPageManagement() {
 
         {/* Promo Cards Section Preview */}
         <div className="mb-8 rounded-xl bg-white p-6 shadow-lg">
-          <div className="mb-4 flex items-center justify-between">
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <h2 className="text-xl font-semibold text-gray-900">Promo Cards Section Preview</h2>
             <label className="flex items-center gap-2">
               <input
@@ -982,7 +982,7 @@ export default function LandingPageManagement() {
 
         {/* RDX Gallery Section Preview */}
         <div className="mb-8 rounded-xl bg-white p-6 shadow-lg">
-          <div className="mb-4 flex items-center justify-between">
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <h2 className="text-xl font-semibold text-gray-900">RDX Gallery Section Preview</h2>
             <label className="flex items-center gap-2">
               <input
@@ -1137,7 +1137,7 @@ export default function LandingPageManagement() {
 
         {/* Success Stories Section Preview */}
         <div className="mb-8 rounded-xl bg-white p-6 shadow-lg">
-          <div className="mb-4 flex items-center justify-between">
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <h2 className="text-xl font-semibold text-gray-900">Success Stories Section Preview</h2>
             <label className="flex items-center gap-2">
               <input
@@ -1206,7 +1206,7 @@ export default function LandingPageManagement() {
 
         {/* Performance Frame Section Preview */}
         <div className="mb-8 rounded-xl bg-white p-6 shadow-lg">
-          <div className="mb-4 flex items-center justify-between">
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <h2 className="text-xl font-semibold text-gray-900">Performance Frame Section Preview</h2>
             <div className="flex items-center gap-3">
               <button

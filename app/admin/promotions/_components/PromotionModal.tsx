@@ -143,7 +143,7 @@ export default function PromotionModal({ isOpen, onClose, promotion, onSubmit }:
           </div>
 
           {/* Type & Value */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="mb-2 block text-sm font-medium text-gray-700">
                 Promotion Type <span className="text-red-500">*</span>
@@ -181,7 +181,7 @@ export default function PromotionModal({ isOpen, onClose, promotion, onSubmit }:
           </div>
 
           {/* Max Discount & Min Purchase */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="mb-2 block text-sm font-medium text-gray-700">
                 Minimum Purchase Amount
@@ -214,7 +214,7 @@ export default function PromotionModal({ isOpen, onClose, promotion, onSubmit }:
           </div>
 
           {/* Application Scope */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="mb-2 block text-sm font-medium text-gray-700">
                 Applies To <span className="text-red-500">*</span>
@@ -301,7 +301,7 @@ export default function PromotionModal({ isOpen, onClose, promotion, onSubmit }:
           )}
 
           {/* Date Range */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="mb-2 block text-sm font-medium text-gray-700">
                 Start Date & Time <span className="text-red-500">*</span>
@@ -339,7 +339,7 @@ export default function PromotionModal({ isOpen, onClose, promotion, onSubmit }:
           </div>
 
           {/* Priority & Active */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="mb-2 block text-sm font-medium text-gray-700">
                 Priority
@@ -369,7 +369,7 @@ export default function PromotionModal({ isOpen, onClose, promotion, onSubmit }:
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
+          <div className="flex flex-col-reverse gap-2 pt-4 border-t border-gray-200 sm:flex-row sm:justify-end sm:gap-3">
             <button
               type="button"
               onClick={onClose}

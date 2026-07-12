@@ -226,7 +226,7 @@ export default function SectionEditor({
                           />
                         </div>
 
-                        <div className="grid grid-cols-2 gap-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Badge Text
@@ -253,7 +253,7 @@ export default function SectionEditor({
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               <LinkIcon className="inline h-4 w-4 mr-1" />
@@ -326,7 +326,7 @@ export default function SectionEditor({
                             />
                           </div>
 
-                          <div className="grid grid-cols-2 gap-3">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-2">
                                 Button Text
@@ -418,7 +418,7 @@ export default function SectionEditor({
                           />
                         </div>
 
-                        <div className="grid grid-cols-2 gap-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               <LinkIcon className="inline h-4 w-4 mr-1" />
@@ -593,7 +593,7 @@ export default function SectionEditor({
                             />
                           </div>
 
-                          <div className="grid grid-cols-2 gap-3">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-2">
                                 Price
@@ -679,7 +679,7 @@ export default function SectionEditor({
                       
                       <div className="space-y-3">
                         {[1, 2, 3].map((num) => (
-                          <div key={num} className="grid grid-cols-2 gap-3">
+                          <div key={num} className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-2">
                                 Stat {num} Value
@@ -796,7 +796,7 @@ export default function SectionEditor({
                           />
                         </div>
 
-                        <div className="grid grid-cols-2 gap-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Button Text
@@ -877,7 +877,7 @@ export default function SectionEditor({
                           />
                         </div>
 
-                        <div className="grid grid-cols-2 gap-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Button Text

@@ -83,19 +83,19 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }: OrderDet
                     <h3 className="font-semibold text-gray-900">Customer Information</h3>
                   </div>
                   <div className="space-y-2 text-sm">
-                    <div>
+                    <div className="break-words">
                       <span className="text-gray-600">Name:</span>
                       <span className="ml-2 font-medium text-gray-900">
                         {order.user ? `${order.user.first_name} ${order.user.last_name}` : order.customer_name || 'Guest / POS Order'}
                       </span>
                     </div>
-                    <div>
+                    <div className="break-words">
                       <span className="text-gray-600">Email:</span>
                       <span className="ml-2 font-medium text-gray-900">
                         {order.user?.email || order.customer_email || 'N/A'}
                       </span>
                     </div>
-                    <div>
+                    <div className="break-words">
                       <span className="text-gray-600">Phone:</span>
                       <span className="ml-2 font-medium text-gray-900">
                         {order.user?.phone || order.customer_phone || 'N/A'}
@@ -206,7 +206,7 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }: OrderDet
                     const primaryImage = item.product?.images?.find((img: any) => img.is_primary)?.full_url || item.product?.images?.[0]?.full_url;
                     
                     return (
-                      <div key={item.id} className="flex items-center gap-4 p-3 rounded-lg bg-gray-50">
+                      <div key={item.id} className="flex flex-wrap items-center gap-4 p-3 rounded-lg bg-gray-50">
                         {primaryImage && (
                           <img
                             src={primaryImage.startsWith('http') ? primaryImage : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}${primaryImage}`}
@@ -217,10 +217,10 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }: OrderDet
                             }}
                           />
                         )}
-                        <div className="flex-1">
-                          <h4 className="font-medium text-gray-900">{item.product_name || item.product?.name}</h4>
+                        <div className="flex-1 min-w-[140px]">
+                          <h4 className="font-medium text-gray-900 break-words">{item.product_name || item.product?.name}</h4>
                           {item.variation_details && (
-                            <p className="text-sm text-gray-600">
+                            <p className="text-sm text-gray-600 break-words">
                               Variation: {typeof item.variation_details === 'string' ? item.variation_details : JSON.stringify(item.variation_details)}
                             </p>
                           )}

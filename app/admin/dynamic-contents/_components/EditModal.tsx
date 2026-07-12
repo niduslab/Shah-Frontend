@@ -25,15 +25,15 @@ export default function EditModal({ isOpen, onClose, title, children }: EditModa
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
       {/* Backdrop */}
-      <div 
+      <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
       />
-      
+
       {/* Modal */}
-      <div className="relative z-[10000] w-full max-w-4xl max-h-[90vh] overflow-hidden rounded-xl bg-white shadow-2xl mx-4">
+      <div className="relative z-[10000] w-full max-w-4xl max-h-[90vh] overflow-hidden rounded-xl bg-white shadow-2xl">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
           <h2 className="text-xl font-semibold text-gray-900">{title}</h2>

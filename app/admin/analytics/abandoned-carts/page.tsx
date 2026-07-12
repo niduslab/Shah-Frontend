@@ -76,7 +76,7 @@ export default function AbandonedCartsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
       <div className="mb-6">
         <Link
           href="/admin/analytics"
@@ -97,7 +97,7 @@ export default function AbandonedCartsPage() {
       </div>
 
       {summary && (
-        <div className="mb-6 grid gap-6 md:grid-cols-3">
+        <div className="mb-6 grid grid-cols-1 gap-6 sm:grid-cols-3">
           <div className="rounded-lg bg-white p-6 shadow-sm">
             <p className="text-sm font-medium text-gray-500">Total Abandoned</p>
             <p className="mt-2 text-3xl font-bold text-red-600">{summary.total_abandoned || 0}</p>

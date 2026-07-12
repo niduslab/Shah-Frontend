@@ -141,15 +141,15 @@ export default function ReportsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-6">
       <div className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#FF6F00] to-[#E65100] shadow-lg shadow-orange-500/30">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#FF6F00] to-[#E65100] shadow-lg shadow-orange-500/30">
               <BarChart3 className="h-6 w-6 text-white" />
             </div>
-            <div>
+            <div className="min-w-0">
               <h1 className="text-3xl font-bold text-gray-900">Reports & Analytics</h1>
               <p className="text-sm text-gray-600">View detailed business insights and reports</p>
             </div>
@@ -181,20 +181,20 @@ export default function ReportsPage() {
         </div>
 
         {/* Filters */}
-        <div className="mb-6 rounded-2xl bg-white p-5 shadow-lg ring-1 ring-gray-200">
-          <div className="flex items-center justify-between mb-4">
+        <div className="mb-6 rounded-2xl bg-white p-4 shadow-lg ring-1 ring-gray-200 sm:p-5">
+          <div className="flex flex-col gap-4 mb-4 sm:flex-row sm:items-center sm:justify-between">
             <h3 className="text-lg font-semibold text-gray-900">Filters</h3>
             <div className="flex items-center gap-2">
               <button
                 onClick={handleExport}
-                className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 transition-all"
+                className="flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 transition-all sm:w-auto"
               >
                 <Download className="h-4 w-4" />
                 Export
               </button>
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 transition-all"
+                className="flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 transition-all sm:w-auto"
               >
                 <Filter className="h-4 w-4" />
                 {showFilters ? 'Hide' : 'Show'}
@@ -203,7 +203,7 @@ export default function ReportsPage() {
           </div>
 
           {showFilters && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {/* Date From */}
               <div>
                 <label className="block text-xs font-medium text-gray-700 mb-1.5">From Date</label>
@@ -275,7 +275,7 @@ export default function ReportsPage() {
         </div>
 
         {/* Report Content */}
-        <div className="rounded-2xl bg-white shadow-lg ring-1 ring-gray-200 p-6">
+        <div className="rounded-2xl bg-white shadow-lg ring-1 ring-gray-200 p-4 sm:p-6">
           {isLoading ? (
             <div className="flex items-center justify-center py-16">
               <div className="text-center">
@@ -294,7 +294,7 @@ export default function ReportsPage() {
                   
                   {/* Summary Cards */}
                   {salesData.data.summary && (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
                       <div className="rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100 p-4 ring-1 ring-emerald-200">
                         <div className="flex items-center justify-between">
                           <div>
@@ -471,7 +471,7 @@ export default function ReportsPage() {
                   
                   {/* Summary Cards */}
                   {inventoryData.data.summary && (
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                       <div className="rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 p-4 ring-1 ring-blue-200">
                         <p className="text-sm font-medium text-blue-700">Total Products</p>
                         <p className="text-2xl font-bold text-blue-900 mt-1">
@@ -562,7 +562,7 @@ export default function ReportsPage() {
                   {orderStatusData.data.status_breakdown && orderStatusData.data.status_breakdown.length > 0 ? (
                     <div>
                       {/* Status Cards */}
-                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
                         {orderStatusData.data.status_breakdown.map((status: any) => {
                           const statusColors: Record<string, { bg: string; text: string; ring: string }> = {
                             pending: { bg: 'from-yellow-50 to-yellow-100', text: 'text-yellow-700', ring: 'ring-yellow-200' },

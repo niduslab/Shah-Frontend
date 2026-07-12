@@ -163,7 +163,7 @@ export default function InventoryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-6">
       <div className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="mb-8">
@@ -203,7 +203,7 @@ export default function InventoryPage() {
               </div>
               <button
                 onClick={() => setIsBulkModalOpen(true)}
-                className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#FF6F00] to-[#E65100] px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-orange-500/30 transition-all hover:shadow-xl hover:shadow-orange-500/40 focus:outline-none focus:ring-2 focus:ring-[#FF6F00] focus:ring-offset-2"
+                className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#FF6F00] to-[#E65100] px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-orange-500/30 transition-all hover:shadow-xl hover:shadow-orange-500/40 focus:outline-none focus:ring-2 focus:ring-[#FF6F00] focus:ring-offset-2"
               >
                 <Edit2 className="h-5 w-5" />
                 Bulk Adjustment
@@ -211,14 +211,14 @@ export default function InventoryPage() {
             </div>
 
             {/* Filters */}
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
               {/* Stock Status Filter */}
               <div className="flex items-center gap-2">
-                <Filter className="h-4 w-4 text-gray-500" />
+                <Filter className="h-4 w-4 text-gray-500 flex-shrink-0" />
                 <select
                   value={stockFilter}
                   onChange={(e) => setStockFilter(e.target.value as any)}
-                  className="rounded-lg border border-gray-300 bg-gray-50 px-3 py-1.5 text-sm transition-all focus:border-[#FF6F00] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
+                  className="w-full sm:w-auto rounded-lg border border-gray-300 bg-gray-50 px-3 py-1.5 text-sm transition-all focus:border-[#FF6F00] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
                 >
                   <option value="all">All Stock</option>
                   <option value="in">In Stock</option>
@@ -231,7 +231,7 @@ export default function InventoryPage() {
               <select
                 value={categoryFilter || ''}
                 onChange={(e) => setCategoryFilter(e.target.value ? parseInt(e.target.value) : null)}
-                className="rounded-lg border border-gray-300 bg-gray-50 px-3 py-1.5 text-sm transition-all focus:border-[#FF6F00] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
+                className="w-full sm:w-auto rounded-lg border border-gray-300 bg-gray-50 px-3 py-1.5 text-sm transition-all focus:border-[#FF6F00] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
               >
                 <option value="">All Categories</option>
                 {categories.map((cat: any) => (
@@ -243,7 +243,7 @@ export default function InventoryPage() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="rounded-lg border border-gray-300 bg-gray-50 px-3 py-1.5 text-sm transition-all focus:border-[#FF6F00] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
+                className="w-full sm:w-auto rounded-lg border border-gray-300 bg-gray-50 px-3 py-1.5 text-sm transition-all focus:border-[#FF6F00] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
               >
                 <option value="name">Sort by Name</option>
                 <option value="quantity">Sort by Quantity</option>

@@ -118,7 +118,7 @@ export default function VisitorPopupsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-6 lg:p-8">
       <div className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="mb-8">
@@ -135,7 +135,7 @@ export default function VisitorPopupsPage() {
 
         {/* Statistics Cards */}
         {statistics && (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             <div className="rounded-2xl bg-white p-5 shadow-lg ring-1 ring-gray-200">
               <div className="flex items-center justify-between">
                 <div>
@@ -201,14 +201,14 @@ export default function VisitorPopupsPage() {
               />
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-3 items-center">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:flex-wrap">
               {/* Contact Filter */}
               <div className="flex-1 w-full">
                 <label className="block text-xs font-medium text-gray-700 mb-1.5">Contact Info</label>
-                <div className="flex items-center gap-1 rounded-xl bg-gray-100 p-1">
+                <div className="flex items-center gap-1 rounded-xl bg-gray-100 p-1 overflow-x-auto">
                   <button
                     onClick={() => setContactFilter('all')}
-                    className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+                    className={`rounded-lg px-4 py-2 text-sm font-medium transition-all whitespace-nowrap ${
                       contactFilter === 'all'
                         ? 'bg-white text-gray-900 shadow-sm'
                         : 'text-gray-600 hover:text-gray-900'
@@ -218,7 +218,7 @@ export default function VisitorPopupsPage() {
                   </button>
                   <button
                     onClick={() => setContactFilter('email')}
-                    className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+                    className={`rounded-lg px-4 py-2 text-sm font-medium transition-all whitespace-nowrap ${
                       contactFilter === 'email'
                         ? 'bg-white text-gray-900 shadow-sm'
                         : 'text-gray-600 hover:text-gray-900'
@@ -228,7 +228,7 @@ export default function VisitorPopupsPage() {
                   </button>
                   <button
                     onClick={() => setContactFilter('phone')}
-                    className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+                    className={`rounded-lg px-4 py-2 text-sm font-medium transition-all whitespace-nowrap ${
                       contactFilter === 'phone'
                         ? 'bg-white text-gray-900 shadow-sm'
                         : 'text-gray-600 hover:text-gray-900'
@@ -238,7 +238,7 @@ export default function VisitorPopupsPage() {
                   </button>
                   <button
                     onClick={() => setContactFilter('both')}
-                    className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+                    className={`rounded-lg px-4 py-2 text-sm font-medium transition-all whitespace-nowrap ${
                       contactFilter === 'both'
                         ? 'bg-white text-gray-900 shadow-sm'
                         : 'text-gray-600 hover:text-gray-900'
@@ -252,7 +252,7 @@ export default function VisitorPopupsPage() {
               {/* Export Button */}
               <button
                 onClick={handleExport}
-                className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-700 px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-emerald-500/30 transition-all hover:shadow-xl hover:shadow-emerald-500/40 mt-6"
+                className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-700 px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-emerald-500/30 transition-all hover:shadow-xl hover:shadow-emerald-500/40 w-full sm:w-auto sm:mt-6"
               >
                 <Download className="h-5 w-5" />
                 Export CSV
@@ -282,14 +282,14 @@ export default function VisitorPopupsPage() {
                   key={visitor.id}
                   className="group p-6 transition-all hover:bg-gradient-to-r hover:from-gray-50 hover:to-transparent"
                 >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1">
+                  <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-3 mb-2">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#FF6F00] to-[#E65100] text-white font-semibold">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#FF6F00] to-[#E65100] text-white font-semibold">
                           {visitor.name.charAt(0).toUpperCase()}
                         </div>
-                        <div>
-                          <h3 className="text-base font-bold text-gray-900">{visitor.name}</h3>
+                        <div className="min-w-0">
+                          <h3 className="text-base font-bold text-gray-900 truncate">{visitor.name}</h3>
                           <p className="text-xs text-gray-500">
                             <Calendar className="inline h-3 w-3 mr-1" />
                             {formatDate(visitor.submitted_at)}
@@ -299,14 +299,14 @@ export default function VisitorPopupsPage() {
 
                       <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-2">
                         {visitor.email && (
-                          <div className="flex items-center gap-1.5">
-                            <Mail className="h-4 w-4 text-emerald-600" />
-                            <span>{visitor.email}</span>
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            <Mail className="h-4 w-4 text-emerald-600 shrink-0" />
+                            <span className="truncate">{visitor.email}</span>
                           </div>
                         )}
                         {visitor.phone && (
                           <div className="flex items-center gap-1.5">
-                            <Phone className="h-4 w-4 text-purple-600" />
+                            <Phone className="h-4 w-4 text-purple-600 shrink-0" />
                             <span>{visitor.phone}</span>
                           </div>
                         )}
@@ -314,14 +314,14 @@ export default function VisitorPopupsPage() {
 
                       {visitor.ip_address && (
                         <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                          <Globe className="h-3 w-3" />
-                          <span>IP: {visitor.ip_address}</span>
+                          <Globe className="h-3 w-3 shrink-0" />
+                          <span className="truncate">IP: {visitor.ip_address}</span>
                         </div>
                       )}
                     </div>
 
                     {/* Actions */}
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 self-end sm:self-start">
                       <button
                         onClick={() => handleViewDetails(visitor)}
                         className="rounded-lg p-2 text-blue-600 transition-all hover:bg-blue-50"

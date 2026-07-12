@@ -64,7 +64,7 @@ export default function SearchAnalyticsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
       <div className="mb-6">
         <Link
           href="/admin/analytics"
@@ -84,7 +84,7 @@ export default function SearchAnalyticsPage() {
         </div>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-4">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <div className="rounded-lg bg-white p-6 shadow-sm">
           <p className="text-sm font-medium text-gray-500">Total Searches</p>
           <p className="mt-2 text-3xl font-bold text-gray-900">{data?.total_searches || 0}</p>
@@ -108,8 +108,8 @@ export default function SearchAnalyticsPage() {
           <h2 className="mb-4 text-lg font-semibold text-gray-900">Top Search Queries</h2>
           <div className="space-y-2">
             {data.top_searches.map((search: any, index: number) => (
-              <div key={index} className="flex items-center justify-between rounded-lg border border-gray-200 p-3">
-                <span className="text-sm font-medium text-gray-900">{search.query}</span>
+              <div key={index} className="flex flex-col gap-1 rounded-lg border border-gray-200 p-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+                <span className="truncate text-sm font-medium text-gray-900">{search.query}</span>
                 <span className="text-sm text-gray-500">{search.count} searches</span>
               </div>
             ))}

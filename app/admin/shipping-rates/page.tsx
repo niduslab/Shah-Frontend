@@ -66,7 +66,7 @@ export default function ShippingRatesPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Shipping Rates</h1>
           <p className="mt-1 text-sm text-gray-500">
@@ -75,7 +75,7 @@ export default function ShippingRatesPage() {
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="inline-flex items-center gap-2 rounded-md bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 sm:w-auto"
         >
           <Plus className="h-4 w-4" />
           Add Shipping Rate
@@ -84,7 +84,7 @@ export default function ShippingRatesPage() {
 
       {/* Filters */}
       <div className="rounded-sm border border-gray-200 bg-white p-4 shadow-sm">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div>
             <label className="mb-1 block text-sm font-medium text-gray-700">
               Method
@@ -217,7 +217,7 @@ export default function ShippingRatesPage() {
 
         {/* Pagination */}
         {pagination && pagination.last_page > 1 && (
-          <div className="flex items-center justify-between border-t border-gray-200 bg-white px-6 py-3">
+          <div className="flex flex-col gap-3 border-t border-gray-200 bg-white px-6 py-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="text-sm text-gray-500">
               Showing {pagination.from} to {pagination.to} of {pagination.total} results
             </div>

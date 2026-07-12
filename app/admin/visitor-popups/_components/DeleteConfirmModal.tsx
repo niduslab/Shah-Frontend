@@ -30,7 +30,7 @@ export default function DeleteConfirmModal({
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg p-2 text-gray-400 transition-all hover:bg-gray-100 hover:text-gray-600"
+            className="rounded-lg p-2 text-gray-400 transition-all hover:bg-gray-100 hover:text-gray-600 shrink-0"
             disabled={isLoading}
           >
             <X className="h-5 w-5" />
@@ -39,7 +39,7 @@ export default function DeleteConfirmModal({
 
         {/* Content */}
         <div className="p-6">
-          <p className="text-gray-700">
+          <p className="text-gray-700 break-words">
             Are you sure you want to delete the submission from{' '}
             <span className="font-semibold text-gray-900">{visitorName}</span>?
           </p>
@@ -49,7 +49,7 @@ export default function DeleteConfirmModal({
         </div>
 
         {/* Footer */}
-        <div className="flex justify-end gap-3 border-t border-gray-200 p-6">
+        <div className="flex flex-col-reverse gap-2 border-t border-gray-200 p-6 sm:flex-row sm:justify-end sm:gap-3">
           <button
             onClick={onClose}
             className="rounded-xl px-6 py-2.5 text-sm font-medium text-gray-700 transition-all hover:bg-gray-100"

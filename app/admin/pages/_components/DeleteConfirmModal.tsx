@@ -28,7 +28,7 @@ export default function DeleteConfirmModal({
       />
 
       {/* Modal */}
-      <div className="relative w-full max-w-md rounded-2xl bg-white shadow-2xl ring-1 ring-gray-200">
+      <div className="relative w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-2xl ring-1 ring-gray-200">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-gray-200 p-6">
           <div className="flex items-center gap-3">
@@ -58,7 +58,7 @@ export default function DeleteConfirmModal({
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end gap-3 border-t border-gray-200 p-6">
+        <div className="flex flex-col-reverse gap-2 sm:flex-row sm:items-center sm:justify-end sm:gap-3 border-t border-gray-200 p-6">
           <button
             onClick={onClose}
             disabled={isLoading}

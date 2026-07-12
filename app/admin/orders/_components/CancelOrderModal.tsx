@@ -100,7 +100,7 @@ export default function CancelOrderModal({ isOpen, onClose, orderId, onSubmit }:
           </div>
 
           {/* Actions */}
-          <div className="mt-6 flex gap-3">
+          <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:gap-3">
             <button
               type="button"
               onClick={onClose}

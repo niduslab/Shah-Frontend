@@ -152,7 +152,7 @@ export default function PromotionsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-6">
       <div className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="mb-8">
@@ -184,10 +184,10 @@ export default function PromotionsPage() {
               </div>
 
               {/* Status Filter */}
-              <div className="flex items-center gap-1 rounded-xl bg-gray-100 p-1">
+              <div className="flex items-center gap-1 rounded-xl bg-gray-100 p-1 overflow-x-auto">
                 <button
                   onClick={() => setStatusFilter('all')}
-                  className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+                  className={`rounded-lg px-4 py-2 text-sm font-medium transition-all whitespace-nowrap ${
                     statusFilter === 'all'
                       ? 'bg-white text-gray-900 shadow-sm'
                       : 'text-gray-600 hover:text-gray-900'
@@ -197,7 +197,7 @@ export default function PromotionsPage() {
                 </button>
                 <button
                   onClick={() => setStatusFilter('active')}
-                  className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+                  className={`rounded-lg px-4 py-2 text-sm font-medium transition-all whitespace-nowrap ${
                     statusFilter === 'active'
                       ? 'bg-white text-gray-900 shadow-sm'
                       : 'text-gray-600 hover:text-gray-900'
@@ -207,7 +207,7 @@ export default function PromotionsPage() {
                 </button>
                 <button
                   onClick={() => setStatusFilter('inactive')}
-                  className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+                  className={`rounded-lg px-4 py-2 text-sm font-medium transition-all whitespace-nowrap ${
                     statusFilter === 'inactive'
                       ? 'bg-white text-gray-900 shadow-sm'
                       : 'text-gray-600 hover:text-gray-900'
@@ -221,7 +221,7 @@ export default function PromotionsPage() {
             {/* Create Button */}
             <button
               onClick={handleCreate}
-              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#FF6F00] to-[#E65100] px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-orange-500/30 transition-all hover:shadow-xl hover:shadow-orange-500/40 focus:outline-none focus:ring-2 focus:ring-[#FF6F00] focus:ring-offset-2"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#FF6F00] to-[#E65100] px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-orange-500/30 transition-all hover:shadow-xl hover:shadow-orange-500/40 focus:outline-none focus:ring-2 focus:ring-[#FF6F00] focus:ring-offset-2 sm:w-auto"
             >
               <Plus className="h-5 w-5" />
               Create Promotion
@@ -259,10 +259,10 @@ export default function PromotionsPage() {
                   key={promotion.id}
                   className="group p-6 transition-all hover:bg-gradient-to-r hover:from-gray-50 hover:to-transparent"
                 >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-lg font-bold text-gray-900">{promotion.name}</h3>
+                  <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-wrap items-center gap-3 mb-2">
+                        <h3 className="text-lg font-bold text-gray-900 truncate">{promotion.name}</h3>
                         {getStatusBadge(promotion)}
                         {getTypeBadge(promotion)}
                       </div>
@@ -299,7 +299,7 @@ export default function PromotionsPage() {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 sm:flex-shrink-0">
                       <button
                         onClick={() => handleToggle(promotion)}
                         className={`rounded-lg p-2 transition-all focus:outline-none focus:ring-2 ${

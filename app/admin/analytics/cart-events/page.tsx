@@ -128,7 +128,7 @@ export default function CartEventsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
       <div className="mb-6">
         <Link
           href="/admin/analytics"
@@ -149,7 +149,7 @@ export default function CartEventsPage() {
       </div>
 
       {/* Summary Cards */}
-      <div className="mb-6 grid gap-6 md:grid-cols-4">
+      <div className="mb-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <div className="rounded-lg bg-white p-6 shadow-sm">
           <p className="text-sm font-medium text-gray-500">Total Events</p>
           <p className="mt-2 text-3xl font-bold text-gray-900">{totalEvents}</p>
@@ -265,21 +265,21 @@ export default function CartEventsPage() {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-between border-t border-gray-200 px-6 py-4">
+              <div className="flex flex-col gap-3 border-t border-gray-200 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page === 1}
-                  className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 sm:w-auto"
                 >
                   Previous
                 </button>
-                <span className="text-sm text-gray-700">
+                <span className="text-center text-sm text-gray-700">
                   Page {page} of {totalPages}
                 </span>
                 <button
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                   disabled={page === totalPages}
-                  className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 sm:w-auto"
                 >
                   Next
                 </button>

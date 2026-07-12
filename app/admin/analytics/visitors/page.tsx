@@ -131,7 +131,7 @@ export default function VisitorsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
       {/* Header */}
       <div className="mb-6">
         <Link
@@ -263,21 +263,21 @@ export default function VisitorsPage() {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-between border-t border-gray-200 px-6 py-4">
+              <div className="flex flex-col gap-3 border-t border-gray-200 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page === 1}
-                  className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 sm:w-auto"
                 >
                   Previous
                 </button>
-                <span className="text-sm text-gray-700">
+                <span className="text-center text-sm text-gray-700">
                   Page {page} of {totalPages}
                 </span>
                 <button
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                   disabled={page === totalPages}
-                  className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 sm:w-auto"
                 >
                   Next
                 </button>
@@ -293,13 +293,13 @@ export default function VisitorsPage() {
           <div className="relative max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-lg bg-white shadow-xl">
             {/* Modal Header */}
             <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-200 bg-white px-6 py-4">
-              <div className="flex items-center gap-3">
+              <div className="flex min-w-0 items-center gap-3">
                 <div className="rounded-full bg-blue-100 p-2">
                   <Users className="h-5 w-5 text-blue-600" />
                 </div>
-                <div>
+                <div className="min-w-0">
                   <h2 className="text-xl font-bold text-gray-900">Visitor Session Details</h2>
-                  <p className="text-sm text-gray-500">Session ID: {selectedVisitor.session_id}</p>
+                  <p className="truncate text-sm text-gray-500">Session ID: {selectedVisitor.session_id}</p>
                 </div>
               </div>
               <button

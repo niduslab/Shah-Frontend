@@ -139,7 +139,7 @@ export default function VariationManager({ variations, onChange, onDelete }: Var
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h3 className="text-lg font-semibold text-gray-900">Product Variations</h3>
           <p className="text-sm text-gray-500">
@@ -149,7 +149,7 @@ export default function VariationManager({ variations, onChange, onDelete }: Var
         <button
           type="button"
           onClick={handleAdd}
-          className="flex items-center gap-2 rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 transition-all hover:bg-gray-200"
+          className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 transition-all hover:bg-gray-200"
         >
           <Plus className="h-4 w-4" />
           Add Variation
@@ -321,7 +321,7 @@ export default function VariationManager({ variations, onChange, onDelete }: Var
                           <p className="mb-2 text-xs font-medium text-gray-600">
                             {hasVariationTypes ? 'Or add custom attribute:' : 'Add custom attribute:'}
                           </p>
-                          <div className="flex gap-2">
+                          <div className="flex flex-col gap-2 sm:flex-row">
                             <input
                               type="text"
                               placeholder="Name (e.g., material)"
@@ -353,7 +353,7 @@ export default function VariationManager({ variations, onChange, onDelete }: Var
 
                 {/* Selected Attributes */}
                 {Object.keys(variation.attributes).length > 0 ? (
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     {Object.entries(variation.attributes).map(([key, value]) => (
                       <div key={key} className="relative">
                         <input

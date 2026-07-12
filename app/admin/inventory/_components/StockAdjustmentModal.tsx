@@ -119,13 +119,13 @@ export default function StockAdjustmentModal({ isOpen, onClose, product, onSubmi
                       key={variation.id}
                       type="button"
                       onClick={() => setFormData(f => ({ ...f, variation_id: variation.id }))}
-                      className={`flex items-center justify-between rounded-xl border px-4 py-3 text-left text-sm transition-all ${
+                      className={`flex flex-wrap items-center justify-between gap-2 rounded-xl border px-4 py-3 text-left text-sm transition-all ${
                         isSelected
                           ? 'border-[#FF6F00] bg-orange-50 ring-2 ring-[#FF6F00]/20'
                           : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                       }`}
                     >
-                      <div>
+                      <div className="min-w-0">
                         <span className="font-medium text-gray-900">{label || `Variant #${variation.id}`}</span>
                         <span className="ml-2 font-mono text-xs text-gray-400">{variation.sku}</span>
                       </div>
@@ -244,7 +244,7 @@ export default function StockAdjustmentModal({ isOpen, onClose, product, onSubmi
           )}
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
+          <div className="flex flex-col-reverse gap-2 pt-4 border-t border-gray-200 sm:flex-row sm:items-center sm:justify-end sm:gap-3">
             <button
               type="button"
               onClick={onClose}

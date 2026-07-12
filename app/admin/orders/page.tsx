@@ -242,7 +242,7 @@ export default function OrdersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-6 lg:p-8">
       <div className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="mb-8">
@@ -279,7 +279,7 @@ export default function OrdersPage() {
               </div>
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className={`flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-medium transition-all ${
+                className={`flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-medium transition-all w-full sm:w-auto ${
                   showFilters
                     ? 'bg-[#FF6F00] text-white shadow-lg shadow-orange-500/30'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -557,7 +557,7 @@ export default function OrdersPage() {
 
           {/* Per Page Selector */}
           {orders && orders.length > 0 && (
-            <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
+            <div className="px-6 py-4 border-t border-gray-200 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-3">
                 <label className="text-sm text-gray-600">Show per page:</label>
                 <select

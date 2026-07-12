@@ -74,7 +74,7 @@ export default function VariationsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-6">
       <div className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="mb-8">
@@ -106,7 +106,7 @@ export default function VariationsPage() {
 
         {/* Actions Bar */}
         <div className="mb-6 rounded-2xl bg-white p-5 shadow-lg ring-1 ring-gray-200">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h2 className="text-lg font-semibold text-gray-900">Variation Types</h2>
               <p className="text-sm text-gray-500">
@@ -115,7 +115,7 @@ export default function VariationsPage() {
             </div>
             <button
               onClick={handleCreateType}
-              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#FF6F00] to-[#E65100] px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-orange-500/30 transition-all hover:shadow-xl hover:shadow-orange-500/40"
+              className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#FF6F00] to-[#E65100] px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-orange-500/30 transition-all hover:shadow-xl hover:shadow-orange-500/40"
             >
               <Plus className="h-5 w-5" />
               Add Variation Type

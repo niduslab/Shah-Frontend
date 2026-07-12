@@ -19,7 +19,7 @@ export default function PageTypeCard({ pageType, onClick }: PageTypeCardProps) {
   return (
     <div
       onClick={onClick}
-      className="group relative overflow-hidden rounded-2xl bg-white p-8 shadow-lg ring-1 ring-gray-200 transition-all hover:shadow-2xl hover:ring-[#FF6F00]/30 cursor-pointer"
+      className="group relative overflow-hidden rounded-2xl bg-white p-4 sm:p-6 lg:p-8 shadow-lg ring-1 ring-gray-200 transition-all hover:shadow-2xl hover:ring-[#FF6F00]/30 cursor-pointer"
     >
       {/* Background Gradient */}
       <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${pageType.color} opacity-10 rounded-full blur-3xl transition-all group-hover:opacity-20 group-hover:scale-150`} />

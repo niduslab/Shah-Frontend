@@ -240,7 +240,7 @@ export default function UserModal({ isOpen, onClose, user, onSubmit }: UserModal
               <Shield className="inline h-4 w-4 mr-1" />
               User Type <span className="text-red-500">*</span>
             </label>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <button
                 type="button"
                 onClick={() => setFormData({ ...formData, user_type: 'customer' })}
@@ -294,7 +294,7 @@ export default function UserModal({ isOpen, onClose, user, onSubmit }: UserModal
           </div>
         </form>
 
-        <div className="sticky bottom-0 flex gap-3 border-t border-gray-200 bg-gray-50 px-6 py-4">
+        <div className="sticky bottom-0 flex flex-col-reverse gap-2 border-t border-gray-200 bg-gray-50 px-6 py-4 sm:flex-row sm:gap-3">
           <button
             type="button"
             onClick={onClose}

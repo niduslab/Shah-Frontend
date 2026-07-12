@@ -50,12 +50,12 @@ export default function VisualSectionEditor({ sectionType, content, settings, on
 
     return (
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <h3 className="text-lg font-semibold text-gray-900">Hero Slides</h3>
           <button
             type="button"
             onClick={addSlide}
-            className="flex items-center gap-2 rounded-lg bg-[#FF6F00] px-4 py-2 text-sm font-medium text-white hover:bg-[#E65100]"
+            className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-[#FF6F00] px-4 py-2 text-sm font-medium text-white hover:bg-[#E65100]"
           >
             <Plus className="h-4 w-4" />
             Add Slide
@@ -75,8 +75,8 @@ export default function VisualSectionEditor({ sectionType, content, settings, on
               </button>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="col-span-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="sm:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   <ImageIcon className="inline h-4 w-4 mr-1" />
                   Image/Video URL
@@ -90,7 +90,7 @@ export default function VisualSectionEditor({ sectionType, content, settings, on
                 />
               </div>
 
-              <div className="col-span-2">
+              <div className="sm:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   <Type className="inline h-4 w-4 mr-1" />
                   Title
@@ -104,7 +104,7 @@ export default function VisualSectionEditor({ sectionType, content, settings, on
                 />
               </div>
 
-              <div className="col-span-2">
+              <div className="sm:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Subtitle
                 </label>
@@ -199,7 +199,7 @@ export default function VisualSectionEditor({ sectionType, content, settings, on
             Slider Settings
           </h4>
           
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="flex items-center gap-3">
               <input
                 type="checkbox"
@@ -290,7 +290,7 @@ export default function VisualSectionEditor({ sectionType, content, settings, on
     return (
       <div className="space-y-6">
         <div className="rounded-xl bg-gray-50 p-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Layout
@@ -323,12 +323,12 @@ export default function VisualSectionEditor({ sectionType, content, settings, on
           </div>
         </div>
 
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <h3 className="text-lg font-semibold text-gray-900">Product Cards</h3>
           <button
             type="button"
             onClick={addItem}
-            className="flex items-center gap-2 rounded-lg bg-[#FF6F00] px-4 py-2 text-sm font-medium text-white hover:bg-[#E65100]"
+            className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-[#FF6F00] px-4 py-2 text-sm font-medium text-white hover:bg-[#E65100]"
           >
             <Plus className="h-4 w-4" />
             Add Card
@@ -348,8 +348,8 @@ export default function VisualSectionEditor({ sectionType, content, settings, on
               </button>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="col-span-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="sm:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   <ImageIcon className="inline h-4 w-4 mr-1" />
                   Image URL
@@ -363,7 +363,7 @@ export default function VisualSectionEditor({ sectionType, content, settings, on
                 />
               </div>
 
-              <div className="col-span-2">
+              <div className="sm:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Title
                 </label>
@@ -376,7 +376,7 @@ export default function VisualSectionEditor({ sectionType, content, settings, on
                 />
               </div>
 
-              <div className="col-span-2">
+              <div className="sm:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Description
                 </label>
@@ -415,7 +415,7 @@ export default function VisualSectionEditor({ sectionType, content, settings, on
                 />
               </div>
 
-              <div className="col-span-2">
+              <div className="sm:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Badge (optional)
                 </label>

@@ -124,7 +124,7 @@ export default function ImportProgressCard({
       </div>
 
       {/* Statistics */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         <div className="rounded-lg bg-white p-3 text-center">
           <p className="text-2xl font-bold text-gray-900">{currentImport.total_rows}</p>
           <p className="text-xs text-gray-600">Total</p>

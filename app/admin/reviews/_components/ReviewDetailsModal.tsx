@@ -123,7 +123,7 @@ export default function ReviewDetailsModal({ isOpen, onClose, review }: ReviewDe
 
         <div className="p-6 space-y-6">
           {/* Status and Rating */}
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-3">
               {renderStars(review.rating)}
               <span className="text-lg font-semibold text-gray-900">{review.rating}.0</span>
@@ -133,8 +133,8 @@ export default function ReviewDetailsModal({ isOpen, onClose, review }: ReviewDe
 
           {/* Review Title and Content */}
           <div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">{review.title}</h3>
-            <p className="text-gray-700 leading-relaxed">{review.comment}</p>
+            <h3 className="text-xl font-bold text-gray-900 mb-2 break-words">{review.title}</h3>
+            <p className="text-gray-700 leading-relaxed break-words">{review.comment}</p>
           </div>
 
           {/* Review Images */}
@@ -185,11 +185,11 @@ export default function ReviewDetailsModal({ isOpen, onClose, review }: ReviewDe
                 <img
                   src={review.product.image}
                   alt={review.product.name}
-                  className="h-16 w-16 rounded-lg object-cover ring-1 ring-gray-200"
+                  className="h-16 w-16 shrink-0 rounded-lg object-cover ring-1 ring-gray-200"
                 />
               )}
-              <div>
-                <p className="font-medium text-gray-900">{review.product.name}</p>
+              <div className="min-w-0">
+                <p className="font-medium text-gray-900 break-words">{review.product.name}</p>
                 <p className="text-sm text-gray-500">Product ID: {review.product_id}</p>
               </div>
             </div>

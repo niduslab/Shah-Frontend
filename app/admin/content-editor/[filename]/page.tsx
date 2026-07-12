@@ -99,7 +99,7 @@ export default function EditContentPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
       <div className="mx-auto max-w-7xl">
         <div className="mb-6">
           <Link
@@ -109,13 +109,13 @@ export default function EditContentPage() {
             <ArrowLeft className="h-4 w-4" />
             Back to Content Editor
           </Link>
-          
-          <div className="flex items-center justify-between">
+
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Edit Content</h1>
-              <div className="mt-2 flex items-center gap-2">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Edit Content</h1>
+              <div className="mt-2 flex flex-wrap items-center gap-2">
                 <Code className="h-4 w-4 text-gray-500" />
-                <p className="text-gray-600">{filename}.json</p>
+                <p className="text-gray-600 break-all">{filename}.json</p>
                 {hasChanges && (
                   <span className="rounded-full bg-yellow-100 px-2 py-1 text-xs font-medium text-yellow-700">
                     Unsaved changes
@@ -123,7 +123,7 @@ export default function EditContentPage() {
                 )}
               </div>
             </div>
-            <div className="flex gap-3">
+            <div className="flex flex-wrap gap-3">
               {hasChanges && (
                 <button
                   onClick={resetChanges}
@@ -174,7 +174,7 @@ export default function EditContentPage() {
 
         <div className="rounded-xl bg-white shadow-lg">
           <div className="border-b border-gray-200 p-4">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-2">
                 <div className="h-3 w-3 rounded-full bg-red-500"></div>
                 <div className="h-3 w-3 rounded-full bg-yellow-500"></div>
@@ -191,7 +191,7 @@ export default function EditContentPage() {
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            className="h-[calc(100vh-350px)] w-full resize-none border-0 p-6 font-mono text-sm focus:outline-none focus:ring-0"
+            className="h-[calc(100vh-350px)] w-full resize-none border-0 p-4 sm:p-6 font-mono text-sm focus:outline-none focus:ring-0"
             spellCheck={false}
             style={{
               tabSize: 2,

@@ -49,26 +49,26 @@ export default function ContentEditorPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-8 flex items-center justify-between">
+        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Content Editor</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Content Editor</h1>
             <p className="mt-2 text-gray-600">
               Manage your page content using JSON files
             </p>
           </div>
-          <button className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-orange-400 to-orange-500 px-6 py-3 text-sm font-medium text-white hover:from-orange-500 hover:to-orange-600">
+          <button className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-orange-400 to-orange-500 px-6 py-3 text-sm font-medium text-white hover:from-orange-500 hover:to-orange-600">
             <Plus className="h-4 w-4" />
             Create New File
           </button>
         </div>
 
         {/* Filter Tabs */}
-        <div className="mb-6 flex gap-2 rounded-lg bg-white p-2 shadow">
+        <div className="mb-6 flex gap-2 rounded-lg bg-white p-2 shadow overflow-x-auto">
           <button
             onClick={() => setFilter("all")}
-            className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+            className={`whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium transition-colors ${
               filter === "all"
                 ? "bg-orange-500 text-white"
                 : "text-gray-700 hover:bg-gray-100"
@@ -78,7 +78,7 @@ export default function ContentEditorPage() {
           </button>
           <button
             onClick={() => setFilter("landing")}
-            className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+            className={`whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium transition-colors ${
               filter === "landing"
                 ? "bg-orange-500 text-white"
                 : "text-gray-700 hover:bg-gray-100"
@@ -88,7 +88,7 @@ export default function ContentEditorPage() {
           </button>
           <button
             onClick={() => setFilter("brand")}
-            className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+            className={`whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium transition-colors ${
               filter === "brand"
                 ? "bg-orange-500 text-white"
                 : "text-gray-700 hover:bg-gray-100"

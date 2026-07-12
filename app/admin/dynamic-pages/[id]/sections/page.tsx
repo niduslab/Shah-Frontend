@@ -227,7 +227,7 @@ export default function PageSectionsPage({ params: propsParams }: { params: { id
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-6">
       <div className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="mb-8">
@@ -238,13 +238,13 @@ export default function PageSectionsPage({ params: propsParams }: { params: { id
             <ArrowLeft className="h-4 w-4" />
             Back to Pages
           </button>
-          
+
           <div className="flex items-center gap-3 mb-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#FF6F00] to-[#E65100] shadow-lg shadow-orange-500/30">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#FF6F00] to-[#E65100] shadow-lg shadow-orange-500/30 shrink-0">
               <Layers className="h-6 w-6 text-white" />
             </div>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">{page?.title} - Sections</h1>
+            <div className="min-w-0">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 break-words">{page?.title} - Sections</h1>
               <p className="text-sm text-gray-600">Manage page sections and content</p>
             </div>
           </div>
@@ -252,7 +252,7 @@ export default function PageSectionsPage({ params: propsParams }: { params: { id
 
         {/* Actions Bar */}
         <div className="mb-6 rounded-2xl bg-white p-5 shadow-lg ring-1 ring-gray-200">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
               <span className="text-sm text-gray-600">
                 {sections.length} {sections.length === 1 ? 'Section' : 'Sections'}
@@ -260,7 +260,7 @@ export default function PageSectionsPage({ params: propsParams }: { params: { id
             </div>
             <button
               onClick={handleCreate}
-              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#FF6F00] to-[#E65100] px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-orange-500/30 transition-all hover:shadow-xl hover:shadow-orange-500/40 focus:outline-none focus:ring-2 focus:ring-[#FF6F00] focus:ring-offset-2"
+              className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#FF6F00] to-[#E65100] px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-orange-500/30 transition-all hover:shadow-xl hover:shadow-orange-500/40 focus:outline-none focus:ring-2 focus:ring-[#FF6F00] focus:ring-offset-2"
             >
               <Plus className="h-5 w-5" />
               Add Section
@@ -296,14 +296,14 @@ export default function PageSectionsPage({ params: propsParams }: { params: { id
                   onDrop={() => handleDrop(section)}
                   className="group p-6 transition-all hover:bg-gradient-to-r hover:from-gray-50 hover:to-transparent cursor-move"
                 >
-                  <div className="flex items-start gap-4">
-                    <div className="mt-1 text-gray-400 cursor-grab active:cursor-grabbing">
+                  <div className="flex flex-col sm:flex-row sm:items-start gap-4">
+                    <div className="hidden sm:block mt-1 text-gray-400 cursor-grab active:cursor-grabbing">
                       <GripVertical className="h-5 w-5" />
                     </div>
-                    
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-lg font-bold text-gray-900">
+
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-wrap items-center gap-3 mb-2">
+                        <h3 className="text-lg font-bold text-gray-900 break-words">
                           {section.title || getSectionTypeLabel(section.section_type)}
                         </h3>
                         {getSectionTypeBadge(section.section_type)}
@@ -325,7 +325,7 @@ export default function PageSectionsPage({ params: propsParams }: { params: { id
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 shrink-0">
                       <button
                         onClick={() => handleToggle(section)}
                         className={`rounded-lg p-2 transition-all focus:outline-none focus:ring-2 ${

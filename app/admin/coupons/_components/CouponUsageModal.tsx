@@ -88,18 +88,18 @@ export default function CouponUsageModal({ isOpen, onClose, couponId, couponCode
                     key={usage.id}
                     className="rounded-xl border border-gray-200 bg-white p-4 transition-all hover:shadow-md"
                   >
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1 space-y-3">
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                      <div className="flex-1 min-w-0 space-y-3">
                         {/* User Info */}
                         <div className="flex items-center gap-2">
                           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100">
                             <User className="h-4 w-4 text-blue-600" />
                           </div>
-                          <div>
-                            <p className="text-sm font-semibold text-gray-900">
+                          <div className="min-w-0">
+                            <p className="text-sm font-semibold text-gray-900 truncate">
                               {usage.user?.first_name} {usage.user?.last_name}
                             </p>
-                            <p className="text-xs text-gray-500">{usage.user?.email}</p>
+                            <p className="text-xs text-gray-500 truncate">{usage.user?.email}</p>
                           </div>
                         </div>
 

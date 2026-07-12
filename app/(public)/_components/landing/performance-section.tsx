@@ -1,44 +1,67 @@
+"use client";
+
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { ProductCard } from "../shared/product-card";
+import { useCategories } from "@/lib/hooks/public/useCategories";
+import { useShopProducts } from "@/lib/hooks/public/useShop";
+import { getPrimaryImageUrl } from "@/lib/utils/image";
 
-const PERFORMANCE_PRODUCTS = [
-  {
-    id: 1,
-    name: "Shah Muscle Chargers Boxing Gloves",
-    image: "/images/landing/sports-gear/right-1.png",
-    price: 21.99,
-    rating: 0,
-    reviews: 0,
-  },
-  {
-    id: 2,
-    name: "XPD Badminton Shoes J-15",
-    image: "/images/landing/sports-gear/right-2.png",
-    price: 39.99,
-    rating: 0,
-    reviews: 0,
-  },
-  {
-    id: 3,
-    name: "Friendship 729 5 Table Tennis Racket",
-    image: "/images/landing/sports-gear/right-3.png",
-    price: 16.99,
-    rating: 0,
-    reviews: 0,
-  },
-  {
-    id: 4,
-    name: "Billard Pool Table",
-    image: "/images/landing/sports-gear/right-4.png",
-    price: 250.99,
-    rating: 0,
-    reviews: 0,
-  },
-];
+/**
+ * Find the top-level "Sports" category (case-insensitive) from the categories tree.
+ */
+function findSportsCategory(categories: any[]): any | undefined {
+  return categories.find(
+    (category) => category?.name?.trim().toLowerCase() === "sports"
+  );
+}
 
 export function PerformanceSection() {
+  // Resolve the Sports category slug dynamically from the catalog
+  const { data: categoriesData } = useCategories();
+  const categories = (categoriesData as any)?.data || [];
+  const sportsCategory = findSportsCategory(categories);
+  const sportsSlug: string | undefined = sportsCategory?.slug;
+
+  // Fetch products within the Sports category. The backend resolves the
+  // category slug to include every sub (and sub-sub) category's products.
+  const { data, isLoading } = useShopProducts(
+    {
+      category_slug: sportsSlug,
+      per_page: 4,
+      sort_by: "created_at",
+      sort_order: "desc",
+    },
+    { enabled: !!sportsSlug }
+  );
+
+  const products = data?.data?.data || [];
+
+  // Transform API products to match ProductCard interface
+  const transformedProducts = products.map((product: any) => ({
+    id: product.id,
+    name: product.name,
+    slug: product.slug,
+    image: getPrimaryImageUrl(product.images),
+    price: parseFloat(product.price),
+    originalPrice: product.compare_price ? parseFloat(product.compare_price) : undefined,
+    rating: product.average_rating ?? 0,
+    reviews: product.review_count || 0,
+    kinomap: product.kinomap,
+  }));
+
+  // Link to the shop pre-filtered to the Sports category (and all its children)
+  const shopHref = sportsSlug ? `/shop?category=${sportsSlug}` : "/shop";
+
+  // Don't render the section if there's no Sports category or no products in it
+  if (!sportsSlug) {
+    return null;
+  }
+  if (!isLoading && transformedProducts.length === 0) {
+    return null;
+  }
+
   return (
     <section className="w-full bg-white py-12">
       <div className="mx-auto w-full max-w-[1400px] px-4 md:px-6">
@@ -47,7 +70,7 @@ export function PerformanceSection() {
             Play Better with the Right Gear
           </h2>
           <Link
-            href="/shop"
+            href={shopHref}
             className="flex items-center gap-2 text-[16px] font-bold text-[#3E4C24] hover:underline"
           >
             View All Products
@@ -65,15 +88,15 @@ export function PerformanceSection() {
             />
             {/* Overlay Gradient */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-            
+
             {/* Content */}
             <div className="absolute bottom-0 left-0 p-8 text-white">
               <h3 className="mb-2 text-3xl font-bold">Pickleball</h3>
               <p className="mb-6 max-w-md text-sm text-gray-200">
                 Lightweight paddles and gear built for fast rallies and smooth gameplay.
               </p>
-              <Link 
-                href="/shop" 
+              <Link
+                href={shopHref}
                 className="flex items-center gap-2 rounded bg-[#FFC107] px-6 py-3 text-[16px] font-semibold text-black transition-colors hover:bg-[#FFC107]/90 w-fit"
               >
                 Shop Now
@@ -84,7 +107,7 @@ export function PerformanceSection() {
 
           {/* Right Product Grid */}
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-            {PERFORMANCE_PRODUCTS.map((product) => (
+            {transformedProducts.slice(0, 4).map((product) => (
               <ProductCard key={product.id} product={product} imageHeight="h-[288px]" />
             ))}
           </div>

@@ -198,19 +198,19 @@ export default function ContentEditorModal({ isOpen, onClose, section, pageId }:
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="w-full max-w-5xl h-[90vh] rounded-2xl bg-white shadow-2xl flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-gray-200 p-6">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#FF6F00] to-[#E65100]">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-gray-200 p-6">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#FF6F00] to-[#E65100] shrink-0">
               <Code className="h-5 w-5 text-white" />
             </div>
-            <div>
+            <div className="min-w-0">
               <h2 className="text-xl font-bold text-gray-900">Edit Section Content</h2>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-gray-500 truncate">
                 {section.title || section.section_type}
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={loadExample}
               className="rounded-lg px-4 py-2 text-sm font-medium text-gray-700 transition-all hover:bg-gray-100"
@@ -227,10 +227,10 @@ export default function ContentEditorModal({ isOpen, onClose, section, pageId }:
         </div>
 
         {/* Tabs */}
-        <div className="flex border-b border-gray-200 px-6">
+        <div className="flex border-b border-gray-200 px-6 overflow-x-auto">
           <button
             onClick={() => setActiveTab('content')}
-            className={`px-4 py-3 text-sm font-medium transition-all border-b-2 ${
+            className={`px-4 py-3 text-sm font-medium transition-all border-b-2 whitespace-nowrap ${
               activeTab === 'content'
                 ? 'border-[#FF6F00] text-[#FF6F00]'
                 : 'border-transparent text-gray-600 hover:text-gray-900'
@@ -240,7 +240,7 @@ export default function ContentEditorModal({ isOpen, onClose, section, pageId }:
           </button>
           <button
             onClick={() => setActiveTab('settings')}
-            className={`px-4 py-3 text-sm font-medium transition-all border-b-2 ${
+            className={`px-4 py-3 text-sm font-medium transition-all border-b-2 whitespace-nowrap ${
               activeTab === 'settings'
                 ? 'border-[#FF6F00] text-[#FF6F00]'
                 : 'border-transparent text-gray-600 hover:text-gray-900'
@@ -280,7 +280,7 @@ export default function ContentEditorModal({ isOpen, onClose, section, pageId }:
         </div>
 
         {/* Actions */}
-        <div className="flex gap-3 border-t border-gray-200 p-6">
+        <div className="flex flex-col-reverse gap-2 sm:flex-row sm:gap-3 border-t border-gray-200 p-6">
           <button
             onClick={onClose}
             className="flex-1 rounded-xl border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 transition-all hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2"

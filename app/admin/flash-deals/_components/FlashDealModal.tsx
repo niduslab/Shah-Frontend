@@ -262,7 +262,7 @@ export default function FlashDealModal({ isOpen, onClose, flashDeal, onSubmit }:
           </div>
 
           {/* Date Range */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="mb-2 block text-sm font-medium text-gray-700">
                 Start Date & Time <span className="text-red-500">*</span>
@@ -306,7 +306,7 @@ export default function FlashDealModal({ isOpen, onClose, flashDeal, onSubmit }:
           </div>
 
           {/* Discount Type & Value */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="mb-2 block text-sm font-medium text-gray-700">
                 Discount Type <span className="text-red-500">*</span>
@@ -376,7 +376,7 @@ export default function FlashDealModal({ isOpen, onClose, flashDeal, onSubmit }:
           )}
 
           {/* Limits */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="mb-2 block text-sm font-medium text-gray-700">
                 Total Quantity Limit
@@ -530,7 +530,7 @@ export default function FlashDealModal({ isOpen, onClose, flashDeal, onSubmit }:
                               <Trash2 className="h-4 w-4" />
                             </button>
                           </div>
-                          <div className="grid grid-cols-2 gap-2">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                             <div>
                               <label className="block text-xs font-medium text-gray-600 mb-1">
                                 Flash Price (optional)
@@ -613,7 +613,7 @@ export default function FlashDealModal({ isOpen, onClose, flashDeal, onSubmit }:
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
+          <div className="flex flex-col-reverse gap-2 pt-4 border-t border-gray-200 sm:flex-row sm:justify-end sm:gap-3">
             <button
               type="button"
               onClick={onClose}

@@ -82,7 +82,7 @@ export default function InventoryLogsModal({ isOpen, onClose, productId, product
 
         {/* Filters */}
         <div className="border-b border-gray-200 bg-gray-50 px-6 py-4">
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
             <label className="text-sm font-medium text-gray-700">Filter by Reason:</label>
             <select
               value={reasonFilter}
@@ -90,7 +90,7 @@ export default function InventoryLogsModal({ isOpen, onClose, productId, product
                 setReasonFilter(e.target.value);
                 setCurrentPage(1);
               }}
-              className="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              className="w-full sm:w-auto rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             >
               <option value="">All Reasons</option>
               <option value="sale">Sale</option>

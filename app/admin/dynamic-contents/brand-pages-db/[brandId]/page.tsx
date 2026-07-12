@@ -490,10 +490,10 @@ export default function BrandPageEditor() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
       <div className="mx-auto max-w-[1600px]">
         {/* Header */}
-        <div className="mb-8 flex items-center justify-between">
+        <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <button
               onClick={() => router.push("/admin/brands")}
@@ -502,16 +502,16 @@ export default function BrandPageEditor() {
               <ArrowLeft className="h-4 w-4" />
               Back to Brands
             </button>
-            <h1 className="text-3xl font-bold text-gray-900">{brand.name} - Brand Page</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{brand.name} - Brand Page</h1>
             <p className="mt-2 text-gray-600">Manage content for {brand.name} brand page</p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <button
               onClick={() => {
                 const timestamp = new Date().getTime();
                 window.open(`/brand/${brand.slug}?t=${timestamp}`, '_blank');
               }}
-              className="flex items-center gap-2 rounded-lg bg-blue-100 px-6 py-2 text-sm font-medium text-blue-700 hover:bg-blue-200"
+              className="flex items-center justify-center gap-2 rounded-lg bg-blue-100 px-6 py-2 text-sm font-medium text-blue-700 hover:bg-blue-200"
               title="Open public page in new tab with fresh content"
             >
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -522,7 +522,7 @@ export default function BrandPageEditor() {
             <button
               onClick={handleSave}
               disabled={saving}
-              className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-orange-400 to-orange-500 px-6 py-2 text-sm font-medium text-white hover:from-orange-500 hover:to-orange-600 disabled:opacity-50"
+              className="flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-orange-400 to-orange-500 px-6 py-2 text-sm font-medium text-white hover:from-orange-500 hover:to-orange-600 disabled:opacity-50"
             >
               <Save className="h-4 w-4" />
               {saving ? "Saving..." : "Save Changes"}
@@ -552,7 +552,7 @@ export default function BrandPageEditor() {
         </div>
 
         {/* Hero Section */}
-        <div className="mb-8 rounded-xl bg-white p-6 shadow-lg">
+        <div className="mb-8 rounded-xl bg-white p-4 sm:p-6 shadow-lg">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-xl font-semibold text-gray-900">Hero Section</h2>
             <label className="flex items-center gap-2">
@@ -671,10 +671,10 @@ export default function BrandPageEditor() {
         </div>
 
         {/* Categories Section */}
-        <div className="mb-8 rounded-xl bg-white p-6 shadow-lg">
-          <div className="mb-4 flex items-center justify-between">
+        <div className="mb-8 rounded-xl bg-white p-4 sm:p-6 shadow-lg">
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <h2 className="text-xl font-semibold text-gray-900">Categories Section</h2>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center gap-4">
               <button
                 onClick={() => {
                   setContent({
@@ -825,7 +825,7 @@ export default function BrandPageEditor() {
         </div>
 
         {/* Behind The Work Section */}
-        <div className="mb-8 rounded-xl bg-white p-6 shadow-lg">
+        <div className="mb-8 rounded-xl bg-white p-4 sm:p-6 shadow-lg">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-xl font-semibold text-gray-900">Behind The Work Section</h2>
             <label className="flex items-center gap-2">
@@ -1027,10 +1027,10 @@ export default function BrandPageEditor() {
         </div>
 
         {/* Shop By Section */}
-        <div className="mb-8 rounded-xl bg-white p-6 shadow-lg">
-          <div className="mb-4 flex items-center justify-between">
+        <div className="mb-8 rounded-xl bg-white p-4 sm:p-6 shadow-lg">
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <h2 className="text-xl font-semibold text-gray-900">Shop By Section</h2>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center gap-4">
               <button
                 onClick={() => {
                   setContent({
@@ -1239,7 +1239,7 @@ export default function BrandPageEditor() {
         </div>
 
         {/* Promo Banner Section */}
-        <div className="mb-8 rounded-xl bg-white p-6 shadow-lg">
+        <div className="mb-8 rounded-xl bg-white p-4 sm:p-6 shadow-lg">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-xl font-semibold text-gray-900">Promotional Banner</h2>
             <label className="flex items-center gap-2">
@@ -1459,7 +1459,7 @@ export default function BrandPageEditor() {
         </div>
 
         {/* Feature Section 1 */}
-        <div className="mb-8 rounded-xl bg-white p-6 shadow-lg">
+        <div className="mb-8 rounded-xl bg-white p-4 sm:p-6 shadow-lg">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-xl font-semibold text-gray-900">Feature Section 1</h2>
             <label className="flex items-center gap-2">
@@ -1621,7 +1621,7 @@ export default function BrandPageEditor() {
         </div>
 
         {/* Feature Section 2 */}
-        <div className="mb-8 rounded-xl bg-white p-6 shadow-lg">
+        <div className="mb-8 rounded-xl bg-white p-4 sm:p-6 shadow-lg">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-xl font-semibold text-gray-900">Feature Section 2</h2>
             <label className="flex items-center gap-2">
