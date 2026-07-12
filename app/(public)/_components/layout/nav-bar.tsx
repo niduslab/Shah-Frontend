@@ -45,9 +45,25 @@ export function NavBar() {
     }));
 
   const sportsCategory = categoriesData?.data?.find((cat: any) => cat.slug === 'sports' && cat.is_active);
-  const sportsItems = (sportsCategory?.children || []).filter((child: any) => child.is_active);
+  const sportsChildren = (sportsCategory?.children || []).filter((child: any) => child.is_active);
+  const indoorSportsCategory = sportsChildren.find((cat: any) => cat.slug === 'indoor-individual');
+  const indoorSportsItems = (indoorSportsCategory?.children || []).filter((child: any) => child.is_active);
+  const teamSportsItems = sportsChildren.filter((cat: any) => cat.slug !== 'indoor-individual');
 
-  const mobileBrands = (brandsData?.data || []).slice(0, 4);
+  const mobileBrands = (brandsData?.data || []).slice(0, 8);
+
+  const getBrandLogoUrl = (logoPath: string) => {
+    if (!logoPath) return '';
+    if (logoPath.startsWith('http://') || logoPath.startsWith('https://')) return logoPath;
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+    const cleanPath = logoPath.startsWith('/') ? logoPath.slice(1) : logoPath;
+    return `${apiUrl}/storage/${cleanPath}`;
+  };
+
+  const floorCategories = [
+    { title: "Floor Mat", href: "/floor-mat" },
+    { title: "Flooring Solution", href: "/flooring-solution" },
+  ];
 
   // Set mounted flag to prevent hydration mismatch
   useEffect(() => {
@@ -436,114 +452,136 @@ export function NavBar() {
 
           {/* Links */}
           <div className="flex flex-col gap-2 flex-1">
-            {/* Shop Accordion */}
-            <div className="border-b border-gray-100 py-2">
-              <button 
-                onClick={() => toggleSubMenu('shop')}
-                className="flex w-full items-center justify-between py-2 text-base font-bold hover:text-[#ffb81e]"
-              >
-                Shop
-                <ChevronRight className={cn("h-4 w-4 transition-transform", openSubMenu === 'shop' && "rotate-90")} />
-              </button>
-              <div className={cn("grid gap-2 overflow-hidden transition-all duration-300 pl-4", openSubMenu === 'shop' ? "grid-rows-[1fr] opacity-100 mt-2" : "grid-rows-[0fr] opacity-0")}>
-                <div className="overflow-hidden flex flex-col gap-2 text-sm text-gray-600">
-                  <Link href="/shop/all" className="py-1 hover:text-[#00072D]">All Products</Link>
-                  <Link href="/shop/new-arrivals" className="py-1 hover:text-[#00072D]">New Arrivals</Link>
-                  <Link href="/shop/best-sellers" className="py-1 hover:text-[#00072D]">Best Sellers</Link>
-                </div>
-              </div>
-            </div>
+            {/* Shop */}
+            <Link href="/shop" className="border-b border-gray-100 py-3 text-base font-bold hover:text-[#ffb81e]">
+              Shop
+            </Link>
 
             {/* Fitness Accordion */}
-            <div className="border-b border-gray-100 py-2">
-              <button 
+            <div className="border-b border-gray-100 py-1">
+              <button
                 onClick={() => toggleSubMenu('fitness')}
-                className="flex w-full items-center justify-between py-2 text-base font-bold hover:text-[#ffb81e]"
+                className="flex w-full items-center justify-between py-2.5 text-base font-bold hover:text-[#ffb81e]"
               >
                 Fitness
-                <ChevronRight className={cn("h-4 w-4 transition-transform", openSubMenu === 'fitness' && "rotate-90")} />
+                <ChevronDown className={cn("h-4 w-4 transition-transform", openSubMenu === 'fitness' && "rotate-180")} />
               </button>
-              <div className={cn("grid gap-2 overflow-hidden transition-all duration-300 pl-4", openSubMenu === 'fitness' ? "grid-rows-[1fr] opacity-100 mt-2" : "grid-rows-[0fr] opacity-0")}>
-                <div className="overflow-hidden flex flex-col gap-2 text-sm text-gray-600">
+              <div className={cn("grid overflow-hidden transition-all duration-300", openSubMenu === 'fitness' ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0")}>
+                <div className="overflow-hidden flex flex-col gap-4 pb-3 pt-1">
                   {fitnessGroups.map((group: any) => (
                     <div key={group.slug}>
-                      <div className="font-semibold text-[#00072D] mt-1">{group.name}</div>
-                      {group.items.length > 0 ? (
-                        group.items.map((item: any) => (
-                          <Link key={item.slug} href={`/shop?category=${item.slug}`} className="block pl-2 py-1 hover:text-[#00072D]">{item.name}</Link>
-                        ))
-                      ) : (
-                        <Link href={`/shop?category=${group.slug}`} className="block pl-2 py-1 hover:text-[#00072D]">View All</Link>
-                      )}
+                      <div className="mb-1.5 text-xs font-bold uppercase tracking-wider text-gray-400">{group.name}</div>
+                      <div className="flex flex-col">
+                        {group.items.length > 0 ? (
+                          group.items.map((item: any) => (
+                            <Link key={item.slug} href={`/shop?category=${item.slug}`} className="rounded-md py-2 pl-2 text-sm text-gray-600 active:bg-gray-50">{item.name}</Link>
+                          ))
+                        ) : (
+                          <Link href={`/shop?category=${group.slug}`} className="rounded-md py-2 pl-2 text-sm text-gray-600 active:bg-gray-50">View All</Link>
+                        )}
+                      </div>
                     </div>
                   ))}
                   {fitnessCategory && (
-                    <Link href={`/shop?category=${fitnessCategory.slug}`} className="py-1 font-semibold text-[#ffb81e] mt-2">Shop All Fitness</Link>
+                    <Link href={`/shop?category=${fitnessCategory.slug}`} className="flex items-center gap-1 text-sm font-bold text-[#ffb81e]">
+                      Shop All Fitness <ChevronRight className="h-3.5 w-3.5" />
+                    </Link>
                   )}
                 </div>
               </div>
             </div>
 
             {/* Sports Accordion */}
-            <div className="border-b border-gray-100 py-2">
-              <button 
+            <div className="border-b border-gray-100 py-1">
+              <button
                 onClick={() => toggleSubMenu('sports')}
-                className="flex w-full items-center justify-between py-2 text-base font-bold hover:text-[#ffb81e]"
+                className="flex w-full items-center justify-between py-2.5 text-base font-bold hover:text-[#ffb81e]"
               >
                 Sports
-                <ChevronRight className={cn("h-4 w-4 transition-transform", openSubMenu === 'sports' && "rotate-90")} />
+                <ChevronDown className={cn("h-4 w-4 transition-transform", openSubMenu === 'sports' && "rotate-180")} />
               </button>
-              <div className={cn("grid gap-2 overflow-hidden transition-all duration-300 pl-4", openSubMenu === 'sports' ? "grid-rows-[1fr] opacity-100 mt-2" : "grid-rows-[0fr] opacity-0")}>
-                <div className="overflow-hidden flex flex-col gap-2 text-sm text-gray-600">
-                  {sportsItems.map((item: any) => (
-                    <Link key={item.slug} href={`/shop?category=${item.slug}`} className="py-1 hover:text-[#00072D]">{item.name}</Link>
-                  ))}
+              <div className={cn("grid overflow-hidden transition-all duration-300", openSubMenu === 'sports' ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0")}>
+                <div className="overflow-hidden flex flex-col gap-4 pb-3 pt-1">
+                  {teamSportsItems.length > 0 && (
+                    <div>
+                      <div className="mb-1.5 text-xs font-bold uppercase tracking-wider text-gray-400">Team Sports</div>
+                      <div className="flex flex-col">
+                        {teamSportsItems.map((item: any) => (
+                          <Link key={item.slug} href={`/shop?category=${item.slug}`} className="rounded-md py-2 pl-2 text-sm text-gray-600 active:bg-gray-50">{item.name}</Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {indoorSportsItems.length > 0 && (
+                    <div>
+                      <div className="mb-1.5 text-xs font-bold uppercase tracking-wider text-gray-400">Indoor & Individual</div>
+                      <div className="flex flex-col">
+                        {indoorSportsItems.map((item: any) => (
+                          <Link key={item.slug} href={`/shop?category=${item.slug}`} className="rounded-md py-2 pl-2 text-sm text-gray-600 active:bg-gray-50">{item.name}</Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                   {sportsCategory && (
-                    <Link href={`/shop?category=${sportsCategory.slug}`} className="py-1 font-semibold text-[#ffb81e] mt-2">Shop All Sports</Link>
+                    <Link href={`/shop?category=${sportsCategory.slug}`} className="flex items-center gap-1 text-sm font-bold text-[#ffb81e]">
+                      Shop All Sports <ChevronRight className="h-3.5 w-3.5" />
+                    </Link>
                   )}
                 </div>
               </div>
             </div>
 
-            {/* Floor Solutions Accordion */}
-            <div className="border-b border-gray-100 py-2">
-              <button 
-                onClick={() => toggleSubMenu('floor-solutions')}
-                className="flex w-full items-center justify-between py-2 text-base font-bold hover:text-[#ffb81e]"
+            {/* Brands Accordion */}
+            <div className="border-b border-gray-100 py-1">
+              <button
+                onClick={() => toggleSubMenu('brands')}
+                className="flex w-full items-center justify-between py-2.5 text-base font-bold hover:text-[#ffb81e]"
               >
-                Floor Solutions
-                <ChevronRight className={cn("h-4 w-4 transition-transform", openSubMenu === 'floor-solutions' && "rotate-90")} />
+                Brands
+                <ChevronDown className={cn("h-4 w-4 transition-transform", openSubMenu === 'brands' && "rotate-180")} />
               </button>
-              <div className={cn("grid gap-2 overflow-hidden transition-all duration-300 pl-4", openSubMenu === 'floor-solutions' ? "grid-rows-[1fr] opacity-100 mt-2" : "grid-rows-[0fr] opacity-0")}>
-                <div className="overflow-hidden flex flex-col gap-2 text-sm text-gray-600">
-                  <div className="font-semibold text-[#00072D] mt-1">Floor Mats</div>
-                  <Link href="/floor-solutions/gym-mats" className="pl-2 py-1 hover:text-[#00072D]">Gym Floor Mats</Link>
-                  <Link href="/floor-solutions/rubber-mats" className="pl-2 py-1 hover:text-[#00072D]">Rubber Floor Mats</Link>
-                  <Link href="/floor-solutions/yoga-mats" className="pl-2 py-1 hover:text-[#00072D]">Yoga & Pilates Mats</Link>
-                  
-                  <div className="font-semibold text-[#00072D] mt-2">Flooring Solutions</div>
-                  <Link href="/floor-solutions/sports-court" className="pl-2 py-1 hover:text-[#00072D]">Sports Court Flooring</Link>
-                  <Link href="/floor-solutions/artificial-turf" className="pl-2 py-1 hover:text-[#00072D]">Artificial Turf</Link>
-                  <Link href="/floor-solutions" className="py-1 font-semibold text-[#ffb81e] mt-2">View All Solutions</Link>
+              <div className={cn("grid overflow-hidden transition-all duration-300", openSubMenu === 'brands' ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0")}>
+                <div className="overflow-hidden flex flex-col gap-3 pb-3 pt-1">
+                  <div className="grid grid-cols-4 gap-2">
+                    {mobileBrands.map((brand: any) => (
+                      <Link
+                        key={brand.slug}
+                        href={`/brand/${brand.slug}`}
+                        title={brand.name}
+                        className="flex h-12 items-center justify-center rounded-md border border-gray-100 bg-white p-1.5 active:bg-gray-50"
+                      >
+                        <img
+                          src={getBrandLogoUrl(brand.logo)}
+                          alt={brand.name}
+                          className="h-full w-full object-contain"
+                          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                        />
+                      </Link>
+                    ))}
+                  </div>
+                  <Link href="/brands" className="flex items-center gap-1 text-sm font-bold text-[#ffb81e]">
+                    View All Brands <ChevronRight className="h-3.5 w-3.5" />
+                  </Link>
                 </div>
               </div>
             </div>
 
-             {/* Brands Accordion */}
-             <div className="border-b border-gray-100 py-2">
-              <button 
-                onClick={() => toggleSubMenu('brands')}
-                className="flex w-full items-center justify-between py-2 text-base font-bold hover:text-[#ffb81e]"
+            {/* Flooring Accordion */}
+            <div className="border-b border-gray-100 py-1">
+              <button
+                onClick={() => toggleSubMenu('flooring')}
+                className="flex w-full items-center justify-between py-2.5 text-base font-bold hover:text-[#ffb81e]"
               >
-                Brands
-                <ChevronRight className={cn("h-4 w-4 transition-transform", openSubMenu === 'brands' && "rotate-90")} />
+                Flooring
+                <ChevronDown className={cn("h-4 w-4 transition-transform", openSubMenu === 'flooring' && "rotate-180")} />
               </button>
-              <div className={cn("grid gap-2 overflow-hidden transition-all duration-300 pl-4", openSubMenu === 'brands' ? "grid-rows-[1fr] opacity-100 mt-2" : "grid-rows-[0fr] opacity-0")}>
-                <div className="overflow-hidden flex flex-col gap-2 text-sm text-gray-600">
-                  {mobileBrands.map((brand: any) => (
-                    <Link key={brand.slug} href={`/brand/${brand.slug}`} className="py-1 hover:text-[#00072D]">{brand.name}</Link>
+              <div className={cn("grid overflow-hidden transition-all duration-300", openSubMenu === 'flooring' ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0")}>
+                <div className="overflow-hidden flex flex-col gap-2 pb-3 pt-1">
+                  {floorCategories.map((category) => (
+                    <Link key={category.href} href={category.href} className="rounded-md py-2 pl-2 text-sm text-gray-600 active:bg-gray-50">
+                      {category.title}
+                    </Link>
                   ))}
-                  <Link href="/brands" className="py-1 font-semibold text-[#ffb81e] mt-2">View All Brands</Link>
                 </div>
               </div>
             </div>
