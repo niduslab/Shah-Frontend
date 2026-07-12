@@ -15,6 +15,7 @@ const instrumentSans = Instrument_Sans({
 export const metadata: Metadata = {
   title: "Shah Sports",
   description: "Premium sports flooring and equipment solutions",
+  colorScheme: "light",
   icons: {
     icon: [
       { url: "/icon.png" },
