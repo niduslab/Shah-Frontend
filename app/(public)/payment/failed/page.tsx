@@ -9,12 +9,18 @@ function PaymentFailedContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [orderNumber, setOrderNumber] = useState<string>('');
 
   useEffect(() => {
     // Get error message from query params
     const message = searchParams.get('message') || searchParams.get('error');
     if (message) {
       setErrorMessage(message);
+    }
+
+    const order = searchParams.get('order') || searchParams.get('order_number');
+    if (order) {
+      setOrderNumber(order);
     }
   }, [searchParams]);
 
@@ -34,6 +40,14 @@ function PaymentFailedContent() {
         {errorMessage && (
           <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
             <p className="text-sm text-red-800">{errorMessage}</p>
+          </div>
+        )}
+
+        {orderNumber && (
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
+            <p className="text-sm text-gray-700">
+              Order Number: <span className="font-mono font-bold">#{orderNumber}</span>
+            </p>
           </div>
         )}
 
