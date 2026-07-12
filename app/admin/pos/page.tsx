@@ -33,15 +33,30 @@ interface CustomerInfo {
   customer_phone: string;
 }
 
+interface ShippingInfo {
+  shipping_address_line1: string;
+  shipping_address_line2: string;
+  shipping_city: string;
+  shipping_state: string;
+  shipping_zip_code: string;
+}
+
 type PaymentMethod = 'cash' | 'card' | 'manual' | 'bkash' | 'nagad' | 'bank_transfer';
 type ActiveTab = 'pos' | 'quotation';
+type DiscountType = 'percent' | 'flat';
 
 export default function POSPage() {
-  const [activeTab, setActiveTab] = useState<ActiveTab>('pos');
+  const [activeTab, _setActiveTab] = useState<ActiveTab>('pos');
+  const setActiveTab = (tab: ActiveTab) => {
+    if (tab === 'quotation') setDiscountType('percent');
+    _setActiveTab(tab);
+  };
   const [searchQuery, setSearchQuery] = useState('');
   const [skuQuery, setSkuQuery] = useState('');
   const [cart, setCart] = useState<CartItem[]>([]);
   const [discount, setDiscount] = useState(0);
+  const [discountType, setDiscountType] = useState<DiscountType>('percent');
+  const [shippingCost, setShippingCost] = useState(0);
   const [notes, setNotes] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('cash');
   const [referenceNumber, setReferenceNumber] = useState('');
@@ -52,7 +67,15 @@ export default function POSPage() {
     customer_email: '',
     customer_phone: ''
   });
+  const [shippingInfo, setShippingInfo] = useState<ShippingInfo>({
+    shipping_address_line1: '',
+    shipping_address_line2: '',
+    shipping_city: '',
+    shipping_state: '',
+    shipping_zip_code: ''
+  });
   const [showCustomerForm, setShowCustomerForm] = useState(false);
+  const [showShippingForm, setShowShippingForm] = useState(false);
   const [orderSummary, setOrderSummary] = useState<any>(null);
 
   const { data: searchResults, isLoading: isSearching, error: searchError } = useSearchPOSProducts(searchQuery);
@@ -103,12 +126,22 @@ export default function POSPage() {
   const resetForm = () => {
     setCart([]);
     setDiscount(0);
+    setDiscountType('percent');
+    setShippingCost(0);
     setNotes('');
     setReferenceNumber('');
     setPaymentNote('');
     setProof(undefined);
     setCustomerInfo({ customer_name: '', customer_email: '', customer_phone: '' });
+    setShippingInfo({
+      shipping_address_line1: '',
+      shipping_address_line2: '',
+      shipping_city: '',
+      shipping_state: '',
+      shipping_zip_code: ''
+    });
     setShowCustomerForm(false);
+    setShowShippingForm(false);
     setOrderSummary(null);
   };
 
@@ -167,8 +200,9 @@ export default function POSPage() {
 
   const calculateTotal = () => {
     const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const discountAmount = (subtotal * discount) / 100;
-    return { subtotal, discount: discountAmount, total: subtotal - discountAmount };
+    const discountAmount = discountType === 'percent' ? (subtotal * discount) / 100 : discount;
+    const total = Math.max(0, subtotal - discountAmount) + shippingCost;
+    return { subtotal, discount: discountAmount, shipping: shippingCost, total };
   };
 
   const handleCalculate = () => {
@@ -179,7 +213,9 @@ export default function POSPage() {
         variation_id: item.variation_id,
         quantity: item.quantity
       })),
-      discount
+      discount,
+      discount_type: discountType,
+      shipping_cost: shippingCost
     });
   };
 
@@ -200,6 +236,13 @@ export default function POSPage() {
         quantity: item.quantity
       })),
       discount,
+      discount_type: discountType,
+      shipping_cost: shippingCost,
+      shipping_address_line1: shippingInfo.shipping_address_line1 || undefined,
+      shipping_address_line2: shippingInfo.shipping_address_line2 || undefined,
+      shipping_city: shippingInfo.shipping_city || undefined,
+      shipping_state: shippingInfo.shipping_state || undefined,
+      shipping_zip_code: shippingInfo.shipping_zip_code || undefined,
       payment_method: paymentMethod,
       reference_number: paymentMethod !== 'cash' ? referenceNumber || undefined : undefined,
       payment_note: paymentMethod !== 'cash' ? paymentNote || undefined : undefined,
@@ -511,6 +554,89 @@ export default function POSPage() {
               )}
             </div>
 
+            {/* Shipping Address — POS only */}
+            {!isQuotation && (
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-xl font-semibold text-gray-900">Shipping Address</h2>
+                  <button
+                    onClick={() => setShowShippingForm(!showShippingForm)}
+                    className="text-sm text-orange-600 hover:text-orange-700"
+                  >
+                    {showShippingForm ? 'Hide' : 'Add / Edit'}
+                  </button>
+                </div>
+
+                {showShippingForm ? (
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Address Line 1</label>
+                      <input
+                        type="text"
+                        value={shippingInfo.shipping_address_line1}
+                        onChange={(e) => setShippingInfo({ ...shippingInfo, shipping_address_line1: e.target.value })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                        placeholder="House, road, area"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Address Line 2</label>
+                      <input
+                        type="text"
+                        value={shippingInfo.shipping_address_line2}
+                        onChange={(e) => setShippingInfo({ ...shippingInfo, shipping_address_line2: e.target.value })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                        placeholder="Apartment, suite, etc. (optional)"
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">City</label>
+                        <input
+                          type="text"
+                          value={shippingInfo.shipping_city}
+                          onChange={(e) => setShippingInfo({ ...shippingInfo, shipping_city: e.target.value })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">State</label>
+                        <input
+                          type="text"
+                          value={shippingInfo.shipping_state}
+                          onChange={(e) => setShippingInfo({ ...shippingInfo, shipping_state: e.target.value })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Zip Code</label>
+                      <input
+                        type="text"
+                        value={shippingInfo.shipping_zip_code}
+                        onChange={(e) => setShippingInfo({ ...shippingInfo, shipping_zip_code: e.target.value })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-1">
+                    {shippingInfo.shipping_address_line1 ? (
+                      <>
+                        <p className="text-gray-900">{shippingInfo.shipping_address_line1}</p>
+                        {shippingInfo.shipping_address_line2 && <p className="text-sm text-gray-600">{shippingInfo.shipping_address_line2}</p>}
+                        <p className="text-sm text-gray-600">
+                          {[shippingInfo.shipping_city, shippingInfo.shipping_state, shippingInfo.shipping_zip_code].filter(Boolean).join(', ')}
+                        </p>
+                      </>
+                    ) : (
+                      <p className="text-gray-500 text-sm">No shipping address (pickup / not shipped)</p>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+
             {/* Payment Method — POS only */}
             {!isQuotation && (
               <div className="bg-white rounded-lg shadow-sm p-6">
@@ -596,22 +722,68 @@ export default function POSPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Discount (%)</label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block text-sm font-medium text-gray-700">Discount</label>
+                    {!isQuotation && (
+                      <div className="flex rounded-lg border border-gray-200 p-0.5 text-xs">
+                        <button
+                          type="button"
+                          onClick={() => setDiscountType('percent')}
+                          className={`px-2 py-1 rounded-md ${discountType === 'percent' ? 'bg-orange-500 text-white' : 'text-gray-600'}`}
+                        >
+                          %
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setDiscountType('flat')}
+                          className={`px-2 py-1 rounded-md ${discountType === 'flat' ? 'bg-orange-500 text-white' : 'text-gray-600'}`}
+                        >
+                          BDT
+                        </button>
+                      </div>
+                    )}
+                  </div>
                   <input
                     type="number"
                     value={discount}
-                    onChange={(e) => setDiscount(Math.max(0, Math.min(100, parseFloat(e.target.value) || 0)))}
+                    onChange={(e) => {
+                      const raw = parseFloat(e.target.value) || 0;
+                      const max = discountType === 'percent' ? 100 : Infinity;
+                      setDiscount(Math.max(0, Math.min(max, raw)));
+                    }}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     min="0"
-                    max="100"
+                    max={discountType === 'percent' ? 100 : undefined}
                     step="0.01"
                   />
                 </div>
 
                 {discount > 0 && (
                   <div className="flex justify-between text-green-600">
-                    <span>Discount ({discount}%)</span>
+                    <span>Discount ({discountType === 'percent' ? `${discount}%` : 'flat'})</span>
                     <span>-{formatCurrency(totals.discount)}</span>
+                  </div>
+                )}
+
+                {!isQuotation && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Shipping Price</label>
+                    <input
+                      type="number"
+                      value={shippingCost}
+                      onChange={(e) => setShippingCost(Math.max(0, parseFloat(e.target.value) || 0))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      min="0"
+                      step="0.01"
+                      placeholder="0.00"
+                    />
+                  </div>
+                )}
+
+                {!isQuotation && shippingCost > 0 && (
+                  <div className="flex justify-between text-gray-600">
+                    <span>Shipping</span>
+                    <span>{formatCurrency(totals.shipping)}</span>
                   </div>
                 )}
 

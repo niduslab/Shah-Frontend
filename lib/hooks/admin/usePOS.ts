@@ -13,6 +13,13 @@ interface POSOrderData {
   customer_phone: string;
   items: CartItem[];
   discount?: number;
+  discount_type?: 'percent' | 'flat';
+  shipping_cost?: number;
+  shipping_address_line1?: string;
+  shipping_address_line2?: string;
+  shipping_city?: string;
+  shipping_state?: string;
+  shipping_zip_code?: string;
   payment_method: 'cash' | 'card' | 'manual' | 'bkash' | 'nagad' | 'bank_transfer';
   reference_number?: string;
   payment_note?: string;
@@ -64,10 +71,17 @@ export const useGetProductBySKU = (sku: string, options?: Omit<UseQueryOptions<A
   });
 };
 
+interface CalculatePOSOrderData {
+  items: CartItem[];
+  discount?: number;
+  discount_type?: 'percent' | 'flat';
+  shipping_cost?: number;
+}
+
 export const useCalculatePOSOrder = (
-  options?: Omit<UseMutationOptions<ApiResponse, any, { items: CartItem[]; discount?: number }>, 'mutationFn'>
+  options?: Omit<UseMutationOptions<ApiResponse, any, CalculatePOSOrderData>, 'mutationFn'>
 ) => {
-  return useMutation<ApiResponse, any, { items: CartItem[]; discount?: number }>({
+  return useMutation<ApiResponse, any, CalculatePOSOrderData>({
     mutationFn: async (data) => {
       const response = await api.post('/api/admin/pos/calculate', data);
       return response.data;
@@ -85,6 +99,13 @@ export const useCreatePOSOrder = (options?: Omit<UseMutationOptions<ApiResponse,
       formData.append('customer_phone', data.customer_phone);
       formData.append('items', JSON.stringify(data.items));
       if (data.discount !== undefined) formData.append('discount', data.discount.toString());
+      if (data.discount_type) formData.append('discount_type', data.discount_type);
+      if (data.shipping_cost !== undefined) formData.append('shipping_cost', data.shipping_cost.toString());
+      if (data.shipping_address_line1) formData.append('shipping_address_line1', data.shipping_address_line1);
+      if (data.shipping_address_line2) formData.append('shipping_address_line2', data.shipping_address_line2);
+      if (data.shipping_city) formData.append('shipping_city', data.shipping_city);
+      if (data.shipping_state) formData.append('shipping_state', data.shipping_state);
+      if (data.shipping_zip_code) formData.append('shipping_zip_code', data.shipping_zip_code);
       formData.append('payment_method', data.payment_method);
       if (data.reference_number) formData.append('reference_number', data.reference_number);
       if (data.payment_note) formData.append('payment_note', data.payment_note);
