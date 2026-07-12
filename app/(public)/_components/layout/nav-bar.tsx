@@ -9,6 +9,8 @@ import { cn } from "@/lib/utils";
 import { useCart } from "@/lib/context/CartContext";
 import { useAuth } from "@/lib/context/AuthContext";
 import { useWishlist } from "@/lib/hooks/user/useWishlist";
+import { useCategories } from "@/lib/hooks/public/useCategories";
+import { useBrands } from "@/lib/hooks/public/useBrands";
 import { ShopMegaMenu } from "./shop-mega-menu";
 import { ShopMainMegaMenu } from "./shop-main-mega-menu";
 import { SportsMegaMenu } from "./sports-mega-menu";
@@ -28,8 +30,24 @@ export function NavBar() {
   const { getCartCount } = useCart();
   const { user, logout, loading } = useAuth();
   const { data: wishlistData } = useWishlist();
+  const { data: categoriesData } = useCategories();
+  const { data: brandsData } = useBrands();
   const cartCount = isMounted ? getCartCount() : 0;
   const wishlistCount = user && wishlistData?.data?.length ? wishlistData.data.length : 0;
+
+  const fitnessCategory = categoriesData?.data?.find((cat: any) => cat.slug === 'fitness' && cat.is_active);
+  const fitnessGroups = (fitnessCategory?.children || [])
+    .filter((child: any) => child.is_active && ['fitness-cardio', 'strength', 'free-weight'].includes(child.slug))
+    .map((group: any) => ({
+      name: group.name,
+      slug: group.slug,
+      items: (group.children || []).filter((item: any) => item.is_active),
+    }));
+
+  const sportsCategory = categoriesData?.data?.find((cat: any) => cat.slug === 'sports' && cat.is_active);
+  const sportsItems = (sportsCategory?.children || []).filter((child: any) => child.is_active);
+
+  const mobileBrands = (brandsData?.data || []).slice(0, 4);
 
   // Set mounted flag to prevent hydration mismatch
   useEffect(() => {
@@ -447,15 +465,21 @@ export function NavBar() {
               </button>
               <div className={cn("grid gap-2 overflow-hidden transition-all duration-300 pl-4", openSubMenu === 'fitness' ? "grid-rows-[1fr] opacity-100 mt-2" : "grid-rows-[0fr] opacity-0")}>
                 <div className="overflow-hidden flex flex-col gap-2 text-sm text-gray-600">
-                  <div className="font-semibold text-[#00072D] mt-1">Cardio</div>
-                  <Link href="#" className="pl-2 py-1 hover:text-[#00072D]">Treadmills</Link>
-                  <Link href="#" className="pl-2 py-1 hover:text-[#00072D]">Ellipticals</Link>
-                  <Link href="#" className="pl-2 py-1 hover:text-[#00072D]">Bikes</Link>
-                  
-                  <div className="font-semibold text-[#00072D] mt-2">Strength</div>
-                  <Link href="#" className="pl-2 py-1 hover:text-[#00072D]">Home Gyms</Link>
-                  <Link href="#" className="pl-2 py-1 hover:text-[#00072D]">Benches</Link>
-                  <Link href="#" className="pl-2 py-1 hover:text-[#00072D]">Weights</Link>
+                  {fitnessGroups.map((group: any) => (
+                    <div key={group.slug}>
+                      <div className="font-semibold text-[#00072D] mt-1">{group.name}</div>
+                      {group.items.length > 0 ? (
+                        group.items.map((item: any) => (
+                          <Link key={item.slug} href={`/shop?category=${item.slug}`} className="block pl-2 py-1 hover:text-[#00072D]">{item.name}</Link>
+                        ))
+                      ) : (
+                        <Link href={`/shop?category=${group.slug}`} className="block pl-2 py-1 hover:text-[#00072D]">View All</Link>
+                      )}
+                    </div>
+                  ))}
+                  {fitnessCategory && (
+                    <Link href={`/shop?category=${fitnessCategory.slug}`} className="py-1 font-semibold text-[#ffb81e] mt-2">Shop All Fitness</Link>
+                  )}
                 </div>
               </div>
             </div>
@@ -471,10 +495,12 @@ export function NavBar() {
               </button>
               <div className={cn("grid gap-2 overflow-hidden transition-all duration-300 pl-4", openSubMenu === 'sports' ? "grid-rows-[1fr] opacity-100 mt-2" : "grid-rows-[0fr] opacity-0")}>
                 <div className="overflow-hidden flex flex-col gap-2 text-sm text-gray-600">
-                  <Link href="#" className="py-1 hover:text-[#00072D]">Cricket</Link>
-                  <Link href="#" className="py-1 hover:text-[#00072D]">Football</Link>
-                  <Link href="#" className="py-1 hover:text-[#00072D]">Badminton</Link>
-                  <Link href="#" className="py-1 hover:text-[#00072D]">Table Tennis</Link>
+                  {sportsItems.map((item: any) => (
+                    <Link key={item.slug} href={`/shop?category=${item.slug}`} className="py-1 hover:text-[#00072D]">{item.name}</Link>
+                  ))}
+                  {sportsCategory && (
+                    <Link href={`/shop?category=${sportsCategory.slug}`} className="py-1 font-semibold text-[#ffb81e] mt-2">Shop All Sports</Link>
+                  )}
                 </div>
               </div>
             </div>
@@ -514,10 +540,9 @@ export function NavBar() {
               </button>
               <div className={cn("grid gap-2 overflow-hidden transition-all duration-300 pl-4", openSubMenu === 'brands' ? "grid-rows-[1fr] opacity-100 mt-2" : "grid-rows-[0fr] opacity-0")}>
                 <div className="overflow-hidden flex flex-col gap-2 text-sm text-gray-600">
-                  <Link href="#" className="py-1 hover:text-[#00072D]">NordicTrack</Link>
-                  <Link href="#" className="py-1 hover:text-[#00072D]">ProForm</Link>
-                  <Link href="#" className="py-1 hover:text-[#00072D]">Reebok</Link>
-                  <Link href="#" className="py-1 hover:text-[#00072D]">Adidas</Link>
+                  {mobileBrands.map((brand: any) => (
+                    <Link key={brand.slug} href={`/brand/${brand.slug}`} className="py-1 hover:text-[#00072D]">{brand.name}</Link>
+                  ))}
                   <Link href="/brands" className="py-1 font-semibold text-[#ffb81e] mt-2">View All Brands</Link>
                 </div>
               </div>
