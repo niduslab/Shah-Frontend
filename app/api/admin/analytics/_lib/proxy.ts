@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const LARAVEL_API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+import { API_ORIGIN } from '@/lib/config/api';
+const LARAVEL_API_URL = API_ORIGIN;
 
 /**
  * Proxy requests to Laravel backend API

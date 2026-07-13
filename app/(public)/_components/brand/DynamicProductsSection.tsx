@@ -1,5 +1,6 @@
 "use client";
 
+import { API_ORIGIN } from '@/lib/config/api';
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
@@ -44,7 +45,7 @@ export function DynamicProductsSection({ brandId, brandName }: DynamicProductsSe
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+        const apiUrl = API_ORIGIN;
         const response = await fetch(
           `${apiUrl}/api/catalog/products?page=1&per_page=20&sort_by=created_at&sort_order=desc&brand_id=${brandId}`,
           { cache: 'no-store' }

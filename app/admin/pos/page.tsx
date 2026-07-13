@@ -1,5 +1,6 @@
 'use client';
 
+import { API_ORIGIN } from '@/lib/config/api';
 import { useState, useEffect } from 'react';
 import {
   ShoppingCart, Search, Plus, Minus, Trash2, User, Phone, Mail,
@@ -382,7 +383,7 @@ export default function POSPage() {
                           >
                             {primaryImage ? (
                               <img
-                                src={primaryImage.startsWith('http') ? primaryImage : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}${primaryImage}`}
+                                src={primaryImage.startsWith('http') ? primaryImage : `${API_ORIGIN}${primaryImage}`}
                                 alt={product.name}
                                 className="w-12 h-12 shrink-0 object-cover rounded"
                                 onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder-product.png'; }}
@@ -442,7 +443,7 @@ export default function POSPage() {
                     <div key={index} className="flex flex-wrap items-center gap-3 p-3 border border-gray-200 rounded-lg sm:flex-nowrap">
                       {item.image ? (
                         <img
-                          src={item.image.startsWith('http') ? item.image : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}${item.image}`}
+                          src={item.image.startsWith('http') ? item.image : `${API_ORIGIN}${item.image}`}
                           alt={item.name}
                           className="w-16 h-16 shrink-0 object-cover rounded"
                           onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder-product.png'; }}

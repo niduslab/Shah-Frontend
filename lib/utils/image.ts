@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '@/lib/config/api';
 /**
  * Get the full URL for an image stored on the backend
  * @param path - The relative path from the backend (e.g., "brands/logo.png" or "/storage/brands/logo.png")
@@ -11,7 +12,7 @@ export function getImageUrl(path: string | null | undefined): string {
     return path;
   }
   
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+  const apiUrl = API_ORIGIN;
   
   // If path already starts with /storage, just prepend the API URL
   if (path.startsWith('/storage/')) {

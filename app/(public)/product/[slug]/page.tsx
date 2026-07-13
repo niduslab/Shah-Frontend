@@ -6,11 +6,12 @@ import { ProductPerformance } from "../../_components/product-details/product-pe
 import { RecommendedProducts } from "../../_components/product-details/recommended-products";
 import { ReviewsModal } from "../../_components/product-details/reviews-modal";
 
+import { API_ORIGIN } from '@/lib/config/api';
 // Fetch product data for metadata and page
 async function getProduct(slug: string) {
   try {
     // Backend API URL from environment variable
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+    const apiUrl = API_ORIGIN;
     const fullUrl = `${apiUrl}/api/catalog/products/${slug}`;
     
     console.log('Fetching product from:', fullUrl);
@@ -58,7 +59,7 @@ export async function generateMetadata({
     };
   }
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+  const apiUrl = API_ORIGIN;
   const primaryImage = product.images?.find((img: any) => img.is_primary) || product.images?.[0];
   const imageUrl = primaryImage?.full_url 
     ? `${apiUrl}${primaryImage.full_url}`
@@ -115,7 +116,7 @@ export default async function ProductDetailsPage({
     notFound();
   }
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+  const apiUrl = API_ORIGIN;
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
   return (

@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+import { API_ORIGIN } from '@/lib/config/api';
 export async function GET(request: NextRequest) {
   try {
-    const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+    const backendUrl = API_ORIGIN;
     
     const response = await fetch(`${backendUrl}/api/categories`, {
       method: 'GET',

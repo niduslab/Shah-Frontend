@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '@/lib/config/api';
 /**
  * CSRF Token Debugging Utility
  * Use this to diagnose CSRF token issues
@@ -29,7 +30,7 @@ export function debugCSRFToken() {
   console.log('Laravel Session:', laravelSession ? 'Present' : 'Not found');
   
   // Check API URL
-  console.log('API URL:', process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000');
+  console.log('API URL:', API_ORIGIN);
   
   // Check current domain
   console.log('Current Domain:', window.location.hostname);

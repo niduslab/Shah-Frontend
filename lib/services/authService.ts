@@ -1,6 +1,7 @@
 import api from '../api/axios';
 import axios from 'axios';
 
+import { API_ORIGIN } from '@/lib/config/api';
 interface RegisterData {
   first_name: string;
   last_name: string;
@@ -44,7 +45,7 @@ interface PasswordChangeData {
   password_confirmation: string;
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const API_URL = API_ORIGIN;
 
 const authService = {
   // Get CSRF cookie before login/register - use raw axios to avoid interceptor

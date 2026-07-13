@@ -1,5 +1,6 @@
 'use client';
 
+import { API_ORIGIN } from '@/lib/config/api';
 import { useState } from 'react';
 import { Search, Download, Eye, Trash2, Mail, Phone, User, Calendar, Globe } from 'lucide-react';
 import Pagination from '@/components/ui/Pagination';
@@ -67,7 +68,7 @@ export default function VisitorPopupsPage() {
 
   const handleExport = async () => {
     try {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const API_URL = API_ORIGIN;
       const token = localStorage.getItem('token');
       
       const response = await fetch(`${API_URL}/api/admin/visitor-popups/export`, {

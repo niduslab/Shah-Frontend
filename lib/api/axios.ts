@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { API_ORIGIN } from '@/lib/config/api';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000' || 'https://api.shahsports.com.bd';
+const API_URL = API_ORIGIN;
 
 const api = axios.create({
   baseURL: API_URL,

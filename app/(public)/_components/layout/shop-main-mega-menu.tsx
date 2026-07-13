@@ -1,5 +1,6 @@
 "use client";
 
+import { API_ORIGIN } from '@/lib/config/api';
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -34,7 +35,7 @@ export function ShopMainMegaMenu({ className, onLinkClick }: { className?: strin
       return logoPath;
     }
     // Otherwise, prepend the API URL
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+    const apiUrl = API_ORIGIN;
     // Remove leading slash if present to avoid double slashes
     const cleanPath = logoPath.startsWith('/') ? logoPath.slice(1) : logoPath;
     return `${apiUrl}/storage/${cleanPath}`;

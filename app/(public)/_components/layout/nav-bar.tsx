@@ -1,5 +1,6 @@
 "use client";
 
+import { API_ORIGIN } from '@/lib/config/api';
 import { Search, ShoppingBag, User, ChevronDown, Menu, X, ChevronRight, LogOut, Settings, Heart } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -55,7 +56,7 @@ export function NavBar() {
   const getBrandLogoUrl = (logoPath: string) => {
     if (!logoPath) return '';
     if (logoPath.startsWith('http://') || logoPath.startsWith('https://')) return logoPath;
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+    const apiUrl = API_ORIGIN;
     const cleanPath = logoPath.startsWith('/') ? logoPath.slice(1) : logoPath;
     return `${apiUrl}/storage/${cleanPath}`;
   };

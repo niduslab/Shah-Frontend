@@ -1,5 +1,6 @@
 'use client';
 
+import { API_ORIGIN } from '@/lib/config/api';
 import { useState, useEffect } from 'react';
 import { X, Package, User, MapPin, CreditCard, Truck, FileText, Calendar, DollarSign, Wallet, Paperclip } from 'lucide-react';
 import { useAdminOrder } from '@/lib/hooks/admin/useAdminOrders';
@@ -209,7 +210,7 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }: OrderDet
                       <div key={item.id} className="flex flex-wrap items-center gap-4 p-3 rounded-lg bg-gray-50">
                         {primaryImage && (
                           <img
-                            src={primaryImage.startsWith('http') ? primaryImage : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}${primaryImage}`}
+                            src={primaryImage.startsWith('http') ? primaryImage : `${API_ORIGIN}${primaryImage}`}
                             alt={item.product_name || item.product?.name}
                             className="h-16 w-16 rounded-lg object-cover"
                             onError={(e) => {

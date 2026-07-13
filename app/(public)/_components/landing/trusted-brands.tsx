@@ -1,5 +1,6 @@
 "use client";
 
+import { API_ORIGIN } from '@/lib/config/api';
 import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -37,7 +38,7 @@ export function TrustedBrands() {
     if (logoPath.startsWith('http://') || logoPath.startsWith('https://')) {
       return logoPath;
     }
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+    const apiUrl = API_ORIGIN;
     const cleanPath = logoPath.startsWith('/') ? logoPath.slice(1) : logoPath;
     return `${apiUrl}/storage/${cleanPath}`;
   };

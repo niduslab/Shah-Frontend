@@ -1,5 +1,6 @@
 "use client";
 
+import { API_ORIGIN } from '@/lib/config/api';
 import { useState, useEffect, useRef } from "react";
 import { Save, ArrowLeft, Plus, Trash2, Search, ChevronDown } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
@@ -411,7 +412,7 @@ export default function BrandPageEditor() {
           </p>
           <div className="rounded-lg bg-red-50 border border-red-200 p-4 mb-4 text-left">
             <p className="text-sm text-red-800">
-              <strong>Backend URL:</strong> {process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}
+              <strong>Backend URL:</strong> {API_ORIGIN}
             </p>
           </div>
           <button

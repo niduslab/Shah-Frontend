@@ -9,6 +9,7 @@ import { DynamicFeatureSection } from "@/app/(public)/_components/brand/DynamicF
 import { DynamicWhyChooseSection } from "@/app/(public)/_components/brand/DynamicWhyChooseSection";
 import { DynamicProductsSection } from "@/app/(public)/_components/brand/DynamicProductsSection";
 
+import { API_ORIGIN } from '@/lib/config/api';
 interface BrandPageContent {
   hero: {
     enabled: boolean;
@@ -102,7 +103,7 @@ interface BrandData {
 
 async function getBrandBySlug(slug: string): Promise<BrandData | null> {
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    const apiUrl = API_ORIGIN;
     console.log(`[Brand Page] Fetching brands from: ${apiUrl}/api/catalog/brands`);
     console.log(`[Brand Page] Looking for slug: ${slug}`);
     
