@@ -1,37 +1,41 @@
 "use client";
 
-import { LayoutDashboard, Package, ShoppingCart, Users, Settings, LogOut, BarChart3, Percent, Link as LinkIcon, HelpCircle, FolderTree, Tag, Layers, Zap, Ticket, PackageCheck, Truck, MessageSquare, CreditCard, FileText, Bell, ChevronDown, ChevronRight, FileEdit, X } from "lucide-react";
+import { LayoutDashboard, Package, ShoppingCart, Users, Settings, LogOut, BarChart3, Percent, Link as LinkIcon, HelpCircle, FolderTree, Tag, Layers, Zap, Ticket, PackageCheck, Truck, MessageSquare, CreditCard, FileText, Bell, ChevronDown, ChevronRight, FileEdit, X, ShieldCheck, Radio } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useSidebar } from "./sidebar-context";
+import { usePermission } from "@/lib/hooks/usePermission";
 
 const menuItems = [
-  { icon: LayoutDashboard, label: "Dashboard", href: "/admin" },
-  { icon: CreditCard, label: "POS", href: "/admin/pos" },
-  { icon: ShoppingCart, label: "Orders", href: "/admin/orders" },
-  { icon: Package, label: "Products", href: "/admin/products" },
-  { icon: FolderTree, label: "Categories", href: "/admin/categories" },
-  { icon: Tag, label: "Brands", href: "/admin/brands" },
-  { icon: Layers, label: "Variations", href: "/admin/variations" },
-  { icon: PackageCheck, label: "Inventory", href: "/admin/inventory" },
-  { icon: Truck, label: "Shipping Rates", href: "/admin/shipping-rates" },
-  { icon: Package, label: "Shipping Classes", href: "/admin/shipping-classes" },
-  { icon: Users, label: "Users", href: "/admin/users" },
-  { icon: MessageSquare, label: "Reviews", href: "/admin/reviews" },
-  { icon: Zap, label: "Flash Deals", href: "/admin/flash-deals" },
-  { icon: Ticket, label: "Coupons", href: "/admin/coupons" },
-  { icon: Percent, label: "Promotions", href: "/admin/promotions" },
-  { icon: BarChart3, label: "Analytics", href: "/admin/analytics" },
-  { icon: BarChart3, label: "Reports", href: "/admin/reports" },
+  { icon: LayoutDashboard, label: "Dashboard", href: "/admin", module: "dashboard" },
+  { icon: CreditCard, label: "POS", href: "/admin/pos", module: "pos" },
+  { icon: ShoppingCart, label: "Orders", href: "/admin/orders", module: "orders" },
+  { icon: Package, label: "Products", href: "/admin/products", module: "products" },
+  { icon: FolderTree, label: "Categories", href: "/admin/categories", module: "categories" },
+  { icon: Tag, label: "Brands", href: "/admin/brands", module: "brands" },
+  { icon: Layers, label: "Variations", href: "/admin/variations", module: "variations" },
+  { icon: PackageCheck, label: "Inventory", href: "/admin/inventory", module: "inventory" },
+  { icon: Truck, label: "Shipping Rates", href: "/admin/shipping-rates", module: "shipping" },
+  { icon: Package, label: "Shipping Classes", href: "/admin/shipping-classes", module: "shipping" },
+  { icon: Users, label: "Users", href: "/admin/users", module: "users" },
+  { icon: ShieldCheck, label: "Roles & Permissions", href: "/admin/roles", module: "users" },
+  { icon: MessageSquare, label: "Reviews", href: "/admin/reviews", module: "reviews" },
+  { icon: Zap, label: "Flash Deals", href: "/admin/flash-deals", module: "flash_deals" },
+  { icon: Ticket, label: "Coupons", href: "/admin/coupons", module: "coupons" },
+  { icon: Percent, label: "Promotions", href: "/admin/promotions", module: "promotions" },
+  { icon: BarChart3, label: "Analytics", href: "/admin/analytics", module: "analytics" },
+  { icon: Radio, label: "Pixel & Tags", href: "/admin/integrations", module: "analytics" },
+  { icon: BarChart3, label: "Reports", href: "/admin/reports", module: "reports" },
   // { icon: FileText, label: "Dynamic Pages", href: "/admin/dynamic-pages" },
-  { icon: Percent, label: "Discounts", href: "/admin/discounts" },
+  { icon: Percent, label: "Discounts", href: "/admin/discounts", module: "promotions" },
 ];
 
 const dynamicContentsMenu = {
   icon: FileEdit,
   label: "Dynamic Contents",
+  module: "content",
   subItems: [
     { label: "Landing Page", href: "/admin/dynamic-contents/landing-page" },
     // { label: "Brand Pages", href: "/admin/dynamic-contents/brand-pages" },
@@ -48,6 +52,10 @@ const bottomMenuItems = [
 function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
   const [isDynamicContentsOpen, setIsDynamicContentsOpen] = useState(false);
+  const { can } = usePermission();
+
+  const visibleMenuItems = menuItems.filter((item) => can(`${item.module}.view`));
+  const showDynamicContents = can(`${dynamicContentsMenu.module}.view`);
 
   return (
     <>
@@ -78,7 +86,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
 
       {/* Navigation */}
       <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
-        {menuItems.map((item) => {
+        {visibleMenuItems.map((item) => {
           const isActive = pathname === item.href;
           return (
             <Link
@@ -99,42 +107,44 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
         })}
 
         {/* Dynamic Contents Menu */}
-        <div>
-          <button
-            onClick={() => setIsDynamicContentsOpen(!isDynamicContentsOpen)}
-            className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-gray-600 transition-all hover:bg-gray-50"
-          >
-            <dynamicContentsMenu.icon className="h-5 w-5 flex-shrink-0" />
-            {dynamicContentsMenu.label}
-            {isDynamicContentsOpen ? (
-              <ChevronDown className="ml-auto h-4 w-4" />
-            ) : (
-              <ChevronRight className="ml-auto h-4 w-4" />
+        {showDynamicContents && (
+          <div>
+            <button
+              onClick={() => setIsDynamicContentsOpen(!isDynamicContentsOpen)}
+              className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-gray-600 transition-all hover:bg-gray-50"
+            >
+              <dynamicContentsMenu.icon className="h-5 w-5 flex-shrink-0" />
+              {dynamicContentsMenu.label}
+              {isDynamicContentsOpen ? (
+                <ChevronDown className="ml-auto h-4 w-4" />
+              ) : (
+                <ChevronRight className="ml-auto h-4 w-4" />
+              )}
+            </button>
+            {isDynamicContentsOpen && (
+              <div className="ml-4 mt-1 space-y-1">
+                {dynamicContentsMenu.subItems.map((subItem) => {
+                  const isActive = pathname === subItem.href;
+                  return (
+                    <Link
+                      key={subItem.href}
+                      href={subItem.href}
+                      onClick={onNavigate}
+                      className={cn(
+                        "flex items-center gap-3 rounded-lg px-4 py-2 text-sm font-medium transition-all",
+                        isActive
+                          ? "bg-gradient-to-r from-orange-400 to-orange-500 text-white shadow-md"
+                          : "text-gray-600 hover:bg-gray-50"
+                      )}
+                    >
+                      {subItem.label}
+                    </Link>
+                  );
+                })}
+              </div>
             )}
-          </button>
-          {isDynamicContentsOpen && (
-            <div className="ml-4 mt-1 space-y-1">
-              {dynamicContentsMenu.subItems.map((subItem) => {
-                const isActive = pathname === subItem.href;
-                return (
-                  <Link
-                    key={subItem.href}
-                    href={subItem.href}
-                    onClick={onNavigate}
-                    className={cn(
-                      "flex items-center gap-3 rounded-lg px-4 py-2 text-sm font-medium transition-all",
-                      isActive
-                        ? "bg-gradient-to-r from-orange-400 to-orange-500 text-white shadow-md"
-                        : "text-gray-600 hover:bg-gray-50"
-                    )}
-                  >
-                    {subItem.label}
-                  </Link>
-                );
-              })}
-            </div>
-          )}
-        </div>
+          </div>
+        )}
       </nav>
     </>
   );

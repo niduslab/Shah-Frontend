@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { X, User, Mail, Phone, Lock, Shield } from 'lucide-react';
+import { useAdminRoles } from '@/lib/hooks/admin/useAdminRoles';
 
 interface UserData {
   first_name: string;
@@ -11,6 +12,7 @@ interface UserData {
   password: string;
   user_type: 'customer' | 'admin' | 'vendor';
   status?: boolean;
+  role?: string;
 }
 
 interface UserModalProps {
@@ -29,9 +31,12 @@ export default function UserModal({ isOpen, onClose, user, onSubmit }: UserModal
     password: '',
     user_type: 'customer',
     status: true,
+    role: '',
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const { data: rolesData } = useAdminRoles();
+  const roles = rolesData?.data ?? [];
 
   useEffect(() => {
     if (user) {
@@ -43,6 +48,7 @@ export default function UserModal({ isOpen, onClose, user, onSubmit }: UserModal
         password: '',
         user_type: user.user_type || 'customer',
         status: user.status ?? true,
+        role: user.role_names?.[0] || '',
       });
     } else {
       setFormData({
@@ -53,6 +59,7 @@ export default function UserModal({ isOpen, onClose, user, onSubmit }: UserModal
         password: '',
         user_type: 'customer',
         status: true,
+        role: '',
       });
     }
     setErrors({});
@@ -96,9 +103,12 @@ export default function UserModal({ isOpen, onClose, user, onSubmit }: UserModal
     
     if (!validate()) return;
 
-    const submitData = { ...formData };
+    const submitData: any = { ...formData };
     if (user && !submitData.password) {
-      delete (submitData as any).password;
+      delete submitData.password;
+    }
+    if (submitData.user_type !== 'admin' || !submitData.role) {
+      submitData.role = null;
     }
 
     onSubmit(submitData);
@@ -276,6 +286,29 @@ export default function UserModal({ isOpen, onClose, user, onSubmit }: UserModal
               </button>
             </div>
           </div>
+
+          {/* Role (admin accounts only) */}
+          {formData.user_type === 'admin' && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                <Shield className="inline h-4 w-4 mr-1" />
+                Role
+              </label>
+              <select
+                value={formData.role}
+                onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm transition-all focus:border-[#FF6F00] focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
+              >
+                <option value="">No role assigned</option>
+                {roles.map((role: { id: number; name: string }) => (
+                  <option key={role.id} value={role.name}>
+                    {role.name}
+                  </option>
+                ))}
+              </select>
+              <p className="mt-1 text-xs text-gray-500">Controls which admin menus and actions this user can access</p>
+            </div>
+          )}
 
           {/* Status */}
           <div>

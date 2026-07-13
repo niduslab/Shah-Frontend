@@ -29,6 +29,8 @@ interface User {
   status?: boolean;
   created_at: string;
   updated_at: string;
+  role_names?: string[];
+  permission_names?: string[];
 }
 
 interface ProfileUpdateData {

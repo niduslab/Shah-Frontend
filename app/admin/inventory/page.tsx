@@ -16,6 +16,8 @@ import StockAdjustmentModal from './_components/StockAdjustmentModal';
 import BulkAdjustmentModal from './_components/BulkAdjustmentModal';
 import InventoryLogsModal from './_components/InventoryLogsModal';
 import LowStockAlert from './_components/LowStockAlert';
+import { usePermission } from '@/lib/hooks/usePermission';
+import { RequirePermission } from '@/app/admin/_components/RequirePermission';
 
 interface InventoryVariation {
   id: number;
@@ -43,7 +45,8 @@ interface InventoryItem {
   variations?: InventoryVariation[];
 }
 
-export default function InventoryPage() {
+function InventoryPageContent() {
+  const { can } = usePermission();
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [stockFilter, setStockFilter] = useState<'all' | 'low' | 'out' | 'in'>('all');
@@ -201,6 +204,7 @@ export default function InventoryPage() {
                   className="w-full rounded-xl border border-gray-300 bg-gray-50 py-2.5 pl-11 pr-4 text-sm transition-all focus:border-[#FF6F00] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
                 />
               </div>
+              {can('inventory.edit') && (
               <button
                 onClick={() => setIsBulkModalOpen(true)}
                 className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#FF6F00] to-[#E65100] px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-orange-500/30 transition-all hover:shadow-xl hover:shadow-orange-500/40 focus:outline-none focus:ring-2 focus:ring-[#FF6F00] focus:ring-offset-2"
@@ -208,6 +212,7 @@ export default function InventoryPage() {
                 <Edit2 className="h-5 w-5" />
                 Bulk Adjustment
               </button>
+              )}
             </div>
 
             {/* Filters */}
@@ -356,6 +361,7 @@ export default function InventoryPage() {
                           </td>
                           <td className="px-6 py-4">
                             <div className="flex items-center justify-end gap-2">
+                              {can('inventory.edit') && (
                               <button
                                 onClick={() => handleAdjustStock(item)}
                                 className="rounded-lg p-2 text-[#FF6F00] transition-all hover:bg-orange-50 focus:outline-none focus:ring-2 focus:ring-[#FF6F00]"
@@ -363,6 +369,7 @@ export default function InventoryPage() {
                               >
                                 <Edit2 className="h-4 w-4" />
                               </button>
+                              )}
                               <button
                                 onClick={() => handleViewLogs(item)}
                                 className="rounded-lg p-2 text-blue-600 transition-all hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -403,6 +410,7 @@ export default function InventoryPage() {
                             </td>
                             <td className="px-6 py-3">
                               <div className="flex items-center justify-end gap-2">
+                                {can('inventory.edit') && (
                                 <button
                                   onClick={() => {
                                     setSelectedProduct({ ...item, _selectedVariationId: variation.id } as any);
@@ -413,6 +421,7 @@ export default function InventoryPage() {
                                 >
                                   <Edit2 className="h-4 w-4" />
                                 </button>
+                                )}
                               </div>
                             </td>
                           </tr>
@@ -483,5 +492,13 @@ export default function InventoryPage() {
         />
       </div>
     </div>
+  );
+}
+
+export default function InventoryPage() {
+  return (
+    <RequirePermission permission="inventory.view">
+      <InventoryPageContent />
+    </RequirePermission>
   );
 }

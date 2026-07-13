@@ -348,6 +348,12 @@
       "namedRegex": "^/admin/flash\\-deals(?:/)?$"
     },
     {
+      "page": "/admin/integrations",
+      "regex": "^/admin/integrations(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/integrations(?:/)?$"
+    },
+    {
       "page": "/admin/inventory",
       "regex": "^/admin/inventory(?:/)?$",
       "routeKeys": {},
@@ -418,6 +424,12 @@
       "regex": "^/admin/reviews(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/admin/reviews(?:/)?$"
+    },
+    {
+      "page": "/admin/roles",
+      "regex": "^/admin/roles(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/roles(?:/)?$"
     },
     {
       "page": "/admin/shipping-classes",

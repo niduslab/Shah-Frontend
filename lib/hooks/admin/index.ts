@@ -13,3 +13,4 @@ export * from './useAdminReviews';
 export * from './useAdminUsers';
 export * from './useAdminNotifications';
 export * from './useVisitorPopups';
+export * from './useTrackingPixels';

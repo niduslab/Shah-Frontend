@@ -7,6 +7,7 @@ import { WhatsAppButton } from "./_components/shared/whatsapp-button";
 import { CookieConsent } from "./_components/shared/cookie-consent";
 import { VisitorPopup } from "./_components/shared/visitor-popup";
 import { SiteUpgradeNotice } from "./_components/shared/site-upgrade-notice";
+import { TrackingPixels } from "./_components/shared/tracking-pixels";
 
 export default function PublicLayout({
   children,
@@ -15,6 +16,7 @@ export default function PublicLayout({
 }) {
   return (
     <div className="public-site flex min-h-screen flex-col">
+      <TrackingPixels />
       <TopBar />
       <NavBar />
       {children}

@@ -14,6 +14,8 @@ import {
 } from '@/lib/hooks/admin/useAdminProducts';
 import { getImageUrl, getPlaceholderImage, getPrimaryImageUrl } from '@/lib/utils/image';
 import { formatCurrency } from '@/lib/utils/currency';
+import { usePermission } from '@/lib/hooks/usePermission';
+import { RequirePermission } from '@/app/admin/_components/RequirePermission';
 import ProductModal from './_components/ProductModal';
 import DeleteConfirmModal from './_components/DeleteConfirmModal';
 
@@ -40,7 +42,8 @@ interface Product {
   images?: Array<{ id: number; image_path: string; is_primary: boolean }>;
 }
 
-export default function ProductsPage() {
+function ProductsPageContent() {
+  const { can } = usePermission();
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -206,14 +209,17 @@ export default function ProductsPage() {
               </select>
 
               {/* Bulk Import Button */}
-              <Link href="/admin/products/bulk-import" className="w-full sm:w-auto">
-                <button className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition-all hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-400">
-                  <Upload className="h-5 w-5" />
-                  Bulk Import
-                </button>
-              </Link>
+              {can('products.create') && (
+                <Link href="/admin/products/bulk-import" className="w-full sm:w-auto">
+                  <button className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition-all hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-400">
+                    <Upload className="h-5 w-5" />
+                    Bulk Import
+                  </button>
+                </Link>
+              )}
 
               {/* Create Button */}
+              {can('products.create') && (
               <button
                 onClick={handleCreate}
                 className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#FF6F00] to-[#E65100] px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-orange-500/30 transition-all hover:shadow-xl hover:shadow-orange-500/40 focus:outline-none focus:ring-2 focus:ring-[#FF6F00] focus:ring-offset-2"
@@ -221,6 +227,7 @@ export default function ProductsPage() {
                 <Plus className="h-5 w-5" />
                 Add Product
               </button>
+              )}
             </div>
           </div>
         </div>
@@ -291,7 +298,7 @@ export default function ProductsPage() {
               <p className="mb-8 text-gray-500">
                 {debouncedSearch ? `No results match "${debouncedSearch}"` : 'Get started by creating your first product'}
               </p>
-              {!debouncedSearch && (
+              {!debouncedSearch && can('products.create') && (
                 <button
                   onClick={handleCreate}
                   className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#FF6F00] to-[#E65100] px-6 py-3 text-sm font-medium text-white shadow-lg shadow-orange-500/30 transition-all hover:shadow-xl hover:shadow-orange-500/40"
@@ -373,6 +380,7 @@ export default function ProductsPage() {
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex items-center justify-end gap-1.5 opacity-0 transition-opacity group-hover:opacity-100">
+                            {can('products.edit') && (
                             <button
                               onClick={() => handleEdit(product)}
                               className="rounded-lg p-2 text-[#FF6F00] transition-all hover:bg-orange-50 focus:outline-none focus:ring-2 focus:ring-[#FF6F00]"
@@ -380,6 +388,8 @@ export default function ProductsPage() {
                             >
                               <Edit2 className="h-4 w-4" />
                             </button>
+                            )}
+                            {can('products.delete') && (
                             <button
                               onClick={() => handleDelete(product)}
                               className="rounded-lg p-2 text-red-600 transition-all hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500"
@@ -387,6 +397,7 @@ export default function ProductsPage() {
                             >
                               <Trash2 className="h-4 w-4" />
                             </button>
+                            )}
                           </div>
                         </td>
                       </tr>
@@ -475,5 +486,13 @@ export default function ProductsPage() {
         />
       </div>
     </div>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <RequirePermission permission="products.view">
+      <ProductsPageContent />
+    </RequirePermission>
   );
 }

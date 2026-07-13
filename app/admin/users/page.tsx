@@ -15,6 +15,8 @@ import {
 import UserModal from '@/app/admin/users/_components/UserModal';
 import DeleteConfirmModal from '@/app/admin/users/_components/DeleteConfirmModal';
 import { formatCurrency } from '@/lib/utils/currency';
+import { usePermission } from '@/lib/hooks/usePermission';
+import { RequirePermission } from '@/app/admin/_components/RequirePermission';
 
 interface User {
   id: number;
@@ -31,8 +33,9 @@ interface User {
   total_spent?: number;
 }
 
-export default function UsersPage() {
+function UsersPageContent() {
   const router = useRouter();
+  const { can } = usePermission();
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
 
@@ -335,6 +338,7 @@ export default function UsersPage() {
             </div>
 
             {/* Create Button */}
+            {can('users.create') && (
             <button
               onClick={handleCreate}
               className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#FF6F00] to-[#E65100] px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-orange-500/30 transition-all hover:shadow-xl hover:shadow-orange-500/40"
@@ -342,6 +346,7 @@ export default function UsersPage() {
               <Plus className="h-5 w-5" />
               Create User
             </button>
+            )}
           </div>
         </div>
 
@@ -358,7 +363,7 @@ export default function UsersPage() {
               <p className="mb-8 text-gray-500">
                 {searchQuery ? 'Try adjusting your search or filters' : 'Get started by creating your first user'}
               </p>
-              {!searchQuery && (
+              {!searchQuery && can('users.create') && (
                 <button
                   onClick={handleCreate}
                   className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#FF6F00] to-[#E65100] px-6 py-3 text-sm font-medium text-white shadow-lg shadow-orange-500/30"
@@ -448,6 +453,7 @@ export default function UsersPage() {
                       >
                         <Eye className="h-5 w-5" />
                       </button>
+                      {can('users.edit') && (
                       <button
                         onClick={() => handleEdit(user)}
                         className="rounded-lg p-2 text-[#FF6F00] transition-all hover:bg-orange-50"
@@ -455,6 +461,8 @@ export default function UsersPage() {
                       >
                         <Edit2 className="h-5 w-5" />
                       </button>
+                      )}
+                      {can('users.delete') && (
                       <button
                         onClick={() => handleDelete(user)}
                         className="rounded-lg p-2 text-red-600 transition-all hover:bg-red-50"
@@ -463,6 +471,7 @@ export default function UsersPage() {
                       >
                         <Trash2 className="h-5 w-5" />
                       </button>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -525,5 +534,13 @@ export default function UsersPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function UsersPage() {
+  return (
+    <RequirePermission permission="users.view">
+      <UsersPageContent />
+    </RequirePermission>
   );
 }
