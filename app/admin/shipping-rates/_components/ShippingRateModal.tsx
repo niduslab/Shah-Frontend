@@ -12,14 +12,10 @@ interface ShippingRateModalProps {
 export default function ShippingRateModal({ rate, onClose }: ShippingRateModalProps) {
   const [formData, setFormData] = useState({
     name: '',
-    method: 'pathao_courier' as 'pathao_courier' | 'shah_sports_team',
+    method: 'pathao_courier' as 'pathao_courier' | 'shah_sports_team' | 'standard',
     shipping_class_id: '',
-    zone: '',
     base_cost: '',
-    per_kg_cost: '',
-    min_weight: '',
-    max_weight: '',
-    free_shipping_threshold: '',
+    free_shipping_min_order: '',
     delivery_time: '',
     is_active: true,
   });
@@ -57,12 +53,8 @@ export default function ShippingRateModal({ rate, onClose }: ShippingRateModalPr
         name: rate.name || '',
         method: rate.method || 'pathao_courier',
         shipping_class_id: rate.shipping_class_id?.toString() || '',
-        zone: rate.zone || '',
         base_cost: rate.base_cost?.toString() || '',
-        per_kg_cost: rate.per_kg_cost?.toString() || '',
-        min_weight: rate.min_weight?.toString() || '',
-        max_weight: rate.max_weight?.toString() || '',
-        free_shipping_threshold: rate.free_shipping_threshold?.toString() || '',
+        free_shipping_min_order: rate.free_shipping_min_order?.toString() || '',
         delivery_time: rate.delivery_time || '',
         is_active: rate.is_active ?? true,
       });
@@ -77,12 +69,8 @@ export default function ShippingRateModal({ rate, onClose }: ShippingRateModalPr
       name: formData.name,
       method: formData.method,
       shipping_class_id: formData.shipping_class_id ? parseInt(formData.shipping_class_id) : null,
-      zone: formData.zone || null,
       base_cost: parseFloat(formData.base_cost),
-      per_kg_cost: formData.per_kg_cost ? parseFloat(formData.per_kg_cost) : null,
-      min_weight: formData.min_weight ? parseFloat(formData.min_weight) : null,
-      max_weight: formData.max_weight ? parseFloat(formData.max_weight) : null,
-      free_shipping_threshold: formData.free_shipping_threshold ? parseFloat(formData.free_shipping_threshold) : null,
+      free_shipping_min_order: formData.free_shipping_min_order ? parseFloat(formData.free_shipping_min_order) : 0,
       delivery_time: formData.delivery_time || null,
       is_active: formData.is_active,
     };
@@ -140,107 +128,48 @@ export default function ShippingRateModal({ rate, onClose }: ShippingRateModalPr
               >
                 <option value="pathao_courier">Pathao Courier</option>
                 <option value="shah_sports_team">Shah Sports Team</option>
+                <option value="standard">Standard Shipping</option>
               </select>
               {errors.method && <p className="mt-1 text-xs text-red-600">{errors.method}</p>}
             </div>
 
-            {/* Zone and Shipping Class */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
-                  Zone
-                </label>
-                <input
-                  type="text"
-                  value={formData.zone}
-                  onChange={(e) => setFormData({ ...formData, zone: e.target.value })}
-                  className="w-full rounded-sm border border-gray-300 px-3 py-2 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
-                  placeholder="e.g., Dhaka, Chittagong"
-                />
-                {errors.zone && <p className="mt-1 text-xs text-red-600">{errors.zone}</p>}
-              </div>
-
-              <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
-                  Shipping Class
-                </label>
-                <select
-                  value={formData.shipping_class_id}
-                  onChange={(e) => setFormData({ ...formData, shipping_class_id: e.target.value })}
-                  className="w-full rounded-sm border border-gray-300 px-3 py-2 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
-                >
-                  <option value="">No Class</option>
-                  {shippingClasses.map((cls: any) => (
-                    <option key={cls.id} value={cls.id}>
-                      {cls.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
+            {/* Shipping Class */}
+            <div>
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                Shipping Class
+              </label>
+              <select
+                value={formData.shipping_class_id}
+                onChange={(e) => setFormData({ ...formData, shipping_class_id: e.target.value })}
+                className="w-full rounded-sm border border-gray-300 px-3 py-2 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
+              >
+                <option value="">No Class (default rate for this method)</option>
+                {shippingClasses.map((cls: any) => (
+                  <option key={cls.id} value={cls.id}>
+                    {cls.name}
+                  </option>
+                ))}
+              </select>
+              <p className="mt-1 text-xs text-gray-500">
+                Applies to products in this class. Keep one &quot;No Class&quot; rate per method as the fallback for products with no class set.
+              </p>
             </div>
 
-            {/* Base Cost and Per KG Cost */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
-                  Base Cost (৳) <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="number"
-                  step="0.01"
-                  value={formData.base_cost}
-                  onChange={(e) => setFormData({ ...formData, base_cost: e.target.value })}
-                  className="w-full rounded-sm border border-gray-300 px-3 py-2 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
-                  placeholder="0.00"
-                />
-                {errors.base_cost && <p className="mt-1 text-xs text-red-600">{errors.base_cost}</p>}
-              </div>
-
-              <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
-                  Per KG Cost (৳)
-                </label>
-                <input
-                  type="number"
-                  step="0.01"
-                  value={formData.per_kg_cost}
-                  onChange={(e) => setFormData({ ...formData, per_kg_cost: e.target.value })}
-                  className="w-full rounded-sm border border-gray-300 px-3 py-2 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
-                  placeholder="0.00"
-                />
-                {errors.per_kg_cost && <p className="mt-1 text-xs text-red-600">{errors.per_kg_cost}</p>}
-              </div>
-            </div>
-
-            {/* Weight Range */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
-                  Min Weight (kg)
-                </label>
-                <input
-                  type="number"
-                  step="0.01"
-                  value={formData.min_weight}
-                  onChange={(e) => setFormData({ ...formData, min_weight: e.target.value })}
-                  className="w-full rounded-sm border border-gray-300 px-3 py-2 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
-                  placeholder="0.00"
-                />
-              </div>
-
-              <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
-                  Max Weight (kg)
-                </label>
-                <input
-                  type="number"
-                  step="0.01"
-                  value={formData.max_weight}
-                  onChange={(e) => setFormData({ ...formData, max_weight: e.target.value })}
-                  className="w-full rounded-sm border border-gray-300 px-3 py-2 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
-                  placeholder="0.00"
-                />
-              </div>
+            {/* Base Cost */}
+            <div>
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                Base Cost (৳) <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="number"
+                step="0.01"
+                min="0"
+                value={formData.base_cost}
+                onChange={(e) => setFormData({ ...formData, base_cost: e.target.value })}
+                className="w-full rounded-sm border border-gray-300 px-3 py-2 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
+                placeholder="0.00"
+              />
+              {errors.base_cost && <p className="mt-1 text-xs text-red-600">{errors.base_cost}</p>}
             </div>
 
             {/* Free Shipping Threshold */}
@@ -251,14 +180,16 @@ export default function ShippingRateModal({ rate, onClose }: ShippingRateModalPr
               <input
                 type="number"
                 step="0.01"
-                value={formData.free_shipping_threshold}
-                onChange={(e) => setFormData({ ...formData, free_shipping_threshold: e.target.value })}
+                min="0"
+                value={formData.free_shipping_min_order}
+                onChange={(e) => setFormData({ ...formData, free_shipping_min_order: e.target.value })}
                 className="w-full rounded-sm border border-gray-300 px-3 py-2 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
-                placeholder="Order amount for free shipping"
+                placeholder="0 = no free shipping"
               />
               <p className="mt-1 text-xs text-gray-500">
-                Orders above this amount will get free shipping
+                Orders at or above this amount ship free on this rate. Leave 0 to disable free shipping.
               </p>
+              {errors.free_shipping_min_order && <p className="mt-1 text-xs text-red-600">{errors.free_shipping_min_order}</p>}
             </div>
 
             {/* Delivery Time */}

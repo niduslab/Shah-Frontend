@@ -5,14 +5,10 @@ import api from '@/lib/api/axios';
 export interface ShippingRate {
   id: number;
   name: string;
-  method: 'shah_sports_team' | 'pathao_courier';
+  method: 'shah_sports_team' | 'pathao_courier' | 'standard';
   shipping_class_id: number | null;
-  zone: string | null;
   base_cost: number;
-  per_kg_cost: number | null;
-  min_weight: number | null;
-  max_weight: number | null;
-  free_shipping_threshold: number | null;
+  free_shipping_min_order: number;
   delivery_time: string | null;
   is_active: boolean;
   created_at: string;
@@ -31,14 +27,10 @@ export interface ShippingClass {
 
 export interface ShippingRateData {
   name: string;
-  method: 'shah_sports_team' | 'pathao_courier';
+  method: 'shah_sports_team' | 'pathao_courier' | 'standard';
   shipping_class_id?: number | null;
-  zone?: string | null;
   base_cost: number;
-  per_kg_cost?: number | null;
-  min_weight?: number | null;
-  max_weight?: number | null;
-  free_shipping_threshold?: number | null;
+  free_shipping_min_order?: number;
   delivery_time?: string | null;
   is_active?: boolean;
 }

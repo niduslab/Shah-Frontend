@@ -59,6 +59,12 @@ export default function ShippingRatesPage() {
           Pathao Courier
         </span>
       ),
+      standard: (
+        <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-gray-100 text-gray-700 ring-1 ring-gray-600/20">
+          <Truck className="h-3 w-3" />
+          Standard Shipping
+        </span>
+      ),
     };
     return badges[method as keyof typeof badges] || method;
   };
@@ -97,6 +103,7 @@ export default function ShippingRatesPage() {
               <option value="">All Methods</option>
               <option value="shah_sports_team">Shah Sports Team</option>
               <option value="pathao_courier">Pathao Courier</option>
+              <option value="standard">Standard Shipping</option>
             </select>
           </div>
 
@@ -130,7 +137,7 @@ export default function ShippingRatesPage() {
                   Method
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                  Zone
+                  Shipping Class
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                   Base Cost
@@ -169,15 +176,15 @@ export default function ShippingRatesPage() {
                       {getMethodBadge(rate.method)}
                     </td>
                     <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                      {rate.zone || 'All Zones'}
+                      {rate.shipping_class?.name || 'Default (no class)'}
                     </td>
                     <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
                       ৳{parseFloat(rate.base_cost).toFixed(2)}
                     </td>
                     <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                      {rate.free_shipping_threshold
-                        ? `৳${parseFloat(rate.free_shipping_threshold).toFixed(2)}`
-                        : 'N/A'}
+                      {parseFloat(rate.free_shipping_min_order) > 0
+                        ? `৳${parseFloat(rate.free_shipping_min_order).toFixed(2)}`
+                        : 'Disabled'}
                     </td>
                     <td className="whitespace-nowrap px-6 py-4 text-sm">
                       {rate.is_active ? (

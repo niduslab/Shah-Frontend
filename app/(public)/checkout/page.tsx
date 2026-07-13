@@ -216,19 +216,9 @@ export default function CheckoutPage() {
       }
     } catch (error) {
       console.error('Failed to fetch shipping methods:', error);
-      // Set default shipping if API fails
-      setShippingMethods([{
-        code: 'standard',
-        name: 'Standard Shipping',
-        description: 'Standard delivery',
-        cost: 50,
-        base_shipping_cost: 50,
-        custom_shipping_cost: 0,
-        delivery_time: '3-5 business days',
-        free_shipping_min_order: 1000,
-        is_free: false,
-      }]);
-      setSelectedShipping('standard');
+      setShippingMethods([]);
+      setSelectedShipping("");
+      toast.error('Could not load shipping options. Please try again.');
     }
   };
   // Handle input change
