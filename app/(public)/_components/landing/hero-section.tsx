@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronDown } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
@@ -207,57 +207,69 @@ export function HeroSection() {
     ));
   };
 
-  // Full-width video hero. Falls back to the grid if the admin selected video mode
+  // Full-bleed video hero. Falls back to the grid if the admin selected video mode
   // but has not uploaded a file yet, so the homepage is never left blank.
   if (heroLayout === "video" && heroVideo.video) {
     return (
-      <div ref={containerRef} className="w-full bg-white py-4 md:py-6 overflow-hidden">
-        <div className="mx-auto w-full max-w-[1400px] px-4 md:px-6">
-          <div className="relative h-[400px] w-full overflow-hidden rounded-xs md:h-[600px]">
-            <video
-              src={heroVideo.video}
-              className="h-full w-full object-cover"
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-            />
+      <section
+        ref={containerRef}
+        className="relative w-full overflow-hidden bg-black h-[70vh] min-h-[440px] md:h-[85vh] md:max-h-[900px]"
+      >
+        <video
+          src={heroVideo.video}
+          className="absolute inset-0 h-full w-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          aria-hidden="true"
+        />
 
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+        {/* Two layers: a bottom scrim to anchor the text, and a light overall wash so
+            bright footage (like a sunlit gym) can't wash the headline out. */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/30" />
 
-            <div className="absolute bottom-8 left-8 max-w-md z-10">
-              {heroVideo.title && (
-                <h2 className="mb-6 text-2xl font-semibold leading-tight text-white sm:text-3xl md:text-[36px]">
-                  {renderTitle(heroVideo.title)}
-                </h2>
-              )}
-              {heroVideo.buttonText && (
-                <Link
-                  href={heroVideo.buttonUrl || "/shop"}
-                  className="inline-flex h-12 items-center gap-2 rounded-md bg-primary px-6 text-[16px] font-semibold text-black transition-colors hover:bg-primary/90"
-                >
-                  {heroVideo.buttonText} <ArrowRight className="h-4 w-4" />
-                </Link>
-              )}
-            </div>
-
-            {heroVideo.discountBadge?.enabled && (
-              <div className="absolute bottom-8 right-8 z-10 flex h-32 w-32 items-center justify-center rounded-full bg-[#FF5722] shadow-2xl transition-transform duration-300 hover:scale-110 md:h-40 md:w-40">
-                <div className="text-center">
-                  <div className="text-sm font-medium text-white md:text-base">
-                    {heroVideo.discountBadge.text}
-                  </div>
-                  <div className="text-4xl font-bold leading-none text-white md:text-5xl">
-                    {heroVideo.discountBadge.percentage}
-                  </div>
-                  <div className="text-sm font-medium text-white md:text-base">Discounts</div>
-                </div>
-              </div>
+        {/* Content sits on the same max-width rail as the rest of the page, so the
+            headline lines up with the sections below even though the video is full-bleed. */}
+        <div className="relative z-10 mx-auto flex h-full w-full max-w-[1400px] flex-col justify-end px-6 pb-20 md:px-10 md:pb-28">
+          <div className="max-w-2xl">
+            {heroVideo.title && (
+              <h1 className="mb-6 text-4xl font-bold leading-[1.1] tracking-tight text-white drop-shadow-lg sm:text-5xl md:text-6xl lg:text-7xl">
+                {renderTitle(heroVideo.title)}
+              </h1>
+            )}
+            {heroVideo.buttonText && (
+              <Link
+                href={heroVideo.buttonUrl || "/shop"}
+                className="group inline-flex h-14 items-center gap-2 rounded-md bg-primary px-8 text-[17px] font-semibold text-black shadow-xl transition-all hover:bg-primary/90 hover:gap-3"
+              >
+                {heroVideo.buttonText}
+                <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-0.5" />
+              </Link>
             )}
           </div>
         </div>
-      </div>
+
+        {heroVideo.discountBadge?.enabled && (
+          <div className="absolute bottom-20 right-6 z-10 flex h-28 w-28 items-center justify-center rounded-full bg-[#FF5722] shadow-2xl transition-transform duration-300 hover:scale-110 md:bottom-28 md:right-10 md:h-40 md:w-40">
+            <div className="text-center">
+              <div className="text-xs font-medium text-white md:text-base">
+                {heroVideo.discountBadge.text}
+              </div>
+              <div className="text-3xl font-bold leading-none text-white md:text-5xl">
+                {heroVideo.discountBadge.percentage}
+              </div>
+              <div className="text-xs font-medium text-white md:text-base">Discounts</div>
+            </div>
+          </div>
+        )}
+
+        {/* Scroll cue — tells the visitor there's a storefront below the fold. */}
+        <div className="pointer-events-none absolute bottom-6 left-1/2 z-10 -translate-x-1/2">
+          <ChevronDown className="h-7 w-7 animate-bounce text-white/70" />
+        </div>
+      </section>
     );
   }
 

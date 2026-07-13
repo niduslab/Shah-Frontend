@@ -1,4 +1,16 @@
 {
+  "heroLayout": "video",
+  "heroVideo": {
+    "video": "/api/uploads/landing/hero-video/1783949236901-WhatsApp-Video-2026-07-13-at-6-03-47-PM.mp4",
+    "title": "Elevate Your\nFitness Journey",
+    "buttonText": "Shop Now",
+    "buttonUrl": "/shop",
+    "discountBadge": {
+      "text": "Up to",
+      "percentage": "40%",
+      "enabled": true
+    }
+  },
   "sections": [
     {
       "id": "main",

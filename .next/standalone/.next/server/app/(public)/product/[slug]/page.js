@@ -1,6 +1,6 @@
 var R=require("../../../../chunks/ssr/[turbopack]_runtime.js")("server/app/(public)/product/[slug]/page.js")
 R.c("server/chunks/ssr/[root-of-the-server]__c40bbbd1._.js")
-R.c("server/chunks/ssr/_79a149fa._.js")
+R.c("server/chunks/ssr/_25a5254a._.js")
 R.c("server/chunks/ssr/node_modules_next_dist_9764e5f5._.js")
 R.c("server/chunks/ssr/_472c1382._.js")
 R.c("server/chunks/ssr/[root-of-the-server]__61f26ee5._.js")
@@ -15,7 +15,8 @@ R.c("server/chunks/ssr/node_modules_next_dist_client_components_2fffaa3a._.js")
 R.c("server/chunks/ssr/node_modules_next_dist_client_components_builtin_unauthorized_15817684.js")
 R.c("server/chunks/ssr/node_modules_1c79c282._.js")
 R.c("server/chunks/ssr/app_(public)_8a3e873a._.js")
+R.c("server/chunks/ssr/app_(public)_product_[slug]_error_tsx_aa414f59._.js")
 R.c("server/chunks/ssr/_7b4419b1._.js")
 R.c("server/chunks/ssr/_next-internal_server_app_(public)_product_[slug]_page_actions_4aa690ee.js")
-R.m(451502)
-module.exports=R.m(451502).exports
+R.m(880930)
+module.exports=R.m(880930).exports

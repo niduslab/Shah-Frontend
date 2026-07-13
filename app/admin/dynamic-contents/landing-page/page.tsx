@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Upload, Save, Eye, ArrowRight, Edit2, LayoutGrid, Video } from "lucide-react";
+import { Upload, Save, Eye, ArrowRight, Edit2, LayoutGrid, Video, ChevronDown } from "lucide-react";
 import Image from "next/image";
 import EditModal from "../_components/EditModal";
 
@@ -778,6 +778,8 @@ export default function LandingPageManagement() {
               {/* Live preview */}
               <div className="relative mb-6 h-[300px] w-full overflow-hidden rounded-lg bg-gray-100 md:h-[500px]">
                 {heroVideo.video ? (
+                  // No `controls` — the live hero has none, and the overlay must be
+                  // what the admin actually sees.
                   <video
                     key={heroVideo.video}
                     src={heroVideo.video}
@@ -786,7 +788,6 @@ export default function LandingPageManagement() {
                     muted
                     loop
                     playsInline
-                    controls
                   />
                 ) : (
                   <div className="flex h-full flex-col items-center justify-center text-gray-400">
@@ -800,32 +801,38 @@ export default function LandingPageManagement() {
 
                 {heroVideo.video && (
                   <>
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                    <div className="pointer-events-none absolute bottom-8 left-8 z-10 max-w-md">
-                      {heroVideo.title && (
-                        <h2 className="mb-6 text-2xl font-semibold leading-tight text-white sm:text-3xl md:text-[36px]">
-                          {renderTitle(heroVideo.title)}
-                        </h2>
-                      )}
-                      {heroVideo.buttonText && (
-                        <div className="inline-flex h-12 items-center gap-2 rounded-md bg-[#FFD700] px-6 text-[16px] font-semibold text-black">
-                          {heroVideo.buttonText} <ArrowRight className="h-4 w-4" />
-                        </div>
-                      )}
+                    {/* Mirrors the live full-bleed hero so the preview is accurate. */}
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/30" />
+                    <div className="pointer-events-none absolute inset-0 z-10 flex flex-col justify-end px-8 pb-14">
+                      <div className="max-w-2xl">
+                        {heroVideo.title && (
+                          <h2 className="mb-5 text-3xl font-bold leading-[1.1] tracking-tight text-white drop-shadow-lg md:text-5xl">
+                            {renderTitle(heroVideo.title)}
+                          </h2>
+                        )}
+                        {heroVideo.buttonText && (
+                          <div className="inline-flex h-12 items-center gap-2 rounded-md bg-[#FFD700] px-7 text-[16px] font-semibold text-black shadow-xl">
+                            {heroVideo.buttonText} <ArrowRight className="h-5 w-5" />
+                          </div>
+                        )}
+                      </div>
                     </div>
                     {heroVideo.discountBadge?.enabled && (
-                      <div className="pointer-events-none absolute bottom-8 right-8 z-10 flex h-32 w-32 items-center justify-center rounded-full bg-[#FF5722] shadow-2xl md:h-40 md:w-40">
+                      <div className="pointer-events-none absolute bottom-14 right-8 z-10 flex h-28 w-28 items-center justify-center rounded-full bg-[#FF5722] shadow-2xl md:h-32 md:w-32">
                         <div className="text-center">
-                          <div className="text-sm font-medium text-white md:text-base">
+                          <div className="text-xs font-medium text-white">
                             {heroVideo.discountBadge.text}
                           </div>
-                          <div className="text-4xl font-bold leading-none text-white md:text-5xl">
+                          <div className="text-3xl font-bold leading-none text-white">
                             {heroVideo.discountBadge.percentage}
                           </div>
-                          <div className="text-sm font-medium text-white md:text-base">Discounts</div>
+                          <div className="text-xs font-medium text-white">Discounts</div>
                         </div>
                       </div>
                     )}
+                    <div className="pointer-events-none absolute bottom-3 left-1/2 z-10 -translate-x-1/2">
+                      <ChevronDown className="h-6 w-6 animate-bounce text-white/70" />
+                    </div>
                   </>
                 )}
               </div>
