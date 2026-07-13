@@ -26,6 +26,32 @@ interface HeroSection {
   };
 }
 
+type HeroLayout = "grid" | "video";
+
+interface HeroVideo {
+  video: string;
+  title: string;
+  buttonText: string;
+  buttonUrl: string;
+  discountBadge?: {
+    enabled: boolean;
+    text: string;
+    percentage: string;
+  };
+}
+
+const DEFAULT_HERO_VIDEO: HeroVideo = {
+  video: "",
+  title: "Elevate Your\nFitness Journey",
+  buttonText: "Shop Now",
+  buttonUrl: "/shop",
+  discountBadge: {
+    enabled: false,
+    text: "Up to",
+    percentage: "40%",
+  },
+};
+
 const DEFAULT_SECTIONS: HeroSection[] = [
   {
     id: "main",
@@ -68,6 +94,8 @@ const DEFAULT_SECTIONS: HeroSection[] = [
 
 export function HeroSection() {
   const [sections, setSections] = useState<HeroSection[]>(DEFAULT_SECTIONS);
+  const [heroLayout, setHeroLayout] = useState<HeroLayout>("grid");
+  const [heroVideo, setHeroVideo] = useState<HeroVideo>(DEFAULT_HERO_VIDEO);
 
   useEffect(() => {
     const fetchHeroSections = async () => {
@@ -77,6 +105,12 @@ export function HeroSection() {
           const data = await response.json();
           if (data.sections && data.sections.length > 0) {
             setSections(data.sections);
+          }
+          if (data.heroLayout === "video" || data.heroLayout === "grid") {
+            setHeroLayout(data.heroLayout);
+          }
+          if (data.heroVideo) {
+            setHeroVideo({ ...DEFAULT_HERO_VIDEO, ...data.heroVideo });
           }
         }
       } catch (error) {
@@ -93,6 +127,9 @@ export function HeroSection() {
   const bottomRightImageRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
+    // The grid refs are not mounted in video mode; animating null targets throws.
+    if (heroLayout === "video") return;
+
     const tl = gsap.timeline({
       defaults: { ease: "power3.out" }
     });
@@ -154,7 +191,7 @@ export function HeroSection() {
         });
     });
 
-  }, { scope: containerRef });
+  }, { scope: containerRef, dependencies: [heroLayout] });
 
   const mainSection = sections.find((s) => s.position === "main");
   const topRightSection = sections.find((s) => s.position === "topRight");
@@ -169,6 +206,60 @@ export function HeroSection() {
       </span>
     ));
   };
+
+  // Full-width video hero. Falls back to the grid if the admin selected video mode
+  // but has not uploaded a file yet, so the homepage is never left blank.
+  if (heroLayout === "video" && heroVideo.video) {
+    return (
+      <div ref={containerRef} className="w-full bg-white py-4 md:py-6 overflow-hidden">
+        <div className="mx-auto w-full max-w-[1400px] px-4 md:px-6">
+          <div className="relative h-[400px] w-full overflow-hidden rounded-xs md:h-[600px]">
+            <video
+              src={heroVideo.video}
+              className="h-full w-full object-cover"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+            />
+
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+
+            <div className="absolute bottom-8 left-8 max-w-md z-10">
+              {heroVideo.title && (
+                <h2 className="mb-6 text-2xl font-semibold leading-tight text-white sm:text-3xl md:text-[36px]">
+                  {renderTitle(heroVideo.title)}
+                </h2>
+              )}
+              {heroVideo.buttonText && (
+                <Link
+                  href={heroVideo.buttonUrl || "/shop"}
+                  className="inline-flex h-12 items-center gap-2 rounded-md bg-primary px-6 text-[16px] font-semibold text-black transition-colors hover:bg-primary/90"
+                >
+                  {heroVideo.buttonText} <ArrowRight className="h-4 w-4" />
+                </Link>
+              )}
+            </div>
+
+            {heroVideo.discountBadge?.enabled && (
+              <div className="absolute bottom-8 right-8 z-10 flex h-32 w-32 items-center justify-center rounded-full bg-[#FF5722] shadow-2xl transition-transform duration-300 hover:scale-110 md:h-40 md:w-40">
+                <div className="text-center">
+                  <div className="text-sm font-medium text-white md:text-base">
+                    {heroVideo.discountBadge.text}
+                  </div>
+                  <div className="text-4xl font-bold leading-none text-white md:text-5xl">
+                    {heroVideo.discountBadge.percentage}
+                  </div>
+                  <div className="text-sm font-medium text-white md:text-base">Discounts</div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div ref={containerRef} className="w-full bg-white py-4 md:py-6 overflow-hidden">

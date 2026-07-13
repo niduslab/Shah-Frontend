@@ -62,7 +62,7 @@ export function FloorSolution() {
         </div>
 
         {/* Sports Equipments */}
-        <div data-reveal className="col-span-1 group relative h-[300px] overflow-hidden rounded-xs md:col-span-2 md:h-[620px]">
+        {/* <div data-reveal className="col-span-1 group relative h-[300px] overflow-hidden rounded-xs md:col-span-2 md:h-[620px]">
           <Image
             src={IMAGES.sportsEquipments}
             alt="Sports Equipments"
@@ -81,7 +81,7 @@ export function FloorSolution() {
               Shop Now <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

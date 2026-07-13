@@ -10,6 +10,18 @@ export const runtime = "nodejs";
 // them back through the /api/uploads/[...path] route instead of a static path.
 const UPLOAD_ROOT = path.join(process.cwd(), "public", "uploads");
 
+const IMAGE_TYPES = ["image/png", "image/jpeg", "image/gif", "image/webp", "image/avif"];
+const VIDEO_TYPES = ["video/mp4", "video/webm"];
+
+// The box this runs on is memory- and disk-constrained, and uploads are read into
+// a Buffer before being written. Cap them so a single large file cannot exhaust it.
+const MAX_IMAGE_BYTES = 10 * 1024 * 1024; // 10MB
+const MAX_VIDEO_BYTES = 50 * 1024 * 1024; // 50MB
+
+function mb(bytes: number) {
+  return Math.round(bytes / (1024 * 1024));
+}
+
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
@@ -20,6 +32,32 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: "No file provided" },
         { status: 400 }
+      );
+    }
+
+    const isVideo = VIDEO_TYPES.includes(file.type);
+    const isImage = IMAGE_TYPES.includes(file.type);
+
+    if (!isVideo && !isImage) {
+      return NextResponse.json(
+        {
+          error:
+            `Unsupported file type "${file.type || "unknown"}". ` +
+            `Allowed: PNG, JPEG, GIF, WebP, AVIF, MP4, WebM.`,
+        },
+        { status: 415 }
+      );
+    }
+
+    const maxBytes = isVideo ? MAX_VIDEO_BYTES : MAX_IMAGE_BYTES;
+    if (file.size > maxBytes) {
+      return NextResponse.json(
+        {
+          error:
+            `File is ${mb(file.size)}MB, which exceeds the ` +
+            `${mb(maxBytes)}MB limit for ${isVideo ? "videos" : "images"}.`,
+        },
+        { status: 413 }
       );
     }
 

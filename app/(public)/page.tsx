@@ -35,8 +35,7 @@ export default function Home() {
       {/* add new rdx gallery */}
       <RdxGallerySection />
       
-      <FlashDealSection />
-      {/* floor solution  */}
+      
       <FloorSolution />
       
       <TrustedBrands />
@@ -55,6 +54,8 @@ export default function Home() {
       
       {/* <FeatureSection />
       <ShopNowBanner /> */}
+      <FlashDealSection />
+      {/* floor solution  */}
     
       <OurClients />
       <PerformanceFrameSection />

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Upload, Save, Eye, ArrowRight, Edit2 } from "lucide-react";
+import { Upload, Save, Eye, ArrowRight, Edit2, LayoutGrid, Video } from "lucide-react";
 import Image from "next/image";
 import EditModal from "../_components/EditModal";
 
@@ -18,6 +18,24 @@ interface HeroSection {
     percentage: string;
   };
 }
+
+type HeroLayout = "grid" | "video";
+
+interface HeroVideo {
+  video: string;
+  title: string;
+  buttonText: string;
+  buttonUrl: string;
+  discountBadge?: {
+    enabled: boolean;
+    text: string;
+    percentage: string;
+  };
+}
+
+// Must stay in sync with the server-side limits in /api/admin/upload.
+const MAX_VIDEO_MB = 50;
+const ALLOWED_VIDEO_TYPES = ["video/mp4", "video/webm"];
 
 interface PreOrderSection {
   id: string;
@@ -107,6 +125,19 @@ interface PerformanceFrameSection {
 
 export default function LandingPageManagement() {
   const [sections, setSections] = useState<HeroSection[]>([]);
+  const [heroLayout, setHeroLayout] = useState<HeroLayout>("grid");
+  const [uploadingVideo, setUploadingVideo] = useState(false);
+  const [heroVideo, setHeroVideo] = useState<HeroVideo>({
+    video: "",
+    title: "Elevate Your\nFitness Journey",
+    buttonText: "Shop Now",
+    buttonUrl: "/shop",
+    discountBadge: {
+      enabled: false,
+      text: "Up to",
+      percentage: "40%",
+    },
+  });
   const [preOrderSection, setPreOrderSection] = useState<PreOrderSection>({
     id: "preorder",
     enabled: true,
@@ -261,6 +292,12 @@ export default function LandingPageManagement() {
       if (response.ok) {
         const data = await response.json();
         setSections(data.sections || getDefaultSections());
+        if (data.heroLayout === "video" || data.heroLayout === "grid") {
+          setHeroLayout(data.heroLayout);
+        }
+        if (data.heroVideo) {
+          setHeroVideo((prev) => ({ ...prev, ...data.heroVideo }));
+        }
         if (data.preOrderSection) {
           setPreOrderSection(data.preOrderSection);
         }
@@ -351,6 +388,52 @@ export default function LandingPageManagement() {
     } catch (error) {
       console.error("Error uploading image:", error);
       alert("Error uploading image");
+    }
+  };
+
+  const handleHeroVideoUpload = async (file: File, inputElement?: HTMLInputElement) => {
+    // Validate before sending: uploading 50MB only to be rejected server-side is a
+    // slow way to find out, and this box has little headroom.
+    if (!ALLOWED_VIDEO_TYPES.includes(file.type)) {
+      alert("Please choose an MP4 or WebM video.");
+      if (inputElement) inputElement.value = "";
+      return;
+    }
+
+    const sizeMb = file.size / (1024 * 1024);
+    if (sizeMb > MAX_VIDEO_MB) {
+      alert(
+        `That video is ${Math.round(sizeMb)}MB. The limit is ${MAX_VIDEO_MB}MB — ` +
+          `please compress it before uploading.`
+      );
+      if (inputElement) inputElement.value = "";
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("folder", "landing/hero-video");
+
+    setUploadingVideo(true);
+    try {
+      const response = await fetch("/api/admin/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setHeroVideo((prev) => ({ ...prev, video: data.url }));
+        if (inputElement) inputElement.value = "";
+      } else {
+        alert(data.error || "Failed to upload video");
+      }
+    } catch (error) {
+      console.error("Error uploading video:", error);
+      alert("Error uploading video");
+    } finally {
+      setUploadingVideo(false);
     }
   };
 
@@ -584,7 +667,7 @@ export default function LandingPageManagement() {
       const response = await fetch("/api/admin/hero-sections", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sections, preOrderSection, promoCardsSection, rdxGallerySection, successStoriesSection, performanceFrameSection }),
+        body: JSON.stringify({ heroLayout, heroVideo, sections, preOrderSection, promoCardsSection, rdxGallerySection, successStoriesSection, performanceFrameSection }),
       });
 
       if (response.ok) {
@@ -651,10 +734,257 @@ export default function LandingPageManagement() {
 
         {/* Hero Section Preview - Exact Replica */}
         <div className="mb-8 rounded-xl bg-white p-6 shadow-lg">
-          <h2 className="mb-4 text-xl font-semibold text-gray-900">Hero Section Preview</h2>
-          
+          <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <h2 className="text-xl font-semibold text-gray-900">Hero Section Preview</h2>
+
+            {/* Layout mode toggle */}
+            <div className="inline-flex rounded-lg border border-gray-200 bg-gray-50 p-1">
+              <button
+                type="button"
+                onClick={() => setHeroLayout("grid")}
+                className={`flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+                  heroLayout === "grid"
+                    ? "bg-white text-gray-900 shadow"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                <LayoutGrid className="h-4 w-4" />
+                Grid Layout
+              </button>
+              <button
+                type="button"
+                onClick={() => setHeroLayout("video")}
+                className={`flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+                  heroLayout === "video"
+                    ? "bg-white text-gray-900 shadow"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                <Video className="h-4 w-4" />
+                Full Video
+              </button>
+            </div>
+          </div>
+
+          <p className="mb-4 text-sm text-gray-600">
+            {heroLayout === "grid"
+              ? "Showing the 4-tile image grid. Click any tile to edit it."
+              : "Showing a single full-width video. Upload an MP4 or WebM and set the overlay text."}
+          </p>
+
+          {/* ---------- VIDEO MODE ---------- */}
+          {heroLayout === "video" && (
+            <div className="mx-auto w-full max-w-[1400px]">
+              {/* Live preview */}
+              <div className="relative mb-6 h-[300px] w-full overflow-hidden rounded-lg bg-gray-100 md:h-[500px]">
+                {heroVideo.video ? (
+                  <video
+                    key={heroVideo.video}
+                    src={heroVideo.video}
+                    className="h-full w-full object-cover"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    controls
+                  />
+                ) : (
+                  <div className="flex h-full flex-col items-center justify-center text-gray-400">
+                    <Video className="mb-3 h-12 w-12" />
+                    <p className="text-sm font-medium">No video uploaded yet</p>
+                    <p className="mt-1 text-xs">
+                      The homepage will keep showing the grid layout until you upload one.
+                    </p>
+                  </div>
+                )}
+
+                {heroVideo.video && (
+                  <>
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                    <div className="pointer-events-none absolute bottom-8 left-8 z-10 max-w-md">
+                      {heroVideo.title && (
+                        <h2 className="mb-6 text-2xl font-semibold leading-tight text-white sm:text-3xl md:text-[36px]">
+                          {renderTitle(heroVideo.title)}
+                        </h2>
+                      )}
+                      {heroVideo.buttonText && (
+                        <div className="inline-flex h-12 items-center gap-2 rounded-md bg-[#FFD700] px-6 text-[16px] font-semibold text-black">
+                          {heroVideo.buttonText} <ArrowRight className="h-4 w-4" />
+                        </div>
+                      )}
+                    </div>
+                    {heroVideo.discountBadge?.enabled && (
+                      <div className="pointer-events-none absolute bottom-8 right-8 z-10 flex h-32 w-32 items-center justify-center rounded-full bg-[#FF5722] shadow-2xl md:h-40 md:w-40">
+                        <div className="text-center">
+                          <div className="text-sm font-medium text-white md:text-base">
+                            {heroVideo.discountBadge.text}
+                          </div>
+                          <div className="text-4xl font-bold leading-none text-white md:text-5xl">
+                            {heroVideo.discountBadge.percentage}
+                          </div>
+                          <div className="text-sm font-medium text-white md:text-base">Discounts</div>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+
+              {/* Video controls */}
+              <div className="grid gap-6 md:grid-cols-2">
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-gray-700">
+                    Hero Video
+                  </label>
+                  <div className="relative flex h-32 items-center justify-center overflow-hidden rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:border-orange-400">
+                    <div className="text-center text-gray-500">
+                      <Upload className="mx-auto mb-2 h-8 w-8" />
+                      <p className="text-sm font-medium">
+                        {uploadingVideo
+                          ? "Uploading..."
+                          : heroVideo.video
+                          ? "Change Video"
+                          : "Upload Video"}
+                      </p>
+                    </div>
+                    <input
+                      type="file"
+                      accept="video/mp4,video/webm"
+                      disabled={uploadingVideo}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) handleHeroVideoUpload(file, e.target);
+                      }}
+                      className="absolute inset-0 z-10 cursor-pointer opacity-0 disabled:cursor-not-allowed"
+                    />
+                  </div>
+                  <p className="mt-2 text-xs text-gray-500">
+                    MP4 or WebM, up to {MAX_VIDEO_MB}MB. The video is muted and looped, so
+                    it should work without sound.
+                  </p>
+                  {heroVideo.video && (
+                    <button
+                      type="button"
+                      onClick={() => setHeroVideo({ ...heroVideo, video: "" })}
+                      className="mt-2 text-xs font-medium text-red-600 hover:text-red-700"
+                    >
+                      Remove video
+                    </button>
+                  )}
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-gray-700">
+                      Title (use a new line for line breaks)
+                    </label>
+                    <textarea
+                      value={heroVideo.title}
+                      onChange={(e) => setHeroVideo({ ...heroVideo, title: e.target.value })}
+                      rows={2}
+                      className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+                      placeholder="Elevate Your&#10;Fitness Journey"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="mb-2 block text-sm font-medium text-gray-700">
+                        Button Text
+                      </label>
+                      <input
+                        type="text"
+                        value={heroVideo.buttonText}
+                        onChange={(e) => setHeroVideo({ ...heroVideo, buttonText: e.target.value })}
+                        className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+                        placeholder="Shop Now"
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-2 block text-sm font-medium text-gray-700">
+                        Button URL
+                      </label>
+                      <input
+                        type="text"
+                        value={heroVideo.buttonUrl}
+                        onChange={(e) => setHeroVideo({ ...heroVideo, buttonUrl: e.target.value })}
+                        className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+                        placeholder="/shop"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
+                    <div className="mb-3 flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={heroVideo.discountBadge?.enabled ?? false}
+                        onChange={(e) =>
+                          setHeroVideo({
+                            ...heroVideo,
+                            discountBadge: {
+                              text: heroVideo.discountBadge?.text ?? "Up to",
+                              percentage: heroVideo.discountBadge?.percentage ?? "40%",
+                              enabled: e.target.checked,
+                            },
+                          })
+                        }
+                        className="h-4 w-4 rounded border-gray-300 text-orange-500 focus:ring-orange-500"
+                      />
+                      <label className="text-sm font-medium text-gray-700">
+                        Show Discount Badge
+                      </label>
+                    </div>
+                    {heroVideo.discountBadge?.enabled && (
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="mb-1 block text-xs text-gray-600">Badge Text</label>
+                          <input
+                            type="text"
+                            placeholder="Up to"
+                            value={heroVideo.discountBadge.text}
+                            onChange={(e) =>
+                              setHeroVideo({
+                                ...heroVideo,
+                                discountBadge: {
+                                  ...heroVideo.discountBadge!,
+                                  text: e.target.value,
+                                },
+                              })
+                            }
+                            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none"
+                          />
+                        </div>
+                        <div>
+                          <label className="mb-1 block text-xs text-gray-600">Percentage</label>
+                          <input
+                            type="text"
+                            placeholder="40%"
+                            value={heroVideo.discountBadge.percentage}
+                            onChange={(e) =>
+                              setHeroVideo({
+                                ...heroVideo,
+                                discountBadge: {
+                                  ...heroVideo.discountBadge!,
+                                  percentage: e.target.value,
+                                },
+                              })
+                            }
+                            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none"
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ---------- GRID MODE ---------- */}
+          {heroLayout === "grid" && (
           <div className="mx-auto grid w-full max-w-[1400px] grid-cols-1 gap-4 md:h-[600px] md:grid-cols-4">
-            
+
             {/* Main Section */}
             {mainSection && (
               <div 
@@ -806,6 +1136,7 @@ export default function LandingPageManagement() {
               </div>
             )}
           </div>
+          )}
         </div>
 
         {/* Pre-Order Section Preview */}
