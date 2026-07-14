@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Search, Package, Truck, CheckCircle, Clock, AlertCircle, Phone, Mail } from 'lucide-react';
+import { Search, Package, Truck, CheckCircle, Clock, AlertCircle, Phone, Mail, ExternalLink } from 'lucide-react';
 import { toast } from 'sonner';
 import api from '@/lib/api/axios';
 import TrackingTimeline from '@/app/(public)/track-order/_components/TrackingTimeline';
@@ -12,6 +12,8 @@ interface TrackingData {
   status: string;
   shipping_method: string;
   tracking_number: string;
+  carrier?: string | null;
+  carrier_url?: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -175,10 +177,24 @@ export default function TrackOrderPage() {
 
                 {/* Tracking Number */}
                 <div className="mb-6">
-                  <p className="text-xs font-medium text-gray-600 mb-2">Tracking Number</p>
+                  <p className="text-xs font-medium text-gray-600 mb-2">
+                    Tracking Number {trackingData.carrier && <span className="font-normal text-gray-500">· {trackingData.carrier}</span>}
+                  </p>
                   <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
                     <p className="text-xs font-mono text-gray-900 break-all">{trackingData.tracking_number || 'Not available yet'}</p>
                   </div>
+                  {trackingData.carrier_url && (
+                    <a
+                      href={trackingData.carrier_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-3 flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#FF6F00] to-[#E65100] px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-orange-500/20 transition-all hover:shadow-lg hover:shadow-orange-500/30 w-full"
+                    >
+                      <Truck className="h-4 w-4" />
+                      Track Live Shipment
+                      <ExternalLink className="h-3.5 w-3.5" />
+                    </a>
+                  )}
                 </div>
 
                 {/* Divider */}

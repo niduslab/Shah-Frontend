@@ -31,7 +31,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
+  const isCheckingAuthRef = useRef(false);
+
   const checkAuth = useCallback(async (showLoading = true) => {
+    // Skip overlapping checks (e.g. a slow background poll still in flight)
+    if (isCheckingAuthRef.current) return;
+    isCheckingAuthRef.current = true;
+
     if (showLoading) setLoading(true);
     try {
       const response = await authService.getUser();
@@ -41,6 +47,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(null);
       userRef.current = null;
     } finally {
+      isCheckingAuthRef.current = false;
       if (showLoading) setLoading(false);
     }
   }, []);

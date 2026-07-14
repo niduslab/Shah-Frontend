@@ -1,37 +1,64 @@
 'use client';
 
 import { useState } from 'react';
-import { X, Truck } from 'lucide-react';
+import { X, Truck, Link as LinkIcon } from 'lucide-react';
 
 interface TrackingModalProps {
   isOpen: boolean;
   onClose: () => void;
   orderId: number;
-  onSubmit: (data: { tracking_number: string; carrier: string }) => Promise<void>;
+  onSubmit: (data: { tracking_number: string; carrier: string; carrier_url?: string }) => Promise<void>;
 }
+
+const CARRIER_LINK_TEMPLATES: Record<string, string> = {
+  Pathao: 'https://merchant.pathao.com/tracking?consignment_id=',
+};
 
 export default function TrackingModal({ isOpen, onClose, orderId, onSubmit }: TrackingModalProps) {
   const [trackingNumber, setTrackingNumber] = useState('');
   const [carrier, setCarrier] = useState('');
+  const [carrierUrl, setCarrierUrl] = useState('');
+  const [urlError, setUrlError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!isOpen) return null;
+
+  const isValidUrl = (value: string) => {
+    try {
+      const url = new URL(value);
+      return url.protocol === 'http:' || url.protocol === 'https:';
+    } catch {
+      return false;
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!trackingNumber.trim() || !carrier.trim()) return;
 
+    if (carrierUrl.trim() && !isValidUrl(carrierUrl.trim())) {
+      setUrlError('Enter a valid link starting with http:// or https://');
+      return;
+    }
+
     setIsSubmitting(true);
     try {
-      await onSubmit({ tracking_number: trackingNumber, carrier });
+      await onSubmit({
+        tracking_number: trackingNumber,
+        carrier,
+        carrier_url: carrierUrl.trim() || undefined,
+      });
       setTrackingNumber('');
       setCarrier('');
+      setCarrierUrl('');
+      setUrlError('');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const commonCarriers = [
+    'Pathao',
     'DHL',
     'FedEx',
     'UPS',
@@ -102,7 +129,12 @@ export default function TrackingModal({ isOpen, onClose, orderId, onSubmit }: Tr
                   <button
                     key={commonCarrier}
                     type="button"
-                    onClick={() => setCarrier(commonCarrier)}
+                    onClick={() => {
+                      setCarrier(commonCarrier);
+                      if (!carrierUrl.trim() && CARRIER_LINK_TEMPLATES[commonCarrier]) {
+                        setCarrierUrl(CARRIER_LINK_TEMPLATES[commonCarrier]);
+                      }
+                    }}
                     className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition-all ${
                       carrier === commonCarrier
                         ? 'border-[#FF6F00] bg-orange-50 text-[#FF6F00]'
@@ -113,6 +145,36 @@ export default function TrackingModal({ isOpen, onClose, orderId, onSubmit }: Tr
                   </button>
                 ))}
               </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Carrier Live Tracking Link
+              </label>
+              <div className="relative">
+                <LinkIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                <input
+                  type="url"
+                  value={carrierUrl}
+                  onChange={(e) => {
+                    setCarrierUrl(e.target.value);
+                    if (urlError) setUrlError('');
+                  }}
+                  placeholder="e.g. https://merchant.pathao.com/tracking?consignment_id=..."
+                  className={`w-full rounded-xl border px-4 py-3 pl-10 text-sm transition-all focus:outline-none focus:ring-2 ${
+                    urlError
+                      ? 'border-red-400 focus:border-red-400 focus:ring-red-100'
+                      : 'border-gray-300 focus:border-[#FF6F00] focus:ring-[#FF6F00]/20'
+                  }`}
+                />
+              </div>
+              {urlError ? (
+                <p className="mt-1.5 text-xs text-red-500">{urlError}</p>
+              ) : (
+                <p className="mt-1.5 text-xs text-gray-400">
+                  Optional. Paste the courier's live tracking URL (e.g. Pathao) so the customer can follow the shipment in real time.
+                </p>
+              )}
             </div>
           </div>
 

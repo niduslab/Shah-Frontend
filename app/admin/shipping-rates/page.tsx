@@ -146,6 +146,9 @@ export default function ShippingRatesPage() {
                   Free Shipping
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                  Weight Pricing
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                   Status
                 </th>
                 <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
@@ -156,13 +159,13 @@ export default function ShippingRatesPage() {
             <tbody className="divide-y divide-gray-200 bg-white">
               {isLoading ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-12 text-center text-sm text-gray-500">
+                  <td colSpan={8} className="px-6 py-12 text-center text-sm text-gray-500">
                     Loading...
                   </td>
                 </tr>
               ) : rates.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-12 text-center text-sm text-gray-500">
+                  <td colSpan={8} className="px-6 py-12 text-center text-sm text-gray-500">
                     No shipping rates found
                   </td>
                 </tr>
@@ -185,6 +188,17 @@ export default function ShippingRatesPage() {
                       {parseFloat(rate.free_shipping_min_order) > 0
                         ? `৳${parseFloat(rate.free_shipping_min_order).toFixed(2)}`
                         : 'Disabled'}
+                    </td>
+                    <td className="whitespace-nowrap px-6 py-4 text-sm">
+                      {rate.weight_pricing_enabled ? (
+                        <span className="inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-700 ring-1 ring-blue-600/20">
+                          Enabled
+                        </span>
+                      ) : (
+                        <span className="inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium bg-gray-100 text-gray-500 ring-1 ring-gray-600/20">
+                          Disabled
+                        </span>
+                      )}
                     </td>
                     <td className="whitespace-nowrap px-6 py-4 text-sm">
                       {rate.is_active ? (

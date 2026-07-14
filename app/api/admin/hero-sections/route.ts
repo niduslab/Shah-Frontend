@@ -110,6 +110,53 @@ function getDefaultData() {
         },
       ],
     },
+    exploreCategoriesSection: {
+      id: "explore-categories",
+      enabled: true,
+      sectionTitle: "Explore Our Categories",
+      categories: [
+        {
+          id: "fitness-cardio",
+          name: "Cardio",
+          image: "/images/landing/explore-categories/image-1.png",
+          href: "/shop?category=fitness-cardio",
+        },
+        {
+          id: "strength",
+          name: "Strength",
+          image: "/images/landing/explore-categories/image-3.png",
+          href: "/shop?category=strength",
+        },
+        {
+          id: "free-weight",
+          name: "Free Weight",
+          image: "/images/landing/explore-categories/image-4.png",
+          href: "/shop?category=free-weight",
+        },
+        {
+          id: "sports",
+          name: "Sports",
+          image: "/images/landing/explore-categories/image-2.png",
+          href: "/shop?category=sports",
+        },
+      ],
+    },
+    flashDealSection: {
+      id: "flash-deal",
+      enabled: true,
+      backgroundImage: "/images/landing/flash-deal/flash-deal.png",
+      badgeText: "Flash Deal",
+      heading: "Grab it before\nit ends.",
+      subtext: "Up to 50% off on premium fitness equipment.",
+      buttonText: "Shop Now",
+      buttonUrl: "/shop?has_flash_deal=true",
+      endsAt: "",
+      discountBadge: {
+        enabled: true,
+        text: "Up to",
+        percentage: "40%",
+      },
+    },
   };
 }
 

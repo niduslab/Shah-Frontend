@@ -6,35 +6,96 @@ import { ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useScrollReveal } from "@/lib/hooks/useScrollReveal";
 
-const BACKGROUND_IMAGE = "/images/landing/flash-deal/flash-deal.png";
+interface FlashDealData {
+  enabled: boolean;
+  backgroundImage: string;
+  badgeText: string;
+  heading: string;
+  subtext: string;
+  buttonText: string;
+  buttonUrl: string;
+  endsAt: string;
+  discountBadge: {
+    enabled: boolean;
+    text: string;
+    percentage: string;
+  };
+}
+
+interface TimeLeft {
+  days: number;
+  hours: number;
+  mins: number;
+  secs: number;
+}
+
+const DEFAULT_DATA: FlashDealData = {
+  enabled: true,
+  backgroundImage: "/images/landing/flash-deal/flash-deal.png",
+  badgeText: "Flash Deal",
+  heading: "Grab it before\nit ends.",
+  subtext: "Up to 50% off on premium fitness equipment.",
+  buttonText: "Shop Now",
+  buttonUrl: "/shop?has_flash_deal=true",
+  endsAt: "",
+  discountBadge: {
+    enabled: true,
+    text: "Up to",
+    percentage: "40%",
+  },
+};
+
+function getTimeLeft(endsAt: string): TimeLeft {
+  const diff = Math.max(0, new Date(endsAt).getTime() - Date.now());
+  const totalSeconds = Math.floor(diff / 1000);
+  return {
+    days: Math.floor(totalSeconds / 86400),
+    hours: Math.floor((totalSeconds % 86400) / 3600),
+    mins: Math.floor((totalSeconds % 3600) / 60),
+    secs: totalSeconds % 60,
+  };
+}
 
 export function FlashDealSection() {
   const sectionRef = useScrollReveal();
-  const [timeLeft, setTimeLeft] = useState({
-    days: 2,
-    hours: 13,
-    mins: 42,
-    secs: 27,
-  });
+  const [data, setData] = useState<FlashDealData>(DEFAULT_DATA);
+  const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, mins: 0, secs: 0 });
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev.secs > 0) {
-          return { ...prev, secs: prev.secs - 1 };
-        } else if (prev.mins > 0) {
-          return { ...prev, mins: prev.mins - 1, secs: 59 };
-        } else if (prev.hours > 0) {
-          return { ...prev, hours: prev.hours - 1, mins: 59, secs: 59 };
-        } else if (prev.days > 0) {
-          return { ...prev, days: prev.days - 1, hours: 23, mins: 59, secs: 59 };
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/hero-sections");
+        if (response.ok) {
+          const result = await response.json();
+          if (result.flashDealSection) {
+            setData(result.flashDealSection);
+          }
         }
-        return prev;
-      });
+      } catch (error) {
+        console.error("Error fetching flash deal data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (!data.endsAt) {
+      setTimeLeft({ days: 0, hours: 0, mins: 0, secs: 0 });
+      return;
+    }
+
+    setTimeLeft(getTimeLeft(data.endsAt));
+    const timer = setInterval(() => {
+      setTimeLeft(getTimeLeft(data.endsAt));
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [data.endsAt]);
+
+  if (!data.enabled) {
+    return null;
+  }
 
   return (
     <section ref={sectionRef as React.RefObject<HTMLElement>} className="w-full bg-white px-4 py-8 md:px-6 md:py-12">
@@ -43,8 +104,8 @@ export function FlashDealSection() {
           {/* Background Image */}
           <div className="absolute inset-0 h-full w-full overflow-hidden">
             <Image
-              src={BACKGROUND_IMAGE}
-              alt="Flash Deal Runner"
+              src={data.backgroundImage}
+              alt="Flash Deal"
               fill
               className="object-cover object-center will-change-transform"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
@@ -58,38 +119,47 @@ export function FlashDealSection() {
           {/* Content */}
           <div className="absolute inset-y-0 left-0 flex max-w-[600px] flex-col justify-center px-6 md:px-16 z-10">
             <span className="mb-2 text-lg font-medium italic text-yellow-400 md:text-xl">
-              Flash Deal
+              {data.badgeText}
             </span>
 
             <h2 className="mb-4 text-4xl font-bold leading-tight text-white md:text-5xl lg:text-6xl">
-              Grab it before <br /> it ends.
+              {data.heading.split("\n").map((line, index) => (
+                <span key={index}>
+                  {line}
+                  {index < data.heading.split("\n").length - 1 && <br />}
+                </span>
+              ))}
             </h2>
 
             <p className="mb-8 text-base text-gray-200 md:text-lg">
-              Up to 50% off on premium fitness equipment.
+              {data.subtext}
             </p>
 
             {/* Countdown Timer */}
-            <div className="mb-8 flex gap-3 md:gap-4">
-              <TimeUnit value={timeLeft.days} label="Days" />
-              <TimeUnit value={timeLeft.hours} label="Hours" />
-              <TimeUnit value={timeLeft.mins} label="Mins" />
-              <TimeUnit value={timeLeft.secs} label="Sec" />
-            </div>
+            {data.endsAt && (
+              <div className="mb-8 flex gap-3 md:gap-4">
+                <TimeUnit value={timeLeft.days} label="Days" />
+                <TimeUnit value={timeLeft.hours} label="Hours" />
+                <TimeUnit value={timeLeft.mins} label="Mins" />
+                <TimeUnit value={timeLeft.secs} label="Sec" />
+              </div>
+            )}
 
             <Link
-              href="/shop?has_flash_deal=true"
+              href={data.buttonUrl}
               className="inline-flex h-12 w-fit items-center gap-2 rounded-xs bg-yellow-400 px-8 text-[16px] font-semibold text-black transition-colors hover:bg-yellow-500"
             >
-              Shop Now <ArrowRight className="h-4 w-4" />
+              {data.buttonText} <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
 
           {/* Discount Badge */}
-          <div className="absolute right-6 top-6 flex h-24 w-24 flex-col items-center justify-center rounded-full bg-orange-600 text-white md:right-16 md:top-16 md:h-32 md:w-32 z-10">
-            <span className="text-sm font-medium md:text-base">Up to</span>
-            <span className="text-2xl font-bold md:text-4xl">40%</span>
-          </div>
+          {data.discountBadge.enabled && (
+            <div className="absolute right-6 top-6 flex h-24 w-24 flex-col items-center justify-center rounded-full bg-orange-600 text-white md:right-16 md:top-16 md:h-32 md:w-32 z-10">
+              <span className="text-sm font-medium md:text-base">{data.discountBadge.text}</span>
+              <span className="text-2xl font-bold md:text-4xl">{data.discountBadge.percentage}</span>
+            </div>
+          )}
         </div>
       </div>
     </section>

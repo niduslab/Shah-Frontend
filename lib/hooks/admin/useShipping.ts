@@ -10,9 +10,35 @@ export interface ShippingRate {
   base_cost: number;
   free_shipping_min_order: number;
   delivery_time: string | null;
+  weight_pricing_enabled: boolean;
   is_active: boolean;
   created_at: string;
   updated_at: string;
+}
+
+export interface WeightCostRuleItem {
+  id?: number;
+  weight: number;
+  cost: number;
+}
+
+export interface WeightCostRule {
+  id: number;
+  shipping_rate_id: number;
+  state: string | null;
+  city: string | null;
+  shipping_calculation_method: 'per_unit' | 'rules';
+  per_unit_cost: number | null;
+  default_rule_cost: number | null;
+  items: WeightCostRuleItem[];
+}
+
+export interface WeightCostRuleData {
+  weight_pricing_enabled: boolean;
+  shipping_calculation_method?: 'per_unit' | 'rules';
+  per_unit_cost?: number | null;
+  default_rule_cost?: number | null;
+  items?: { weight: number; cost: number }[];
 }
 
 export interface ShippingClass {
@@ -32,6 +58,7 @@ export interface ShippingRateData {
   base_cost: number;
   free_shipping_min_order?: number;
   delivery_time?: string | null;
+  weight_pricing_enabled?: boolean;
   is_active?: boolean;
 }
 
@@ -119,6 +146,38 @@ export const useDeleteShippingRate = (options?: UseMutationOptions<any, any, num
       queryClient.invalidateQueries({ queryKey: ['admin', 'shipping-rates'] });
     },
     ...options,
+  });
+};
+
+// Weight Cost Rule Hooks
+export const useWeightCostRule = (rateId: number, options?: Partial<UseQueryOptions<any>>) => {
+  return useQuery({
+    queryKey: ['admin', 'shipping-rate', rateId, 'weight-cost-rule'],
+    queryFn: async () => {
+      const response = await api.get(`/api/admin/shipping-rates/${rateId}/weight-cost-rule`);
+      return response.data;
+    },
+    enabled: !!rateId,
+    ...options,
+  });
+};
+
+export const useSaveWeightCostRule = (
+  options?: UseMutationOptions<any, any, { rateId: number; data: WeightCostRuleData }>
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ rateId, data }) => {
+      const response = await api.put(`/api/admin/shipping-rates/${rateId}/weight-cost-rule`, data);
+      return response.data;
+    },
+    onSuccess: async (data, variables, onMutateResult, context) => {
+      await queryClient.invalidateQueries({ queryKey: ['admin', 'shipping-rates'] });
+      await queryClient.invalidateQueries({ queryKey: ['admin', 'shipping-rate', variables.rateId] });
+      options?.onSuccess?.(data, variables, onMutateResult, context);
+    },
+    onError: options?.onError,
   });
 };
 

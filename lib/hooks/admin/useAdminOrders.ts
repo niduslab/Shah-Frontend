@@ -79,13 +79,13 @@ export const useCancelAdminOrder = (options?: UseMutationOptions<any, any, { id:
 };
 
 export const useAssignTracking = (
-  options?: UseMutationOptions<any, any, { id: number; tracking_number: string; carrier: string }>
+  options?: UseMutationOptions<any, any, { id: number; tracking_number: string; carrier: string; carrier_url?: string }>
 ) => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
-    mutationFn: async ({ id, tracking_number, carrier }) => {
-      const response = await api.post(`/api/admin/orders/${id}/tracking`, { tracking_number, carrier });
+    mutationFn: async ({ id, tracking_number, carrier, carrier_url }) => {
+      const response = await api.post(`/api/admin/orders/${id}/tracking`, { tracking_number, carrier, carrier_url });
       return response.data;
     },
     onSuccess: (_, variables) => {

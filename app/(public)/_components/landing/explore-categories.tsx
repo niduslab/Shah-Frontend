@@ -3,51 +3,92 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useScrollReveal } from "@/lib/hooks/useScrollReveal";
 
-const CATEGORIES = [
-  {
-    slug: "fitness-cardio",
-    name: "Cardio",
-    image: "/images/landing/explore-categories/image-1.png",
-    href: "/shop?category=fitness-cardio",
-  },
-  {
-    slug: "strength",
-    name: "Strength",
-    image: "/images/landing/explore-categories/image-3.png",
-    href: "/shop?category=strength",
-  },
-  {
-    slug: "free-weight",
-    name: "Free Weight",
-    image: "/images/landing/explore-categories/image-4.png",
-    href: "/shop?category=free-weight",
-  },
-  {
-    slug: "sports",
-    name: "Sports",
-    image: "/images/landing/explore-categories/image-2.png",
-    href: "/shop?category=sports",
-  },
-];
+interface Category {
+  id: string;
+  name: string;
+  image: string;
+  href: string;
+}
+
+interface ExploreCategoriesData {
+  enabled: boolean;
+  sectionTitle: string;
+  categories: Category[];
+}
+
+const DEFAULT_DATA: ExploreCategoriesData = {
+  enabled: true,
+  sectionTitle: "Explore Our Categories",
+  categories: [
+    {
+      id: "fitness-cardio",
+      name: "Cardio",
+      image: "/images/landing/explore-categories/image-1.png",
+      href: "/shop?category=fitness-cardio",
+    },
+    {
+      id: "strength",
+      name: "Strength",
+      image: "/images/landing/explore-categories/image-3.png",
+      href: "/shop?category=strength",
+    },
+    {
+      id: "free-weight",
+      name: "Free Weight",
+      image: "/images/landing/explore-categories/image-4.png",
+      href: "/shop?category=free-weight",
+    },
+    {
+      id: "sports",
+      name: "Sports",
+      image: "/images/landing/explore-categories/image-2.png",
+      href: "/shop?category=sports",
+    },
+  ],
+};
 
 export function ExploreCategories() {
   const sectionRef = useScrollReveal();
+  const [data, setData] = useState<ExploreCategoriesData>(DEFAULT_DATA);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/hero-sections");
+        if (response.ok) {
+          const result = await response.json();
+          if (result.exploreCategoriesSection) {
+            setData(result.exploreCategoriesSection);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching explore categories data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (!data.enabled) {
+    return null;
+  }
 
   return (
     <section ref={sectionRef as React.RefObject<HTMLElement>} className="w-full bg-white py-12">
       <div className="mx-auto w-full max-w-[1400px] px-4 md:px-6">
         <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           <h2 data-reveal className="text-3xl font-bold tracking-tight text-black">
-            Explore Our Categories
+            {data.sectionTitle}
           </h2>
         </div>
 
         <div data-reveal-stagger className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {CATEGORIES.map((category) => (
+          {data.categories.map((category) => (
             <Link
-              key={category.slug}
+              key={category.id}
               href={category.href}
               data-reveal
               className="category-card group relative block aspect-[4/5] overflow-hidden rounded-xs-lg bg-gray-100"

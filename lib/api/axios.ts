@@ -6,6 +6,7 @@ const API_URL = API_ORIGIN;
 const api = axios.create({
   baseURL: API_URL,
   withCredentials: true, // CRITICAL: This enables HTTP-only cookies
+  timeout: 15000, // Fail fast instead of holding a browser connection slot forever
   headers: {
     'Accept': 'application/json',
     'Content-Type': 'application/json',

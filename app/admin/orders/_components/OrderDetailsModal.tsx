@@ -2,7 +2,7 @@
 
 import { API_ORIGIN } from '@/lib/config/api';
 import { useState, useEffect } from 'react';
-import { X, Package, User, MapPin, CreditCard, Truck, FileText, Calendar, DollarSign, Wallet, Paperclip } from 'lucide-react';
+import { X, Package, User, MapPin, CreditCard, Truck, FileText, Calendar, DollarSign, Wallet, Paperclip, ExternalLink } from 'lucide-react';
 import { useAdminOrder } from '@/lib/hooks/admin/useAdminOrders';
 
 interface OrderDetailsModalProps {
@@ -191,6 +191,19 @@ export default function OrderDetailsModal({ isOpen, onClose, orderId }: OrderDet
                       <div>
                         <span className="text-gray-600">Carrier:</span>
                         <span className="ml-2 font-medium text-gray-900">{order.carrier}</span>
+                      </div>
+                    )}
+                    {order.carrier_url && (
+                      <div>
+                        <a
+                          href={order.carrier_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-1 inline-flex items-center gap-1.5 rounded-lg bg-[#FF6F00]/10 px-3 py-1.5 text-xs font-semibold text-[#FF6F00] transition-colors hover:bg-[#FF6F00]/20"
+                        >
+                          Track Live Shipment
+                          <ExternalLink className="h-3.5 w-3.5" />
+                        </a>
                       </div>
                     )}
                   </div>

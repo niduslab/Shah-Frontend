@@ -123,6 +123,37 @@ interface PerformanceFrameSection {
   frames: PerformanceFrame[];
 }
 
+interface ExploreCategory {
+  id: string;
+  name: string;
+  image: string;
+  href: string;
+}
+
+interface ExploreCategoriesSection {
+  id: string;
+  enabled: boolean;
+  sectionTitle: string;
+  categories: ExploreCategory[];
+}
+
+interface FlashDealSection {
+  id: string;
+  enabled: boolean;
+  backgroundImage: string;
+  badgeText: string;
+  heading: string;
+  subtext: string;
+  buttonText: string;
+  buttonUrl: string;
+  endsAt: string;
+  discountBadge: {
+    enabled: boolean;
+    text: string;
+    percentage: string;
+  };
+}
+
 export default function LandingPageManagement() {
   const [sections, setSections] = useState<HeroSection[]>([]);
   const [heroLayout, setHeroLayout] = useState<HeroLayout>("grid");
@@ -278,6 +309,53 @@ export default function LandingPageManagement() {
       { id: "frame-5", image: "/images/landing/performance-frame/image-5.png", alt: "Tennis" },
     ],
   });
+  const [exploreCategoriesSection, setExploreCategoriesSection] = useState<ExploreCategoriesSection>({
+    id: "explore-categories",
+    enabled: true,
+    sectionTitle: "Explore Our Categories",
+    categories: [
+      {
+        id: "fitness-cardio",
+        name: "Cardio",
+        image: "/images/landing/explore-categories/image-1.png",
+        href: "/shop?category=fitness-cardio",
+      },
+      {
+        id: "strength",
+        name: "Strength",
+        image: "/images/landing/explore-categories/image-3.png",
+        href: "/shop?category=strength",
+      },
+      {
+        id: "free-weight",
+        name: "Free Weight",
+        image: "/images/landing/explore-categories/image-4.png",
+        href: "/shop?category=free-weight",
+      },
+      {
+        id: "sports",
+        name: "Sports",
+        image: "/images/landing/explore-categories/image-2.png",
+        href: "/shop?category=sports",
+      },
+    ],
+  });
+  const [flashDealSection, setFlashDealSection] = useState<FlashDealSection>({
+    id: "flash-deal",
+    enabled: true,
+    backgroundImage: "/images/landing/flash-deal/flash-deal.png",
+    badgeText: "Flash Deal",
+    heading: "Grab it before\nit ends.",
+    subtext: "Up to 50% off on premium fitness equipment.",
+    buttonText: "Shop Now",
+    buttonUrl: "/shop?has_flash_deal=true",
+    endsAt: "",
+    discountBadge: {
+      enabled: true,
+      text: "Up to",
+      percentage: "40%",
+    },
+  });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [editingSection, setEditingSection] = useState<string | null>(null);
@@ -312,6 +390,12 @@ export default function LandingPageManagement() {
         }
         if (data.performanceFrameSection) {
           setPerformanceFrameSection(data.performanceFrameSection);
+        }
+        if (data.exploreCategoriesSection) {
+          setExploreCategoriesSection(data.exploreCategoriesSection);
+        }
+        if (data.flashDealSection) {
+          setFlashDealSection(data.flashDealSection);
         }
       } else {
         setSections(getDefaultSections());
@@ -532,6 +616,67 @@ export default function LandingPageManagement() {
     }
   };
 
+  const handleExploreCategoryImageUpload = async (categoryId: string, file: File, inputElement?: HTMLInputElement) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("folder", "landing/explore-categories");
+
+    try {
+      const response = await fetch("/api/admin/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const newCategories = exploreCategoriesSection.categories.map(category =>
+          category.id === categoryId ? { ...category, image: data.url } : category
+        );
+        setExploreCategoriesSection({
+          ...exploreCategoriesSection,
+          categories: newCategories,
+        });
+        if (inputElement) {
+          inputElement.value = "";
+        }
+      } else {
+        alert("Failed to upload image");
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      alert("Error uploading image");
+    }
+  };
+
+  const handleFlashDealImageUpload = async (file: File, inputElement?: HTMLInputElement) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("folder", "landing/flash-deal");
+
+    try {
+      const response = await fetch("/api/admin/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setFlashDealSection({
+          ...flashDealSection,
+          backgroundImage: data.url,
+        });
+        if (inputElement) {
+          inputElement.value = "";
+        }
+      } else {
+        alert("Failed to upload image");
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      alert("Error uploading image");
+    }
+  };
+
   const handleRdxGalleryImageUpload = async (itemId: string, file: File, inputElement?: HTMLInputElement) => {
     const formData = new FormData();
     formData.append("file", file);
@@ -667,7 +812,7 @@ export default function LandingPageManagement() {
       const response = await fetch("/api/admin/hero-sections", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ heroLayout, heroVideo, sections, preOrderSection, promoCardsSection, rdxGallerySection, successStoriesSection, performanceFrameSection }),
+        body: JSON.stringify({ heroLayout, heroVideo, sections, preOrderSection, promoCardsSection, rdxGallerySection, successStoriesSection, performanceFrameSection, exploreCategoriesSection, flashDealSection }),
       });
 
       if (response.ok) {
@@ -1314,6 +1459,124 @@ export default function LandingPageManagement() {
                   </div>
                 </div>
               ))}
+            </div>
+          )}
+        </div>
+
+        {/* Explore Categories Section Preview */}
+        <div className="mb-8 rounded-xl bg-white p-6 shadow-lg">
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <h2 className="text-xl font-semibold text-gray-900">Explore Categories Section Preview</h2>
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={exploreCategoriesSection.enabled}
+                onChange={(e) => setExploreCategoriesSection({ ...exploreCategoriesSection, enabled: e.target.checked })}
+                className="h-4 w-4 rounded border-gray-300 text-orange-500 focus:ring-orange-500"
+              />
+              <span className="text-sm text-gray-700">Enable Section</span>
+            </label>
+          </div>
+
+          {exploreCategoriesSection.enabled && (
+            <div>
+              <div className="mb-4">
+                <label className="mb-2 block text-sm font-medium text-gray-700">Section Title</label>
+                <input
+                  type="text"
+                  value={exploreCategoriesSection.sectionTitle}
+                  onChange={(e) => setExploreCategoriesSection({ ...exploreCategoriesSection, sectionTitle: e.target.value })}
+                  className="w-full max-w-md rounded-lg border border-gray-300 px-4 py-2 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                {exploreCategoriesSection.categories.map((category) => (
+                  <div
+                    key={category.id}
+                    className="group relative aspect-[4/5] cursor-pointer overflow-hidden rounded-xs-lg bg-gray-100"
+                    onClick={() => setEditingSection(`explore-category-${category.id}`)}
+                  >
+                    <Image
+                      src={category.image}
+                      alt={category.name}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-90" />
+
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all group-hover:bg-black/30 group-hover:opacity-100">
+                      <div className="flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-medium text-gray-900 shadow-lg">
+                        <Edit2 className="h-4 w-4" />
+                        Click to Edit
+                      </div>
+                    </div>
+
+                    <div className="absolute bottom-6 left-6 text-white">
+                      <h3 className="mb-2 text-2xl font-medium">{category.name}</h3>
+                      <div className="flex items-center gap-2 text-[16px] font-semibold text-primary">
+                        <span>Shop Now</span>
+                        <ArrowRight className="h-4 w-4" />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Flash Deal Section Preview */}
+        <div className="mb-8 rounded-xl bg-white p-6 shadow-lg">
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <h2 className="text-xl font-semibold text-gray-900">Flash Deal Section Preview</h2>
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={flashDealSection.enabled}
+                onChange={(e) => setFlashDealSection({ ...flashDealSection, enabled: e.target.checked })}
+                className="h-4 w-4 rounded border-gray-300 text-orange-500 focus:ring-orange-500"
+              />
+              <span className="text-sm text-gray-700">Enable Section</span>
+            </label>
+          </div>
+
+          {flashDealSection.enabled && (
+            <div
+              className="group relative h-[300px] w-full cursor-pointer overflow-hidden rounded-xs md:h-[400px]"
+              onClick={() => setEditingSection("flash-deal")}
+            >
+              {flashDealSection.backgroundImage && (
+                <Image
+                  src={flashDealSection.backgroundImage}
+                  alt="Flash Deal"
+                  fill
+                  className="object-cover object-center"
+                />
+              )}
+              <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent pointer-events-none" />
+
+              <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all group-hover:bg-black/30 group-hover:opacity-100">
+                <div className="flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-medium text-gray-900 shadow-lg">
+                  <Edit2 className="h-4 w-4" />
+                  Click to Edit
+                </div>
+              </div>
+
+              <div className="absolute inset-y-0 left-0 flex max-w-[600px] flex-col justify-center px-6 md:px-16 z-10">
+                <span className="mb-2 text-lg font-medium italic text-yellow-400">{flashDealSection.badgeText}</span>
+                <h2 className="mb-2 text-3xl font-bold leading-tight text-white md:text-4xl">
+                  {renderTitle(flashDealSection.heading)}
+                </h2>
+                <p className="text-sm text-gray-200 md:text-base">{flashDealSection.subtext}</p>
+              </div>
+
+              {flashDealSection.discountBadge.enabled && (
+                <div className="absolute right-6 top-6 flex h-20 w-20 flex-col items-center justify-center rounded-full bg-orange-600 text-white z-10">
+                  <span className="text-xs font-medium">{flashDealSection.discountBadge.text}</span>
+                  <span className="text-xl font-bold">{flashDealSection.discountBadge.percentage}</span>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -2199,6 +2462,270 @@ export default function LandingPageManagement() {
               </div>
             );
           })()}
+        </EditModal>
+
+        {/* Edit Modal for Explore Categories */}
+        <EditModal
+          isOpen={!!(editingSection?.startsWith("explore-category-"))}
+          onClose={() => setEditingSection(null)}
+          title={`Edit ${exploreCategoriesSection.categories.find(c => editingSection === `explore-category-${c.id}`)?.name || "Category"}`}
+        >
+          {editingSection?.startsWith("explore-category-") && (() => {
+            const categoryId = editingSection.replace("explore-category-", "");
+            const category = exploreCategoriesSection.categories.find(c => c.id === categoryId);
+
+            if (!category) return null;
+
+            return (
+              <div className="grid gap-6 md:grid-cols-2">
+                {/* Image Upload */}
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-gray-700">
+                    Category Image
+                  </label>
+                  <div className="relative h-64 overflow-hidden rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:border-orange-400">
+                    {category.image && (
+                      <Image
+                        src={category.image}
+                        alt={category.name}
+                        fill
+                        className="object-cover"
+                      />
+                    )}
+                    {!category.image && (
+                      <div className="flex h-full items-center justify-center">
+                        <Upload className="h-12 w-12 text-gray-400" />
+                      </div>
+                    )}
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all hover:bg-black/50 hover:opacity-100">
+                      <div className="text-center text-white">
+                        <Upload className="mx-auto h-8 w-8 mb-2" />
+                        <p className="text-sm font-medium">
+                          {category.image ? "Change Image" : "Upload Image"}
+                        </p>
+                      </div>
+                    </div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) handleExploreCategoryImageUpload(categoryId, file, e.target);
+                      }}
+                      className="absolute inset-0 z-10 cursor-pointer opacity-0"
+                    />
+                  </div>
+                </div>
+
+                {/* Content Fields */}
+                <div className="space-y-4">
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-gray-700">
+                      Name
+                    </label>
+                    <input
+                      type="text"
+                      value={category.name}
+                      onChange={(e) => {
+                        const newCategories = exploreCategoriesSection.categories.map(c =>
+                          c.id === categoryId ? { ...c, name: e.target.value } : c
+                        );
+                        setExploreCategoriesSection({ ...exploreCategoriesSection, categories: newCategories });
+                      }}
+                      className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-gray-700">
+                      Link URL
+                    </label>
+                    <input
+                      type="text"
+                      value={category.href}
+                      onChange={(e) => {
+                        const newCategories = exploreCategoriesSection.categories.map(c =>
+                          c.id === categoryId ? { ...c, href: e.target.value } : c
+                        );
+                        setExploreCategoriesSection({ ...exploreCategoriesSection, categories: newCategories });
+                      }}
+                      className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+                    />
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+        </EditModal>
+
+        {/* Edit Modal for Flash Deal Section */}
+        <EditModal
+          isOpen={editingSection === "flash-deal"}
+          onClose={() => setEditingSection(null)}
+          title="Edit Flash Deal Section"
+        >
+          <div className="grid gap-6 md:grid-cols-2">
+            {/* Image Upload */}
+            <div>
+              <label className="mb-2 block text-sm font-medium text-gray-700">
+                Background Image
+              </label>
+              <div className="relative h-64 overflow-hidden rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:border-orange-400">
+                {flashDealSection.backgroundImage && (
+                  <Image
+                    src={flashDealSection.backgroundImage}
+                    alt="Flash Deal"
+                    fill
+                    className="object-cover"
+                  />
+                )}
+                {!flashDealSection.backgroundImage && (
+                  <div className="flex h-full items-center justify-center">
+                    <Upload className="h-12 w-12 text-gray-400" />
+                  </div>
+                )}
+                <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all hover:bg-black/50 hover:opacity-100">
+                  <div className="text-center text-white">
+                    <Upload className="mx-auto h-8 w-8 mb-2" />
+                    <p className="text-sm font-medium">
+                      {flashDealSection.backgroundImage ? "Change Image" : "Upload Image"}
+                    </p>
+                  </div>
+                </div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) handleFlashDealImageUpload(file, e.target);
+                  }}
+                  className="absolute inset-0 z-10 cursor-pointer opacity-0"
+                />
+              </div>
+            </div>
+
+            {/* Content Fields */}
+            <div className="space-y-4">
+              <div>
+                <label className="mb-2 block text-sm font-medium text-gray-700">
+                  Badge Text
+                </label>
+                <input
+                  type="text"
+                  value={flashDealSection.badgeText}
+                  onChange={(e) => setFlashDealSection({ ...flashDealSection, badgeText: e.target.value })}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+                />
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-medium text-gray-700">
+                  Heading (use a new line to break text)
+                </label>
+                <textarea
+                  value={flashDealSection.heading}
+                  onChange={(e) => setFlashDealSection({ ...flashDealSection, heading: e.target.value })}
+                  rows={2}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+                />
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-medium text-gray-700">
+                  Subtext
+                </label>
+                <textarea
+                  value={flashDealSection.subtext}
+                  onChange={(e) => setFlashDealSection({ ...flashDealSection, subtext: e.target.value })}
+                  rows={2}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+                />
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-medium text-gray-700">
+                  Button Text
+                </label>
+                <input
+                  type="text"
+                  value={flashDealSection.buttonText}
+                  onChange={(e) => setFlashDealSection({ ...flashDealSection, buttonText: e.target.value })}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+                />
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-medium text-gray-700">
+                  Button URL
+                </label>
+                <input
+                  type="text"
+                  value={flashDealSection.buttonUrl}
+                  onChange={(e) => setFlashDealSection({ ...flashDealSection, buttonUrl: e.target.value })}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+                />
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-medium text-gray-700">
+                  Countdown Ends At
+                </label>
+                <input
+                  type="datetime-local"
+                  value={flashDealSection.endsAt ? flashDealSection.endsAt.slice(0, 16) : ""}
+                  onChange={(e) => setFlashDealSection({ ...flashDealSection, endsAt: e.target.value ? new Date(e.target.value).toISOString() : "" })}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+                />
+                <p className="mt-1 text-xs text-gray-500">Leave empty to hide the countdown timer.</p>
+              </div>
+
+              {/* Discount Badge Settings */}
+              <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
+                <div className="mb-3 flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={flashDealSection.discountBadge.enabled}
+                    onChange={(e) => setFlashDealSection({
+                      ...flashDealSection,
+                      discountBadge: { ...flashDealSection.discountBadge, enabled: e.target.checked },
+                    })}
+                    className="h-4 w-4 rounded border-gray-300 text-orange-500 focus:ring-orange-500"
+                  />
+                  <label className="text-sm font-medium text-gray-700">
+                    Show Discount Badge
+                  </label>
+                </div>
+                {flashDealSection.discountBadge.enabled && (
+                  <div className="space-y-3">
+                    <div>
+                      <label className="mb-1 block text-xs text-gray-600">Badge Text</label>
+                      <input
+                        type="text"
+                        value={flashDealSection.discountBadge.text}
+                        onChange={(e) => setFlashDealSection({
+                          ...flashDealSection,
+                          discountBadge: { ...flashDealSection.discountBadge, text: e.target.value },
+                        })}
+                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-1 block text-xs text-gray-600">Percentage</label>
+                      <input
+                        type="text"
+                        value={flashDealSection.discountBadge.percentage}
+                        onChange={(e) => setFlashDealSection({
+                          ...flashDealSection,
+                          discountBadge: { ...flashDealSection.discountBadge, percentage: e.target.value },
+                        })}
+                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
         </EditModal>
 
         {/* Edit Modal for RDX Gallery Items */}

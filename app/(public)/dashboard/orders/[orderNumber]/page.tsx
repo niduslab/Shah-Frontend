@@ -22,7 +22,8 @@ import {
   ShoppingBag,
   Star,
   MessageSquare,
-  Loader2
+  Loader2,
+  ExternalLink
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getPrimaryImageUrl } from '@/lib/utils/image';
@@ -329,12 +330,27 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
 
         {order.tracking_number && (
           <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-            <div className="flex items-center">
-              <Truck className="w-5 h-5 text-blue-600 mr-2" />
-              <div>
-                <p className="text-sm font-medium text-blue-900">Tracking Number</p>
-                <p className="text-blue-700">{order.tracking_number}</p>
+            <div className="flex items-center justify-between flex-wrap gap-3">
+              <div className="flex items-center">
+                <Truck className="w-5 h-5 text-blue-600 mr-2" />
+                <div>
+                  <p className="text-sm font-medium text-blue-900">
+                    Tracking Number {order.carrier && <span className="font-normal text-blue-700">· {order.carrier}</span>}
+                  </p>
+                  <p className="text-blue-700">{order.tracking_number}</p>
+                </div>
               </div>
+              {order.carrier_url && (
+                <a
+                  href={order.carrier_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+                >
+                  Track Live Shipment
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+              )}
             </div>
           </div>
         )}

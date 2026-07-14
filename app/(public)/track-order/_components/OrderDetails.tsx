@@ -1,4 +1,4 @@
-import { Calendar, MapPin, Truck } from 'lucide-react';
+import { Calendar, MapPin, Truck, ExternalLink } from 'lucide-react';
 
 interface OrderDetailsProps {
   trackingData: {
@@ -6,6 +6,8 @@ interface OrderDetailsProps {
     status: string;
     shipping_method: string;
     tracking_number: string;
+    carrier?: string | null;
+    carrier_url?: string | null;
     created_at: string;
     updated_at: string;
   };
@@ -79,10 +81,23 @@ export default function OrderDetails({ trackingData }: OrderDetailsProps) {
               <MapPin className="h-5 w-5 text-green-600" />
             </div>
             <div className="flex-1">
-              <p className="text-xs font-medium text-gray-600 mb-1">Tracking Number</p>
+              <p className="text-xs font-medium text-gray-600 mb-1">
+                Tracking Number {trackingData.carrier && <span className="font-normal text-gray-500">· {trackingData.carrier}</span>}
+              </p>
               <p className="text-sm font-semibold text-gray-900 font-mono break-all">
                 {trackingData.tracking_number || 'Not available yet'}
               </p>
+              {trackingData.carrier_url && (
+                <a
+                  href={trackingData.carrier_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-[#FF6F00] hover:underline"
+                >
+                  Track Live Shipment
+                  <ExternalLink className="h-3 w-3" />
+                </a>
+              )}
             </div>
           </div>
         </div>
