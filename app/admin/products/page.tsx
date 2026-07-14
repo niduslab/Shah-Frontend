@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Plus, Edit2, Trash2, Search, Package, Image as ImageIcon, Upload, X } from 'lucide-react';
 import Link from 'next/link';
 import Pagination from '@/components/ui/Pagination';
@@ -48,13 +48,11 @@ function ProductsPageContent() {
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearch(searchQuery);
-      setCurrentPage(1);
-    }, 400);
-    return () => clearTimeout(timer);
-  }, [searchQuery]);
+  const runSearch = () => {
+    setDebouncedSearch(searchQuery);
+    setCurrentPage(1);
+  };
+
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive' | 'draft'>('all');
   const [perPage, setPerPage] = useState(20);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -156,23 +154,38 @@ function ProductsPageContent() {
         <div className="mb-6 rounded-2xl bg-white p-5 shadow-lg ring-1 ring-gray-200">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             {/* Search */}
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search by name, SKU, category..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-xl border border-gray-300 bg-gray-50 py-2.5 pl-11 pr-10 text-sm transition-all focus:border-[#FF6F00] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
-              />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-0.5 text-gray-400 hover:bg-gray-200 hover:text-gray-600 transition-all"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              )}
+            <div className="relative flex flex-1 max-w-md gap-2">
+              <div className="relative flex-1">
+                <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search by name, SKU, category..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') runSearch();
+                  }}
+                  className="w-full rounded-xl border border-gray-300 bg-gray-50 py-2.5 pl-11 pr-10 text-sm transition-all focus:border-[#FF6F00] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF6F00]/20"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => {
+                      setSearchQuery('');
+                      setDebouncedSearch('');
+                      setCurrentPage(1);
+                    }}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-0.5 text-gray-400 hover:bg-gray-200 hover:text-gray-600 transition-all"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
+              <button
+                onClick={runSearch}
+                className="flex items-center justify-center rounded-xl bg-gradient-to-r from-[#FF6F00] to-[#E65100] px-4 py-2.5 text-sm font-medium text-white shadow-lg shadow-orange-500/30 transition-all hover:shadow-xl hover:shadow-orange-500/40 focus:outline-none focus:ring-2 focus:ring-[#FF6F00] focus:ring-offset-2"
+              >
+                Search
+              </button>
             </div>
 
             <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
@@ -235,16 +248,22 @@ function ProductsPageContent() {
         {/* Products Table */}
         <div className="rounded-2xl bg-white shadow-lg ring-1 ring-gray-200">
           {/* Result count + active search indicator */}
-          {debouncedSearch && !isFetching && (
+          {debouncedSearch && (
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between border-b border-gray-100 px-6 py-3">
               <p className="text-sm text-gray-500">
-                {products.length === 0
+                {isFetching
+                  ? <>Searching for <span className="font-medium text-gray-900">"{debouncedSearch}"</span>…</>
+                  : products.length === 0
                   ? <>No results for <span className="font-medium text-gray-900">"{debouncedSearch}"</span></>
                   : <>{paginationData?.total ?? products.length} result{(paginationData?.total ?? products.length) !== 1 ? 's' : ''} for <span className="font-medium text-gray-900">"{debouncedSearch}"</span></>
                 }
               </p>
               <button
-                onClick={() => setSearchQuery('')}
+                onClick={() => {
+                  setSearchQuery('');
+                  setDebouncedSearch('');
+                  setCurrentPage(1);
+                }}
                 className="text-xs font-medium text-[#FF6F00] hover:underline"
               >
                 Clear search
@@ -252,8 +271,8 @@ function ProductsPageContent() {
             </div>
           )}
 
-          {/* Skeleton rows while fetching */}
-          {isFetching ? (
+          {/* Skeleton rows only on the very first load; subsequent fetches dim the existing table instead of replacing it */}
+          {isFetching && !productsData ? (
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="border-b border-gray-200 bg-gray-50">
@@ -309,7 +328,7 @@ function ProductsPageContent() {
               )}
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            <div className={`overflow-x-auto transition-opacity ${isFetching ? 'opacity-50' : 'opacity-100'}`}>
               <table className="w-full">
                 <thead className="border-b border-gray-200 bg-gray-50">
                   <tr>
