@@ -1,18 +1,19 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { 
-  Bold, 
-  Italic, 
-  List, 
-  ListOrdered, 
-  Heading2, 
+import {
+  Bold,
+  Italic,
+  List,
+  ListOrdered,
+  Heading2,
   Heading3,
   Link2,
   ImageIcon,
   Table as TableIcon,
   Code,
-  FileCode
+  FileCode,
+  ChevronDown
 } from 'lucide-react';
 import './editor-styles.css';
 
@@ -24,7 +25,9 @@ interface RichTextEditorProps {
 
 export default function RichTextEditor({ value, onChange }: RichTextEditorProps) {
   const [isHtmlMode, setIsHtmlMode] = useState(false);
+  const [showImageMenu, setShowImageMenu] = useState(false);
   const editorRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const isTypingRef = useRef(false);
 
   // Only update editor content when value changes externally (not from typing)
@@ -132,11 +135,38 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
     }
   };
 
-  const addImage = () => {
+  const addImageFromUrl = () => {
     const url = window.prompt('Enter image URL:');
     if (url) {
       execCommand('insertImage', url);
     }
+    setShowImageMenu(false);
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    files.forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const base64String = event.target?.result as string;
+        if (base64String) {
+          execCommand('insertImage', base64String);
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+    setShowImageMenu(false);
+  };
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
   };
 
   const addLink = () => {
@@ -172,6 +202,16 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
     <div className="border border-gray-300 rounded-xl overflow-hidden">
       {/* Toolbar */}
       <div className="bg-gray-50 border-b border-gray-300 p-2 flex flex-wrap gap-1">
+        {/* File Input */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={handleFileSelect}
+          className="hidden"
+        />
+
         {/* Text Formatting */}
         <button
           type="button"
@@ -249,14 +289,38 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
         >
           <Link2 className="h-4 w-4" />
         </button>
-        <button
-          type="button"
-          onClick={addImage}
-          className="p-2 rounded hover:bg-gray-200 transition-colors"
-          title="Add Image"
-        >
-          <ImageIcon className="h-4 w-4" />
-        </button>
+
+        {/* Image Dropdown */}
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => setShowImageMenu(!showImageMenu)}
+            className="flex items-center gap-1 p-2 rounded hover:bg-gray-200 transition-colors"
+            title="Add Image"
+          >
+            <ImageIcon className="h-4 w-4" />
+            <ChevronDown className="h-3 w-3" />
+          </button>
+          {showImageMenu && (
+            <div className="absolute top-full left-0 mt-1 bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+              <button
+                type="button"
+                onClick={handleUploadClick}
+                className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-sm whitespace-nowrap"
+              >
+                Upload from PC
+              </button>
+              <button
+                type="button"
+                onClick={addImageFromUrl}
+                className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-sm whitespace-nowrap"
+              >
+                Add Image URL
+              </button>
+            </div>
+          )}
+        </div>
+
         <button
           type="button"
           onClick={insertTable}

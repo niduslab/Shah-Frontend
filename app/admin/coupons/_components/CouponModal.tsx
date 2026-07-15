@@ -26,6 +26,7 @@ export default function CouponModal({ isOpen, onClose, coupon, onSubmit }: Coupo
     starts_at: '',
     expires_at: '',
     is_active: true,
+    is_public: true,
     applies_to: 'all' as 'all' | 'products' | 'brands' | 'categories',
   });
 
@@ -61,6 +62,7 @@ export default function CouponModal({ isOpen, onClose, coupon, onSubmit }: Coupo
         starts_at: coupon.starts_at ? coupon.starts_at.slice(0, 16) : '',
         expires_at: coupon.expires_at ? coupon.expires_at.slice(0, 16) : '',
         is_active: coupon.is_active ?? true,
+        is_public: coupon.is_public ?? true,
         applies_to: coupon.applies_to || 'all',
       });
       
@@ -90,6 +92,7 @@ export default function CouponModal({ isOpen, onClose, coupon, onSubmit }: Coupo
         starts_at: '',
         expires_at: '',
         is_active: true,
+        is_public: true,
         applies_to: 'all',
       });
       setSelectedProducts([]);
@@ -114,6 +117,7 @@ export default function CouponModal({ isOpen, onClose, coupon, onSubmit }: Coupo
         starts_at: formData.starts_at || undefined,
         expires_at: formData.expires_at || undefined,
         is_active: formData.is_active,
+        is_public: formData.is_public,
         once_per_customer: formData.once_per_customer,
       };
 
@@ -555,6 +559,25 @@ export default function CouponModal({ isOpen, onClose, coupon, onSubmit }: Coupo
             <label htmlFor="is_active" className="text-sm font-medium text-gray-700">
               Active
             </label>
+          </div>
+
+          {/* Visibility */}
+          <div>
+            <div className="flex items-center gap-3">
+              <input
+                type="checkbox"
+                id="is_public"
+                checked={formData.is_public}
+                onChange={(e) => setFormData({ ...formData, is_public: e.target.checked })}
+                className="h-4 w-4 rounded border-gray-300 text-[#FF6F00] focus:ring-2 focus:ring-[#FF6F00]/20"
+              />
+              <label htmlFor="is_public" className="text-sm font-medium text-gray-700">
+                Show on public coupons list
+              </label>
+            </div>
+            <p className="mt-1 text-xs text-gray-500 pl-7">
+              Turn this off to create a secret coupon — it won&apos;t appear on the cart/checkout page, but customers can still redeem it if they enter the code manually.
+            </p>
           </div>
 
           {/* Actions */}

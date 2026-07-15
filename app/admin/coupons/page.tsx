@@ -30,6 +30,7 @@ interface Coupon {
   starts_at: string;
   expires_at: string;
   is_active: boolean;
+  is_public?: boolean;
   products?: any[];
   brands?: any[];
   categories?: any[];
@@ -293,6 +294,11 @@ export default function CouponsPage() {
                         </button>
                         {getStatusBadge(coupon)}
                         {getTypeBadge(coupon)}
+                        {coupon.is_public === false && (
+                          <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-amber-100 text-amber-700 ring-1 ring-amber-600/20">
+                            Secret
+                          </span>
+                        )}
                       </div>
 
                       {coupon.name && (

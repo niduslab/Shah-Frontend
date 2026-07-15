@@ -14,6 +14,7 @@ interface CouponData {
   starts_at?: string;
   expires_at?: string;
   is_active?: boolean;
+  is_public?: boolean;
   product_ids?: number[];
   brand_ids?: number[];
   category_ids?: number[];
