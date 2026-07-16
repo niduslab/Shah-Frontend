@@ -63,7 +63,7 @@ api.interceptors.response.use(
 
       try {
         console.log('CSRF token mismatch (419), fetching new token...');
-        
+
         // Get a fresh CSRF token using raw axios to avoid interceptor loop
         await axios.get(`${API_URL}/sanctum/csrf-cookie`, {
           withCredentials: true,
@@ -77,7 +77,7 @@ api.interceptors.response.use(
         if (newToken) {
           originalRequest.headers['X-XSRF-TOKEN'] = decodeURIComponent(newToken);
           console.log('Retrying request with new CSRF token');
-          
+
           // Retry the original request with the new token
           return api(originalRequest);
         } else {
@@ -90,22 +90,54 @@ api.interceptors.response.use(
       }
     }
 
-    // Handle 401 Unauthorized - session expired
+    // Handle 401 Unauthorized - session expired or unauthenticated
     if (error.response?.status === 401) {
-      // Suppress console errors for expected 401s on auth check
+      // Suppress console errors for expected 401s on auth check endpoint
       if (originalRequest.url?.includes('/api/auth/user')) {
-        // Silently reject - this is expected for guest users
         return Promise.reject({ ...error, silent: true });
       }
 
-      // For other 401 errors, clear token - NO REDIRECT
       if (typeof window !== 'undefined') {
-        const token = localStorage.getItem('token');
-        if (token) {
+        // Check if user was actually logged in before this 401
+        const storedUser = localStorage.getItem('user');
+        const hasAuthToken = localStorage.getItem('token');
+        const wasLoggedIn = storedUser || hasAuthToken;
+
+        if (wasLoggedIn) {
+          // User was logged in but session expired or became invalid
+          console.log('Session expired or invalid - clearing cache');
+
+          // Clear all auth-related data from localStorage
           localStorage.removeItem('token');
-          // REMOVED: No more admin redirect
+          localStorage.removeItem('user');
+
+          // Clear all cookies by setting them to expire
+          document.cookie.split(";").forEach((c) => {
+            const name = c.split("=")[0].trim();
+            if (name) {
+              document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+            }
+          });
+
+          // Dispatch custom event for global auth state update and redirect
+          window.dispatchEvent(
+            new CustomEvent('unauthenticated', {
+              detail: {
+                status: 401,
+                reason: 'session_expired',
+                wasLoggedIn: true
+              }
+            })
+          );
+        } else {
+          // User was never logged in - just a regular unauthenticated request
+          console.log('Unauthenticated request - user was not logged in');
+          error.isGuest = true;
         }
       }
+
+      // Mark this error so components know to handle 401 differently
+      error.isUnauthenticated = true;
     }
 
     return Promise.reject(error);

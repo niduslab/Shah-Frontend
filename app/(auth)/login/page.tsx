@@ -26,14 +26,16 @@ function LoginForm() {
   // Get redirect URL from query params or default to home
   const redirectTo = searchParams.get('redirect') || '/';
 
-  // Load remembered email on mount
+  // Load remembered email on mount (but not if coming from session expiration)
   useEffect(() => {
     const rememberedEmail = localStorage.getItem('rememberEmail');
-    if (rememberedEmail) {
+    const sessionExpired = searchParams.get('sessionExpired') === 'true';
+
+    if (rememberedEmail && !sessionExpired) {
       setEmail(rememberedEmail);
       setRememberMe(true);
     }
-  }, []);
+  }, [searchParams]);
 
   // Redirect if already logged in (when page loads) - but NOT during form submission
   useEffect(() => {

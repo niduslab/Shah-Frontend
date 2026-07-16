@@ -1,11 +1,11 @@
 "use client";
 
 import { API_ORIGIN } from '@/lib/config/api';
-import { Search, ShoppingBag, User, ChevronDown, Menu, X, ChevronRight, LogOut, Settings, Heart } from "lucide-react";
+import { Search, ShoppingBag, User, ChevronDown, Menu, X, ChevronRight, LogOut, Settings, Heart, Loader } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect } from "react";
-import { usePathname } from "next/navigation";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useCart } from "@/lib/context/CartContext";
 import { useAuth } from "@/lib/context/AuthContext";
@@ -18,6 +18,8 @@ import { SportsMegaMenu } from "./sports-mega-menu";
 import { BrandsMegaMenu } from "./brands-mega-menu";
 import { FloorSolutionsMegaMenu } from "./floor-solutions-mega-menu";
 import { UserNotificationBell } from "./UserNotificationBell";
+import api from "@/lib/api/axios";
+import { getImageUrl, getPlaceholderImage } from "@/lib/utils/image";
 
 export function NavBar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -27,7 +29,16 @@ export function NavBar() {
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileSearchQuery, setMobileSearchQuery] = useState("");
   const [activeMegaMenu, setActiveMegaMenu] = useState<string | null>(null);
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [showSearchResults, setShowSearchResults] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  const [mobileSearchResults, setMobileSearchResults] = useState<any[]>([]);
+  const [showMobileSearchResults, setShowMobileSearchResults] = useState(false);
+  const [isMobileSearching, setIsMobileSearching] = useState(false);
+  const searchResultsRef = useRef<HTMLDivElement>(null);
+  const mobileSearchResultsRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const router = useRouter();
   const { getCartCount } = useCart();
   const { user, logout, loading } = useAuth();
   const { data: wishlistData } = useWishlist();
@@ -79,18 +90,24 @@ export function NavBar() {
     setActiveMegaMenu(null);
   }, [pathname]);
 
-  // Close user menu when clicking outside
+  // Close user menu and search results when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Element;
       if (showUserMenu && !target.closest('.user-menu-container')) {
         setShowUserMenu(false);
       }
+      if (showSearchResults && !target.closest('.search-results-container')) {
+        setShowSearchResults(false);
+      }
+      if (showMobileSearchResults && !target.closest('.mobile-search-results-container')) {
+        setShowMobileSearchResults(false);
+      }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [showUserMenu]);
+  }, [showUserMenu, showSearchResults, showMobileSearchResults]);
 
   // Prevent body scroll when menu is open
   useEffect(() => {
@@ -145,9 +162,62 @@ export function NavBar() {
     return user.user_type === 'admin' ? '/admin' : '/dashboard';
   };
 
+  const searchProducts = useCallback(async (query: string, isMobile: boolean = false) => {
+    if (query.trim().length < 1) {
+      if (isMobile) {
+        setMobileSearchResults([]);
+        setShowMobileSearchResults(false);
+      } else {
+        setSearchResults([]);
+        setShowSearchResults(false);
+      }
+      return;
+    }
+
+    try {
+      if (isMobile) {
+        setIsMobileSearching(true);
+      } else {
+        setIsSearching(true);
+      }
+
+      const response = await api.get('/api/catalog/products', {
+        params: {
+          search: query.trim(),
+          per_page: 8,
+        },
+      });
+
+      const products = response.data?.data?.data || [];
+
+      if (isMobile) {
+        setMobileSearchResults(products);
+        setShowMobileSearchResults(products.length > 0);
+      } else {
+        setSearchResults(products);
+        setShowSearchResults(products.length > 0);
+      }
+    } catch (error) {
+      console.error('Search error:', error);
+      if (isMobile) {
+        setMobileSearchResults([]);
+      } else {
+        setSearchResults([]);
+      }
+    } finally {
+      if (isMobile) {
+        setIsMobileSearching(false);
+      } else {
+        setIsSearching(false);
+      }
+    }
+  }, []);
+
   const handleDesktopSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
+      setShowSearchResults(false);
+      setSearchResults([]);
       window.location.href = `/shop?search=${encodeURIComponent(searchQuery.trim())}`;
     }
   };
@@ -156,8 +226,21 @@ export function NavBar() {
     e.preventDefault();
     if (mobileSearchQuery.trim()) {
       setIsMobileMenuOpen(false);
+      setShowMobileSearchResults(false);
+      setMobileSearchResults([]);
       window.location.href = `/shop?search=${encodeURIComponent(mobileSearchQuery.trim())}`;
     }
+  };
+
+  const handleProductClick = (productSlug: string, isMobile: boolean = false) => {
+    setShowSearchResults(false);
+    setSearchResults([]);
+    setShowMobileSearchResults(false);
+    setMobileSearchResults([]);
+    if (isMobile) {
+      setIsMobileMenuOpen(false);
+    }
+    router.push(`/product/${productSlug}`);
   };
 
   return (
@@ -298,18 +381,62 @@ export function NavBar() {
         {/* Right Section: Search & Icons */}
         <div className="flex items-center gap-4 md:gap-6">
           {/* Search Bar (Desktop) */}
-          <form onSubmit={handleDesktopSearch} className="relative hidden w-[100px] xl:w-[300px] lg:block">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search Products"
-              className="h-10 w-full rounded-xs border-none bg-white px-4 py-2 text-sm outline-none placeholder:text-gray-500 text-black"
-            />
-            <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2">
-              <Search className="h-4 w-4 text-gray-500 hover:text-gray-700" />
-            </button>
-          </form>
+          <div className="relative hidden w-[100px] xl:w-[300px] lg:block search-results-container" ref={searchResultsRef}>
+            <form onSubmit={handleDesktopSearch} className="relative">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  searchProducts(e.target.value, false);
+                }}
+                onFocus={() => searchQuery && setShowSearchResults(true)}
+                placeholder="Search Products"
+                className="h-10 w-full rounded-xs border-none bg-white px-4 py-2 text-sm outline-none placeholder:text-gray-500 text-black"
+              />
+              <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2">
+                {isSearching ? (
+                  <Loader className="h-4 w-4 text-gray-500 animate-spin" />
+                ) : (
+                  <Search className="h-4 w-4 text-gray-500 hover:text-gray-700" />
+                )}
+              </button>
+            </form>
+
+            {/* Search Results Dropdown */}
+            {showSearchResults && searchResults.length > 0 && (
+              <div className="absolute top-full left-0 right-0 mt-1 max-h-80 overflow-y-auto bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                {searchResults.map((product) => {
+                  const imageUrl = product.images && product.images.length > 0
+                    ? getImageUrl(typeof product.images[0] === 'string' ? product.images[0] : product.images[0]?.image_path || product.images[0]?.full_url)
+                    : getPlaceholderImage(product.name);
+
+                  return (
+                    <button
+                      key={product.id}
+                      onClick={() => handleProductClick(product.slug)}
+                      className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 border-b last:border-b-0 transition-colors text-left"
+                    >
+                      <div className="h-12 w-12 flex-shrink-0 bg-gray-100 rounded flex items-center justify-center overflow-hidden">
+                        <img
+                          src={imageUrl}
+                          alt={product.name}
+                          className="h-full w-full object-contain p-1"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = getPlaceholderImage(product.name);
+                          }}
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-medium text-gray-900 truncate">{product.name}</div>
+                        <div className="text-xs text-gray-500">TK {product.price}</div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
 
           {/* Icons */}
           <div className="flex items-center gap-4 text-sm font-medium md:gap-6">
@@ -438,18 +565,62 @@ export function NavBar() {
           </div>
 
           {/* Search Mobile */}
-          <form onSubmit={handleMobileSearch} className="relative mb-3">
-            <input
-              type="text"
-              value={mobileSearchQuery}
-              onChange={(e) => setMobileSearchQuery(e.target.value)}
-              placeholder="Search Products..."
-              className="h-10 w-full rounded-md border border-gray-200 bg-gray-50 px-4 py-2 text-sm outline-none focus:border-[#00072D] transition-colors placeholder:text-gray-400"
-            />
-            <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2">
-              <Search className="h-4 w-4 text-gray-400 hover:text-gray-600" />
-            </button>
-          </form>
+          <div className="relative mb-3 mobile-search-results-container" ref={mobileSearchResultsRef}>
+            <form onSubmit={handleMobileSearch} className="relative">
+              <input
+                type="text"
+                value={mobileSearchQuery}
+                onChange={(e) => {
+                  setMobileSearchQuery(e.target.value);
+                  searchProducts(e.target.value, true);
+                }}
+                onFocus={() => mobileSearchQuery && setShowMobileSearchResults(true)}
+                placeholder="Search Products..."
+                className="h-10 w-full rounded-md border border-gray-200 bg-gray-50 px-4 py-2 text-sm outline-none focus:border-[#00072D] transition-colors placeholder:text-gray-400"
+              />
+              <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2">
+                {isMobileSearching ? (
+                  <Loader className="h-4 w-4 text-gray-400 animate-spin" />
+                ) : (
+                  <Search className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                )}
+              </button>
+            </form>
+
+            {/* Mobile Search Results Dropdown */}
+            {showMobileSearchResults && mobileSearchResults.length > 0 && (
+              <div className="absolute top-full left-0 right-0 mt-2 max-h-80 overflow-y-auto bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                {mobileSearchResults.map((product) => {
+                  const imageUrl = product.images && product.images.length > 0
+                    ? getImageUrl(typeof product.images[0] === 'string' ? product.images[0] : product.images[0]?.image_path || product.images[0]?.full_url)
+                    : getPlaceholderImage(product.name);
+
+                  return (
+                    <button
+                      key={product.id}
+                      onClick={() => handleProductClick(product.slug, true)}
+                      className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 border-b last:border-b-0 transition-colors text-left"
+                    >
+                      <div className="h-12 w-12 flex-shrink-0 bg-gray-100 rounded flex items-center justify-center overflow-hidden">
+                        <img
+                          src={imageUrl}
+                          alt={product.name}
+                          className="h-full w-full object-contain p-1"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = getPlaceholderImage(product.name);
+                          }}
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-medium text-gray-900 truncate">{product.name}</div>
+                        <div className="text-xs text-gray-500">TK {product.price}</div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
 
           {/* Links */}
           <div className="flex flex-col gap-2 flex-1">

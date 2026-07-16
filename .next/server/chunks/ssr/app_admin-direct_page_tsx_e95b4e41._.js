@@ -1,0 +1,3 @@
+module.exports=[462012,a=>{"use strict";var b=a.i(187924),c=a.i(837118),d=a.i(50944),e=a.i(572131);function f(){let{user:a,loading:f}=(0,c.useAuth)(),g=(0,d.useRouter)();return(0,e.useEffect)(()=>{f||(a&&"admin"===a.user_type?window.location.href="/admin":a?g.push("/dashboard"):g.push("/login"))},[a,f,g]),(0,b.jsx)("div",{className:"flex items-center justify-center min-h-screen",children:(0,b.jsxs)("div",{className:"text-center",children:[(0,b.jsx)("div",{className:"animate-spin rounded-full h-12 w-12 border-b-2 border-[#00072D] mx-auto mb-4"}),(0,b.jsx)("p",{children:"Checking admin access..."})]})})}a.s(["default",()=>f])}];
+
+//# sourceMappingURL=app_admin-direct_page_tsx_e95b4e41._.js.map

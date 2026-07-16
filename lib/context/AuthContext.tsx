@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, useRef, ReactNode, useCallback, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import authService, { User, RegisterData } from '../services/authService';
 
 interface AuthContextType {
@@ -19,6 +20,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const isInitialized = useRef(false);
   const userRef = useRef<User | null>(null);
+  const router = useRouter();
 
   const logout = useCallback(async () => {
     try {
@@ -43,14 +45,57 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const response = await authService.getUser();
       setUser(response.data);
       userRef.current = response.data;
-    } catch {
-      setUser(null);
-      userRef.current = null;
+    } catch (error: any) {
+      // Handle 401 errors from auth check
+      if (error?.response?.status === 401 || error?.silent) {
+        // Session expired or invalid - user was logged in but now isn't
+        const wasLoggedIn = !!userRef.current;
+        if (wasLoggedIn) {
+          console.log('Session check failed - session expired');
+          setUser(null);
+          userRef.current = null;
+
+          // Clear cache
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+
+          // Redirect to login with current path and sessionExpired flag
+          const currentPath = typeof window !== 'undefined' ? window.location.pathname : '/';
+          const loginUrl = '/auth/login?redirect=' + encodeURIComponent(currentPath) + '&sessionExpired=true';
+          router.push(loginUrl);
+        }
+      } else {
+        setUser(null);
+        userRef.current = null;
+      }
     } finally {
       isCheckingAuthRef.current = false;
       if (showLoading) setLoading(false);
     }
-  }, []);
+  }, [router]);
+
+  // Handle global unauthenticated event (401 responses)
+  useEffect(() => {
+    const handleUnauthenticated = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      const { reason, wasLoggedIn } = customEvent.detail || {};
+
+      if (wasLoggedIn && reason === 'session_expired') {
+        // Session expired - user was logged in but now isn't
+        console.log('Session expired - redirecting to login');
+        setUser(null);
+        userRef.current = null;
+
+        // Redirect with sessionExpired flag so login page knows not to auto-fill email
+        const currentPath = typeof window !== 'undefined' ? window.location.pathname : '/';
+        const loginUrl = '/auth/login?redirect=' + encodeURIComponent(currentPath) + '&sessionExpired=true';
+        router.push(loginUrl);
+      }
+    };
+
+    window.addEventListener('unauthenticated', handleUnauthenticated);
+    return () => window.removeEventListener('unauthenticated', handleUnauthenticated);
+  }, [router]);
 
   // Periodic session check (every 5 minutes) — silent, no loading flash
   useEffect(() => {
