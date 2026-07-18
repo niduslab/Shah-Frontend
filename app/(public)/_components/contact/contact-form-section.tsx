@@ -35,7 +35,19 @@ export function ContactFormSection() {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { id, value } = e.target;
-    setFormData((prev) => ({ ...prev, [id]: value }));
+    let sanitizedValue = value;
+
+    // Validate name fields - only allow letters, spaces, hyphens, and apostrophes
+    if (id === "firstName" || id === "lastName") {
+      sanitizedValue = value.replace(/[^a-zA-Z\s'-]/g, "");
+    }
+
+    // Validate phone field - only allow numbers, spaces, +, -, (, )
+    if (id === "phone") {
+      sanitizedValue = value.replace(/[^0-9+\-\s()]/g, "");
+    }
+
+    setFormData((prev) => ({ ...prev, [id]: sanitizedValue }));
     if (errors[id]) {
       setErrors((prev) => ({ ...prev, [id]: "" }));
     }
@@ -46,17 +58,26 @@ export function ContactFormSection() {
 
     if (!formData.firstName.trim()) {
       newErrors.firstName = "First name is required";
+    } else if (!/^[a-zA-Z\s'-]+$/.test(formData.firstName.trim())) {
+      newErrors.firstName = "Name can only contain letters, spaces, hyphens, and apostrophes";
     }
+
+    if (formData.lastName.trim() && !/^[a-zA-Z\s'-]+$/.test(formData.lastName.trim())) {
+      newErrors.lastName = "Name can only contain letters, spaces, hyphens, and apostrophes";
+    }
+
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = "Please enter a valid email";
     }
+
     if (!formData.message.trim()) {
       newErrors.message = "Please enter your message";
     }
+
     if (formData.phone.trim() && !/^[0-9+\-\s()]+$/.test(formData.phone)) {
-      newErrors.phone = "Please enter a valid phone number";
+      newErrors.phone = "Phone number can only contain numbers and +, -, (, )";
     }
 
     setErrors(newErrors);
@@ -175,8 +196,13 @@ export function ContactFormSection() {
                     value={formData.lastName}
                     onChange={handleChange}
                     placeholder="Enter your last name"
-                    className="w-full px-4 py-3 bg-white border border-gray-200 rounded-sm focus:outline-none focus:ring-1 focus:ring-primary/50 text-sm"
+                    className={`w-full px-4 py-3 bg-white border rounded-sm focus:outline-none focus:ring-1 focus:ring-primary/50 text-sm ${
+                      errors.lastName ? "border-red-500" : "border-gray-200"
+                    }`}
                   />
+                  {errors.lastName && (
+                    <p className="text-xs text-red-600">{errors.lastName}</p>
+                  )}
                 </div>
               </div>
 

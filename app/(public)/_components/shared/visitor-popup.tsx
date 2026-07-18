@@ -49,6 +49,27 @@ export function VisitorPopup({ delay = 3000 }: VisitorPopupProps) {
     }
   }, [delay, user, authLoading, hasShownThisSession]);
 
+  // Prevent background scroll when modal is visible
+  useEffect(() => {
+    if (isVisible) {
+      // Save current scroll position
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      document.body.style.overflow = 'hidden';
+
+      return () => {
+        // Restore scroll position
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        document.body.style.overflow = '';
+        window.scrollTo(0, scrollY);
+      };
+    }
+  }, [isVisible]);
+
   const handleClose = () => {
     setIsVisible(false);
     // Mark as dismissed for this session only
