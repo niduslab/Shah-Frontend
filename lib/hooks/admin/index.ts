@@ -14,3 +14,5 @@ export * from './useAdminUsers';
 export * from './useAdminNotifications';
 export * from './useVisitorPopups';
 export * from './useTrackingPixels';
+export * from './useContactMessages';
+export * from './useSiteSettings';

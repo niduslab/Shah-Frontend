@@ -1,17 +1,29 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Sparkles } from "lucide-react";
+import { Sparkles, X } from "lucide-react";
+
+const DISMISS_KEY = "site-upgrade-notice-dismissed";
 
 export function SiteUpgradeNotice() {
   const [isMounted, setIsMounted] = useState(false);
+  const [isDismissed, setIsDismissed] = useState(false);
 
   useEffect(() => {
+    if (sessionStorage.getItem(DISMISS_KEY) === "true") {
+      setIsDismissed(true);
+      return;
+    }
     const timer = setTimeout(() => setIsMounted(true), 400);
     return () => clearTimeout(timer);
   }, []);
 
-  if (!isMounted) return null;
+  const handleDismiss = () => {
+    sessionStorage.setItem(DISMISS_KEY, "true");
+    setIsDismissed(true);
+  };
+
+  if (!isMounted || isDismissed) return null;
 
   return (
     <div className="slide-up-fade" role="status" aria-live="polite">
@@ -34,6 +46,14 @@ export function SiteUpgradeNotice() {
                 The full experience will be live soon, thank you for your patience.
               </span>
             </p>
+            <button
+              type="button"
+              onClick={handleDismiss}
+              aria-label="Dismiss notice"
+              className="ml-1 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-white/10 hover:text-white"
+            >
+              <X className="h-4 w-4" />
+            </button>
           </div>
         </div>
       </div>

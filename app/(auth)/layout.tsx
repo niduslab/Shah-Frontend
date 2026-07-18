@@ -1,6 +1,3 @@
-'use client';
-
-import Link from 'next/link';
 import { TopBar } from "../(public)/_components/layout/top-bar";
 import { NavBar } from "../(public)/_components/layout/nav-bar";
 import { Footer } from "../(public)/_components/layout/footer";

@@ -183,6 +183,9 @@
     "[project]/app/admin/categories/page": [
       "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
     ],
+    "[project]/app/admin/contact-messages/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
     "[project]/app/admin/content-editor/[filename]/page": [
       "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
     ],
@@ -271,6 +274,9 @@
       "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
     ],
     "[project]/app/admin/roles/page": [
+      "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
+    ],
+    "[project]/app/admin/settings/page": [
       "static/media/f06bf9da926bae75-s.p.c68a79fb.woff2"
     ],
     "[project]/app/admin/shipping-classes/page": [

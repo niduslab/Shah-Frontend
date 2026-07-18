@@ -1,6 +1,6 @@
 "use client";
 
-import { MessageSquare, Search, ChevronDown, LogOut, Menu } from "lucide-react";
+import { Search, ChevronDown, LogOut, Menu } from "lucide-react";
 import { useAuth } from "@/lib/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
@@ -97,11 +97,6 @@ export function AdminHeader() {
 
       {/* Right Actions */}
       <div className="flex flex-shrink-0 items-center gap-2 sm:gap-4">
-        {/* Message Icon */}
-        <button className="relative hidden rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-50 hover:text-gray-700 sm:block">
-          <MessageSquare className="h-5 w-5" />
-        </button>
-
         {/* Notification Bell */}
         <NotificationBell
           notifications={notifications}

@@ -62,7 +62,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/forgot-password",
       "dataRoute": "/forgot-password.rsc",
       "allowHeader": [
@@ -86,7 +87,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/login",
       "dataRoute": "/login.rsc",
       "allowHeader": [
@@ -110,7 +112,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/register",
       "dataRoute": "/register.rsc",
       "allowHeader": [
@@ -134,7 +137,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/about-us",
       "dataRoute": "/about-us.rsc",
       "allowHeader": [
@@ -158,7 +162,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/about",
       "dataRoute": "/about.rsc",
       "allowHeader": [
@@ -182,7 +187,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/badminton-flooring",
       "dataRoute": "/badminton-flooring.rsc",
       "allowHeader": [
@@ -206,7 +212,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/basketball-flooring",
       "dataRoute": "/basketball-flooring.rsc",
       "allowHeader": [
@@ -230,7 +237,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/brand/nordictrack",
       "dataRoute": "/brand/nordictrack.rsc",
       "allowHeader": [
@@ -254,7 +262,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/brands",
       "dataRoute": "/brands.rsc",
       "allowHeader": [
@@ -278,7 +287,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/cart",
       "dataRoute": "/cart.rsc",
       "allowHeader": [
@@ -302,7 +312,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/checkout",
       "dataRoute": "/checkout.rsc",
       "allowHeader": [
@@ -326,7 +337,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/contact",
       "dataRoute": "/contact.rsc",
       "allowHeader": [
@@ -350,7 +362,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/dashboard/addresses",
       "dataRoute": "/dashboard/addresses.rsc",
       "allowHeader": [
@@ -374,7 +387,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/dashboard/notifications",
       "dataRoute": "/dashboard/notifications.rsc",
       "allowHeader": [
@@ -398,7 +412,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/dashboard/orders",
       "dataRoute": "/dashboard/orders.rsc",
       "allowHeader": [
@@ -422,7 +437,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/dashboard",
       "dataRoute": "/dashboard.rsc",
       "allowHeader": [
@@ -446,7 +462,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/dashboard/profile",
       "dataRoute": "/dashboard/profile.rsc",
       "allowHeader": [
@@ -470,7 +487,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/dashboard/returns",
       "dataRoute": "/dashboard/returns.rsc",
       "allowHeader": [
@@ -494,7 +512,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/dashboard/reviews",
       "dataRoute": "/dashboard/reviews.rsc",
       "allowHeader": [
@@ -518,7 +537,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/dashboard/settings",
       "dataRoute": "/dashboard/settings.rsc",
       "allowHeader": [
@@ -542,7 +562,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/dashboard/wishlist",
       "dataRoute": "/dashboard/wishlist.rsc",
       "allowHeader": [
@@ -566,7 +587,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/faq",
       "dataRoute": "/faq.rsc",
       "allowHeader": [
@@ -590,7 +612,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/flash-sale",
       "dataRoute": "/flash-sale.rsc",
       "allowHeader": [
@@ -614,7 +637,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/floor-mat",
       "dataRoute": "/floor-mat.rsc",
       "allowHeader": [
@@ -638,7 +662,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/flooring-solution",
       "dataRoute": "/flooring-solution.rsc",
       "allowHeader": [
@@ -662,7 +687,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/joyfull-series",
       "dataRoute": "/joyfull-series.rsc",
       "allowHeader": [
@@ -686,7 +712,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/kino-map",
       "dataRoute": "/kino-map.rsc",
       "allowHeader": [
@@ -710,7 +737,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/multipurpose-flooring",
       "dataRoute": "/multipurpose-flooring.rsc",
       "allowHeader": [
@@ -734,7 +762,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/our-proud-clients",
       "dataRoute": "/our-proud-clients.rsc",
       "allowHeader": [
@@ -758,7 +787,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/",
       "dataRoute": "/index.rsc",
       "allowHeader": [
@@ -782,7 +812,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/payment/cancel",
       "dataRoute": "/payment/cancel.rsc",
       "allowHeader": [
@@ -806,7 +837,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/payment/failed",
       "dataRoute": "/payment/failed.rsc",
       "allowHeader": [
@@ -830,7 +862,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/payment/success",
       "dataRoute": "/payment/success.rsc",
       "allowHeader": [
@@ -854,7 +887,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/privacy",
       "dataRoute": "/privacy.rsc",
       "allowHeader": [
@@ -878,7 +912,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/returns",
       "dataRoute": "/returns.rsc",
       "allowHeader": [
@@ -902,7 +937,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/services",
       "dataRoute": "/services.rsc",
       "allowHeader": [
@@ -926,7 +962,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/shipping",
       "dataRoute": "/shipping.rsc",
       "allowHeader": [
@@ -950,7 +987,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/shop",
       "dataRoute": "/shop.rsc",
       "allowHeader": [
@@ -974,7 +1012,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/store",
       "dataRoute": "/store.rsc",
       "allowHeader": [
@@ -998,7 +1037,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/table-tennis-flooring",
       "dataRoute": "/table-tennis-flooring.rsc",
       "allowHeader": [
@@ -1022,7 +1062,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/terms",
       "dataRoute": "/terms.rsc",
       "allowHeader": [
@@ -1046,7 +1087,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/track-order",
       "dataRoute": "/track-order.rsc",
       "allowHeader": [
@@ -1070,7 +1112,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/trioflex-multipurpose-flooring",
       "dataRoute": "/trioflex-multipurpose-flooring.rsc",
       "allowHeader": [
@@ -1094,7 +1137,8 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "initialRevalidateSeconds": false,
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
       "srcRoute": "/trioflex-series",
       "dataRoute": "/trioflex-series.rsc",
       "allowHeader": [
@@ -1361,6 +1405,30 @@
       "initialRevalidateSeconds": false,
       "srcRoute": "/admin/categories",
       "dataRoute": "/admin/categories.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/admin/contact-messages": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/admin/contact-messages",
+      "dataRoute": "/admin/contact-messages.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -1970,6 +2038,30 @@
         "x-next-revalidate-tag-token"
       ]
     },
+    "/admin/settings": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/admin/settings",
+      "dataRoute": "/admin/settings.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
     "/admin/shipping-classes": {
       "experimentalBypassFor": [
         {
@@ -2176,8 +2268,8 @@
   "dynamicRoutes": {},
   "notFoundRoutes": [],
   "preview": {
-    "previewModeId": "2aa97aa8f615cbc81200dc2ded2de000",
-    "previewModeSigningKey": "200daec7180b30042b7e5b4da88f011caedb1dc97fd377584c5ecc2a1c17d9b5",
-    "previewModeEncryptionKey": "dbda4cbe5f31835c0001051d5529b9ff87cf5fa27711b299c0311f9bf0e6015b"
+    "previewModeId": "fcc57363ba9f79736a9d3f096dcdb825",
+    "previewModeSigningKey": "1b4304b3cc889ccc00abfa4429bed71f3590bfd00f4e53226237c1edcbb74741",
+    "previewModeEncryptionKey": "f6f034dddcb1c306ea69824464f57efb9d995a72b1a3f462a2b459355c13cd25"
   }
 }
