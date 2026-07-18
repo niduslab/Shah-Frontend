@@ -1,14 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import {
-  Facebook,
-  Instagram,
   Mail,
   MapPin,
   Phone,
-  Twitter,
-  Youtube,
-  X,
 } from "lucide-react";
 
 const paymentIcons = [
@@ -84,11 +79,6 @@ export function Footer() {
                   Contact Us
                 </Link>
               </li>
-              <li>
-                <Link href="/admin/login" className="hover:text-[#FFB81E] transition-colors">
-                  Admin Login
-                </Link>
-              </li>
             </ul>
           </div>
 
@@ -117,7 +107,7 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/shop?category=floor-solutions" className="hover:text-[#FFB81E] transition-colors">
+                <Link href="/flooring-solution" className="hover:text-[#FFB81E] transition-colors">
                   Floor Solutions
                 </Link>
               </li>
@@ -162,22 +152,6 @@ export function Footer() {
 
         {/* Bottom Bar */}
         <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
-          {/* Social Icons */}
-          <div className="flex items-center gap-6">
-            <Link href="#" className="text-white hover:text-[#FFB81E] transition-colors">
-              <Facebook className="h-5 w-5" />
-            </Link>
-            <Link href="#" className="text-white hover:text-[#FFB81E] transition-colors">
-              <Instagram className="h-5 w-5" />
-            </Link>
-            <Link href="#" className="text-white hover:text-[#FFB81E] transition-colors">
-              <X className="h-5 w-5" />
-            </Link>
-            <Link href="#" className="text-white hover:text-[#FFB81E] transition-colors">
-              <Youtube className="h-5 w-5" />
-            </Link>
-          </div>
-
           {/* Copyright */}
           <div className="text-sm text-white">
             © 2026 <span className="text-[#FFB81E] font-semibold italic">SHAH SPORTS</span>. All Rights Reserved.

@@ -1,10 +1,12 @@
 
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useState, useRef, FormEvent } from 'react';
 import { useAuth } from '@/lib/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+
+type FieldName = 'name' | 'email' | 'password' | 'passwordConfirmation' | 'acceptTerms';
 
 export default function RegisterPage() {
   const [name, setName] = useState('');
@@ -13,45 +15,68 @@ export default function RegisterPage() {
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<Partial<Record<FieldName, string>>>({});
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
-  
+
+  const fieldRefs = useRef<Partial<Record<FieldName, HTMLInputElement>>>({});
+  const errorSummaryRef = useRef<HTMLDivElement>(null);
+
   const { register } = useAuth();
   const router = useRouter();
+
+  const focusFirstInvalid = (errors: Partial<Record<FieldName, string>>) => {
+    const order: FieldName[] = ['name', 'email', 'password', 'passwordConfirmation', 'acceptTerms'];
+    const firstInvalid = order.find((field) => errors[field]);
+    if (firstInvalid) {
+      const el = fieldRefs.current[firstInvalid];
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el?.focus();
+    } else {
+      errorSummaryRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError('');
 
     // Validation
-    if (!name || !email || !password || !passwordConfirmation) {
-      setError('Please fill in all required fields');
-      return;
-    }
+    const errors: Partial<Record<FieldName, string>> = {};
 
-    if (!/\S+@\S+\.\S+/.test(email)) {
-      setError('Please enter a valid email address');
-      return;
+    if (!name.trim()) {
+      errors.name = 'Full name is required';
     }
-
-    if (password.length < 8) {
-      setError('Password must be at least 8 characters long');
-      return;
+    if (!email.trim()) {
+      errors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      errors.email = 'Please enter a valid email address';
     }
-
-    if (password !== passwordConfirmation) {
-      setError('Passwords do not match');
-      return;
+    if (!password) {
+      errors.password = 'Password is required';
+    } else if (password.length < 8) {
+      errors.password = 'Password must be at least 8 characters long';
     }
-
+    if (!passwordConfirmation) {
+      errors.passwordConfirmation = 'Please confirm your password';
+    } else if (password !== passwordConfirmation) {
+      errors.passwordConfirmation = 'Passwords do not match';
+    }
     if (!acceptTerms) {
-      setError('Please accept the terms and conditions');
+      errors.acceptTerms = 'Please accept the terms and conditions';
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      setError('Please fix the highlighted fields below.');
+      focusFirstInvalid(errors);
       return;
     }
 
+    setFieldErrors({});
     setLoading(true);
 
     try {
@@ -68,16 +93,16 @@ export default function RegisterPage() {
         password,
         password_confirmation: passwordConfirmation,
       });
-      
+
       // Get the registered user from response
       const registeredUser = response.data.user;
-      
+
       // Set redirecting state
       setIsRedirecting(true);
-      
+
       // Small delay to ensure state is updated
       await new Promise(resolve => setTimeout(resolve, 100));
-      
+
       // Simple direct redirect based on user type
       if (registeredUser.user_type === 'admin') {
         window.location.href = '/admin';
@@ -85,10 +110,25 @@ export default function RegisterPage() {
         window.location.href = '/dashboard';
       }
     } catch (err: any) {
-      const errorMessage = err.response?.data?.message || 
-                          err.response?.data?.error || 
+      const errorMessage = err.response?.data?.message ||
+                          err.response?.data?.error ||
                           'Registration failed. Please try again.';
       setError(errorMessage);
+
+      // Map server-side field errors (Laravel validation shape) onto the same fields.
+      const serverErrors = err.response?.data?.errors;
+      if (serverErrors && typeof serverErrors === 'object') {
+        const mapped: Partial<Record<FieldName, string>> = {};
+        if (serverErrors.email) mapped.email = Array.isArray(serverErrors.email) ? serverErrors.email[0] : String(serverErrors.email);
+        if (serverErrors.password) mapped.password = Array.isArray(serverErrors.password) ? serverErrors.password[0] : String(serverErrors.password);
+        if (serverErrors.first_name || serverErrors.last_name) {
+          mapped.name = Array.isArray(serverErrors.first_name) ? serverErrors.first_name[0] : 'Please check your name';
+        }
+        setFieldErrors(mapped);
+        focusFirstInvalid(mapped);
+      } else {
+        errorSummaryRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
     } finally {
       setLoading(false);
     }
@@ -111,12 +151,16 @@ export default function RegisterPage() {
           </div>
 
       {error && (
-        <div className="p-4 rounded-lg bg-red-50 border border-red-200 text-red-600 text-sm">
+        <div
+          ref={errorSummaryRef}
+          role="alert"
+          className="p-4 rounded-lg bg-red-50 border border-red-200 text-red-600 text-sm"
+        >
           {error}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-5" noValidate>
         <div className="space-y-2">
           <label htmlFor="name" className="text-sm font-medium text-foreground">
             Full Name <span className="text-red-500">*</span>
@@ -128,10 +172,14 @@ export default function RegisterPage() {
               placeholder="John Doe"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              required
-              className="h-12 w-full rounded-xl border border-border bg-gray-50/50 px-4 text-sm outline-none transition-all focus:border-[#0B3B2D] focus:ring-2 focus:ring-[#0B3B2D]/10 focus:bg-white placeholder:text-muted-foreground"
+              ref={(el) => { if (el) fieldRefs.current.name = el; }}
+              aria-invalid={!!fieldErrors.name}
+              className={`h-12 w-full rounded-xl border bg-gray-50/50 px-4 text-sm outline-none transition-all focus:ring-2 focus:bg-white placeholder:text-muted-foreground ${
+                fieldErrors.name ? 'border-red-500 focus:border-red-500 focus:ring-red-500/10' : 'border-border focus:border-[#0B3B2D] focus:ring-[#0B3B2D]/10'
+              }`}
             />
           </div>
+          {fieldErrors.name && <p className="text-xs text-red-600">{fieldErrors.name}</p>}
         </div>
 
         <div className="space-y-2">
@@ -145,10 +193,14 @@ export default function RegisterPage() {
               placeholder="name@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              required
-              className="h-12 w-full rounded-xl border border-border bg-gray-50/50 px-4 text-sm outline-none transition-all focus:border-[#0B3B2D] focus:ring-2 focus:ring-[#0B3B2D]/10 focus:bg-white placeholder:text-muted-foreground"
+              ref={(el) => { if (el) fieldRefs.current.email = el; }}
+              aria-invalid={!!fieldErrors.email}
+              className={`h-12 w-full rounded-xl border bg-gray-50/50 px-4 text-sm outline-none transition-all focus:ring-2 focus:bg-white placeholder:text-muted-foreground ${
+                fieldErrors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-500/10' : 'border-border focus:border-[#0B3B2D] focus:ring-[#0B3B2D]/10'
+              }`}
             />
           </div>
+          {fieldErrors.email && <p className="text-xs text-red-600">{fieldErrors.email}</p>}
         </div>
 
         <div className="space-y-2">
@@ -178,9 +230,11 @@ export default function RegisterPage() {
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={8}
-              className="h-12 w-full rounded-xl border border-border bg-gray-50/50 px-4 pr-12 text-sm outline-none transition-all focus:border-[#0B3B2D] focus:ring-2 focus:ring-[#0B3B2D]/10 focus:bg-white placeholder:text-muted-foreground"
+              ref={(el) => { if (el) fieldRefs.current.password = el; }}
+              aria-invalid={!!fieldErrors.password}
+              className={`h-12 w-full rounded-xl border bg-gray-50/50 px-4 pr-12 text-sm outline-none transition-all focus:ring-2 focus:bg-white placeholder:text-muted-foreground ${
+                fieldErrors.password ? 'border-red-500 focus:border-red-500 focus:ring-red-500/10' : 'border-border focus:border-[#0B3B2D] focus:ring-[#0B3B2D]/10'
+              }`}
             />
             <button
               type="button"
@@ -199,7 +253,11 @@ export default function RegisterPage() {
               )}
             </button>
           </div>
-          <p className="text-xs text-gray-500">Must be at least 8 characters</p>
+          {fieldErrors.password ? (
+            <p className="text-xs text-red-600">{fieldErrors.password}</p>
+          ) : (
+            <p className="text-xs text-gray-500">Must be at least 8 characters</p>
+          )}
         </div>
 
         <div className="space-y-2">
@@ -213,9 +271,11 @@ export default function RegisterPage() {
               placeholder="••••••••"
               value={passwordConfirmation}
               onChange={(e) => setPasswordConfirmation(e.target.value)}
-              required
-              minLength={8}
-              className="h-12 w-full rounded-xl border border-border bg-gray-50/50 px-4 pr-12 text-sm outline-none transition-all focus:border-[#0B3B2D] focus:ring-2 focus:ring-[#0B3B2D]/10 focus:bg-white placeholder:text-muted-foreground"
+              ref={(el) => { if (el) fieldRefs.current.passwordConfirmation = el; }}
+              aria-invalid={!!fieldErrors.passwordConfirmation}
+              className={`h-12 w-full rounded-xl border bg-gray-50/50 px-4 pr-12 text-sm outline-none transition-all focus:ring-2 focus:bg-white placeholder:text-muted-foreground ${
+                fieldErrors.passwordConfirmation ? 'border-red-500 focus:border-red-500 focus:ring-red-500/10' : 'border-border focus:border-[#0B3B2D] focus:ring-[#0B3B2D]/10'
+              }`}
             />
             <button
               type="button"
@@ -236,25 +296,35 @@ export default function RegisterPage() {
           </div>
         </div>
 
-        <div className="flex items-start">
-          <input
-            id="terms"
-            type="checkbox"
-            checked={acceptTerms}
-            onChange={(e) => setAcceptTerms(e.target.checked)}
-            className="h-4 w-4 mt-0.5 rounded border-gray-300 text-[#0B3B2D] focus:ring-[#0B3B2D]"
-          />
-          <label htmlFor="terms" className="ml-2 text-sm text-gray-600">
-            I agree to the{' '}
-            <Link href="/terms" className="text-[#0B3B2D] hover:underline">
-              Terms of Service
-            </Link>{' '}
-            and{' '}
-            <Link href="/privacy" className="text-[#0B3B2D] hover:underline">
-              Privacy Policy
-            </Link>
-          </label>
+        <div>
+          <div className="flex items-start">
+            <input
+              id="terms"
+              type="checkbox"
+              checked={acceptTerms}
+              onChange={(e) => setAcceptTerms(e.target.checked)}
+              ref={(el) => { if (el) fieldRefs.current.acceptTerms = el; }}
+              aria-invalid={!!fieldErrors.acceptTerms}
+              className="h-4 w-4 mt-0.5 rounded border-gray-300 text-[#0B3B2D] focus:ring-[#0B3B2D]"
+            />
+            <label htmlFor="terms" className="ml-2 text-sm text-gray-600">
+              I agree to the{' '}
+              <Link href="/terms" className="text-[#0B3B2D] hover:underline">
+                Terms of Service
+              </Link>{' '}
+              and{' '}
+              <Link href="/privacy" className="text-[#0B3B2D] hover:underline">
+                Privacy Policy
+              </Link>
+            </label>
+          </div>
+          {fieldErrors.acceptTerms && <p className="mt-1 text-xs text-red-600">{fieldErrors.acceptTerms}</p>}
         </div>
+
+        {/* Error summary near the submit button so it's visible without scrolling back up */}
+        {error && Object.keys(fieldErrors).length > 0 && (
+          <p className="text-sm text-red-600" role="alert">{error}</p>
+        )}
 
         <button
           type="submit"

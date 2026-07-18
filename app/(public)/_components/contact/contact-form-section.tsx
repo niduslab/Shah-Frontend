@@ -13,6 +13,7 @@ interface FormData {
   phone: string;
   address: string;
   message: string;
+  website: string; // honeypot — real users never see or fill this
 }
 
 const initialFormData: FormData = {
@@ -22,6 +23,7 @@ const initialFormData: FormData = {
   phone: "",
   address: "",
   message: "",
+  website: "",
 };
 
 export function ContactFormSection() {
@@ -53,6 +55,9 @@ export function ContactFormSection() {
     if (!formData.message.trim()) {
       newErrors.message = "Please enter your message";
     }
+    if (formData.phone.trim() && !/^[0-9+\-\s()]+$/.test(formData.phone)) {
+      newErrors.phone = "Please enter a valid phone number";
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -62,6 +67,14 @@ export function ContactFormSection() {
     e.preventDefault();
 
     if (!validateForm()) {
+      return;
+    }
+
+    // Honeypot tripped — a real visitor can't have typed into a hidden field.
+    // Pretend success and stop, same as the backend does if this is bypassed.
+    if (formData.website.trim() !== "") {
+      toast.success("Thank you for reaching out! Our team will get back to you soon.");
+      setFormData(initialFormData);
       return;
     }
 
@@ -75,6 +88,7 @@ export function ContactFormSection() {
         phone: formData.phone || null,
         address: formData.address || null,
         message: formData.message,
+        website: formData.website,
       });
 
       if (response.data.success) {
@@ -115,6 +129,23 @@ export function ContactFormSection() {
           <div className="bg-[#F4F5F7] p-8 md:p-10 rounded-sm">
             <h2 className="text-2xl font-bold mb-8 text-black">Message Us</h2>
             <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+              {/* Honeypot — hidden from real users via off-screen positioning, not
+                  display:none, so basic bots that check computed visibility still fall for it. */}
+              <div
+                aria-hidden="true"
+                style={{ position: "absolute", left: "-9999px", width: "1px", height: "1px", overflow: "hidden" }}
+              >
+                <label htmlFor="website">Website</label>
+                <input
+                  type="text"
+                  id="website"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={formData.website}
+                  onChange={handleChange}
+                />
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label htmlFor="firstName" className="font-medium text-sm text-black">
@@ -178,8 +209,13 @@ export function ContactFormSection() {
                     value={formData.phone}
                     onChange={handleChange}
                     placeholder="Enter your phone number"
-                    className="w-full px-4 py-3 bg-white border border-gray-200 rounded-sm focus:outline-none focus:ring-1 focus:ring-primary/50 text-sm"
+                    className={`w-full px-4 py-3 bg-white border rounded-sm focus:outline-none focus:ring-1 focus:ring-primary/50 text-sm ${
+                      errors.phone ? "border-red-500" : "border-gray-200"
+                    }`}
                   />
+                  {errors.phone && (
+                    <p className="text-xs text-red-600">{errors.phone}</p>
+                  )}
                 </div>
               </div>
 

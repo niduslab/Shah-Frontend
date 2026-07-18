@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { Lock, Mail } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -118,9 +119,9 @@ export default function AdminLoginPage() {
                   Remember me
                 </label>
               </div>
-              <a href="#" className="text-sm font-medium text-[#00072D] hover:underline">
+              <Link href="/forgot-password" className="text-sm font-medium text-[#00072D] hover:underline">
                 Forgot password?
-              </a>
+              </Link>
             </div>
 
             <button
