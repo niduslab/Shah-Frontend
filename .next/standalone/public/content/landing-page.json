@@ -167,29 +167,29 @@
       {
         "id": "bangladesh-navy",
         "name": "Bangladesh Navy",
-        "media": "/images/landing/success-stories/1776431696394-Austin_DM.mp4",
+        "media": "/api/uploads/landing/success-stories/1784712333314-compressed-video.webm",
         "mediaType": "video",
         "description": "The quality of equipment is exceptional, and their customer service is outstanding."
       },
       {
         "id": "huawei",
         "name": "Huawei Enterprise",
-        "media": "/images/landing/success-stories/1776431718270-Arvin_DM.mp4",
+        "media": "/api/uploads/landing/success-stories/1784716527252-download--1-.webm",
         "mediaType": "video",
         "description": "The durability and performance of their equipment is unmatched in the market."
       },
       {
         "id": "gulshan-club",
         "name": "Gulshan Club",
-        "media": "/images/landing/success-stories/c720ec2c5e57a0bc8d6ddfb287ceee26a9140229.png",
-        "mediaType": "image",
+        "media": "/api/uploads/landing/success-stories/1784716536489-Untitled-design--2-.webm",
+        "mediaType": "video",
         "description": "The yoga and flexibility equipment from Shah Sports is top-notch. Great value for money!"
       },
       {
         "id": "cocord",
         "name": "Cocord Real-Estate",
-        "media": "/images/landing/success-stories/cfa8138ad5135723dcedad5236627bc4d080c002.png",
-        "mediaType": "image",
+        "media": "/api/uploads/landing/success-stories/1784716543280-download--2-.webm",
+        "mediaType": "video",
         "description": "The quality of equipment is exceptional, and their customer service is outstanding."
       }
     ]
