@@ -56,7 +56,7 @@ export function SuccessStories() {
   const videoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>({});
   const [storiesData, setStoriesData] = useState<SuccessStoriesData>({
     enabled: true,
-    sectionTitle: "Success Stories That Inspire Us",
+    sectionTitle: "Our Projects",
     stories: DEFAULT_STORIES,
   });
   const [loading, setLoading] = useState(false);

@@ -265,7 +265,7 @@ export default function LandingPageManagement() {
   const [successStoriesSection, setSuccessStoriesSection] = useState<SuccessStoriesSection>({
     id: "success-stories",
     enabled: true,
-    sectionTitle: "Success Stories That Inspire Us",
+    sectionTitle: "Our Projects",
     stories: [
       {
         id: "bangladesh-navy",
@@ -2927,7 +2927,7 @@ export default function LandingPageManagement() {
                       value={successStoriesSection.sectionTitle}
                       onChange={(e) => setSuccessStoriesSection({ ...successStoriesSection, sectionTitle: e.target.value })}
                       className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
-                      placeholder="Success Stories That Inspire Us"
+                      placeholder="Our Projects"
                     />
                   </div>
 
