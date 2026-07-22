@@ -52,7 +52,7 @@
   ],
   "preOrderSection": {
     "id": "preorder",
-    "enabled": true,
+    "enabled": false,
     "sectionTitle": "Pre-Order Now & Save Big",
     "viewAllText": "View All Preorder Products",
     "viewAllUrl": "/pre-order",
@@ -92,7 +92,7 @@
   },
   "promoCardsSection": {
     "id": "promo-cards",
-    "enabled": true,
+    "enabled": false,
     "cards": [
       {
         "id": "cardio",
@@ -162,7 +162,7 @@
   "successStoriesSection": {
     "id": "success-stories",
     "enabled": true,
-    "sectionTitle": "Success Stories That Inspire Us",
+    "sectionTitle": "Our Projects",
     "stories": [
       {
         "id": "bangladesh-navy",
@@ -239,19 +239,19 @@
       {
         "id": "fitness-cardio",
         "name": "Cardio",
-        "image": "/images/landing/explore-categories/image-1.png",
+        "image": "/api/uploads/landing/explore-categories/1784709485740-1784446523244-Screenshot-2026-07-14-174239.png",
         "href": "/shop?category=fitness-cardio"
       },
       {
         "id": "strength",
         "name": "Strength",
-        "image": "/images/landing/explore-categories/image-3.png",
+        "image": "/api/uploads/landing/explore-categories/1784709490509-1784446537750-Screenshot-2026-07-14-174248.png",
         "href": "/shop?category=strength"
       },
       {
         "id": "free-weight",
         "name": "Free Weight",
-        "image": "/images/landing/explore-categories/image-4.png",
+        "image": "/api/uploads/landing/explore-categories/1784709495154-1784446555033-Screenshot-2026-07-14-174254.png",
         "href": "/shop?category=free-weight"
       },
       {
@@ -264,7 +264,7 @@
   },
   "flashDealSection": {
     "id": "flash-deal",
-    "enabled": true,
+    "enabled": false,
     "backgroundImage": "/images/landing/flash-deal/flash-deal.png",
     "badgeText": "Flash Deal",
     "heading": "Grab it before\nit ends.",
